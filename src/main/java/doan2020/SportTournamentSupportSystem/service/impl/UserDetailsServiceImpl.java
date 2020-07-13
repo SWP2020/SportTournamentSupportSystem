@@ -10,7 +10,6 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import doan2020.SportTournamentSupportSystem.entity.RoleTestEntity;
@@ -28,7 +27,7 @@ public class UserDetailsServiceImpl implements UserDetailsService{
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		// Kiểm tra xem user có tồn tại trong database không?
-		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+//		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         UserTestEntity user = userRepository.findByUsername(username);
         RoleTestEntity roleEntity = roleRepository.findOneByRoleid(user.getRole().getRoleID());
 		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();

@@ -1,17 +1,17 @@
 package doan2020.SportTournamentSupportSystem.dtIn;
 
-public class UserDtIn {
+public class RegisterDtIn {
 	private String username;
 
     private String password;
     
     private String email;
     
-    public UserDtIn() {
+    public RegisterDtIn() {
     	
     }
 
-	public UserDtIn(String username, String password, String email) {
+	public RegisterDtIn(String username, String password, String email) {
 		super();
 		this.username = username;
 		this.password = password;

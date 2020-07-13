@@ -8,24 +8,25 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import doan2020.SportTournamentSupportSystem.dtIn.LoginDtIn;
+import doan2020.SportTournamentSupportSystem.dtIn.RegisterDtIn;
 import doan2020.SportTournamentSupportSystem.response.Response;
-import doan2020.SportTournamentSupportSystem.service.impl.LoginService;
+import doan2020.SportTournamentSupportSystem.service.impl.RegisterService;
 
 @RestController
-@RequestMapping("/login")
-public class LoginAPI {
-
-	  @Autowired
-	  private LoginService loginService;
-	  
-	  @PostMapping
-	  public ResponseEntity<Response> login(@RequestBody LoginDtIn user) {
-	    HttpStatus httpStatus = null;
+@RequestMapping("/register")
+public class RegisterAPI {
+	
+	@Autowired
+    RegisterService registerService;
+	
+	/* ---------------- register NEW USER ------------------------ */
+	@PostMapping
+	public ResponseEntity<Response> createUser(@RequestBody RegisterDtIn user) {
+		HttpStatus httpStatus = null;
 	    Response response = new Response();
 	    try {
-	    	response = loginService.checkLogin(user);
-	        if(response.getResult().containsKey("Authentication")){
+	    	response = registerService.addNewUsers(user);
+	        if(response.getResult().containsValue("001")){
 	        httpStatus = HttpStatus.OK;
 	      } else {
 	        httpStatus = HttpStatus.BAD_REQUEST;
@@ -34,6 +35,5 @@ public class LoginAPI {
 	      httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
 	    }
 	    return new ResponseEntity<Response>(response, httpStatus);
-	  }
-
+	}
 }

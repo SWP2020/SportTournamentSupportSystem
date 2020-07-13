@@ -8,4 +8,5 @@ import doan2020.SportTournamentSupportSystem.entity.UserTestEntity;
 @Repository
 public interface UserRepository extends JpaRepository<UserTestEntity, Long>{
 	UserTestEntity findByUsername(String username);
+	
 }

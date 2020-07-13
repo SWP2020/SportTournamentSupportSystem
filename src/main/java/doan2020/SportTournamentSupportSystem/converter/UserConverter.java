@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import doan2020.SportTournamentSupportSystem.dtIn.UserDtIn;
+import doan2020.SportTournamentSupportSystem.dtIn.RegisterDtIn;
 import doan2020.SportTournamentSupportSystem.dtOut.UserDtOut;
 import doan2020.SportTournamentSupportSystem.entity.UserTestEntity;
 
@@ -14,7 +14,7 @@ public class UserConverter {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
-	public UserTestEntity toEntity(UserDtIn dto) {
+	public UserTestEntity toEntity(RegisterDtIn dto) {
 		UserTestEntity entity = new UserTestEntity();
 		if (dto.getPassword() != null) {
 			entity.setPassword(passwordEncoder.encode(dto.getPassword()));
