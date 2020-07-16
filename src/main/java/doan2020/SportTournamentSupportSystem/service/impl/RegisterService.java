@@ -13,8 +13,8 @@ import doan2020.SportTournamentSupportSystem.converter.UserConverter;
 import doan2020.SportTournamentSupportSystem.dtIn.RegisterDtIn;
 import doan2020.SportTournamentSupportSystem.entity.RoleTestEntity;
 import doan2020.SportTournamentSupportSystem.entity.UserTestEntity;
-import doan2020.SportTournamentSupportSystem.repository.RoleRepository;
-import doan2020.SportTournamentSupportSystem.repository.UserRepository;
+import doan2020.SportTournamentSupportSystem.repository.RoleTestRepository;
+import doan2020.SportTournamentSupportSystem.repository.UserTestRepository;
 import doan2020.SportTournamentSupportSystem.response.Response;
 import doan2020.SportTournamentSupportSystem.service.IRegisterService;
 
@@ -22,10 +22,10 @@ import doan2020.SportTournamentSupportSystem.service.IRegisterService;
 public class RegisterService implements IRegisterService{
 
 	@Autowired
-	private UserRepository userRepository;
+	private UserTestRepository userRepository;
 	
 	@Autowired
-	private RoleRepository roleRepository;
+	private RoleTestRepository roleRepository;
 	
 	@Autowired
 	private UserConverter userConverter;

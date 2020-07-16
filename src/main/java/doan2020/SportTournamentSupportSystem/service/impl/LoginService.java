@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 import doan2020.SportTournamentSupportSystem.dtIn.LoginDtIn;
 import doan2020.SportTournamentSupportSystem.entity.UserTestEntity;
-import doan2020.SportTournamentSupportSystem.repository.UserRepository;
+import doan2020.SportTournamentSupportSystem.repository.UserTestRepository;
 import doan2020.SportTournamentSupportSystem.response.Response;
 import doan2020.SportTournamentSupportSystem.service.ILoginService;
 
@@ -24,7 +24,7 @@ public class LoginService implements ILoginService {
 	private JwtService jwtService;
 
 	@Autowired
-	private UserRepository userRepository;
+	private UserTestRepository userRepository;
 
 	@Override
 	public Response checkLogin(LoginDtIn user) {

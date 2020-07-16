@@ -14,15 +14,15 @@ import org.springframework.stereotype.Service;
 
 import doan2020.SportTournamentSupportSystem.entity.RoleTestEntity;
 import doan2020.SportTournamentSupportSystem.entity.UserTestEntity;
-import doan2020.SportTournamentSupportSystem.repository.RoleRepository;
-import doan2020.SportTournamentSupportSystem.repository.UserRepository;
+import doan2020.SportTournamentSupportSystem.repository.RoleTestRepository;
+import doan2020.SportTournamentSupportSystem.repository.UserTestRepository;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService{
 	@Autowired
-	private UserRepository userRepository;
+	private UserTestRepository userRepository;
 	
 	@Autowired
-	private RoleRepository roleRepository;
+	private RoleTestRepository roleRepository;
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

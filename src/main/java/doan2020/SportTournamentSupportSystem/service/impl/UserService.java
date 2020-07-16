@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import doan2020.SportTournamentSupportSystem.converter.UserConverter;
 import doan2020.SportTournamentSupportSystem.dtOut.UserDtOut;
 import doan2020.SportTournamentSupportSystem.entity.UserTestEntity;
-import doan2020.SportTournamentSupportSystem.repository.UserRepository;
+import doan2020.SportTournamentSupportSystem.repository.UserTestRepository;
 import doan2020.SportTournamentSupportSystem.response.Response;
 import doan2020.SportTournamentSupportSystem.service.IUserService;
 
@@ -20,7 +20,7 @@ import doan2020.SportTournamentSupportSystem.service.IUserService;
 public class UserService implements IUserService{
 	
 	@Autowired
-	private UserRepository userRepository;
+	private UserTestRepository userRepository;
 	
 	
 	@Autowired
