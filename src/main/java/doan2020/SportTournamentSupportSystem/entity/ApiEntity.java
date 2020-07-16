@@ -19,22 +19,23 @@ import com.sun.istack.NotNull;
 
 
 @Entity
-@Table(name = "players")
+@Table(name = "apis")
 @EntityListeners(AuditingEntityListener.class)
-public class PlayerEntity{
+public class ApiEntity{
 
 	@Id
 	@NotNull
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	@NotNull
 	private String name;
 	
-	private boolean gender;
+	private String description;
 	
-	private Date dob;
+	private String url;
 	
-	private String email;
+	private String method;
 	
 	private String createdBy;
 	
@@ -45,8 +46,8 @@ public class PlayerEntity{
 	private Date modifiedDate;
 	
 
-	@ManyToMany(mappedBy = "playersList")
-	private Collection<TeamEntity> teams;
+	@ManyToMany(mappedBy = "apisList")
+	private Collection<RoleEntity> roles;
 	
 
 	public Long getId() {
@@ -61,28 +62,28 @@ public class PlayerEntity{
 		this.name = name;
 	}
 	
-	public boolean getGender() {
-		return gender;
+	public String getDescription() {
+		return description;
 	}
 	
-	public void setGender(boolean gender) {
-		this.gender = gender;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 	
-	public Date getDob() {
-		return dob;
+	public String getUrl() {
+		return url;
 	}
 	
-	public void setDob(Date dob) {
-		this.dob = dob;
+	public void setUrl(String url) {
+		this.url = url;
 	}
 	
-	public String getEmail() {
-		return email;
+	public String getMethod() {
+		return method;
 	}
 	
-	public void setEmail(String email) {
-		this.email = email;
+	public void setMethod(String method) {
+		this.method = method;
 	}
 	
 	public String getCreatedby() {
@@ -117,12 +118,12 @@ public class PlayerEntity{
 		this.modifiedDate = modifiedDate;
 	}
 	
-	public Collection<TeamEntity> getTeamslist() {
-		return teams;
+	public Collection<RoleEntity> getRoleslist() {
+		return roles;
 	}
 	
-	public void setTeamslist(Collection<TeamEntity> teamsList) {
-		this.teams = teamsList;
+	public void setRoleslist(Collection<RoleEntity> rolesList) {
+		this.roles = rolesList;
 	}
 	
 

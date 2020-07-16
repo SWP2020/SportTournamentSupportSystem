@@ -1,7 +1,6 @@
 
 package doan2020.SportTournamentSupportSystem.entity;
 
-import java.util.Collection;
 import java.util.Date;
 
 import javax.persistence.Entity;
@@ -9,7 +8,6 @@ import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -19,22 +17,23 @@ import com.sun.istack.NotNull;
 
 
 @Entity
-@Table(name = "players")
+@Table(name = "permissions")
 @EntityListeners(AuditingEntityListener.class)
-public class PlayerEntity{
+public class PermissionEntity{
 
 	@Id
 	@NotNull
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	@NotNull
 	private String name;
 	
-	private boolean gender;
+	private String description;
 	
-	private Date dob;
+	private boolean can_edit;
 	
-	private String email;
+	private boolean can_delete;
 	
 	private String createdBy;
 	
@@ -45,9 +44,6 @@ public class PlayerEntity{
 	private Date modifiedDate;
 	
 
-	@ManyToMany(mappedBy = "playersList")
-	private Collection<TeamEntity> teams;
-	
 
 	public Long getId() {
 		return id;
@@ -61,28 +57,28 @@ public class PlayerEntity{
 		this.name = name;
 	}
 	
-	public boolean getGender() {
-		return gender;
+	public String getDescription() {
+		return description;
 	}
 	
-	public void setGender(boolean gender) {
-		this.gender = gender;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 	
-	public Date getDob() {
-		return dob;
+	public boolean getCan_edit() {
+		return can_edit;
 	}
 	
-	public void setDob(Date dob) {
-		this.dob = dob;
+	public void setCan_edit(boolean can_edit) {
+		this.can_edit = can_edit;
 	}
 	
-	public String getEmail() {
-		return email;
+	public boolean getCan_delete() {
+		return can_delete;
 	}
 	
-	public void setEmail(String email) {
-		this.email = email;
+	public void setCan_delete(boolean can_delete) {
+		this.can_delete = can_delete;
 	}
 	
 	public String getCreatedby() {
@@ -115,14 +111,6 @@ public class PlayerEntity{
 	
 	public void setModifieddate(Date modifiedDate) {
 		this.modifiedDate = modifiedDate;
-	}
-	
-	public Collection<TeamEntity> getTeamslist() {
-		return teams;
-	}
-	
-	public void setTeamslist(Collection<TeamEntity> teamsList) {
-		this.teams = teamsList;
 	}
 	
 

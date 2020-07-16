@@ -20,6 +20,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.sun.istack.NotNull;
 
+
+
 @Entity
 @Table(name = "posts")
 @EntityListeners(AuditingEntityListener.class)
@@ -59,5 +61,89 @@ public class PostEntity{
 	private Collection<CommentEntity> comments;
 
 
+	public Long getId() {
+		return id;
+	}
+	
+	public String getTitle() {
+		return title;
+	}
+	
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	
+	public String getContent() {
+		return content;
+	}
+	
+	public void setContent(String content) {
+		this.content = content;
+	}
+	
+	public String getCreatedby() {
+		return createdBy;
+	}
+	
+	public void setCreatedby(String createdBy) {
+		this.createdBy = createdBy;
+	}
+	
+	public Date getCreateddate() {
+		return createdDate;
+	}
+	
+	public void setCreateddate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+	
+	public String getModifiedby() {
+		return modifiedBy;
+	}
+	
+	public void setModifiedby(String modifiedBy) {
+		this.modifiedBy = modifiedBy;
+	}
+	
+	public Date getModifieddate() {
+		return modifiedDate;
+	}
+	
+	public void setModifieddate(Date modifiedDate) {
+		this.modifiedDate = modifiedDate;
+	}
+	
+	public TournamentEntity getTournament() {
+		return tournament;
+	}
+	
+	public void setTournament(TournamentEntity tournament) {
+		this.tournament = tournament;
+	}
+	
+	public UserEntity getAuthor() {
+		return author;
+	}
+	
+	public void setAuthor(UserEntity author) {
+		this.author = author;
+	}
+	
+	public Collection<UserEntity> getUserslist() {
+		return users;
+	}
+	
+	public void setUserslist(Collection<UserEntity> usersList) {
+		this.users = usersList;
+	}
+	
+	public Collection<CommentEntity> getComments() {
+		return comments;
+	}
+	
+	public void setComments(Collection<CommentEntity> comments) {
+		this.comments = comments;
+	}
+	
 
 }

@@ -20,6 +20,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.sun.istack.NotNull;
 
+
+
 @Entity
 @Table(name = "competitions")
 @EntityListeners(AuditingEntityListener.class)
@@ -50,10 +52,6 @@ public class CompetitionEntity{
 	@JoinColumn(name = "sportId")
 	private SportEntity sport;
 	
-	@ManyToOne
-	@JoinColumn(name = "scoringunitId")
-	private ScoringunitEntity scoringunit;
-	
 	@ManyToMany(mappedBy = "competitionsList")
 	private Collection<TeamEntity> teams;
 	
@@ -61,5 +59,81 @@ public class CompetitionEntity{
 	private Collection<MatchEntity> matches;
 
 
+	public Long getId() {
+		return id;
+	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	public String getCreatedby() {
+		return createdBy;
+	}
+	
+	public void setCreatedby(String createdBy) {
+		this.createdBy = createdBy;
+	}
+	
+	public Date getCreateddate() {
+		return createdDate;
+	}
+	
+	public void setCreateddate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+	
+	public String getModifiedby() {
+		return modifiedBy;
+	}
+	
+	public void setModifiedby(String modifiedBy) {
+		this.modifiedBy = modifiedBy;
+	}
+	
+	public Date getModifieddate() {
+		return modifiedDate;
+	}
+	
+	public void setModifieddate(Date modifiedDate) {
+		this.modifiedDate = modifiedDate;
+	}
+	
+	public TournamentEntity getTournament() {
+		return tournament;
+	}
+	
+	public void setTournament(TournamentEntity tournament) {
+		this.tournament = tournament;
+	}
+	
+	public SportEntity getSport() {
+		return sport;
+	}
+	
+	public void setSport(SportEntity sport) {
+		this.sport = sport;
+	}
+	
+	public Collection<TeamEntity> getTeamslist() {
+		return teams;
+	}
+	
+	public void setTeamslist(Collection<TeamEntity> teamsList) {
+		this.teams = teamsList;
+	}
+	
+	public Collection<MatchEntity> getMatches() {
+		return matches;
+	}
+	
+	public void setMatches(Collection<MatchEntity> matches) {
+		this.matches = matches;
+	}
+	
 
 }

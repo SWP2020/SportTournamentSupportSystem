@@ -16,6 +16,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.sun.istack.NotNull;
 
+
+
 @Entity
 @Table(name = "reports")
 @EntityListeners(AuditingEntityListener.class)
@@ -48,5 +50,73 @@ public class ReportEntity{
 	private UserEntity receiver;
 	
 
+	public Long getId() {
+		return id;
+	}
+	
+	public String getContent() {
+		return content;
+	}
+	
+	public void setContent(String content) {
+		this.content = content;
+	}
+	
+	public String getLink() {
+		return link;
+	}
+	
+	public void setLink(String link) {
+		this.link = link;
+	}
+	
+	public String getCreatedby() {
+		return createdBy;
+	}
+	
+	public void setCreatedby(String createdBy) {
+		this.createdBy = createdBy;
+	}
+	
+	public Date getCreateddate() {
+		return createdDate;
+	}
+	
+	public void setCreateddate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+	
+	public String getModifiedby() {
+		return modifiedBy;
+	}
+	
+	public void setModifiedby(String modifiedBy) {
+		this.modifiedBy = modifiedBy;
+	}
+	
+	public Date getModifieddate() {
+		return modifiedDate;
+	}
+	
+	public void setModifieddate(Date modifiedDate) {
+		this.modifiedDate = modifiedDate;
+	}
+	
+	public UserEntity getSender() {
+		return sender;
+	}
+	
+	public void setSender(UserEntity sender) {
+		this.sender = sender;
+	}
+	
+	public UserEntity getReceiver() {
+		return receiver;
+	}
+	
+	public void setReceiver(UserEntity receiver) {
+		this.receiver = receiver;
+	}
+	
 
 }

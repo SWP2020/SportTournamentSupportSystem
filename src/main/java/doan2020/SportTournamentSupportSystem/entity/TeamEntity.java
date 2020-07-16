@@ -22,6 +22,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.sun.istack.NotNull;
 
+
+
 @Entity
 @Table(name = "teams")
 @EntityListeners(AuditingEntityListener.class)
@@ -80,5 +82,105 @@ public class TeamEntity{
 	private Collection<ResultEntity> results;
 
 
+	public Long getId() {
+		return id;
+	}
+	
+	public String getFullname() {
+		return fullName;
+	}
+	
+	public void setFullname(String fullName) {
+		this.fullName = fullName;
+	}
+	
+	public String getShortname() {
+		return shortName;
+	}
+	
+	public void setShortname(String shortName) {
+		this.shortName = shortName;
+	}
+	
+	public String getDescription() {
+		return description;
+	}
+	
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	
+	public String getCreatedby() {
+		return createdBy;
+	}
+	
+	public void setCreatedby(String createdBy) {
+		this.createdBy = createdBy;
+	}
+	
+	public Date getCreateddate() {
+		return createdDate;
+	}
+	
+	public void setCreateddate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+	
+	public String getModifiedby() {
+		return modifiedBy;
+	}
+	
+	public void setModifiedby(String modifiedBy) {
+		this.modifiedBy = modifiedBy;
+	}
+	
+	public Date getModifieddate() {
+		return modifiedDate;
+	}
+	
+	public void setModifieddate(Date modifiedDate) {
+		this.modifiedDate = modifiedDate;
+	}
+	
+	public UserEntity getCreator() {
+		return creator;
+	}
+	
+	public void setCreator(UserEntity creator) {
+		this.creator = creator;
+	}
+	
+	public Collection<CompetitionEntity> getCompetitionslist() {
+		return competitionsList;
+	}
+	
+	public void setCompetitionslist(Collection<CompetitionEntity> competitionsList) {
+		this.competitionsList = competitionsList;
+	}
+	
+	public Collection<MatchEntity> getMatcheslist() {
+		return matchesList;
+	}
+	
+	public void setMatcheslist(Collection<MatchEntity> matchesList) {
+		this.matchesList = matchesList;
+	}
+	
+	public Collection<PlayerEntity> getPlayerslist() {
+		return playersList;
+	}
+	
+	public void setPlayerslist(Collection<PlayerEntity> playersList) {
+		this.playersList = playersList;
+	}
+	
+	public Collection<ResultEntity> getResults() {
+		return results;
+	}
+	
+	public void setResults(Collection<ResultEntity> results) {
+		this.results = results;
+	}
+	
 
 }

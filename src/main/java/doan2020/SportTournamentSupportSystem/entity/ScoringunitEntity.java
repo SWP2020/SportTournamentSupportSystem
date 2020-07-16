@@ -10,13 +10,14 @@ import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.sun.istack.NotNull;
+
+
 
 @Entity
 @Table(name = "scoringunits")
@@ -44,12 +45,77 @@ public class ScoringunitEntity{
 	private Date modifiedDate;
 	
 
-	@ManyToMany(mappedBy = "scoringunitsList")
-	private Collection<SportEntity> sports;
-	
 	@OneToMany(mappedBy = "scoringunit", cascade = CascadeType.ALL)
-	private Collection<CompetitionEntity> competitions;
+	private Collection<SportEntity> sports;
 
 
+	public Long getId() {
+		return id;
+	}
+	
+	public String getFullname() {
+		return fullName;
+	}
+	
+	public void setFullname(String fullName) {
+		this.fullName = fullName;
+	}
+	
+	public String getShortname() {
+		return shortName;
+	}
+	
+	public void setShortname(String shortName) {
+		this.shortName = shortName;
+	}
+	
+	public String getDescription() {
+		return description;
+	}
+	
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	
+	public String getCreatedby() {
+		return createdBy;
+	}
+	
+	public void setCreatedby(String createdBy) {
+		this.createdBy = createdBy;
+	}
+	
+	public Date getCreateddate() {
+		return createdDate;
+	}
+	
+	public void setCreateddate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+	
+	public String getModifiedby() {
+		return modifiedBy;
+	}
+	
+	public void setModifiedby(String modifiedBy) {
+		this.modifiedBy = modifiedBy;
+	}
+	
+	public Date getModifieddate() {
+		return modifiedDate;
+	}
+	
+	public void setModifieddate(Date modifiedDate) {
+		this.modifiedDate = modifiedDate;
+	}
+	
+	public Collection<SportEntity> getSports() {
+		return sports;
+	}
+	
+	public void setSports(Collection<SportEntity> sports) {
+		this.sports = sports;
+	}
+	
 
 }
