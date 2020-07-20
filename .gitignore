@@ -33,15 +33,15 @@ build/
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-/node_modules
-/.pnp
+/frontEnd/SportTournamentSupportSystem/node_modules
+/frontEnd/SportTournamentSupportSystem/.pnp
 .pnp.js
 
 # testing
-/coverage
+/frontEnd/SportTournamentSupportSystem/coverage
 
 # production
-/build
+/frontEnd/SportTournamentSupportSystem/build
 
 # misc
 .DS_Store

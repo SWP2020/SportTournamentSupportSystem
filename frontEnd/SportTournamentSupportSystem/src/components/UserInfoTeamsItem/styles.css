@@ -1,0 +1,35 @@
+.UserInfoTeamsItem-container {
+  display: flex;
+  background-color: #2b2f39;
+  border-radius: 7px;
+  overflow: hidden;
+  width: 100%;
+  flex-direction: row;
+  margin-bottom: 25px;
+}
+
+.UserInfoTeamsItem-order-number-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.UserInfoTeamsItem-order-number-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #ff7324;
+  width: 50%;
+  height: 60%;
+  border-radius: 10px;
+}
+
+.UserInfoTeamsItem-team-name-container {
+  flex: 7;
+  padding-left: 50px;
+}
+
+.UserInfoTeamsItem-team-setting-container {
+  flex: 2;
+}

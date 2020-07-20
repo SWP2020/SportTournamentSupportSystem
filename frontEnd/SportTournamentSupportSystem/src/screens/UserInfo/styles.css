@@ -1,0 +1,44 @@
+.UserInfo-Container {
+  flex: 1;
+  width: 100%;
+}
+
+.UserInfo-background-image-container {
+  height: 250px;
+  background-color: white;
+}
+
+.UserInfo-content-container {
+  flex: 1;
+  display: flex;
+}
+
+.UserInfo-content-container {
+  display: flex;
+}
+
+.UserInfo-content-info-container {
+  width: 100%;
+}
+
+.UserInfo-content-info-basic-info-container {
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-left: 350px;
+}
+
+.UserInfo-content-info-basic-info-container-singleRow {
+  display: flex;
+  flex-direction: row;
+}
+
+.UserInfo-name-text {
+  font-weight: bold;
+  font-size: 25px;
+}
+
+.UserInfo-otherInfo-text {
+  padding-right: 60px;
+}
