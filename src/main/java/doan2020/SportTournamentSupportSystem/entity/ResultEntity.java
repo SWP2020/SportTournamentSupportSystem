@@ -25,12 +25,6 @@ public class ResultEntity{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@NotNull
-	private Long matchId;
-	
-	@NotNull
-	private Long teamId;
-	
 	private int setNumber;
 	
 	private float score;
@@ -57,22 +51,6 @@ public class ResultEntity{
 
 	public Long getId() {
 		return id;
-	}
-	
-	public Long getMatchid() {
-		return matchId;
-	}
-	
-	public void setMatchid(Long matchId) {
-		this.matchId = matchId;
-	}
-	
-	public Long getTeamid() {
-		return teamId;
-	}
-	
-	public void setTeamid(Long teamId) {
-		this.teamId = teamId;
 	}
 	
 	public int getSetnumber() {
