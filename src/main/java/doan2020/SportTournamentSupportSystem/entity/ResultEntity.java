@@ -1,20 +1,17 @@
 
 package doan2020.SportTournamentSupportSystem.entity;
 
-import java.util.Date;
-
 import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.persistence.EntityListeners;
-import javax.persistence.GeneratedValue;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import java.util.Date;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
 import com.sun.istack.NotNull;
+import javax.persistence.GeneratedValue;
+import javax.persistence.ManyToOne;
+import javax.persistence.JoinColumn;
 
 
 
@@ -27,6 +24,12 @@ public class ResultEntity{
 	@NotNull
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
+	@NotNull
+	private Long matchId;
+	
+	@NotNull
+	private Long teamId;
 	
 	private int setNumber;
 	
@@ -54,6 +57,22 @@ public class ResultEntity{
 
 	public Long getId() {
 		return id;
+	}
+	
+	public Long getMatchid() {
+		return matchId;
+	}
+	
+	public void setMatchid(Long matchId) {
+		this.matchId = matchId;
+	}
+	
+	public Long getTeamid() {
+		return teamId;
+	}
+	
+	public void setTeamid(Long teamId) {
+		this.teamId = teamId;
 	}
 	
 	public int getSetnumber() {

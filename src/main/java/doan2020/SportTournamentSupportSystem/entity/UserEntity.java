@@ -1,26 +1,23 @@
 
 package doan2020.SportTournamentSupportSystem.entity;
 
-import java.util.Collection;
-import java.util.Date;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.persistence.EntityListeners;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import java.util.Date;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
 import com.sun.istack.NotNull;
+import javax.persistence.GeneratedValue;
+import javax.persistence.ManyToOne;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.CascadeType;
+import javax.persistence.FetchType;
+import javax.persistence.JoinTable;
+import java.util.Collection;
+import javax.persistence.OneToMany;
 
 
 
@@ -57,6 +54,8 @@ public class UserEntity{
 	private String background;
 	
 	private boolean active;
+	
+	private String url;
 	
 	private String createdBy;
 	
@@ -193,6 +192,14 @@ public class UserEntity{
 	
 	public void setActive(boolean active) {
 		this.active = active;
+	}
+	
+	public String getUrl() {
+		return url;
+	}
+	
+	public void setUrl(String url) {
+		this.url = url;
 	}
 	
 	public String getCreatedby() {
