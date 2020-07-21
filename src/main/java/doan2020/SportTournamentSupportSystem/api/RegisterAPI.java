@@ -11,29 +11,36 @@ import org.springframework.web.bind.annotation.RestController;
 import doan2020.SportTournamentSupportSystem.dtIn.RegisterDtIn;
 import doan2020.SportTournamentSupportSystem.response.Response;
 import doan2020.SportTournamentSupportSystem.service.impl.RegisterService;
+import doan2020.SportTournamentSupportSystem.service.impl.VerificationTokenService;
 
 @RestController
 @RequestMapping("/register")
 public class RegisterAPI {
-	
+
 	@Autowired
-    RegisterService registerService;
-	
+	RegisterService registerService;
+
+	@Autowired
+	VerificationTokenService verificationTokenService;
+
 	/* ---------------- register NEW USER ------------------------ */
 	@PostMapping
 	public ResponseEntity<Response> createUser(@RequestBody RegisterDtIn user) {
 		HttpStatus httpStatus = null;
-	    Response response = new Response();
-	    try {
-	    	response = registerService.addNewUsers(user);
-	        if(response.getResult().containsValue("001")){
-	        httpStatus = HttpStatus.OK;
-	      } else {
-	        httpStatus = HttpStatus.BAD_REQUEST;
-	      }
-	    } catch (Exception ex) {
-	      httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-	    }
-	    return new ResponseEntity<Response>(response, httpStatus);
+		Response response = new Response();
+		try {
+			response = registerService.addNewUsers(user);
+			
+			if (response.getError().containsValue("001")) {	
+				verificationTokenService.createVerification(user.getEmail(), user.getUsername());
+				httpStatus = HttpStatus.OK;
+			} else {
+				httpStatus = HttpStatus.BAD_REQUEST;
+			}
+		} catch (Exception ex) {
+			httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+		return new ResponseEntity<Response>(response, httpStatus);
 	}
+
 }

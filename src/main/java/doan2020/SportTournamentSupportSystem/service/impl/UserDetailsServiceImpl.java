@@ -12,26 +12,26 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import doan2020.SportTournamentSupportSystem.entity.RoleTestEntity;
-import doan2020.SportTournamentSupportSystem.entity.UserTestEntity;
-import doan2020.SportTournamentSupportSystem.repository.RoleTestRepository;
-import doan2020.SportTournamentSupportSystem.repository.UserTestRepository;
+import doan2020.SportTournamentSupportSystem.entity.RoleEntity;
+import doan2020.SportTournamentSupportSystem.entity.UserEntity;
+import doan2020.SportTournamentSupportSystem.repository.RoleRepository;
+import doan2020.SportTournamentSupportSystem.repository.UserRepository;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService{
 	@Autowired
-	private UserTestRepository userRepository;
+	private UserRepository userRepository;
 	
 	@Autowired
-	private RoleTestRepository roleRepository;
+	private RoleRepository roleRepository;
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		// Kiểm tra xem user có tồn tại trong database không?
 //		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        UserTestEntity user = userRepository.findByUsername(username);
-        RoleTestEntity roleEntity = roleRepository.findOneByRoleid(user.getRole().getRoleID());
+        UserEntity user = userRepository.findByUsername(username);
+        RoleEntity roleEntity = roleRepository.findOneById(user.getRole().getId());
 		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-		authorities.add(new SimpleGrantedAuthority(roleEntity.getRoleName()));
+		authorities.add(new SimpleGrantedAuthority(roleEntity.getName()));
         if (user == null) {
             throw new UsernameNotFoundException(username);
         }

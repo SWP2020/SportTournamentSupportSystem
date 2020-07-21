@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
 
 import doan2020.SportTournamentSupportSystem.converter.UserConverter;
 import doan2020.SportTournamentSupportSystem.dtOut.UserDtOut;
-import doan2020.SportTournamentSupportSystem.entity.UserTestEntity;
-import doan2020.SportTournamentSupportSystem.repository.UserTestRepository;
+import doan2020.SportTournamentSupportSystem.entity.UserEntity;
+import doan2020.SportTournamentSupportSystem.repository.UserRepository;
 import doan2020.SportTournamentSupportSystem.response.Response;
 import doan2020.SportTournamentSupportSystem.service.IUserService;
 
@@ -20,7 +20,7 @@ import doan2020.SportTournamentSupportSystem.service.IUserService;
 public class UserService implements IUserService{
 	
 	@Autowired
-	private UserTestRepository userRepository;
+	private UserRepository userRepository;
 	
 	
 	@Autowired
@@ -34,8 +34,8 @@ public class UserService implements IUserService{
 		Map<String, Object> error = new HashMap<String, Object>();
 		List<UserDtOut> listUsers = new ArrayList<>();
 		try {
-		List<UserTestEntity> entities = userRepository.findAll(pageable).getContent();
-		for (UserTestEntity item: entities) {
+		List<UserEntity> entities = userRepository.findAll(pageable).getContent();
+		for (UserEntity item: entities) {
 			UserDtOut userDtOut = userConverter.toDTO(item);
 			listUsers.add(userDtOut);
 			result.put("listUsers", listUsers);
