@@ -3,6 +3,8 @@ package doan2020.SportTournamentSupportSystem.response;
 import java.util.Map;
 
 public class Response {
+	
+	private Map config;
 
 	private Map result;
 
@@ -27,5 +29,15 @@ public class Response {
 	public void setError(Map error) {
 		this.error = error;
 	}
+
+	public Map getConfig() {
+		return config;
+	}
+
+	public void setConfig(Map config) {
+		this.config = config;
+	}
+	
+	
 
 }
