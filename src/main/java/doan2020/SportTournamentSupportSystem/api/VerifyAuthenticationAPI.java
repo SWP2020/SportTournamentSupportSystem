@@ -1,5 +1,8 @@
 package doan2020.SportTournamentSupportSystem.api;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +24,9 @@ public class VerifyAuthenticationAPI {
 	@GetMapping
     public ResponseEntity<Response> verifyEmail(@RequestBody VerifyAuthenticationDtIn VerifyAuthenticationDtIn) {
 		HttpStatus httpStatus = null;
-	    Response response = new Response();
+		Response response = new Response();
+		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> error = new HashMap<String, Object>();
 	    try {
 	    	response = verificationTokenService.verifyEmail(VerifyAuthenticationDtIn);
 	        httpStatus = HttpStatus.OK;
