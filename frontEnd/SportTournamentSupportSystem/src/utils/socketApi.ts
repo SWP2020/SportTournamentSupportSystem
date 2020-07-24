@@ -13,19 +13,37 @@ export async function query<T>(
   method: METHOD,
   params: IParams = {}
 ) {
-  const baseUrl = 'http://localhost:8081/';
+  const baseUrl = 'http://10.22.177.194:8090/';
   const realUrl = `${baseUrl}${uri}`;
 
-
   return new Promise<IResponse<T>>((resolve: Function, reject: Function) => {
-    axios.get(realUrl, params)
-      .then((response) => {
-        console.log('response', response);
-        resolve(response);
-      }).catch((error) => {
-        console.log('error', error);
-        reject(error);
-      });
+    switch (method) {
+      case METHOD.POST: {
+        axios.post(realUrl, params)
+          .then((response) => {
+            console.log('response', response);
+            resolve(response);
+          }).catch((error) => {
+            console.log('error', error);
+            reject(error);
+          });
+        break;
+      }
+      case METHOD.PUT: {
 
+        break;
+      }
+      case METHOD.GET: {
+
+        break;
+      }
+      case METHOD.DELETE: {
+
+        break;
+      }
+      default: {
+        break;
+      }
+    }
   });
 }

@@ -27,7 +27,7 @@ class TournamentOverview extends React.Component<ITournamentOverviewProps, ITour
           <div className="TournamentOverview-avatar-container">
           </div>
           <div className="TournamentOverview-name-container">
-            <p className="TournamentOverview-name-text">Giải bóng đá nữ U20</p>
+            <p className="TournamentOverview-name-text">Giải hội khỏe phù đổng</p>
           </div>
         </div>
         <div className="TournamentOverview-info-container">

@@ -1,5 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { RouteComponentProps } from 'react-router-dom';
+import * as H from 'history';
+import { StaticContext } from 'react-router';
 import CustomTab from 'components/CustomTab';
 import UserInfoOverview from 'components/UserInfoOverview';
 import UserInfoTournament from 'components/UserInfoTournament';
@@ -7,6 +10,7 @@ import UserInfoTeams from 'components/UserInfoTeams';
 import './styles.css';
 
 interface IUserInfoProps extends React.ClassAttributes<UserInfo> {
+  routerInfo: RouteComponentProps<any, StaticContext, H.LocationState>;
 }
 
 interface IUserInfoState {
@@ -38,7 +42,7 @@ class UserInfo extends React.Component<IUserInfoProps, IUserInfoState> {
                 <p className="UserInfo-otherInfo-text">Tạo ngày 30/09/2020</p>
               </div>
               <div className="UserInfo-content-info-basic-info-container-singleRow">
-                <p>id: user-123456789</p>
+                <p>id: {this.props.routerInfo.match.params.userId}</p>
               </div>
             </div>
             <div className="UserInfo-content-info-advanced-info-container">

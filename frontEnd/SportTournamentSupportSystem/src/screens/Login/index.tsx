@@ -12,6 +12,10 @@ interface ILoginProps extends React.ClassAttributes<Login> {
 interface ILoginState {
   username: string;
   password: string;
+  usernameError: boolean;
+  passwordError: boolean;
+  usernameErrorContent: string;
+  passwordErrorContent: string;
 }
 
 class Login extends React.Component<ILoginProps, ILoginState> {
@@ -20,6 +24,10 @@ class Login extends React.Component<ILoginProps, ILoginState> {
     this.state = {
       username: '',
       password: '',
+      usernameError: false,
+      usernameErrorContent: '',
+      passwordError: false,
+      passwordErrorContent: '',
     };
   }
 
@@ -31,7 +39,34 @@ class Login extends React.Component<ILoginProps, ILoginState> {
     this.setState({ password: value, });
   }
 
+  private validate = () => {
+    let passwordError = false;
+    let passwordErrorContent = '';
+    let usernameErrorContent = '';
+    let usernameError = false;
+    if (this.state.password.includes(' ')) {
+      passwordError = true;
+      passwordErrorContent = 'Mật khẩu không được trống, và không chứa dấu cách';
+    }
+    if (this.state.username.trim() === '') {
+      usernameError = true;
+      usernameErrorContent = 'Tên đăng nhập không được trống';
+    }
+
+    return { passwordError, passwordErrorContent, usernameErrorContent, usernameError };
+  }
+
   private handleLogin = () => {
+    const { passwordError, passwordErrorContent, usernameErrorContent, usernameError } = this.validate();
+    this.setState({
+      passwordError,
+      passwordErrorContent,
+      usernameErrorContent,
+      usernameError,
+    });
+    if (passwordError === true || usernameError === true) {
+      return;
+    }
     const params = {
       username: this.state.username,
       password: this.state.password,
@@ -54,8 +89,8 @@ class Login extends React.Component<ILoginProps, ILoginState> {
           <p>Hoặc</p>
 
 
-          <TextInput label={'Tên đăng nhập'} onChangeText={this.onChangeUserName} />
-          <TextInput label={'Mật khẩu'} type={'password'} onChangeText={this.onChangePassword} />
+          <TextInput label={'Tên đăng nhập'} onChangeText={this.onChangeUserName} error={this.state.usernameError} errorContent={this.state.usernameErrorContent} />
+          <TextInput label={'Mật khẩu'} type={'password'} onChangeText={this.onChangePassword} error={this.state.passwordError} errorContent={this.state.passwordErrorContent} />
           <div className="Login-option-container">
             <div className="Login-option-container-item">
               <label className="Checkbox-label">

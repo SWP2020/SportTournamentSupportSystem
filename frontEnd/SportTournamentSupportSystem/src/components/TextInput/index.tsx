@@ -5,6 +5,8 @@ import './styles.css';
 interface ITextInputProps extends React.ClassAttributes<TextInput> {
   label: string;
   type?: string;
+  errorContent: string;
+  error: boolean;
 
   onChangeText(value: string): void;
 }
@@ -26,6 +28,7 @@ class TextInput extends React.Component<ITextInputProps, ITextInputState> {
   render() {
     return (
       <div className="omrs-input-group">
+        {this.props.error === true && <div className="TextInput-error-text-container"><p className="TextInput-error-text">{this.props.errorContent}</p></div>}
         <label className="omrs-input-underlined">
           <input required type={this.props.type} onChange={this.onChangeValue}/>
           <span className="omrs-input-label">{this.props.label}</span>

@@ -29,7 +29,7 @@ class ForgotPassword extends React.Component<IForgotPasswordProps, IForgotPasswo
           <h2>Quên mật khẩu</h2>
           <p className="Long-introduction">Nhập địa chỉ email của bạn và chúng tôi sẽ gửi cho bạn một liên kết để đặt lại mật khẩu của bạn.</p>
 
-          <TextInput label={'Email của bạn'} type={'email'} onChangeText={this.onChangeEmail}/>
+          {/* <TextInput label={'Email của bạn'} type={'email'} onChangeText={this.onChangeEmail}/> */}
           <div className="Button-login-container">
             <div className="Button-login">
               <h4 className="Button-login-text">Gửi</h4>

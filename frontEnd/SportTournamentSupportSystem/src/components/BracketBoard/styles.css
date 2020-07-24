@@ -1,4 +1,5 @@
 .BracketBoard-container {
   display: flex;
   flex-direction: row;
+  color: white;
 }

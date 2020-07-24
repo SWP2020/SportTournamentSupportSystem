@@ -1,0 +1,14 @@
+.TournamentSetting-container {
+  color: white;
+  display: flex;
+}
+
+.TournamentSetting-tournament-container {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.TournamentSetting-header-text {
+  font-size: 25px;
+  font-weight: bold;
+}
