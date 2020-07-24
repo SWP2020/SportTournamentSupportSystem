@@ -1,26 +1,29 @@
 
 package doan2020.SportTournamentSupportSystem.entity;
 
-import java.util.Collection;
-import java.util.Date;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.persistence.EntityListeners;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
+
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import java.util.Date;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
 import com.sun.istack.NotNull;
+import javax.persistence.GeneratedValue;
+import javax.persistence.ManyToOne;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.CascadeType;
+import javax.persistence.FetchType;
+import javax.persistence.JoinTable;
+import java.util.Collection;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 
 
@@ -58,12 +61,18 @@ public class UserEntity{
 	
 	private boolean active;
 	
+	private String url;
+	
+	@CreatedBy
 	private String createdBy;
 	
+	@CreatedDate
 	private Date createdDate;
 	
+	@LastModifiedBy
 	private String modifiedBy;
 	
+	@LastModifiedDate
 	private Date modifiedDate;
 	
 
@@ -101,7 +110,9 @@ public class UserEntity{
 
 	@OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
 	private Collection<TournamentEntity> tournaments;
-
+    
+	@OneToOne(mappedBy = "userEntity", cascade = CascadeType.ALL)
+    private VerificationToken verificationToken;
 
 	public Long getId() {
 		return id;
@@ -193,6 +204,14 @@ public class UserEntity{
 	
 	public void setActive(boolean active) {
 		this.active = active;
+	}
+	
+	public String getUrl() {
+		return url;
+	}
+	
+	public void setUrl(String url) {
+		this.url = url;
 	}
 	
 	public String getCreatedby() {
@@ -289,6 +308,14 @@ public class UserEntity{
 	
 	public void setTournaments(Collection<TournamentEntity> tournaments) {
 		this.tournaments = tournaments;
+	}
+	
+	public VerificationToken getVerificationToken() {
+		return verificationToken;
+	}
+
+	public void setVerificationToken(VerificationToken verificationToken) {
+		this.verificationToken = verificationToken;
 	}
 	
 

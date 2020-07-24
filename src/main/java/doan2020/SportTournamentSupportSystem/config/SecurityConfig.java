@@ -53,17 +53,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.csrf().ignoringAntMatchers("/**");
 
 		http.authorizeRequests().antMatchers("/login**").permitAll();
+		http.authorizeRequests().antMatchers("/register**").permitAll();
 		
-		http.logout()
-		.logoutSuccessUrl("/login")
-		.logoutUrl("/logout")
-		.permitAll();
 
-		http.antMatcher("/users**").httpBasic().authenticationEntryPoint(restServicesEntryPoint()).and()
+		http.antMatcher("/**").httpBasic().authenticationEntryPoint(restServicesEntryPoint()).and()
 		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
 		.antMatchers(HttpMethod.GET, "/users**").access("hasRole('ROLE_ADMIN')")
-//		.antMatchers(HttpMethod.POST, "/register**").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
-//		.antMatchers(HttpMethod.POST, "/users**").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+		.antMatchers(HttpMethod.GET, "/view-user-infor/**").access("hasRole('ROLE_USER')")
+		.antMatchers(HttpMethod.PUT, "/edit-profile**").access("hasRole('ROLE_USER')")
 		.and()
 		.addFilterBefore(jwtAuthenticationTokenFilter(), UsernamePasswordAuthenticationFilter.class)
 		.exceptionHandling().accessDeniedHandler(customAccessDeniedHandler());

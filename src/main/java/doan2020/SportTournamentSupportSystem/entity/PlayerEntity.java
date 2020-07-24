@@ -1,20 +1,17 @@
 
 package doan2020.SportTournamentSupportSystem.entity;
 
-import java.util.Collection;
-import java.util.Date;
-
 import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.persistence.EntityListeners;
-import javax.persistence.GeneratedValue;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import java.util.Date;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
-
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
 import com.sun.istack.NotNull;
+import javax.persistence.GeneratedValue;
+import javax.persistence.ManyToMany;
+import java.util.Collection;
 
 
 
@@ -46,7 +43,7 @@ public class PlayerEntity{
 	
 
 	@ManyToMany(mappedBy = "playersList")
-	private Collection<TeamEntity> teams;
+	private Collection<TeamEntity> teamsList;
 	
 
 	public Long getId() {
@@ -118,11 +115,11 @@ public class PlayerEntity{
 	}
 	
 	public Collection<TeamEntity> getTeamslist() {
-		return teams;
+		return teamsList;
 	}
 	
 	public void setTeamslist(Collection<TeamEntity> teamsList) {
-		this.teams = teamsList;
+		this.teamsList = teamsList;
 	}
 	
 

@@ -1,24 +1,21 @@
 
 package doan2020.SportTournamentSupportSystem.entity;
 
-import java.util.Collection;
-import java.util.Date;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.persistence.EntityListeners;
-import javax.persistence.GeneratedValue;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import java.util.Date;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import com.sun.istack.NotNull;
+import javax.persistence.GeneratedValue;
+import javax.persistence.ManyToOne;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
+import java.util.Collection;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import com.sun.istack.NotNull;
+import javax.persistence.CascadeType;
 
 
 
@@ -34,6 +31,8 @@ public class CompetitionEntity{
 	
 	@NotNull
 	private String name;
+	
+	private String status;
 	
 	private String createdBy;
 	
@@ -53,7 +52,7 @@ public class CompetitionEntity{
 	private SportEntity sport;
 	
 	@ManyToMany(mappedBy = "competitionsList")
-	private Collection<TeamEntity> teams;
+	private Collection<TeamEntity> teamsList;
 	
 	@OneToMany(mappedBy = "competition", cascade = CascadeType.ALL)
 	private Collection<MatchEntity> matches;
@@ -69,6 +68,14 @@ public class CompetitionEntity{
 	
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public String getStatus() {
+		return status;
+	}
+	
+	public void setStatus(String status) {
+		this.status = status;
 	}
 	
 	public String getCreatedby() {
@@ -120,11 +127,11 @@ public class CompetitionEntity{
 	}
 	
 	public Collection<TeamEntity> getTeamslist() {
-		return teams;
+		return teamsList;
 	}
 	
 	public void setTeamslist(Collection<TeamEntity> teamsList) {
-		this.teams = teamsList;
+		this.teamsList = teamsList;
 	}
 	
 	public Collection<MatchEntity> getMatches() {

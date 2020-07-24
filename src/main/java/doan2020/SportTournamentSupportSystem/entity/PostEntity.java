@@ -1,24 +1,21 @@
 
 package doan2020.SportTournamentSupportSystem.entity;
 
-import java.util.Collection;
-import java.util.Date;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.persistence.EntityListeners;
-import javax.persistence.GeneratedValue;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import java.util.Date;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import com.sun.istack.NotNull;
+import javax.persistence.GeneratedValue;
+import javax.persistence.ManyToOne;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
+import java.util.Collection;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import com.sun.istack.NotNull;
+import javax.persistence.CascadeType;
 
 
 
@@ -55,7 +52,7 @@ public class PostEntity{
 	private UserEntity author;
 	
 	@ManyToMany(mappedBy = "postsList")
-	private Collection<UserEntity> users;
+	private Collection<UserEntity> usersList;
 	
 	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
 	private Collection<CommentEntity> comments;
@@ -130,11 +127,11 @@ public class PostEntity{
 	}
 	
 	public Collection<UserEntity> getUserslist() {
-		return users;
+		return usersList;
 	}
 	
 	public void setUserslist(Collection<UserEntity> usersList) {
-		this.users = usersList;
+		this.usersList = usersList;
 	}
 	
 	public Collection<CommentEntity> getComments() {

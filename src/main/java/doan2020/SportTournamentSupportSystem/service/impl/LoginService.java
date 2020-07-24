@@ -10,8 +10,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import doan2020.SportTournamentSupportSystem.dtIn.LoginDtIn;
-import doan2020.SportTournamentSupportSystem.entity.UserTestEntity;
-import doan2020.SportTournamentSupportSystem.repository.UserTestRepository;
+import doan2020.SportTournamentSupportSystem.entity.UserEntity;
+import doan2020.SportTournamentSupportSystem.repository.UserRepository;
 import doan2020.SportTournamentSupportSystem.response.Response;
 import doan2020.SportTournamentSupportSystem.service.ILoginService;
 
@@ -24,7 +24,7 @@ public class LoginService implements ILoginService {
 	private JwtService jwtService;
 
 	@Autowired
-	private UserTestRepository userRepository;
+	private UserRepository userRepository;
 
 	@Override
 	public Response checkLogin(LoginDtIn user) {
@@ -32,11 +32,11 @@ public class LoginService implements ILoginService {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
 		try {
-			List<UserTestEntity> listUser = userRepository.findAll();
-			for (UserTestEntity userExist : listUser) {
+			List<UserEntity> listUser = userRepository.findAll();
+			for (UserEntity userExist : listUser) {
 				boolean checkPW = passwordEncoder.matches(user.getPassword(), userExist.getPassword());
-				if (StringUtils.equals(user.getUsername(), userExist.getUserName()) && checkPW) {
-					if (userRepository.findByUsername(user.getUsername()).getActive()){
+				if (StringUtils.equals(user.getUsername(), userExist.getUsername()) && checkPW) {
+					if ((userRepository.findByUsername(user.getUsername())).getActive()){
 
 						String token = jwtService.generateTokenLogin(user.getUsername());
 						result.put("Authentication", token);

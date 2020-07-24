@@ -1,20 +1,17 @@
 
 package doan2020.SportTournamentSupportSystem.entity;
 
-import java.util.Collection;
-import java.util.Date;
-
 import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.persistence.EntityListeners;
-import javax.persistence.GeneratedValue;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import java.util.Date;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
-
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
 import com.sun.istack.NotNull;
+import javax.persistence.GeneratedValue;
+import javax.persistence.ManyToMany;
+import java.util.Collection;
 
 
 
@@ -47,7 +44,7 @@ public class ApiEntity{
 	
 
 	@ManyToMany(mappedBy = "apisList")
-	private Collection<RoleEntity> roles;
+	private Collection<RoleEntity> rolesList;
 	
 
 	public Long getId() {
@@ -119,11 +116,11 @@ public class ApiEntity{
 	}
 	
 	public Collection<RoleEntity> getRoleslist() {
-		return roles;
+		return rolesList;
 	}
 	
 	public void setRoleslist(Collection<RoleEntity> rolesList) {
-		this.roles = rolesList;
+		this.rolesList = rolesList;
 	}
 	
 
