@@ -77,7 +77,7 @@ public class TournamentEntity{
 		return id;
 	}
 	
-	public String getFullname() {
+	public String getFullName() {
 		return fullName;
 	}
 	
@@ -85,7 +85,7 @@ public class TournamentEntity{
 		this.fullName = fullName;
 	}
 	
-	public String getShortname() {
+	public String getShortName() {
 		return shortName;
 	}
 	

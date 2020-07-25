@@ -78,9 +78,21 @@ public class TournamentService implements ITournamentService {
 	}
 
 	@Override
-	public void update(TournamentEntity tournament) {
+	public TournamentEntity update(Long id, TournamentEntity newData) {
 		
-		tournamentRepository.save(tournament);
-
+		TournamentEntity old = tournamentRepository.findOneById(id);
+		old.setFullName(newData.getFullName());
+		old.setShortName(newData.getShortName());
+		old.setDescription(newData.getDescription());
+		old.setCreator(newData.getCreator());
+		old.setOpeningLocation(newData.getOpeningLocation());
+		old.setOpeningTime(newData.getOpeningTime());
+		old.setClosingLocation(newData.getClosingLocation());
+		old.setClosingTime(newData.getClosingTime());
+		old.setDonor(newData.getDonor());
+		old.setStatus(newData.getStatus());
+		old.setUrl(newData.getUrl());
+		old = tournamentRepository.save(old);
+		return old;
 	}
 }

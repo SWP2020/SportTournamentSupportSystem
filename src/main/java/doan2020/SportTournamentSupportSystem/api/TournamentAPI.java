@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -110,6 +111,44 @@ public class TournamentAPI {
 			service.addOne(tournamentEntity);
 			System.out.println("add OK");
 			TournamentDtOut dto = converter.toDTO(tournamentEntity);
+			System.out.println("convert OK");
+			result.put("tournament", dto);
+			config.put("global", 0);
+			error.put("messageCode", 0);
+			error.put("message", "Tournament create successfuly");
+		} catch (Exception e) {
+			result.put("tournament", null);
+			config.put("global", 0);
+			error.put("messageCode", 1);
+			error.put("message", "Tournament create fail");
+		}
+
+		response.setConfig(config);
+		response.setResult(result);
+		response.setError(error);
+		return new ResponseEntity<Response>(response, httpStatus);
+	}
+	
+	/*
+	 * Edit mot Tournament
+	 * 
+	 */
+	@PutMapping
+	@CrossOrigin
+	public ResponseEntity<Response> editTournament(@RequestBody Map<String, Object> tournament,
+			@RequestParam Long id) {
+		System.out.println("editTournament");
+		HttpStatus httpStatus = HttpStatus.OK;
+		Response response = new Response();
+		Map<String, Object> config = new HashMap<String, Object>();
+		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> error = new HashMap<String, Object>();
+		try {
+			TournamentEntity tournamentEntity = converter.toEntity(tournament);
+			System.out.println("convert OK");
+			TournamentEntity newTournament = service.update(id, tournamentEntity);
+			System.out.println("add OK");
+			TournamentDtOut dto = converter.toDTO(newTournament);
 			System.out.println("convert OK");
 			result.put("tournament", dto);
 			config.put("global", 0);

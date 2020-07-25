@@ -6,17 +6,18 @@ import org.springframework.data.domain.Pageable;
 
 import doan2020.SportTournamentSupportSystem.dtIn.EditProfileDtIn;
 import doan2020.SportTournamentSupportSystem.dtIn.RegisterDtIn;
+import doan2020.SportTournamentSupportSystem.entity.TeamEntity;
 import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
 import doan2020.SportTournamentSupportSystem.response.Response;
 
-public interface ITournamentService {
-	public Collection<TournamentEntity> findAll(Pageable pageable);
+public interface ITeamService {
+	public Collection<TeamEntity> findAll(Pageable pageable);
 
-	public TournamentEntity findByName(String name);
-	public TournamentEntity findById(Long id);
+	public TeamEntity findByName(String name);
+	public TeamEntity findById(Long id);
 	
-	public void addOne(TournamentEntity tournament);
-	public void addMany(Collection<TournamentEntity> tournaments);
+	public void addOne(TeamEntity tournament);
+	public void addMany(Collection<TeamEntity> tournaments);
 	
-	public TournamentEntity update(Long id, TournamentEntity tournament);
+	public TeamEntity update(Long id, TeamEntity tournament);
 }
