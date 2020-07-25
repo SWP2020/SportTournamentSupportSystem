@@ -7,7 +7,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
+import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
 import doan2020.SportTournamentSupportSystem.repository.CompetitionRepository;
+import doan2020.SportTournamentSupportSystem.repository.TournamentRepository;
 import doan2020.SportTournamentSupportSystem.service.ICompetitionService;
 
 @Service
@@ -15,6 +17,9 @@ public class CompetitionService implements ICompetitionService {
 
 	@Autowired
 	private CompetitionRepository competitionRepository;
+	
+	@Autowired
+	private TournamentRepository tournamentRepository;
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
@@ -50,6 +55,13 @@ public class CompetitionService implements ICompetitionService {
 			competitionEntity = competitionRepository.findOneById(id);
 		}
 		return competitionEntity;
+	}
+
+	@Override
+	public TournamentEntity findOneByTournamentID(Long id) {
+		TournamentEntity entity = new TournamentEntity();
+		entity = tournamentRepository.getOne(id);
+		return entity;
 	}
 
 }
