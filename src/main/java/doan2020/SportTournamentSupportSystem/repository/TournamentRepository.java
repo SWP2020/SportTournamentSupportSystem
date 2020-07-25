@@ -7,6 +7,10 @@ import org.springframework.stereotype.Repository;
 import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
 
 @Repository
-public interface TournamentRepository extends JpaRepository<TournamentEntity, Long>{
+public interface TournamentRepository extends JpaRepository<TournamentEntity, Long> {
 	
+	TournamentEntity findByShortName(String name);
+	
+	TournamentEntity findOneById(Long id);
+
 }

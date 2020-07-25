@@ -14,12 +14,16 @@ import doan2020.SportTournamentSupportSystem.dtOut.TournamentDtOut;
 import doan2020.SportTournamentSupportSystem.dtOut.UserDtOut;
 import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
 import doan2020.SportTournamentSupportSystem.entity.UserEntity;
+import doan2020.SportTournamentSupportSystem.service.IUserService;
 import doan2020.SportTournamentSupportSystem.service.impl.UserService;
 import net.bytebuddy.implementation.bytecode.Throw;
 
 @Component
 public class TournamentConverter{
-
+	
+	@Autowired
+	IUserService userService;
+	
 	public TournamentEntity toEntity(Map<String, Object> map) throws Exception{
 		TournamentEntity entity = new TournamentEntity();
 		System.out.println("In toEntity:");
@@ -27,15 +31,11 @@ public class TournamentConverter{
 			entity.setFullName((String) map.get("fullName"));
 			entity.setShortName((String) map.get("shortName"));
 			entity.setDescription((String) map.get("description"));
-			System.out.println("check point 1");
 			
 			Long id = Long.parseLong(String.valueOf(map.get("creatorId")));
-			
-			UserEntity creator = new UserService().findOneById(id);
-			
-			
+			UserEntity creator = userService.findOneById(id);
+					
 			entity.setCreator(creator);
-			System.out.println(entity.getCreator().getUsername());
 			
 			entity.setOpeningLocation((String) map.get("openingLocation"));
 			
@@ -68,7 +68,7 @@ public class TournamentConverter{
 			dto.setFullName(entity.getFullname());
 			dto.setShortName(entity.getShortname());
 			dto.setDescription(entity.getDescription());
-			dto.setCreator(entity.getCreator());
+			dto.setCreatorId(entity.getCreator().getId());
 			dto.setOpeningLocation(entity.getOpeningLocation());
 			dto.setOpeningTime(entity.getOpeningTime());
 			dto.setClosingLocation(entity.getClosingLocation());

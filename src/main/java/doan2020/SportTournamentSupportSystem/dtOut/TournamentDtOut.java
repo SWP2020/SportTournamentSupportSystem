@@ -16,7 +16,7 @@ public class TournamentDtOut {
 	
 	private String description;
 
-	private UserEntity creator;
+	private Long creatorId;
 	
 	private String openingLocation;
 	
@@ -37,7 +37,7 @@ public class TournamentDtOut {
 	}
 
 	public TournamentDtOut(Long id, String fullName, String password, String shortName, String description,
-			UserEntity creator, String openingLocation, Date openingTime, String closingLocation, Date closingTime,
+			Long creatorId, String openingLocation, Date openingTime, String closingLocation, Date closingTime,
 			String donor, String status, String url) {
 		super();
 		this.id = id;
@@ -45,7 +45,7 @@ public class TournamentDtOut {
 		this.password = password;
 		this.shortName = shortName;
 		this.description = description;
-		this.creator = creator;
+		this.creatorId = creatorId;
 		this.openingLocation = openingLocation;
 		this.openingTime = openingTime;
 		this.closingLocation = closingLocation;
@@ -53,14 +53,6 @@ public class TournamentDtOut {
 		this.donor = donor;
 		this.status = status;
 		this.url = url;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
 	}
 
 	public Long getId() {
@@ -95,12 +87,20 @@ public class TournamentDtOut {
 		this.shortName = shortName;
 	}
 
-	public UserEntity getCreator() {
-		return creator;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setCreator(UserEntity creator) {
-		this.creator = creator;
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public Long getCreatorId() {
+		return creatorId;
+	}
+
+	public void setCreatorId(Long creatorId) {
+		this.creatorId = creatorId;
 	}
 
 	public String getOpeningLocation() {

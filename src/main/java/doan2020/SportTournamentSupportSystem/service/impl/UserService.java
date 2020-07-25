@@ -1,5 +1,6 @@
 package doan2020.SportTournamentSupportSystem.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,13 +23,25 @@ public class UserService implements IUserService {
 
 	@Override
 	@Transactional
-	public UserEntity findOneByID(Long id) {
+	public UserEntity findOneById(Long id) {
 		UserEntity oldUserEntity = null;
 		if (id != null) {
+			System.out.println(id);
 			oldUserEntity = userRepository.findOneById(id);
 		}
 		return oldUserEntity;
 	}
+	
+//	@Override
+//	@Transactional
+//	public UserEntity findOneById(Long id) {
+//		System.out.println("Find one");
+//		List<UserEntity> x = userRepository.findAll();
+//		for (UserEntity e: x) {
+//			System.out.println(e.getUsername());
+//		}
+//		return null;
+//	}
 
 	@Override
 	public List<UserEntity> findAll(Pageable pageable) {

@@ -8,7 +8,7 @@ import doan2020.SportTournamentSupportSystem.entity.UserEntity;
 
 public interface IUserService {
 	
-	public UserEntity findOneByID(Long id);
+	public UserEntity findOneById(Long id);
 	
 	public List<UserEntity> findAll(Pageable pageable);
 	

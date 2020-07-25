@@ -40,18 +40,18 @@ public class LoginService implements ILoginService {
 
 						String token = jwtService.generateTokenLogin(user.getUsername());
 						result.put("Authentication", token);
-						error.put("messageCode", "001");
+						error.put("messageCode", 0);
 						error.put("message", "login Successfull");
 						
 					    break;
 					} else {
-						error.put("messageCode", "003");
+						error.put("messageCode", 1);
 						error.put("message", "User is not active");
 						
 						break;
 					}
 				} else {
-					error.put("messageCode", "002");
+					error.put("messageCode", 1);
 					error.put("message", "UserName and PassWrong is Wrong");
 				}
 			}

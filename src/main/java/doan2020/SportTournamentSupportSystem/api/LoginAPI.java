@@ -3,6 +3,7 @@ package doan2020.SportTournamentSupportSystem.api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,8 +21,9 @@ public class LoginAPI {
 	private LoginService loginService;
 
 	@PostMapping
+	@CrossOrigin
 	public ResponseEntity<Response> login(@RequestBody LoginDtIn user) {
-		HttpStatus httpStatus = null;
+		HttpStatus httpStatus = HttpStatus.OK;
 		Response response = new Response();
 		try {
 			response = loginService.checkLogin(user);

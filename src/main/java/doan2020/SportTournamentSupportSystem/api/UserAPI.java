@@ -59,7 +59,7 @@ public class UserAPI {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
 		List<UserDtOut> listUsers = new ArrayList<>();
-		HttpStatus httpStatus = null;
+		HttpStatus httpStatus = HttpStatus.OK;
 		try {
 			if (page != null && limit != null) {
 				Sort sortable = Sort.by("userID").ascending();
@@ -94,13 +94,13 @@ public class UserAPI {
 	@GetMapping("/{id}")
 	public ResponseEntity<Response> getUserInfor(@PathVariable("id") Long id) {
 		Response response = new Response();
-		HttpStatus httpStatus = null;
+		HttpStatus httpStatus = HttpStatus.OK;
 		Map<String, Object> config = new HashMap<String, Object>();
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
 		UserEntity user = new UserEntity();
 		try {
-			user = userService.findOneByID(id);
+			user = userService.findOneById(id);
 			UserDtOut userDtOut = userConverter.toDTO(user);
 			result.put("User", userDtOut);
 			error.put("messageCode", true);
@@ -118,7 +118,7 @@ public class UserAPI {
 	/* ---------------- register NEW USER ------------------------ */
 	@PostMapping
 	public ResponseEntity<Response> createUser(@RequestBody RegisterDtIn registerDtIn) {
-		HttpStatus httpStatus = null;
+		HttpStatus httpStatus = HttpStatus.OK;
 		Response response = new Response();
 		Map<String, Object> config = new HashMap<String, Object>();
 		Map<String, Object> result = new HashMap<String, Object>();
@@ -154,7 +154,7 @@ public class UserAPI {
 	@PutMapping("/{id}")
 	public ResponseEntity<Response> editUser(@PathVariable("id") Long id,
 			@RequestBody EditProfileDtIn editProfileDtIn) {
-		HttpStatus httpStatus = null;
+		HttpStatus httpStatus = HttpStatus.OK;
 		Response response = new Response();
 		Map<String, Object> config = new HashMap<String, Object>();
 		Map<String, Object> result = new HashMap<String, Object>();
@@ -163,7 +163,7 @@ public class UserAPI {
 			UserEntity userEntity = new UserEntity();
 			UserEntity oldUserEntity = new UserEntity();
 			if (id != null) {
-				oldUserEntity = userService.findOneByID(id);
+				oldUserEntity = userService.findOneById(id);
 				if (oldUserEntity != null) {
 					userEntity = userConverter.toEntity(editProfileDtIn, oldUserEntity);
 					userService.editUser(userEntity);
@@ -191,14 +191,14 @@ public class UserAPI {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Response> deleteUser(@PathVariable("id") Long id) {
 		Response response = new Response();
-		HttpStatus httpStatus = null;
+		HttpStatus httpStatus = HttpStatus.OK;
 		Map<String, Object> config = new HashMap<String, Object>();
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
 		UserEntity oldUserEntity = new UserEntity();
 		try {
 			if (id != null) {
-				oldUserEntity = userService.findOneByID(id);
+				oldUserEntity = userService.findOneById(id);
 				if (oldUserEntity != null) {
 					userService.deleteUser(oldUserEntity);
 					httpStatus = HttpStatus.OK;

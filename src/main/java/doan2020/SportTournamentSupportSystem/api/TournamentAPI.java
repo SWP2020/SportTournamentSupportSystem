@@ -19,6 +19,7 @@ import doan2020.SportTournamentSupportSystem.converter.TournamentConverter;
 import doan2020.SportTournamentSupportSystem.dtIn.LoginDtIn;
 import doan2020.SportTournamentSupportSystem.dtOut.TournamentDtOut;
 import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
+import doan2020.SportTournamentSupportSystem.entity.UserEntity;
 import doan2020.SportTournamentSupportSystem.response.Response;
 import doan2020.SportTournamentSupportSystem.service.ITournamentService;
 import doan2020.SportTournamentSupportSystem.service.impl.LoginService;
@@ -95,6 +96,7 @@ public class TournamentAPI {
 	 * 
 	 */
 	@PostMapping
+	@CrossOrigin
 	public ResponseEntity<Response> createTournament(@RequestBody Map<String, Object> newTournament) {
 		System.out.println("createTournament");
 		HttpStatus httpStatus = HttpStatus.OK;
