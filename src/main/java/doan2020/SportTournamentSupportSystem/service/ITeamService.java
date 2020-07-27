@@ -16,8 +16,8 @@ public interface ITeamService {
 	public TeamEntity findByName(String name);
 	public TeamEntity findById(Long id);
 	
-	public void addOne(TeamEntity tournament);
-	public void addMany(Collection<TeamEntity> tournaments);
+	public void addOne(TeamEntity team);
+	public void addMany(Collection<TeamEntity> teams);
 	
-	public TeamEntity update(Long id, TeamEntity tournament);
+	public TeamEntity update(Long id, TeamEntity team);
 }

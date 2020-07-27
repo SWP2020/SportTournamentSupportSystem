@@ -6,7 +6,7 @@ import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
 import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
 
 public interface ICompetitionService {
-	public CompetitionEntity findOneByID(Long id);
+	public CompetitionEntity findOneById(Long id);
 	
 	public TournamentEntity findOneByTournamentID(Long id);
 	

@@ -49,7 +49,7 @@ public class CompetitionService implements ICompetitionService {
 	}
 
 	@Override
-	public CompetitionEntity findOneByID(Long id) {
+	public CompetitionEntity findOneById(Long id) {
 		CompetitionEntity competitionEntity = null;
 		if (id != null) {
 			competitionEntity = competitionRepository.findOneById(id);

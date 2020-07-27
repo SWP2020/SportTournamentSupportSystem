@@ -23,6 +23,7 @@ import doan2020.SportTournamentSupportSystem.service.ITeamService;
 
 
 @RestController
+@CrossOrigin
 @RequestMapping("/teams")
 public class TeamAPI {
 	@Autowired
@@ -32,7 +33,7 @@ public class TeamAPI {
 	private TeamConverter converter;
 
 	/*
-	 * Tim kiem team theo id
+	 * Get team theo id
 	 */
 	@GetMapping
 	public ResponseEntity<Response> getTeam(@RequestParam(value = "id", required = true) Long id) {
