@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,6 +36,7 @@ import doan2020.SportTournamentSupportSystem.service.IUserService;
 import doan2020.SportTournamentSupportSystem.service.impl.VerificationTokenService;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/users")
 public class UserAPI {
 	@Autowired
@@ -78,7 +80,7 @@ public class UserAPI {
 				}
 			} else {
 				httpStatus = HttpStatus.NO_CONTENT;
-				error.put("messageCode", true);
+				error.put("messageCode", 1);
 				error.put("message", "can't get List Users");
 			}
 		} catch (Exception e) {
@@ -91,6 +93,7 @@ public class UserAPI {
 	}
 
 	/* get One User */
+	
 	@GetMapping("/{id}")
 	public ResponseEntity<Response> getUserInfor(@PathVariable("id") Long id) {
 		Response response = new Response();
@@ -103,7 +106,7 @@ public class UserAPI {
 			user = userService.findOneById(id);
 			UserDtOut userDtOut = userConverter.toDTO(user);
 			result.put("User", userDtOut);
-			error.put("messageCode", true);
+			error.put("messageCode", 0);
 			error.put("message", "get User successfully");
 			httpStatus = HttpStatus.OK;
 		} catch (Exception e) {
@@ -128,7 +131,7 @@ public class UserAPI {
 			List<UserEntity> listUser = userService.findAll();
 			for (UserEntity userExist : listUser) {
 				if (StringUtils.equals(user.getUsername(), userExist.getUsername())) {
-					error.put("messageCode", true);
+					error.put("messageCode", 1);
 					error.put("message", "User is Exists");
 				}
 			}
@@ -139,7 +142,7 @@ public class UserAPI {
 			userService.addNewUsers(user);
 			verificationTokenService.createVerification(user.getEmail(), user.getUsername());
 			
-			error.put("messageCode", true);
+			error.put("messageCode", 0);
 			error.put("message", "Register successfully");
 			httpStatus = HttpStatus.OK;
 
@@ -168,16 +171,16 @@ public class UserAPI {
 					userEntity = userConverter.toEntity(editProfileDtIn, oldUserEntity);
 					userService.editUser(userEntity);
 					httpStatus = HttpStatus.OK;
-					error.put("messageCode", true);
+					error.put("messageCode", 0);
 					error.put("message", "Edit Profile User Successfull");
 				} else {
 					httpStatus = HttpStatus.NOT_FOUND;
-					error.put("messageCode", false);
+					error.put("messageCode", 1);
 					error.put("message", "Not Find User to update ");
 				}
 			} else {
 				httpStatus = HttpStatus.NOT_FOUND;
-				error.put("messageCode", false);
+				error.put("messageCode", 1);
 				error.put("message", "userId is not enter");
 			}
 		} catch (Exception ex) {
@@ -202,16 +205,16 @@ public class UserAPI {
 				if (oldUserEntity != null) {
 					userService.deleteUser(oldUserEntity);
 					httpStatus = HttpStatus.OK;
-					error.put("messageCode", true);
+					error.put("messageCode", 0);
 					error.put("message", "Delete User Successfull");
 				} else {
 					httpStatus = HttpStatus.NOT_FOUND;
-					error.put("messageCode", false);
+					error.put("messageCode", 1);
 					error.put("message", "Not Find User to delete ");
 				}
 			} else {
 				httpStatus = HttpStatus.NOT_FOUND;
-				error.put("messageCode", false);
+				error.put("messageCode", 1);
 				error.put("message", "userId is not enter");
 			}
 		} catch (Exception e) {
