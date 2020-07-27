@@ -1,6 +1,5 @@
 package doan2020.SportTournamentSupportSystem.service.impl;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
