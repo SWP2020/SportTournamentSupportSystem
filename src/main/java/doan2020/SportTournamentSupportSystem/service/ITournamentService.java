@@ -19,4 +19,6 @@ public interface ITournamentService {
 	public void addMany(Collection<TournamentEntity> tournaments);
 	
 	public TournamentEntity update(Long id, TournamentEntity tournament);
+	
+//	public void delete(TournamentEntity tournament);
 }

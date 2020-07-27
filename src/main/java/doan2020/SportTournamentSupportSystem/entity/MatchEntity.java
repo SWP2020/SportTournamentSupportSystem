@@ -62,122 +62,128 @@ public class MatchEntity{
 	@OneToMany(mappedBy = "match", cascade = CascadeType.ALL)
 	private Collection<ResultEntity> results;
 
-
 	public Long getId() {
 		return id;
 	}
-	
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
 	public String getName() {
 		return name;
 	}
-	
+
 	public void setName(String name) {
 		this.name = name;
 	}
-	
-	public int getNumofset() {
+
+	public int getNumOfSet() {
 		return numOfSet;
 	}
-	
-	public void setNumofset(int numOfSet) {
+
+	public void setNumOfSet(int numOfSet) {
 		this.numOfSet = numOfSet;
 	}
-	
-	public Date getExpecteddate() {
+
+	public Date getExpectedDate() {
 		return expectedDate;
 	}
-	
-	public void setExpecteddate(Date expectedDate) {
+
+	public void setExpectedDate(Date expectedDate) {
 		this.expectedDate = expectedDate;
 	}
-	
-	public String getExpectedplace() {
+
+	public String getExpectedPlace() {
 		return expectedPlace;
 	}
-	
-	public void setExpectedplace(String expectedPlace) {
+
+	public void setExpectedPlace(String expectedPlace) {
 		this.expectedPlace = expectedPlace;
 	}
-	
-	public Date getRealdate() {
+
+	public Date getRealDate() {
 		return realDate;
 	}
-	
-	public void setRealdate(Date realDate) {
+
+	public void setRealDate(Date realDate) {
 		this.realDate = realDate;
 	}
-	
-	public String getRealplace() {
+
+	public String getRealPlace() {
 		return realPlace;
 	}
-	
-	public void setRealplace(String realPlace) {
+
+	public void setRealPlace(String realPlace) {
 		this.realPlace = realPlace;
 	}
-	
+
 	public String getStatus() {
 		return status;
 	}
-	
+
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	
-	public String getCreatedby() {
+
+	public String getCreatedBy() {
 		return createdBy;
 	}
-	
-	public void setCreatedby(String createdBy) {
+
+	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
 	}
-	
-	public Date getCreateddate() {
+
+	public Date getCreatedDate() {
 		return createdDate;
 	}
-	
-	public void setCreateddate(Date createdDate) {
+
+	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
 	}
-	
-	public String getModifiedby() {
+
+	public String getModifiedBy() {
 		return modifiedBy;
 	}
-	
-	public void setModifiedby(String modifiedBy) {
+
+	public void setModifiedBy(String modifiedBy) {
 		this.modifiedBy = modifiedBy;
 	}
-	
-	public Date getModifieddate() {
+
+	public Date getModifiedDate() {
 		return modifiedDate;
 	}
-	
-	public void setModifieddate(Date modifiedDate) {
+
+	public void setModifiedDate(Date modifiedDate) {
 		this.modifiedDate = modifiedDate;
 	}
-	
+
 	public CompetitionEntity getCompetition() {
 		return competition;
 	}
-	
+
 	public void setCompetition(CompetitionEntity competition) {
 		this.competition = competition;
 	}
-	
-	public Collection<TeamEntity> getTeamslist() {
+
+	public Collection<TeamEntity> getTeamsList() {
 		return teamsList;
 	}
-	
-	public void setTeamslist(Collection<TeamEntity> teamsList) {
+
+	public void setTeamsList(Collection<TeamEntity> teamsList) {
 		this.teamsList = teamsList;
 	}
-	
+
 	public Collection<ResultEntity> getResults() {
 		return results;
 	}
-	
+
 	public void setResults(Collection<ResultEntity> results) {
 		this.results = results;
 	}
+
+
+	
 	
 
 }

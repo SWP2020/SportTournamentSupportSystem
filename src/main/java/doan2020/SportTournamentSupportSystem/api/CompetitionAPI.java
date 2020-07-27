@@ -46,7 +46,7 @@ public class CompetitionAPI {
 		CompetitionEntity competitionEntity = new CompetitionEntity();
 		CompetitionDtOut competitionDtOut = new CompetitionDtOut();
 		try {
-			competitionEntity = CompetitionService.findOneByID(id);
+			competitionEntity = CompetitionService.findOneById(id);
 
 			competitionDtOut = competitionConverter.toDTO(competitionEntity);
 
@@ -142,7 +142,7 @@ public class CompetitionAPI {
 			CompetitionEntity competitionEntity = new CompetitionEntity();
 			CompetitionEntity oldCompetitionEntity = new CompetitionEntity();
 			if (id != null) {
-				oldCompetitionEntity = CompetitionService.findOneByID(id);
+				oldCompetitionEntity = CompetitionService.findOneById(id);
 				if (oldCompetitionEntity != null) {
 					competitionEntity = competitionConverter.toEntityUpdate(editCompetitionDtIn, oldCompetitionEntity);
 					CompetitionService.editCompetition(competitionEntity);
@@ -179,7 +179,7 @@ public class CompetitionAPI {
 		CompetitionEntity competitionEntity = new CompetitionEntity();
 		try {
 			if (id != null) {
-				competitionEntity = CompetitionService.findOneByID(id);
+				competitionEntity = CompetitionService.findOneById(id);
 				if (competitionEntity != null) {
 					CompetitionService.deleteCompetition(competitionEntity);
 					httpStatus = HttpStatus.OK;
