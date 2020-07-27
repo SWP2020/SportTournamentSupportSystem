@@ -139,8 +139,12 @@ public class UserAPI {
 			if (roleEntity != null)
 				user.setRole(roleEntity);
 			user.setActive(false);
+			
 			userService.addNewUsers(user);
+			
 			verificationTokenService.createVerification(user.getEmail(), user.getUsername());
+			
+			result.put("User", user);
 			
 			error.put("messageCode", 0);
 			error.put("message", "Register successfully");

@@ -28,6 +28,7 @@ public class LoginAPI {
 		try {
 			response = loginService.checkLogin(user);
 			if (response.getResult().containsKey("Authentication")) {
+
 				httpStatus = HttpStatus.OK;
 			}
 		} catch (Exception ex) {

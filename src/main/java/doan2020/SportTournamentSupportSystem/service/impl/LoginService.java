@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import doan2020.SportTournamentSupportSystem.converter.UserConverter;
 import doan2020.SportTournamentSupportSystem.dtIn.LoginDtIn;
+import doan2020.SportTournamentSupportSystem.dtOut.UserDtOut;
 import doan2020.SportTournamentSupportSystem.entity.UserEntity;
 import doan2020.SportTournamentSupportSystem.repository.UserRepository;
 import doan2020.SportTournamentSupportSystem.response.Response;
@@ -22,9 +24,15 @@ public class LoginService implements ILoginService {
 
 	@Autowired
 	private JwtService jwtService;
+	
+	@Autowired
+	private UserService userService;
 
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	private UserConverter userConverter;
 
 	@Override
 	public Response checkLogin(LoginDtIn user) {
@@ -39,6 +47,12 @@ public class LoginService implements ILoginService {
 					if ((userRepository.findByUsername(user.getUsername())).getActive()){
 
 						String token = jwtService.generateTokenLogin(user.getUsername());
+						
+						UserEntity userEntity = userRepository.findByUsername(user.getUsername());
+						
+						UserDtOut userDtOut = userConverter.toDTO(userEntity);
+						
+						result.put("User", userDtOut);
 						result.put("Authentication", token);
 						error.put("messageCode", 0);
 						error.put("message", "login Successfull");
