@@ -10,7 +10,7 @@ public interface ITournamentService {
 	public Collection<TournamentEntity> findAll(Pageable pageable);
 
 	public TournamentEntity findByName(String name);
-	public TournamentEntity findById(Long id);
+	public TournamentEntity findOneById(Long id);
 	
 	public void addOne(TournamentEntity tournament);
 	public void addMany(Collection<TournamentEntity> tournaments);

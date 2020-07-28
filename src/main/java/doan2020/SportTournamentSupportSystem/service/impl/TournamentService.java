@@ -48,11 +48,12 @@ public class TournamentService implements ITournamentService {
 	}
 
 	@Override
-	public TournamentEntity findById(Long id) {
+	public TournamentEntity findOneById(Long id) {
 		TournamentEntity res = null;
 		try {
 			res = tournamentRepository.findOneById(id);
 		} catch (Exception e) {
+			System.out.println("Has exceoption in TournamentService.findById");
 			return null;
 		}
 		

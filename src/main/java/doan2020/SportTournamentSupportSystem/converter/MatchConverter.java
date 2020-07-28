@@ -49,7 +49,6 @@ public class MatchConverter{
 			
 			Long id = Long.parseLong(String.valueOf(map.get("competitionId")));
 			CompetitionEntity competition = competitionService.findOneById(id);
-					
 			entity.setCompetition(competition);
 		}catch (Exception e) {
 			System.out.println("Has Exception");
