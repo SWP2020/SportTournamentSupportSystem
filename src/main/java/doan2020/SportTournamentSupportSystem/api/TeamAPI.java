@@ -41,7 +41,7 @@ public class TeamAPI {
 	 * Get all team Paging
 	 */
 	@GetMapping("/getAll")
-	public ResponseEntity<Response> getAllTeamPaging(@RequestParam(value = "page", required = true) Integer page) {
+	public ResponseEntity<Response> getAllTeamPagingByUserId(@RequestParam(value = "page", required = true) Integer page) {
 		System.out.println("getTeam");
 		HttpStatus httpStatus = HttpStatus.OK;
 		Response response = new Response();
@@ -69,6 +69,68 @@ public class TeamAPI {
 		Pageable pageable = PageRequest.of(page - 1, limit , sortable);
 
 		list = (List<TeamEntity>) service.findAll(pageable);
+			
+		try {
+			for(TeamEntity teamEntity :list) {
+				
+			TeamDtOut resDTO = converter.toDTO(teamEntity);
+			teamDtOuts.add(resDTO);
+			}
+			System.out.println(teamDtOuts.get(0).getFullName());
+			System.out.println("a");
+			result.put("list Team", teamDtOuts);
+			config.put("global", 0);
+			error.put("messageCode", 0);
+			error.put("message", "Found");
+			
+			System.out.println("true");
+
+		} catch (Exception e) {
+			result.put("team", null);
+			config.put("global", 0);
+			error.put("messageCode", 1);
+			error.put("message", "Team is not exist");
+		}
+
+		response.setConfig(config);
+		response.setResult(result);
+		response.setError(error);
+
+		return new ResponseEntity<Response>(response, httpStatus);
+	}
+	
+	/*
+	 * Get all team Paging
+	 */
+	@GetMapping("/getAllByUserId")
+	public ResponseEntity<Response> getAllTeamPaging(@RequestParam(value = "page", required = true) Integer page, @RequestParam(value ="id") Long id) {
+		System.out.println("getTeam");
+		HttpStatus httpStatus = HttpStatus.OK;
+		Response response = new Response();
+		Map<String, Object> config = new HashMap<String, Object>();
+		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> error = new HashMap<String, Object>();
+		List<TeamDtOut> teamDtOuts = new ArrayList<TeamDtOut>();
+		List<TeamEntity> list = new ArrayList<TeamEntity>();
+//		System.out.println("2");
+
+		if (page == null || id == null) {
+			result.put("team", null);
+			config.put("global", 0);
+			error.put("messageCode", 1);
+			error.put("message", "Required page and UserId");
+			httpStatus = HttpStatus.OK;
+			response.setConfig(config);
+			response.setResult(result);
+			response.setError(error);
+			return new ResponseEntity<Response>(response, httpStatus);
+		}
+
+		Sort sortable = Sort.by("id").ascending();
+		int limit = 3;
+		Pageable pageable = PageRequest.of(page - 1, limit , sortable);
+
+		list = (List<TeamEntity>) service.findAllByCreator(id, pageable);
 			
 		try {
 			for(TeamEntity teamEntity :list) {
@@ -141,7 +203,7 @@ public class TeamAPI {
 			result.put("team", null);
 			config.put("global", 0);
 			error.put("messageCode", 1);
-			error.put("message", "Tournament is not exist");
+			error.put("message", "Team is not exist");
 		}
 
 		response.setConfig(config);
