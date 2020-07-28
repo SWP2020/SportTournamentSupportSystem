@@ -49,6 +49,7 @@ public class UserConverter {
 		dto.setImageprofile(entity.getAvatar());
 		dto.setLastname(dto.getLastname());
 		dto.setPassword(entity.getPassword());
+		dto.setAge(validator.ConvertDobToAge(validator.formatDate(entity.getDob())));
 		return dto;
 	}
 

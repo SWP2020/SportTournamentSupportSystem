@@ -23,12 +23,14 @@ public class UserDtOut {
 	private boolean active;
 	
 	private String createdate;
+	
+	private int age;
 
 	public UserDtOut() {
 		
 	}
 	public UserDtOut(Long userID, String username, String password, String firstname, String lastname, String dob,
-			boolean gender, String email, String imageprofile, boolean active, String createdate) {
+			boolean gender, String email, String imageprofile, boolean active, String createdate, int age) {
 		super();
 		this.userID = userID;
 		this.username = username;
@@ -41,6 +43,7 @@ public class UserDtOut {
 		this.imageprofile = imageprofile;
 		this.active = active;
 		this.createdate = createdate;
+		this.age = age;
 	}
 
 	public Long getUserID() {
@@ -129,6 +132,12 @@ public class UserDtOut {
 
 	public void setCreatedate(String createdate) {
 		this.createdate = createdate;
+	}
+	public int getAge() {
+		return age;
+	}
+	public void setAge(int age) {
+		this.age = age;
 	}
 	
 	
