@@ -64,11 +64,14 @@ public class TournamentConverter{
 		
 		TournamentDtOut dto = new TournamentDtOut();
 		try {
+			System.out.println("CP1");
 			dto.setId(entity.getId());
 			dto.setFullName(entity.getFullName());
 			dto.setShortName(entity.getShortName());
 			dto.setDescription(entity.getDescription());
+			System.out.println("CP2");
 			dto.setCreatorId(entity.getCreator().getId());
+			System.out.println("CP3");
 			dto.setOpeningLocation(entity.getOpeningLocation());
 			dto.setOpeningTime(entity.getOpeningTime());
 			dto.setClosingLocation(entity.getClosingLocation());
@@ -76,7 +79,9 @@ public class TournamentConverter{
 			dto.setDonor(entity.getDonor());
 			dto.setStatus(entity.getStatus());
 			dto.setUrl(entity.getUrl());
+			System.out.println("CP4");
 		} catch (Exception e) {
+			System.out.println("Has exception in TournamentConverter.toDTO");
 			throw e;
 		}
 		

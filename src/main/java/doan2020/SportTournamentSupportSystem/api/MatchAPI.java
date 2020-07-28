@@ -22,6 +22,7 @@ import doan2020.SportTournamentSupportSystem.response.Response;
 import doan2020.SportTournamentSupportSystem.service.IMatchService;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/matches")
 public class MatchAPI {
 	@Autowired

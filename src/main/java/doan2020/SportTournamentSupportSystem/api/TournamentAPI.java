@@ -49,7 +49,8 @@ public class TournamentAPI {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
 //		System.out.println("2");
-
+		System.out.println(id);
+		System.out.println(name);
 		if (id == null && name == null) {
 			result.put("tournament", null);
 			config.put("global", 0);
@@ -64,15 +65,20 @@ public class TournamentAPI {
 
 		TournamentEntity res;
 
-		if (id == null)
+		if (id == null) {
+			System.out.println("Find by name");
 			res = service.findByName(name);
-		else {
+		} else {
+			System.out.println("Find by Id");
 			res = service.findById(id);
 		}
 			
 		try {
+			
+			
 			TournamentDtOut resDTO = converter.toDTO(res);
-
+			System.out.println("Convert OK");
+			
 			result.put("tournament", resDTO);
 			config.put("global", 0);
 			error.put("messageCode", 0);

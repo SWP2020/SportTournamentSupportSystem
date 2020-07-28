@@ -53,6 +53,7 @@ public class TournamentService implements ITournamentService {
 		try {
 			res = tournamentRepository.findOneById(id);
 		} catch (Exception e) {
+			System.out.println("Has exceoption in TournamentService.findById");
 			return null;
 		}
 		
