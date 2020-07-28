@@ -105,7 +105,7 @@ public class TournamentAPI {
 	/*
 	 * Tim kiem tournament theo paging by UserId
 	 */
-<<<<<<< HEAD
+
 //	@GetMapping("/getAllbyUserId")
 //	public ResponseEntity<Response> getTournamentPagingByUserId(@RequestParam(value = "page") Integer page, @RequestParam(value = "id") Long id) {
 //		System.out.println("getTournament");
@@ -167,7 +167,7 @@ public class TournamentAPI {
 //
 //		return new ResponseEntity<Response>(response, httpStatus);
 //	}
-=======
+
 	@GetMapping("/getAllByUserId")
 	public ResponseEntity<Response> getTournamentPagingByUserId(@RequestParam(value = "page") Integer page, @RequestParam(value = "id") Long id) {
 		System.out.println("getTournament");
@@ -229,9 +229,6 @@ public class TournamentAPI {
 
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
->>>>>>> 34267f87d96c2770ed7c781acc14b74a6dca8d48
-	
-	
 	
 	/*
 	 * Tim kiem tournament theo id hoac name Yeu cau id hoac name phai duoc nhap Neu
