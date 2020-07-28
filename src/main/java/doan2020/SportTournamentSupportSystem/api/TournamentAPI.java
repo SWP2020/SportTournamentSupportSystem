@@ -105,7 +105,7 @@ public class TournamentAPI {
 	/*
 	 * Tim kiem tournament theo paging by UserId
 	 */
-	@GetMapping("/getAllbyUserId")
+	@GetMapping("/getAllByUserId")
 	public ResponseEntity<Response> getTournamentPagingByUserId(@RequestParam(value = "page") Integer page, @RequestParam(value = "id") Long id) {
 		System.out.println("getTournament");
 		HttpStatus httpStatus = HttpStatus.OK;

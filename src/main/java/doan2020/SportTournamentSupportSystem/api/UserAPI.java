@@ -15,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -53,7 +52,7 @@ public class UserAPI {
 
 	/* ---------------- GET ALL USER ------------------------ */
 //	@GetMapping
-	@RequestMapping(value = "", method = RequestMethod.GET)
+	@RequestMapping(value = "/getAll", method = RequestMethod.GET)
 	public ResponseEntity<Response> getAllUser(@RequestParam(value = "page", required = false) Integer page,
 			@RequestParam(value = "limit", required = false) Integer limit) {
 		Response response = new Response();
@@ -95,8 +94,8 @@ public class UserAPI {
 
 	/* get One User */
 
-	@GetMapping("/{id}")
-	public ResponseEntity<Response> getUserInfor(@PathVariable("id") Long id) {
+	@GetMapping("/getOne")
+	public ResponseEntity<Response> getUserInfor(@RequestParam(value = "id") Long id) {
 		Response response = new Response();
 		HttpStatus httpStatus = HttpStatus.OK;
 		Map<String, Object> config = new HashMap<String, Object>();
@@ -106,7 +105,13 @@ public class UserAPI {
 		try {
 			user = userService.findOneById(id);
 			UserDtOut userDtOut = userConverter.toDTO(user);
+			
+			int countOfTournament = user.getTournaments().size();
+			int countOfTeam = user.getTeams().size();
+			
 			result.put("User", userDtOut);
+			result.put("countOfTournament", countOfTournament);
+			result.put("countOfTeam", countOfTeam);
 			error.put("messageCode", 0);
 			error.put("message", "get User successfully");
 			httpStatus = HttpStatus.OK;
@@ -167,8 +172,8 @@ public class UserAPI {
 	}
 
 	/* ---------------- Edit Profile User ------------------------ */
-	@PutMapping("/{id}")
-	public ResponseEntity<Response> editUser(@PathVariable("id") Long id,
+	@PutMapping("")
+	public ResponseEntity<Response> editUser(@RequestParam(value = "id") Long id,
 			@RequestBody EditProfileDtIn editProfileDtIn) {
 		HttpStatus httpStatus = HttpStatus.OK;
 		Response response = new Response();
@@ -206,8 +211,8 @@ public class UserAPI {
 	}
 
 	/* delete one User */
-	@DeleteMapping("/{id}")
-	public ResponseEntity<Response> deleteUser(@PathVariable("id") Long id) {
+	@DeleteMapping("")
+	public ResponseEntity<Response> deleteUser(@RequestParam(value = "id") Long id) {
 		Response response = new Response();
 		HttpStatus httpStatus = null;
 		Map<String, Object> config = new HashMap<String, Object>();
