@@ -18,4 +18,6 @@ public interface ITournamentService {
 	public TournamentEntity update(Long id, TournamentEntity tournament);
 	
 //	public void delete(TournamentEntity tournament);
+	
+	public Collection<TournamentEntity> findAllByCreator(Pageable pageable, Long id);
 }

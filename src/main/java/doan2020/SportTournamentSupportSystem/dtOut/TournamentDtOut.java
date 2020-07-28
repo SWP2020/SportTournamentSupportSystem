@@ -20,11 +20,11 @@ public class TournamentDtOut {
 	
 	private String openingLocation;
 	
-	private Date openingTime;
+	private String openingTime;
 	
 	private String closingLocation;
 	
-	private Date closingTime;
+	private String closingTime;
 	
 	private String donor;
 	
@@ -37,7 +37,7 @@ public class TournamentDtOut {
 	}
 
 	public TournamentDtOut(Long id, String fullName, String password, String shortName, String description,
-			Long creatorId, String openingLocation, Date openingTime, String closingLocation, Date closingTime,
+			Long creatorId, String openingLocation, String openingTime, String closingLocation, String closingTime,
 			String donor, String status, String url) {
 		super();
 		this.id = id;
@@ -111,12 +111,12 @@ public class TournamentDtOut {
 		this.openingLocation = openingLocation;
 	}
 
-	public Date getOpeningTime() {
+	public String getOpeningTime() {
 		return openingTime;
 	}
 
-	public void setOpeningTime(Date openingTime) {
-		this.openingTime = openingTime;
+	public void setOpeningTime(String string) {
+		this.openingTime = string;
 	}
 
 	public String getClosingLocation() {
@@ -127,12 +127,12 @@ public class TournamentDtOut {
 		this.closingLocation = closingLocation;
 	}
 
-	public Date getClosingTime() {
+	public String getClosingTime() {
 		return closingTime;
 	}
 
-	public void setClosingTime(Date closingTime) {
-		this.closingTime = closingTime;
+	public void setClosingTime(String date) {
+		this.closingTime = date;
 	}
 
 	public String getDonor() {
