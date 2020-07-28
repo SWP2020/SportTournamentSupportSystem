@@ -74,7 +74,7 @@ public class TournamentService implements ITournamentService {
 	@Override
 	public Collection<TournamentEntity> findAll(Pageable pageable) {
 		
-		return tournamentRepository.findAll();
+		return (Collection<TournamentEntity>) tournamentRepository.findAll(pageable).getContent();
 	}
 
 	@Override
