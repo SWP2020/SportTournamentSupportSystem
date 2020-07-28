@@ -48,7 +48,7 @@ public class TournamentService implements ITournamentService {
 	}
 
 	@Override
-	public TournamentEntity findById(Long id) {
+	public TournamentEntity findOneById(Long id) {
 		TournamentEntity res = null;
 		try {
 			res = tournamentRepository.findOneById(id);

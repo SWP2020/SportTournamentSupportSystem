@@ -38,7 +38,7 @@ public class CompetitionConverter {
 //		}
 		
 		if(competitionDtIn.getTournamentID() != null) {
-			tournamentEntity = tournamentService.findById(competitionDtIn.getTournamentID());
+			tournamentEntity = tournamentService.findOneById(competitionDtIn.getTournamentID());
 			
 			if(tournamentEntity !=null) {
 				competitionEntity.setTournament(tournamentEntity);
@@ -71,7 +71,7 @@ public class CompetitionConverter {
 //		}
 		
 		if(competitionDtIn.getTournamentID() != null) {
-			tournamentEntity = tournamentService.findById(competitionDtIn.getTournamentID());
+			tournamentEntity = tournamentService.findOneById(competitionDtIn.getTournamentID());
 			
 			if(tournamentEntity !=null) {
 				competitionEntity.setTournament(tournamentEntity);
