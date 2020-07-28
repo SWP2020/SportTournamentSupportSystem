@@ -10,8 +10,6 @@ public class TournamentDtOut {
 
 	private String fullName;
 
-	private String password;
-
 	private String shortName;
 	
 	private String description;
@@ -36,13 +34,12 @@ public class TournamentDtOut {
 		
 	}
 
-	public TournamentDtOut(Long id, String fullName, String password, String shortName, String description,
+	public TournamentDtOut(Long id, String fullName, String shortName, String description,
 			Long creatorId, String openingLocation, String openingTime, String closingLocation, String closingTime,
 			String donor, String status, String url) {
 		super();
 		this.id = id;
 		this.fullName = fullName;
-		this.password = password;
 		this.shortName = shortName;
 		this.description = description;
 		this.creatorId = creatorId;
@@ -70,15 +67,7 @@ public class TournamentDtOut {
 	public void setFullName(String fullName) {
 		this.fullName = fullName;
 	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
+	
 	public String getShortName() {
 		return shortName;
 	}

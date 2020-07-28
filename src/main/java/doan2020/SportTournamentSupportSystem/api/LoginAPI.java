@@ -14,6 +14,7 @@ import doan2020.SportTournamentSupportSystem.response.Response;
 import doan2020.SportTournamentSupportSystem.service.impl.LoginService;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/login")
 public class LoginAPI {
 
@@ -21,11 +22,11 @@ public class LoginAPI {
 	private LoginService loginService;
 
 	@PostMapping
-	@CrossOrigin
 	public ResponseEntity<Response> login(@RequestBody LoginDtIn user) {
 		HttpStatus httpStatus = HttpStatus.OK;
 		Response response = new Response();
 		try {
+			System.out.println(user.getUsername());
 			response = loginService.checkLogin(user);
 			if (response.getResult().containsKey("Authentication")) {
 
