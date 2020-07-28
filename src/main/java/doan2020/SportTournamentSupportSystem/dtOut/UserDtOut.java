@@ -1,7 +1,5 @@
 package doan2020.SportTournamentSupportSystem.dtOut;
 
-import java.util.Date;
-
 public class UserDtOut {
 
 	private Long userID;
@@ -14,7 +12,7 @@ public class UserDtOut {
 
 	private String lastname;
 	
-	private Date dob;
+	private String dob;
 	
 	private boolean gender;
 	
@@ -24,13 +22,13 @@ public class UserDtOut {
 	
 	private boolean active;
 	
-	private Date createdate;
+	private String createdate;
 
 	public UserDtOut() {
 		
 	}
-	public UserDtOut(Long userID, String username, String password, String firstname, String lastname, Date dob,
-			boolean gender, String email, String imageprofile, boolean active, Date createdate) {
+	public UserDtOut(Long userID, String username, String password, String firstname, String lastname, String dob,
+			boolean gender, String email, String imageprofile, boolean active, String createdate) {
 		super();
 		this.userID = userID;
 		this.username = username;
@@ -85,11 +83,11 @@ public class UserDtOut {
 		this.lastname = lastname;
 	}
 
-	public Date getDob() {
+	public String getDob() {
 		return dob;
 	}
 
-	public void setDob(Date dob) {
+	public void setDob(String dob) {
 		this.dob = dob;
 	}
 
@@ -125,11 +123,11 @@ public class UserDtOut {
 		this.active = active;
 	}
 
-	public Date getCreatedate() {
+	public String getCreatedate() {
 		return createdate;
 	}
 
-	public void setCreatedate(Date createdate) {
+	public void setCreatedate(String createdate) {
 		this.createdate = createdate;
 	}
 	

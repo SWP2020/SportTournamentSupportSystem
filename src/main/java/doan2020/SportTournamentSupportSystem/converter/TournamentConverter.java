@@ -5,24 +5,22 @@ import java.util.Date;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import doan2020.SportTournamentSupportSystem.dtIn.EditProfileDtIn;
-import doan2020.SportTournamentSupportSystem.dtIn.RegisterDtIn;
 import doan2020.SportTournamentSupportSystem.dtOut.TournamentDtOut;
-import doan2020.SportTournamentSupportSystem.dtOut.UserDtOut;
 import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
 import doan2020.SportTournamentSupportSystem.entity.UserEntity;
 import doan2020.SportTournamentSupportSystem.service.IUserService;
-import doan2020.SportTournamentSupportSystem.service.impl.UserService;
-import net.bytebuddy.implementation.bytecode.Throw;
+import doan2020.SportTournamentSupportSystem.validator.Validator;
 
 @Component
 public class TournamentConverter{
 	
 	@Autowired
 	IUserService userService;
+	
+	@Autowired
+	private Validator validator;
 	
 	public TournamentEntity toEntity(Map<String, Object> map) throws Exception{
 		TournamentEntity entity = new TournamentEntity();
@@ -63,6 +61,8 @@ public class TournamentConverter{
 	public TournamentDtOut toDTO(TournamentEntity entity) throws Exception {
 		
 		TournamentDtOut dto = new TournamentDtOut();
+		
+		
 		try {
 			System.out.println("CP1");
 			dto.setId(entity.getId());
@@ -73,9 +73,9 @@ public class TournamentConverter{
 			dto.setCreatorId(entity.getCreator().getId());
 			System.out.println("CP3");
 			dto.setOpeningLocation(entity.getOpeningLocation());
-			dto.setOpeningTime(entity.getOpeningTime());
+			dto.setOpeningTime(validator.formatDate(entity.getOpeningTime()));
 			dto.setClosingLocation(entity.getClosingLocation());
-			dto.setClosingTime(entity.getClosingTime());
+			dto.setClosingTime(validator.formatDate(entity.getClosingTime()));
 			dto.setDonor(entity.getDonor());
 			dto.setStatus(entity.getStatus());
 			dto.setUrl(entity.getUrl());

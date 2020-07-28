@@ -1,9 +1,14 @@
 package doan2020.SportTournamentSupportSystem.api;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -31,7 +36,69 @@ public class TeamAPI {
 
 	@Autowired
 	private TeamConverter converter;
+     
+	/*
+	 * Get all team Paging
+	 */
+	@GetMapping("/getAll")
+	public ResponseEntity<Response> getAllTeamPaging(@RequestParam(value = "page", required = true) Integer page) {
+		System.out.println("getTeam");
+		HttpStatus httpStatus = HttpStatus.OK;
+		Response response = new Response();
+		Map<String, Object> config = new HashMap<String, Object>();
+		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> error = new HashMap<String, Object>();
+		List<TeamDtOut> teamDtOuts = new ArrayList<TeamDtOut>();
+		List<TeamEntity> list = new ArrayList<TeamEntity>();
+//		System.out.println("2");
 
+		if (page == null) {
+			result.put("team", null);
+			config.put("global", 0);
+			error.put("messageCode", 1);
+			error.put("message", "Required team id");
+			httpStatus = HttpStatus.OK;
+			response.setConfig(config);
+			response.setResult(result);
+			response.setError(error);
+			return new ResponseEntity<Response>(response, httpStatus);
+		}
+
+		Sort sortable = Sort.by("id").ascending();
+		int limit = 3;
+		Pageable pageable = PageRequest.of(page - 1, limit , sortable);
+
+		list = (List<TeamEntity>) service.findAll(pageable);
+			
+		try {
+			for(TeamEntity teamEntity :list) {
+				
+			TeamDtOut resDTO = converter.toDTO(teamEntity);
+			teamDtOuts.add(resDTO);
+			}
+			System.out.println(teamDtOuts.get(0).getFullName());
+			System.out.println("a");
+			result.put("list Team", teamDtOuts);
+			config.put("global", 0);
+			error.put("messageCode", 0);
+			error.put("message", "Found");
+			
+			System.out.println("true");
+
+		} catch (Exception e) {
+			result.put("team", null);
+			config.put("global", 0);
+			error.put("messageCode", 1);
+			error.put("message", "Team is not exist");
+		}
+
+		response.setConfig(config);
+		response.setResult(result);
+		response.setError(error);
+
+		return new ResponseEntity<Response>(response, httpStatus);
+	}
+	
 	/*
 	 * Get team theo id
 	 */

@@ -1,9 +1,5 @@
 package doan2020.SportTournamentSupportSystem.dtOut;
 
-import java.util.Date;
-
-import doan2020.SportTournamentSupportSystem.entity.UserEntity;
-
 public class TeamDtOut {
 
 	private Long id;

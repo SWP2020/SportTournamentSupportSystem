@@ -8,12 +8,18 @@ import doan2020.SportTournamentSupportSystem.dtIn.EditProfileDtIn;
 import doan2020.SportTournamentSupportSystem.dtIn.RegisterDtIn;
 import doan2020.SportTournamentSupportSystem.dtOut.UserDtOut;
 import doan2020.SportTournamentSupportSystem.entity.UserEntity;
+import doan2020.SportTournamentSupportSystem.validator.Validator;
 
 @Component
 public class UserConverter {
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private Validator validator;
+	
+	
 
 	public UserEntity toEntity(RegisterDtIn dto) {
 		UserEntity entity = new UserEntity();
@@ -35,8 +41,8 @@ public class UserConverter {
 		}
 		dto.setUsername(entity.getUsername());
 		dto.setActive(entity.getActive());
-		dto.setCreatedate(entity.getCreateddate());
-		dto.setDob(entity.getDob());
+		dto.setCreatedate(validator.formatDate(entity.getCreateddate()));
+		dto.setDob(validator.formatDate(entity.getDob()));
 		dto.setEmail(entity.getEmail());
 		dto.setFirstname(entity.getFirstname());
 		dto.setGender(entity.getGender());

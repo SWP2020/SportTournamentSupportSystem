@@ -1,24 +1,14 @@
 package doan2020.SportTournamentSupportSystem.converter;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import doan2020.SportTournamentSupportSystem.dtIn.EditProfileDtIn;
-import doan2020.SportTournamentSupportSystem.dtIn.RegisterDtIn;
 import doan2020.SportTournamentSupportSystem.dtOut.TeamDtOut;
-import doan2020.SportTournamentSupportSystem.dtOut.TournamentDtOut;
-import doan2020.SportTournamentSupportSystem.dtOut.UserDtOut;
 import doan2020.SportTournamentSupportSystem.entity.TeamEntity;
-import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
 import doan2020.SportTournamentSupportSystem.entity.UserEntity;
 import doan2020.SportTournamentSupportSystem.service.IUserService;
-import doan2020.SportTournamentSupportSystem.service.impl.UserService;
-import net.bytebuddy.implementation.bytecode.Throw;
 
 @Component
 public class TeamConverter{

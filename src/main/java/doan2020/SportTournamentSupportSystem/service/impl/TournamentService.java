@@ -96,4 +96,10 @@ public class TournamentService implements ITournamentService {
 		old = tournamentRepository.save(old);
 		return old;
 	}
+
+	@Override
+	public Collection<TournamentEntity> findAllByCreator(Pageable pageable, Long creatorId) {
+		// TODO Auto-generated method stub
+		return (Collection<TournamentEntity>) tournamentRepository.findByCreatorId(creatorId, pageable).getContent();
+	}
 }
