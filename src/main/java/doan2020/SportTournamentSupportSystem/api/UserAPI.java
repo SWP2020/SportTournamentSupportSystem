@@ -86,14 +86,15 @@ public class UserAPI {
 		} catch (Exception e) {
 			httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
 		}
-		response.setResult(result);
 		response.setError(error);
+		response.setResult(result);
+		response.setConfig(config);
 		return new ResponseEntity<Response>(response, httpStatus);
 
 	}
 
 	/* get One User */
-	
+
 	@GetMapping("/{id}")
 	public ResponseEntity<Response> getUserInfor(@PathVariable("id") Long id) {
 		Response response = new Response();
@@ -112,8 +113,9 @@ public class UserAPI {
 		} catch (Exception e) {
 			httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
 		}
-		response.setResult(result);
 		response.setError(error);
+		response.setResult(result);
+		response.setConfig(config);
 
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
@@ -134,14 +136,23 @@ public class UserAPI {
 					error.put("messageCode", 1);
 					error.put("message", "User is Exists");
 				}
+
+				if (StringUtils.equals(user.getEmail(), userExist.getEmail())) {
+					error.put("messageCode", 1);
+					error.put("message", "Email is Exists");
+				}
 			}
 			RoleEntity roleEntity = roleService.findOneByName("ROLE_USER");
 			if (roleEntity != null)
 				user.setRole(roleEntity);
 			user.setActive(false);
+
 			userService.addNewUsers(user);
+
 			verificationTokenService.createVerification(user.getEmail(), user.getUsername());
-			
+
+			result.put("User", user);
+
 			error.put("messageCode", 0);
 			error.put("message", "Register successfully");
 			httpStatus = HttpStatus.OK;
@@ -150,6 +161,8 @@ public class UserAPI {
 			httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
 		}
 		response.setError(error);
+		response.setResult(result);
+		response.setConfig(config);
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
 
@@ -187,6 +200,8 @@ public class UserAPI {
 			httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
 		}
 		response.setError(error);
+		response.setResult(result);
+		response.setConfig(config);
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
 
@@ -194,7 +209,7 @@ public class UserAPI {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Response> deleteUser(@PathVariable("id") Long id) {
 		Response response = new Response();
-		HttpStatus httpStatus = HttpStatus.OK;
+		HttpStatus httpStatus = null;
 		Map<String, Object> config = new HashMap<String, Object>();
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
@@ -221,6 +236,60 @@ public class UserAPI {
 			httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
 		}
 		response.setError(error);
+		response.setResult(result);
+		response.setConfig(config);
+		return new ResponseEntity<Response>(response, httpStatus);
+	}
+
+	@PostMapping("/sendMail")
+	public ResponseEntity<Response> sendMail(@RequestBody RegisterDtIn registerDtIn) {
+		Response response = new Response();
+		HttpStatus httpStatus = null;
+		Map<String, Object> config = new HashMap<String, Object>();
+		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> error = new HashMap<String, Object>();
+
+		try {
+			if (verificationTokenService.createVerification(registerDtIn.getEmail(), registerDtIn.getUsername())) {
+				;
+				error.put("messageCode", 0);
+				error.put("message", "Sending mail successfully");
+
+			} else {
+				error.put("messageCode", 1);
+				error.put("message", "Sending mail fail");
+			}
+
+			httpStatus = HttpStatus.OK;
+
+		} catch (Exception e) {
+			error.put("messageCode", 1);
+			error.put("message", "Sending mail fail");
+			httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+		response.setError(error);
+		response.setResult(result);
+		response.setConfig(config);
+		return new ResponseEntity<Response>(response, httpStatus);
+
+	}
+	
+	@PostMapping("/forgotPassword")
+	public ResponseEntity<Response> forgotPassword(@RequestBody RegisterDtIn registerDtIn){
+		Response response = new Response();
+		HttpStatus httpStatus = null;
+		Map<String, Object> config = new HashMap<String, Object>();
+		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> error = new HashMap<String, Object>();
+		try {
+			
+		}catch (Exception e) {
+			// TODO: handle exception
+		}
+		response.setError(error);
+		response.setResult(result);
+		response.setConfig(config);
+		
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
 

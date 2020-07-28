@@ -64,7 +64,7 @@ public class TeamService implements ITeamService {
 	@Override
 	public Collection<TeamEntity> findAll(Pageable pageable) {
 		
-		return teamRepository.findAll();
+		return teamRepository.findAll(pageable).getContent();
 	}
 
 	@Override

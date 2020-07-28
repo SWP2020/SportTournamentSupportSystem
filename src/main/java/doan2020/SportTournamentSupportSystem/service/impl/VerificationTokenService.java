@@ -32,13 +32,11 @@ public class VerificationTokenService implements IVerificationTokenService{
         this.sendingMailService = sendingMailService;
     }
 
-    public void createVerification(String email, String UserName){
+    public boolean createVerification(String email, String UserName){
         List<UserEntity> users = userRepository.findByEmailAndUsername(email, UserName);
         UserEntity user;
         if (users.isEmpty()) {
-            user = new UserEntity();
-            user.setEmail(email);
-            userRepository.save(user);
+            return false;
         } else {
             user = users.get(0);
         }
@@ -54,6 +52,7 @@ public class VerificationTokenService implements IVerificationTokenService{
         }
 
         sendingMailService.sendVerificationMail(email, verificationToken.getToken());
+        return true;
     }
 
     public Response verifyEmail(VerifyAuthenticationDtIn verifyAuthenticationDtIn){

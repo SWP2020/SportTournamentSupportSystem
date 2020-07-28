@@ -4,10 +4,7 @@ import java.util.Collection;
 
 import org.springframework.data.domain.Pageable;
 
-import doan2020.SportTournamentSupportSystem.dtIn.EditProfileDtIn;
-import doan2020.SportTournamentSupportSystem.dtIn.RegisterDtIn;
 import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
-import doan2020.SportTournamentSupportSystem.response.Response;
 
 public interface ITournamentService {
 	public Collection<TournamentEntity> findAll(Pageable pageable);
