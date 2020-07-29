@@ -1,9 +1,14 @@
 package doan2020.SportTournamentSupportSystem.api;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -31,10 +36,159 @@ public class MatchAPI {
 	@Autowired
 	private MatchConverter converter;
 
+	
+	/*
+	 * Tim kiem match theo paging by CompetitionId for schedule
+	 */
+	@GetMapping("/getAllPagingByCompetitionId")
+	public ResponseEntity<Response> getAllPagingByCompetitionId(@RequestParam(value = "page") Integer page, @RequestParam(value = "id") Long id) {
+		System.out.println("getPost");
+		HttpStatus httpStatus = HttpStatus.OK;
+		Response response = new Response();
+		Map<String, Object> config = new HashMap<String, Object>();
+		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> error = new HashMap<String, Object>();
+		List<MatchDtOut> matchDtOuts = new ArrayList<MatchDtOut>();
+		List<MatchEntity> list = new ArrayList<MatchEntity>();
+//		System.out.println("2");
+
+		if (page == null || id == null) {
+			result.put("Match", null);
+			config.put("global", 0);
+			error.put("messageCode", 1);
+			error.put("message", "Required Match's page!");
+			httpStatus = HttpStatus.OK;
+			response.setConfig(config);
+			response.setResult(result);
+			response.setError(error);
+			return new ResponseEntity<Response>(response, httpStatus);
+		}
+
+		Sort sortable = Sort.by("id").ascending();
+		int limit = 3;
+		Pageable pageable = PageRequest.of(page - 1, limit, sortable);
+
+		list = (List<MatchEntity>) service.findAllByCompetitionId(id, pageable);
+
+		if (list.isEmpty()) {
+			result.put("Match", null);
+			config.put("global", 0);
+			error.put("messageCode", 1);
+			error.put("message", "Match is not exist");
+			response.setConfig(config);
+			response.setResult(result);
+			response.setError(error);
+			return new ResponseEntity<Response>(response, httpStatus);
+		}
+
+		try {
+			for (MatchEntity matchEntity : list) {
+
+				MatchDtOut resDTO = converter.toDTO(matchEntity);
+				matchDtOuts.add(resDTO);
+				
+			}
+
+			result.put("list Match", matchDtOuts);
+			config.put("global", 0);
+			error.put("messageCode", 0);
+			error.put("message", "Found");
+
+			System.out.println("true");
+
+		} catch (Exception e) {
+			result.put("Match", null);
+			config.put("global", 0);
+			error.put("messageCode", 1);
+			error.put("message", "Error to get list Match");
+			System.out.println(e.getMessage().toString());
+		}
+
+		response.setConfig(config);
+		response.setResult(result);
+		response.setError(error);
+
+		return new ResponseEntity<Response>(response, httpStatus);
+	}
+	
+	/*
+	 * Tim kiem match theo paging by CompetitionId for schedule
+	 */
+	@GetMapping("/getAllByCompetitionId")
+	public ResponseEntity<Response> getAllByCompetitionId(@RequestParam(value = "id") Long id) {
+		System.out.println("getPost");
+		HttpStatus httpStatus = HttpStatus.OK;
+		Response response = new Response();
+		Map<String, Object> config = new HashMap<String, Object>();
+		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> error = new HashMap<String, Object>();
+		List<MatchDtOut> matchDtOuts = new ArrayList<MatchDtOut>();
+		List<MatchEntity> list = new ArrayList<MatchEntity>();
+//		System.out.println("2");
+
+		if (id == null) {
+			result.put("Match", null);
+			config.put("global", 0);
+			error.put("messageCode", 1);
+			error.put("message", "Required Match's page!");
+			httpStatus = HttpStatus.OK;
+			response.setConfig(config);
+			response.setResult(result);
+			response.setError(error);
+			return new ResponseEntity<Response>(response, httpStatus);
+		}
+
+//		Sort sortable = Sort.by("id").ascending();
+//		int limit = 3;
+//		Pageable pageable = PageRequest.of(page - 1, limit, sortable);
+
+		list = (List<MatchEntity>) service.findAllByCompetitionId(id);
+
+		if (list.isEmpty()) {
+			result.put("Match", null);
+			config.put("global", 0);
+			error.put("messageCode", 1);
+			error.put("message", "Match is not exist");
+			response.setConfig(config);
+			response.setResult(result);
+			response.setError(error);
+			return new ResponseEntity<Response>(response, httpStatus);
+		}
+
+		try {
+			for (MatchEntity matchEntity : list) {
+
+				MatchDtOut resDTO = converter.toDTO(matchEntity);
+				matchDtOuts.add(resDTO);
+				
+			}
+
+			result.put("list Match", matchDtOuts);
+			config.put("global", 0);
+			error.put("messageCode", 0);
+			error.put("message", "Found");
+
+			System.out.println("true");
+
+		} catch (Exception e) {
+			result.put("Match", null);
+			config.put("global", 0);
+			error.put("messageCode", 1);
+			error.put("message", "Error to get list Match");
+			System.out.println(e.getMessage().toString());
+		}
+
+		response.setConfig(config);
+		response.setResult(result);
+		response.setError(error);
+
+		return new ResponseEntity<Response>(response, httpStatus);
+	}
+	
 	/*
 	 * Get match theo id
 	 */
-	@GetMapping
+	@GetMapping("/getOne")
 	public ResponseEntity<Response> getMatch(@RequestParam(value = "id", required = true) Long id) {
 		System.out.println("getMatch");
 		HttpStatus httpStatus = HttpStatus.OK;
@@ -84,7 +238,7 @@ public class MatchAPI {
 	}
 
 	/*
-	 * Tao moi mot Tournament
+	 * Tao moi mot Match
 	 * 
 	 */
 	@PostMapping

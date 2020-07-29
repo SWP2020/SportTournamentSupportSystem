@@ -46,7 +46,7 @@ public class PostService implements IPostService {
 	@Override
 	public Collection<PostEntity> findAll(Pageable pageable) {
 		
-		return postRepository.findAll();
+		return postRepository.findAll(pageable).getContent();
 	}
 
 	@Override
@@ -60,5 +60,11 @@ public class PostService implements IPostService {
 		old.setAuthor(entity.getAuthor());
 		old = postRepository.save(old);
 		return old;
+	}
+
+	@Override
+	public Collection<PostEntity> findByTournamentId(Long tournamentId, Pageable pageable) {
+		// TODO Auto-generated method stub
+		return (Collection<PostEntity>) postRepository.findByTournamentId(tournamentId, pageable).getContent();
 	}
 }

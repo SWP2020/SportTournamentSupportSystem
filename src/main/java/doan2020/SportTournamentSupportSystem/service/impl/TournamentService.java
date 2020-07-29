@@ -1,31 +1,14 @@
 package doan2020.SportTournamentSupportSystem.service.impl;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import doan2020.SportTournamentSupportSystem.converter.UserConverter;
-import doan2020.SportTournamentSupportSystem.dtIn.EditProfileDtIn;
-import doan2020.SportTournamentSupportSystem.dtIn.RegisterDtIn;
-import doan2020.SportTournamentSupportSystem.dtOut.UserDtOut;
-import doan2020.SportTournamentSupportSystem.dtOut.ViewUserInforOverviewDtOut;
-import doan2020.SportTournamentSupportSystem.entity.RoleEntity;
 import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
-import doan2020.SportTournamentSupportSystem.entity.UserEntity;
-import doan2020.SportTournamentSupportSystem.repository.RoleRepository;
 import doan2020.SportTournamentSupportSystem.repository.TournamentRepository;
-import doan2020.SportTournamentSupportSystem.repository.UserRepository;
-import doan2020.SportTournamentSupportSystem.response.Response;
 import doan2020.SportTournamentSupportSystem.service.ITournamentService;
-import doan2020.SportTournamentSupportSystem.service.IUserService;
 
 @Service
 public class TournamentService implements ITournamentService {

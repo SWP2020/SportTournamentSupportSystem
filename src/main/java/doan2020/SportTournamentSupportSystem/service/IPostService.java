@@ -15,4 +15,6 @@ public interface IPostService {
 	public void addMany(Collection<PostEntity> list);
 	
 	public PostEntity update(Long id, PostEntity entity);
+	
+	public Collection<PostEntity> findByTournamentId(Long tournamentId, Pageable pageable);
 }

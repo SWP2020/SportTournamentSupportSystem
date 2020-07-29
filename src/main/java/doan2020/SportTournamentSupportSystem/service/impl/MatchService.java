@@ -50,10 +50,18 @@ public class MatchService implements IMatchService {
 		return res;
 	}
 
+	//for schedule
 	@Override
-	public Collection<MatchEntity> findAll(Pageable pageable) {
+	public Collection<MatchEntity> findAllByCompetitionId(Long competitionId, Pageable pageable) {
 		
-		return matchRepository.findAll();
+		return (Collection<MatchEntity>) matchRepository.findByCompetitionId(competitionId, pageable).getContent();
+	}
+	
+	//for bracket
+	@Override
+	public Collection<MatchEntity> findAllByCompetitionId(Long competitionId) {
+		
+		return matchRepository.findByCompetitionId(competitionId);
 	}
 
 	@Override
