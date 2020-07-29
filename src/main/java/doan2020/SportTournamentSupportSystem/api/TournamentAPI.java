@@ -106,67 +106,67 @@ public class TournamentAPI {
 	 * Tim kiem tournament theo paging by UserId
 	 */
 
-//	@GetMapping("/getAllbyUserId")
-//	public ResponseEntity<Response> getTournamentPagingByUserId(@RequestParam(value = "page") Integer page, @RequestParam(value = "id") Long id) {
-//		System.out.println("getTournament");
-//		HttpStatus httpStatus = HttpStatus.OK;
-//		Response response = new Response();
-//		Map<String, Object> config = new HashMap<String, Object>();
-//		Map<String, Object> result = new HashMap<String, Object>();
-//		Map<String, Object> error = new HashMap<String, Object>();
-//		List<TournamentDtOut> tournamentDtOuts = new ArrayList<TournamentDtOut>();
-//		List<TournamentEntity> list = new ArrayList<TournamentEntity>();
-////		System.out.println("2");
-//
-//		if (page == null || id == null) {
-//			result.put("tournament", null);
-//			config.put("global", 0);
-//			error.put("messageCode", 1);
-//			error.put("message", "Required tournament's page!");
-//			httpStatus = HttpStatus.OK;
-//			response.setConfig(config);
-//			response.setResult(result);
-//			response.setError(error);
-//			return new ResponseEntity<Response>(response, httpStatus);
-//		}
-//		
-//		Sort sortable = Sort.by("id").ascending();
-//		int limit = 3;
-//		Pageable pageable = PageRequest.of(page - 1, limit , sortable);
-//
-//		list = (List<TournamentEntity>) service.findAllByCreator(pageable, id);
-//			
-//		try {
-//			for(TournamentEntity tournamentEntity :list) {
-//				
-//			TournamentDtOut resDTO = converter.toDTO(tournamentEntity);
-//			tournamentDtOuts.add(resDTO);
-//			System.out.println(tournamentDtOuts.get(0).getFullName());
-//			System.out.println("cong");
-//			}
-//			System.out.println(tournamentDtOuts.get(0).getFullName());
-//			System.out.println("a");
-//			result.put("list tournament", tournamentDtOuts);
-//			config.put("global", 0);
-//			error.put("messageCode", 0);
-//			error.put("message", "Found");
-//			
-//			System.out.println("true");
-//
-//		} catch (Exception e) {
-//			result.put("tournament", null);
-//			config.put("global", 0);
-//			error.put("messageCode", 1);
-//			error.put("message", "Tournament is not exist");
-//			System.out.println(e.getMessage().toString());
-//		}
-//
-//		response.setConfig(config);
-//		response.setResult(result);
-//		response.setError(error);
-//
-//		return new ResponseEntity<Response>(response, httpStatus);
-//	}
+	@GetMapping("/getAllByUserId")
+	public ResponseEntity<Response> getTournamentPagingByUserId(@RequestParam(value = "page") Integer page, @RequestParam(value = "id") Long id) {
+		System.out.println("getTournament");
+		HttpStatus httpStatus = HttpStatus.OK;
+		Response response = new Response();
+		Map<String, Object> config = new HashMap<String, Object>();
+		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> error = new HashMap<String, Object>();
+		List<TournamentDtOut> tournamentDtOuts = new ArrayList<TournamentDtOut>();
+		List<TournamentEntity> list = new ArrayList<TournamentEntity>();
+//		System.out.println("2");
+
+		if (page == null || id == null) {
+			result.put("tournament", null);
+			config.put("global", 0);
+			error.put("messageCode", 1);
+			error.put("message", "Required tournament's page!");
+			httpStatus = HttpStatus.OK;
+			response.setConfig(config);
+			response.setResult(result);
+			response.setError(error);
+			return new ResponseEntity<Response>(response, httpStatus);
+		}
+		
+		Sort sortable = Sort.by("id").ascending();
+		int limit = 3;
+		Pageable pageable = PageRequest.of(page - 1, limit , sortable);
+
+		list = (List<TournamentEntity>) service.findAllByCreator(pageable, id);
+			
+		try {
+			for(TournamentEntity tournamentEntity :list) {
+				
+			TournamentDtOut resDTO = converter.toDTO(tournamentEntity);
+			tournamentDtOuts.add(resDTO);
+			System.out.println(tournamentDtOuts.get(0).getFullName());
+			System.out.println("cong");
+			}
+			System.out.println(tournamentDtOuts.get(0).getFullName());
+			System.out.println("a");
+			result.put("list tournament", tournamentDtOuts);
+			config.put("global", 0);
+			error.put("messageCode", 0);
+			error.put("message", "Found");
+			
+			System.out.println("true");
+
+		} catch (Exception e) {
+			result.put("tournament", null);
+			config.put("global", 0);
+			error.put("messageCode", 1);
+			error.put("message", "Tournament is not exist");
+			System.out.println(e.getMessage().toString());
+		}
+
+		response.setConfig(config);
+		response.setResult(result);
+		response.setError(error);
+
+		return new ResponseEntity<Response>(response, httpStatus);
+	}
 
 	
 	

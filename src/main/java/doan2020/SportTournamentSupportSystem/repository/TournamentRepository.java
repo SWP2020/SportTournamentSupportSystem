@@ -1,8 +1,7 @@
 
 package doan2020.SportTournamentSupportSystem.repository;
 
-import java.util.Collection;
-
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -16,5 +15,5 @@ public interface TournamentRepository extends JpaRepository<TournamentEntity, Lo
 	
 	TournamentEntity findOneById(Long id);
 	
-//	Collection<TournamentEntity> findByCreatorId(Long creatorId, Pageable pageable);
+	Page<TournamentEntity> findByCreatorId(Long creatorId, Pageable pageable);
 }
