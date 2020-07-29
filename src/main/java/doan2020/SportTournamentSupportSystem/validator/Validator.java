@@ -21,8 +21,15 @@ public class Validator {
 	}
 	
 	public int ConvertDobToAge(String dobEntity) {
-		LocalDate dob = LocalDate.parse(dobEntity);
-		LocalDate curDate = LocalDate.now();
-		return Period.between(dob, curDate).getYears();
+		int res = -1;
+		try {
+			LocalDate dob = LocalDate.parse(dobEntity);
+			LocalDate curDate = LocalDate.now();
+			res = Period.between(dob, curDate).getYears();
+		} catch (Exception e) {
+			return res;
+		}
+		
+		return res;
 	}
 }
