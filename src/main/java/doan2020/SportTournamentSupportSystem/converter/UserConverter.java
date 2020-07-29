@@ -41,7 +41,10 @@ public class UserConverter {
 		}
 		dto.setUsername(entity.getUsername());
 		dto.setActive(entity.getActive());
+		
+		System.out.println("CP1");
 		dto.setCreatedate(validator.formatDate(entity.getCreateddate()));
+		System.out.println("CP2");
 		dto.setDob(validator.formatDate(entity.getDob()));
 		dto.setEmail(entity.getEmail());
 		dto.setFirstname(entity.getFirstname());
@@ -49,7 +52,9 @@ public class UserConverter {
 		dto.setImageprofile(entity.getAvatar());
 		dto.setLastname(dto.getLastname());
 		dto.setPassword(entity.getPassword());
+		System.out.println("CP3");
 		dto.setAge(validator.ConvertDobToAge(validator.formatDate(entity.getDob())));
+		System.out.println("CP4");
 		return dto;
 	}
 

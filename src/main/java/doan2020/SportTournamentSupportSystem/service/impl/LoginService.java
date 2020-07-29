@@ -42,11 +42,14 @@ public class LoginService implements ILoginService {
 			UserEntity findUser = userRepository.findByUsername(user.getUsername());
 			System.out.println(findUser);
 			boolean checkPW = passwordEncoder.matches(user.getPassword(), findUser.getPassword());
+			System.out.println("check pass OK");
 			if (StringUtils.equals(user.getUsername(), findUser.getUsername()) && checkPW) {
 				if (findUser.getActive()) {
 
 					String token = jwtService.generateTokenLogin(user.getUsername());
 					UserDtOut userDtOut = userConverter.toDTO(findUser);
+					
+					System.out.println("convert OK");
 
 					result.put("User", userDtOut);
 					result.put("Authentication", token);
