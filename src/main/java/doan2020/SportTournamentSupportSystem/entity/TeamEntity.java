@@ -85,22 +85,22 @@ public class TeamEntity{
 		return id;
 	}
 	
-	public String getFullname() {
+	public String getFullName() {
 		return fullName;
 	}
-	
-	public void setFullname(String fullName) {
+
+	public void setFullName(String fullName) {
 		this.fullName = fullName;
 	}
-	
-	public String getShortname() {
+
+	public String getShortName() {
 		return shortName;
 	}
-	
-	public void setShortname(String shortName) {
+
+	public void setShortName(String shortName) {
 		this.shortName = shortName;
 	}
-	
+
 	public String getDescription() {
 		return description;
 	}

@@ -77,19 +77,19 @@ public class TournamentEntity{
 		return id;
 	}
 	
-	public String getFullname() {
+	public String getFullName() {
 		return fullName;
 	}
 	
-	public void setFullname(String fullName) {
+	public void setFullName(String fullName) {
 		this.fullName = fullName;
 	}
 	
-	public String getShortname() {
+	public String getShortName() {
 		return shortName;
 	}
 	
-	public void setShortname(String shortName) {
+	public void setShortName(String shortName) {
 		this.shortName = shortName;
 	}
 	
@@ -101,35 +101,35 @@ public class TournamentEntity{
 		this.description = description;
 	}
 	
-	public String getOpeninglocation() {
+	public String getOpeningLocation() {
 		return openingLocation;
 	}
 	
-	public void setOpeninglocation(String openingLocation) {
+	public void setOpeningLocation(String openingLocation) {
 		this.openingLocation = openingLocation;
 	}
 	
-	public Date getOpeningtime() {
+	public Date getOpeningTime() {
 		return openingTime;
 	}
 	
-	public void setOpeningtime(Date openingTime) {
+	public void setOpeningTime(Date openingTime) {
 		this.openingTime = openingTime;
 	}
 	
-	public String getClosinglocation() {
+	public String getClosingLocation() {
 		return closingLocation;
 	}
 	
-	public void setClosinglocation(String closingLocation) {
+	public void setClosingLocation(String closingLocation) {
 		this.closingLocation = closingLocation;
 	}
 	
-	public Date getClosingtime() {
+	public Date getClosingTime() {
 		return closingTime;
 	}
 	
-	public void setClosingtime(Date closingTime) {
+	public void setClosingTime(Date closingTime) {
 		this.closingTime = closingTime;
 	}
 	

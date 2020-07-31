@@ -20,43 +20,42 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import doan2020.SportTournamentSupportSystem.converter.MatchConverter;
-import doan2020.SportTournamentSupportSystem.dtOut.MatchDtOut;
-import doan2020.SportTournamentSupportSystem.entity.MatchEntity;
+import doan2020.SportTournamentSupportSystem.converter.PostConverter;
+import doan2020.SportTournamentSupportSystem.dtOut.PostDtOut;
+import doan2020.SportTournamentSupportSystem.entity.PostEntity;
 import doan2020.SportTournamentSupportSystem.response.Response;
-import doan2020.SportTournamentSupportSystem.service.IMatchService;
+import doan2020.SportTournamentSupportSystem.service.IPostService;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/matches")
-public class MatchAPI {
+@RequestMapping("/posts")
+public class PostAPI {
 	@Autowired
-	private IMatchService service;
+	private IPostService service;
 
 	@Autowired
-	private MatchConverter converter;
+	private PostConverter converter;
 
-	
 	/*
-	 * Tim kiem match theo paging by CompetitionId for schedule
+	 * Tim kiem post theo paging
 	 */
-	@GetMapping("/getAllPagingByCompetitionId")
-	public ResponseEntity<Response> getAllPagingByCompetitionId(@RequestParam(value = "page") Integer page, @RequestParam(value = "id") Long id) {
+	@GetMapping("/getAllByTournamentId")
+	public ResponseEntity<Response> getPostPagingByTournamentId(@RequestParam(value = "page") Integer page, @RequestParam(value = "id") Long id) {
 		System.out.println("getPost");
 		HttpStatus httpStatus = HttpStatus.OK;
 		Response response = new Response();
 		Map<String, Object> config = new HashMap<String, Object>();
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
-		List<MatchDtOut> matchDtOuts = new ArrayList<MatchDtOut>();
-		List<MatchEntity> list = new ArrayList<MatchEntity>();
+		List<PostDtOut> postDtOuts = new ArrayList<PostDtOut>();
+		List<PostEntity> list = new ArrayList<PostEntity>();
 //		System.out.println("2");
 
 		if (page == null || id == null) {
-			result.put("Match", null);
+			result.put("Post", null);
 			config.put("global", 0);
 			error.put("messageCode", 1);
-			error.put("message", "Required Match's page!");
+			error.put("message", "Required Post's page!");
 			httpStatus = HttpStatus.OK;
 			response.setConfig(config);
 			response.setResult(result);
@@ -68,13 +67,13 @@ public class MatchAPI {
 		int limit = 3;
 		Pageable pageable = PageRequest.of(page - 1, limit, sortable);
 
-		list = (List<MatchEntity>) service.findAllByCompetitionId(id, pageable);
+		list = (List<PostEntity>) service.findByTournamentId(id, pageable);
 
 		if (list.isEmpty()) {
-			result.put("Match", null);
+			result.put("Post", null);
 			config.put("global", 0);
 			error.put("messageCode", 1);
-			error.put("message", "Match is not exist");
+			error.put("message", "Post is not exist");
 			response.setConfig(config);
 			response.setResult(result);
 			response.setError(error);
@@ -82,14 +81,14 @@ public class MatchAPI {
 		}
 
 		try {
-			for (MatchEntity matchEntity : list) {
+			for (PostEntity postEntity : list) {
 
-				MatchDtOut resDTO = converter.toDTO(matchEntity);
-				matchDtOuts.add(resDTO);
+				PostDtOut resDTO = converter.toDTO(postEntity);
+				postDtOuts.add(resDTO);
 				
 			}
 
-			result.put("list Match", matchDtOuts);
+			result.put("list post", postDtOuts);
 			config.put("global", 0);
 			error.put("messageCode", 0);
 			error.put("message", "Found");
@@ -97,10 +96,10 @@ public class MatchAPI {
 			System.out.println("true");
 
 		} catch (Exception e) {
-			result.put("Match", null);
+			result.put("Post", null);
 			config.put("global", 0);
 			error.put("messageCode", 1);
-			error.put("message", "Error to get list Match");
+			error.put("message", "Error to get list Post");
 			System.out.println(e.getMessage().toString());
 		}
 
@@ -112,25 +111,25 @@ public class MatchAPI {
 	}
 	
 	/*
-	 * Tim kiem match theo paging by CompetitionId for schedule
+	 * Tim kiem post theo paging
 	 */
-	@GetMapping("/getAllByCompetitionId")
-	public ResponseEntity<Response> getAllByCompetitionId(@RequestParam(value = "id") Long id) {
+	@GetMapping("/getAll")
+	public ResponseEntity<Response> getPostPaging(@RequestParam(value = "page") Integer page) {
 		System.out.println("getPost");
 		HttpStatus httpStatus = HttpStatus.OK;
 		Response response = new Response();
 		Map<String, Object> config = new HashMap<String, Object>();
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
-		List<MatchDtOut> matchDtOuts = new ArrayList<MatchDtOut>();
-		List<MatchEntity> list = new ArrayList<MatchEntity>();
+		List<PostDtOut> postDtOuts = new ArrayList<PostDtOut>();
+		List<PostEntity> list = new ArrayList<PostEntity>();
 //		System.out.println("2");
 
-		if (id == null) {
-			result.put("Match", null);
+		if (page == null) {
+			result.put("Post", null);
 			config.put("global", 0);
 			error.put("messageCode", 1);
-			error.put("message", "Required Match's page!");
+			error.put("message", "Required Post's page!");
 			httpStatus = HttpStatus.OK;
 			response.setConfig(config);
 			response.setResult(result);
@@ -138,17 +137,17 @@ public class MatchAPI {
 			return new ResponseEntity<Response>(response, httpStatus);
 		}
 
-//		Sort sortable = Sort.by("id").ascending();
-//		int limit = 3;
-//		Pageable pageable = PageRequest.of(page - 1, limit, sortable);
+		Sort sortable = Sort.by("id").ascending();
+		int limit = 3;
+		Pageable pageable = PageRequest.of(page - 1, limit, sortable);
 
-		list = (List<MatchEntity>) service.findAllByCompetitionId(id);
+		list = (List<PostEntity>) service.findAll(pageable);
 
 		if (list.isEmpty()) {
-			result.put("Match", null);
+			result.put("Post", null);
 			config.put("global", 0);
 			error.put("messageCode", 1);
-			error.put("message", "Match is not exist");
+			error.put("message", "Post is not exist");
 			response.setConfig(config);
 			response.setResult(result);
 			response.setError(error);
@@ -156,14 +155,14 @@ public class MatchAPI {
 		}
 
 		try {
-			for (MatchEntity matchEntity : list) {
+			for (PostEntity postEntity : list) {
 
-				MatchDtOut resDTO = converter.toDTO(matchEntity);
-				matchDtOuts.add(resDTO);
+				PostDtOut resDTO = converter.toDTO(postEntity);
+				postDtOuts.add(resDTO);
 				
 			}
 
-			result.put("list Match", matchDtOuts);
+			result.put("list post", postDtOuts);
 			config.put("global", 0);
 			error.put("messageCode", 0);
 			error.put("message", "Found");
@@ -171,10 +170,10 @@ public class MatchAPI {
 			System.out.println("true");
 
 		} catch (Exception e) {
-			result.put("Match", null);
+			result.put("Post", null);
 			config.put("global", 0);
 			error.put("messageCode", 1);
-			error.put("message", "Error to get list Match");
+			error.put("message", "Error to get list Post");
 			System.out.println(e.getMessage().toString());
 		}
 
@@ -184,25 +183,24 @@ public class MatchAPI {
 
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
-	
+
 	/*
-	 * Get match theo id
+	 * Get post theo id
 	 */
 	@GetMapping("/getOne")
-	public ResponseEntity<Response> getMatch(@RequestParam(value = "id", required = true) Long id) {
-		System.out.println("getMatch");
+	public ResponseEntity<Response> getPost(@RequestParam(value = "id", required = true) Long id) {
+		System.out.println("getPost");
 		HttpStatus httpStatus = HttpStatus.OK;
 		Response response = new Response();
 		Map<String, Object> config = new HashMap<String, Object>();
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
-//		System.out.println("2");
 
 		if (id == null) {
-			result.put("match", null);
+			result.put("post", null);
 			config.put("global", 0);
 			error.put("messageCode", 1);
-			error.put("message", "Required Match id");
+			error.put("message", "Required post id");
 			httpStatus = HttpStatus.OK;
 			response.setConfig(config);
 			response.setResult(result);
@@ -210,24 +208,23 @@ public class MatchAPI {
 			return new ResponseEntity<Response>(response, httpStatus);
 		}
 
-		MatchEntity res;
-
+		PostEntity res;
 
 		res = service.findById(id);
 
 		try {
-			MatchDtOut resDTO = converter.toDTO(res);
+			PostDtOut resDTO = converter.toDTO(res);
 
-			result.put("Match", resDTO);
+			result.put("post", resDTO);
 			config.put("global", 0);
 			error.put("messageCode", 0);
 			error.put("message", "Found");
 
 		} catch (Exception e) {
-			result.put("Match", null);
+			result.put("post", null);
 			config.put("global", 0);
 			error.put("messageCode", 1);
-			error.put("message", "Tournament is not exist");
+			error.put("message", "Error to get list Post");
 		}
 
 		response.setConfig(config);
@@ -238,35 +235,35 @@ public class MatchAPI {
 	}
 
 	/*
-	 * Tao moi mot Match
+	 * Tao moi mot Post
 	 * 
 	 */
 	@PostMapping
 	@CrossOrigin
-	public ResponseEntity<Response> createMatch(@RequestBody Map<String, Object> newMatch) {
-		System.out.println("createMatch");
+	public ResponseEntity<Response> createPost(@RequestBody Map<String, Object> newPost) {
+		System.out.println("createPost");
 		HttpStatus httpStatus = HttpStatus.OK;
 		Response response = new Response();
 		Map<String, Object> config = new HashMap<String, Object>();
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
 		try {
-			MatchEntity matchEntity = converter.toEntity(newMatch);
+			PostEntity postEntity = converter.toEntity(newPost);
 			System.out.println("convert OK");
-			service.addOne(matchEntity);
+			service.addOne(postEntity);
 			System.out.println("add OK");
-			MatchDtOut dto = converter.toDTO(matchEntity);
+			PostDtOut dto = converter.toDTO(postEntity);
 			System.out.println("convert OK");
-			result.put("match", dto);
+			result.put("post", dto);
 			config.put("global", 0);
 			error.put("messageCode", 0);
-			error.put("message", "Match create successfuly");
+			error.put("message", "Post create successfuly");
 		} catch (Exception e) {
-			result.put("Match", null);
+			result.put("post", null);
 			config.put("global", 0);
 			error.put("messageCode", 1);
-			error.put("message", "Match create fail");
-		}
+			error.put("message", "Post create fail");
+		} 
 
 		response.setConfig(config);
 		response.setResult(result);
@@ -275,34 +272,34 @@ public class MatchAPI {
 	}
 
 	/*
-	 * Edit mot Match
+	 * Edit mot Post
 	 * 
 	 */
 	@PutMapping
 	@CrossOrigin
-	public ResponseEntity<Response> editMatch(@RequestBody Map<String, Object> Match, @RequestParam Long id) {
-		System.out.println("editMatch");
+	public ResponseEntity<Response> editPost(@RequestBody Map<String, Object> post, @RequestParam Long id) {
+		System.out.println("editPost");
 		HttpStatus httpStatus = HttpStatus.OK;
 		Response response = new Response();
 		Map<String, Object> config = new HashMap<String, Object>();
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
 		try {
-			MatchEntity MatchEntity = converter.toEntity(Match);
+			PostEntity postEntity = converter.toEntity(post);
 			System.out.println("convert OK");
-			MatchEntity newMatch = service.update(id, MatchEntity);
+			PostEntity newPost = service.update(id, postEntity);
 			System.out.println("add OK");
-			MatchDtOut dto = converter.toDTO(newMatch);
+			PostDtOut dto = converter.toDTO(newPost);
 			System.out.println("convert OK");
-			result.put("match", dto);
+			result.put("post", dto);
 			config.put("global", 0);
 			error.put("messageCode", 0);
-			error.put("message", "Match update successfuly");
+			error.put("message", "Post update successfuly");
 		} catch (Exception e) {
-			result.put("match", null);
+			result.put("post", null);
 			config.put("global", 0);
 			error.put("messageCode", 1);
-			error.put("message", "Match update fail");
+			error.put("message", "Post update fail");
 		}
 
 		response.setConfig(config);

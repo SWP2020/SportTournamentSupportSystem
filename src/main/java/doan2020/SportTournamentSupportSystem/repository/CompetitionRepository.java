@@ -8,5 +8,5 @@ import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
 
 @Repository
 public interface CompetitionRepository extends JpaRepository<CompetitionEntity, Long>{
-	
+	CompetitionEntity findOneById(Long id);
 }
