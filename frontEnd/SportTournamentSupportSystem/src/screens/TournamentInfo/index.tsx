@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { connect } from 'react-redux';
 import Select, { ValueType, OptionTypeBase } from 'react-select';
 import { RouteComponentProps } from 'react-router-dom';
 import * as H from 'history';
 import { StaticContext } from 'react-router';
+import Skeleton from 'react-loading-skeleton';
 import { FaRunning } from 'react-icons/fa';
 import { IoIosPeople } from 'react-icons/io';
 import { BsCalendarFill } from 'react-icons/bs';
@@ -13,10 +14,17 @@ import BracketSchedule from 'components/BracketSchedule';
 import BracketRank from 'components/BracketRank';
 import TournamentListTeam from 'components/TournamentListTeam';
 import TournamentSetting from 'components/TournamentSetting';
+import { IBigRequest, IParams } from 'interfaces/common';
+import { IState } from 'redux-saga/reducers';
+import { formatDateToDisplay } from 'utils/datetime';
+import { queryTournamentInfo } from './actions';
 import './styles.css';
 
 interface ITournamentInfoProps extends React.ClassAttributes<TournamentInfo> {
   routerInfo: RouteComponentProps<any, StaticContext, H.LocationState>;
+  tournamentInfo: IParams | null;
+
+  queryTournamentInfo(param: IBigRequest): void;
 }
 
 interface ITournamentInfoState {
@@ -45,6 +53,21 @@ class TournamentInfo extends React.Component<ITournamentInfoProps, ITournamentIn
     };
   }
 
+  componentDidMount() {
+    this.requestData();
+  }
+
+  private requestData = () => {
+    const params = {
+      path: '',
+      param: {
+        id: Number(this.props.routerInfo.match.params.tournamentId),
+      },
+      data: {},
+    };
+    this.props.queryTournamentInfo(params);
+  }
+
   private onChangeSport = (value: ValueType<OptionTypeBase>) => {
     this.setState({
       selectedSport: value,
@@ -58,8 +81,16 @@ class TournamentInfo extends React.Component<ITournamentInfoProps, ITournamentIn
   }
 
   render() {
-    const tabList = ['Nhánh thi đấu', 'Lịch thi đấu', 'Bảng xếp hạng', 'Thông tin', 'Danh sách các đội', 'Cài đặt'];
-    const componentList = [<BracketBoard />, <BracketSchedule />, <BracketRank />, <div />, <TournamentListTeam />, <TournamentSetting />];
+    let tabList: string[] = [];
+    let componentList: ReactNode[] = [];
+    if (this.state.selectedCompetition != null) {
+      tabList = ['Nhánh thi đấu', 'Lịch thi đấu', 'Bảng xếp hạng', 'Thông tin', 'Danh sách các đội', 'Cài đặt'];
+      componentList = [<BracketBoard />, <BracketSchedule />, <BracketRank />, <div />, <TournamentListTeam />, <TournamentSetting />];
+    } else {
+      tabList = ['Cài đặt'];
+      componentList = [<TournamentSetting />];
+    }
+
     return (
       <div className="TournamentInfo-Container">
         <div className="TournamentInfo-background-image-container">
@@ -68,7 +99,41 @@ class TournamentInfo extends React.Component<ITournamentInfoProps, ITournamentIn
           <div className="TournamentInfo-content-info-container">
             <div className="TournamentInfo-content-info-basic-info-container">
               <div className="TournamentInfo-content-info-basic-info-container-singleRow">
-                <p className="TournamentInfo-name-text">Giải hội khỏe phù đổng</p>
+                <p className="TournamentInfo-name-text">{this.props.tournamentInfo != null ? this.props.tournamentInfo.fullName : <Skeleton width={400} height={30} />}</p>
+              </div>
+              <div className="TournamentInfo-content-info-basic-info-container-singleRow">
+                <div className="TournamentInfo-info-item">
+                  <p>Tên ngắn: {this.props.tournamentInfo != null ? `(${this.props.tournamentInfo.shortName})` : <Skeleton width={150} height={20} />}</p>
+                </div>
+              </div>
+              <div className="TournamentInfo-content-info-basic-info-container-singleRow">
+                <div className="TournamentInfo-info-item">
+                  <p>Nhà tài trợ: {this.props.tournamentInfo != null ? this.props.tournamentInfo.donor : <Skeleton width={150} height={20} />}</p>
+                </div>
+                <div className="TournamentInfo-info-item">
+                  <p>Trạng thái: {this.props.tournamentInfo != null ? (this.props.tournamentInfo.status === 'processing' ? 'Đang diễn ra' : (this.props.tournamentInfo.status == null ? 'Chưa diễn ra' : 'Đã kết thúc')) : <Skeleton width={125} height={20} />}</p>
+                </div>
+              </div>
+              <div className="TournamentInfo-content-info-basic-info-container-singleRow">
+                <div className="TournamentInfo-info-item">
+                  <p>Ngày bắt đầu: {this.props.tournamentInfo != null ? formatDateToDisplay(this.props.tournamentInfo.openingTime as string | undefined, 'dd/MM/yyyy', 'yyyy-MM-dd') : <Skeleton width={150} height={20} />}</p>
+                </div>
+                <div className="TournamentInfo-info-item">
+                  <p>Địa điểm khai mạc: {this.props.tournamentInfo != null ? this.props.tournamentInfo.openingLocation : <Skeleton width={150} height={20} />}</p>
+                </div>
+              </div>
+              <div className="TournamentInfo-content-info-basic-info-container-singleRow">
+                <div className="TournamentInfo-info-item">
+                  <p>Ngày kết thúc: {this.props.tournamentInfo != null ? formatDateToDisplay(this.props.tournamentInfo.closingTime as string | undefined, 'dd/MM/yyyy', 'yyyy-MM-dd') : <Skeleton width={150} height={20} />}</p>
+                </div>
+                <div className="TournamentInfo-info-item">
+                  <p>Địa điểm bế mạc: {this.props.tournamentInfo != null ? this.props.tournamentInfo.closingLocation : <Skeleton width={150} height={20} />}</p>
+                </div>
+              </div>
+              <div className="TournamentInfo-content-info-basic-info-container-singleRow">
+                <div className="TournamentInfo-info-item">
+                  <p>Được tạo ngày: 01/01/2020</p>
+                </div>
               </div>
               <div className="TournamentInfo-content-info-basic-info-container-singleRow">
                 <div className="TournamentInfo-info-item">
@@ -82,16 +147,7 @@ class TournamentInfo extends React.Component<ITournamentInfoProps, ITournamentIn
               </div>
               <div className="TournamentInfo-content-info-basic-info-container-singleRow">
                 <div className="TournamentInfo-info-item">
-                  <BsCalendarFill size={25} />
-                  <p className="TournamentInfo-text">01/01/2020</p>
-                </div>
-                <div className="TournamentInfo-info-item">
-                  <p>Được tạo ngày: 01/01/2020</p>
-                </div>
-              </div>
-              <div className="TournamentInfo-content-info-basic-info-container-singleRow">
-                <div className="TournamentInfo-info-item">
-                  <p>id: tournament-123456789</p>
+                  <p>Mô tả: {this.props.tournamentInfo != null ? this.props.tournamentInfo.description : <Skeleton width={300} height={20} />}</p>
                 </div>
               </div>
             </div>
@@ -145,9 +201,9 @@ class TournamentInfo extends React.Component<ITournamentInfoProps, ITournamentIn
                 </div>
               </div>}
             </div>
-            {this.state.selectedCompetition != null && this.state.selectedSport != null && <div className="TournamentInfo-content-info-advanced-info-container">
+            <div className="TournamentInfo-content-info-advanced-info-container">
               <CustomTab tabList={tabList} componentList={componentList} selectedIndex={0}></CustomTab>
-            </div>}
+            </div>
           </div>
         </div>
       </div>
@@ -155,7 +211,13 @@ class TournamentInfo extends React.Component<ITournamentInfoProps, ITournamentIn
   }
 }
 
+const mapStateToProps = (state: IState) => {
+  return {
+    tournamentInfo: state.tournamentInfo,
+  };
+};
+
 export default connect(
-  null,
-  null
+  mapStateToProps,
+  { queryTournamentInfo, }
 )(TournamentInfo);

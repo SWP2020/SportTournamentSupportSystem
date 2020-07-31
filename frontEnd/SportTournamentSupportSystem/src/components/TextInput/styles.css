@@ -136,12 +136,3 @@ div.omrs-input-group {
 .omrs-input-filled>input {
   background: var(--omrs-color-bg-low-contrast);
 }
-
-.TextInput-error-text-container {
-  position: absolute;
-  margin-top: 40px;
-}
-
-.TextInput-error-text {
-  color: red;
-}

@@ -1,9 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Switch, Route, Redirect } from 'react-router-dom';
+import { Switch, Route, Redirect, Router } from 'react-router-dom';
+import { CookiesProvider } from 'react-cookie';
+import history from "utils/history";
 import Login from 'screens/Login';
 import SignUp from 'screens/SignUp';
-// import ForgotPassword from 'screens/ForgotPassword';
+import ForgotPassword from 'screens/ForgotPassword';
 import Home from 'screens/Home';
 // import UserInfo from 'screens/UserInfo';
 import TournamentInfo from 'screens/TournamentInfo';
@@ -11,8 +13,11 @@ import Header from 'components/Header';
 import Content from 'components/Content';
 import UserInfo from 'screens/UserInfo';
 import AllTournaments from 'components/AllTournaments';
+import CreateNewTournament from 'screens/CreateNewTournament';
 import { IState } from 'redux-saga/reducers';
 import './App.css';
+import { cookies } from 'utils/cookies';
+import { COOKIES_TYPE } from 'global';
 
 interface IAppProps extends React.ClassAttributes<App> {
 }
@@ -31,25 +36,33 @@ class App extends React.Component<IAppProps, IAppState> {
   render() {
     return (
       <div className="Container">
-        <Switch>
-          <Route exact path={["/", "/home"]} render={() => <Header />} />
-          <Route path="/tournament/:tournamentId" render={() => <Header />} />
-          <Route path="/signUp" render={() => <Header />} />
-          <Route path="/user/:userId" render={() => <Header />} />
-          <Route path="/tournaments" render={() => <Header />} />
-          <Route path="/login" render={() => <Header />} />
-        </Switch>
-        <Content fullScreen={true} transparent={false}>
-          <Switch>
-            <Route exact path={["/", "/home"]} render={() => <Home />} />
-            <Route path="/tournament/:tournamentId" render={(info) => <TournamentInfo routerInfo={info} />} />
-            <Route path="/tournaments" render={() => <AllTournaments />} />
-            <Route path="/signUp" render={() => <SignUp />} />
-            <Route path="/login" render={() => <Login />} />
-            <Route path="/user/:userId" render={(info) => <UserInfo routerInfo={info} />} />
-            <Route render={() => <Redirect to="/" />} />
-          </Switch>
-        </Content>
+        <CookiesProvider>
+          <Router history={history}>
+            <Switch>
+              <Route exact path={["/", "/home"]} render={() => <Header currentPage={'home'} />} />
+              <Route path="/tournament/:tournamentId" render={() => <Header currentPage={'tournamentInfo'} />} />
+              <Route path="/signUp" render={() => <Header currentPage={'signUp'} />} />
+              <Route path="/user/:userId" render={() => <Header currentPage={'userInfo'} />} />
+              <Route path="/tournaments" render={() => <Header currentPage={'tournaments'} />} />
+              <Route path="/login" render={() => <Header currentPage={'login'} />} />
+              <Route path="/forgotPassword" render={() => <Header currentPage={'forgotPassword'} />} />
+              <Route path="/newTournament" render={() => <Header currentPage={'newTournament'} />} />
+            </Switch>
+            <Content fullScreen={true} transparent={false}>
+              <Switch>
+                <Route exact path={["/", "/home"]} render={() => <Home />} />
+                <Route path="/tournament/:tournamentId" render={(info) => <TournamentInfo routerInfo={info} />} />
+                <Route path="/tournaments" render={() => <AllTournaments />} />
+                <Route path="/signUp" render={() => <SignUp />} />
+                <Route path="/forgotPassword" render={() => <ForgotPassword />} />
+                <Route path="/login" render={() => { return cookies.get(COOKIES_TYPE.AUTH_TOKEN) != null ? <Redirect to="/" /> : <Login />; }} />
+                <Route path="/user/:userId" render={(info) => <UserInfo routerInfo={info} />} />
+                <Route path="/newTournament" render={() => { return cookies.get(COOKIES_TYPE.AUTH_TOKEN) == null ? <Redirect to="/login" /> : <CreateNewTournament />; }} />
+                <Route render={() => <Redirect to="/" />} />
+              </Switch>
+            </Content>
+          </Router>
+        </CookiesProvider>
       </div>
     );
   }

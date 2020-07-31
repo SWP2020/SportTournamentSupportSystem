@@ -29,6 +29,12 @@ export interface IParams {
   [s: string]: TypeAny;
 }
 
+export interface IBigRequest {
+  path: string | number;
+  param: IParams;
+  data: IParams;
+}
+
 export interface IRequest<T> extends AnyAction {
   response: IResponseType;
   data: T;

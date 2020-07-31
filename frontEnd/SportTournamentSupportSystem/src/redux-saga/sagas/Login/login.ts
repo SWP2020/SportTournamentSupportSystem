@@ -1,29 +1,45 @@
 import { call, takeLatest, put } from 'redux-saga/effects';
+import { cookies } from 'utils/cookies';
 import { query, METHOD } from 'utils/socketApi';
-import { IRequest, IParams } from 'interfaces/common';
+import { IRequest, IParams, IBigRequest } from 'interfaces/common';
 import { LOGIN, COMMON_SHOW_NOTIFICATION } from 'redux-saga/actions';
+import { COOKIES_TYPE } from 'global';
+import history from "utils/history";
 
-const login = (data: IParams) => {
+
+const login = (data: IParams, path: string | number, param: IParams) => {
   const uri = 'login';
-  const params = { ...data };
-  return query(uri, METHOD.POST, params);
+  const datas = { ...data };
+  const paths = path;
+  const params = { ...param };
+  return query(uri, METHOD.POST, datas, params, paths);
 };
 
-function* doLogin(request: IRequest<IParams>) {
+function* doLogin(request: IRequest<IBigRequest>) {
   try {
-    const response = yield call(login, request.data);
-    const data = response.data;
-    yield put({
-      type: request.response.success,
-      payload: data,
-    });
+    const response = yield call(login, request.data.data, request.data.path, request.data.param);
+    const data = response.data.result;
+    if (response.data.error.messageCode === 0) {
+      yield put({
+        type: request.response.success,
+        payload: data.User,
+      });
+      yield cookies.set(COOKIES_TYPE.AUTH_TOKEN, data);
+      yield history.push("/");
+    } else {
+      yield cookies.remove(COOKIES_TYPE.AUTH_TOKEN);
+      throw new Error(response.data.error.message);
+    }
   } catch (error) {
+    yield put({
+      type: request.response.failed,
+    });
     yield put({
       type: COMMON_SHOW_NOTIFICATION,
       data: {
         type: 'error',
         title: 'Login',
-        content: 'Your username or password is incorrect',
+        content: error,
         time: new Date(),
       },
     });

@@ -1,13 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import TextInput from 'components/TextInput';
-import { IParams } from 'interfaces/common';
+import { IBigRequest } from 'interfaces/common';
 import config from 'config';
 import { signUp } from './actions';
 import './styles.css';
 
 interface ISignUpProps extends React.ClassAttributes<SignUp> {
-  signUp(param: IParams): void;
+  signUp(param: IBigRequest): void;
 }
 
 interface ISignUpState {
@@ -69,7 +69,7 @@ class SignUp extends React.Component<ISignUpProps, ISignUpState> {
     let emailError = false;
     let reconfirmPasswordErrorContent = '';
     let reconfirmPasswordError = false;
-    if (this.state.password.includes(' ') || !config.regex.password.test(this.state.password)) {
+    if (this.state.password.includes(' ') || !config.regex.password.test(this.state.password) || this.state.password.trim() === '') {
       passwordError = true;
       passwordErrorContent = 'Mật khẩu không được trống, không chứa dấu cách, và phải chứa từ 8 đến 32 kí tự';
     }
@@ -105,9 +105,13 @@ class SignUp extends React.Component<ISignUpProps, ISignUpState> {
       return;
     }
     const params = {
-      username: this.state.username,
-      password: this.state.password,
-      email: this.state.email,
+      path: '',
+      param: {},
+      data: {
+        username: this.state.username,
+        password: this.state.password,
+        email: this.state.email,
+      },
     };
 
     this.props.signUp(params);
@@ -126,11 +130,10 @@ class SignUp extends React.Component<ISignUpProps, ISignUpState> {
           </div>
           <p>Hoặc</p>
 
-
-          <TextInput label={'Tên đăng nhập'} onChangeText={this.onChangeUserName} error={this.state.usernameError} errorContent={this.state.usernameErrorContent} />
-          <TextInput label={'Email'} onChangeText={this.onChangeEmail} error={this.state.emailError} errorContent={this.state.emailErrorContent} />
-          <TextInput label={'Mật khẩu'} type={'password'} onChangeText={this.onChangePassword} error={this.state.passwordError} errorContent={this.state.passwordErrorContent} />
-          <TextInput label={'Xác nhận mật khẩu'} type={'password'} onChangeText={this.onChangeReconfirmPassword} error={this.state.reconfirmPasswordError} errorContent={this.state.reconfirmPasswordErrorContent} />
+          <TextInput onHandleSubmit={this.handleSignUp} label={'Tên đăng nhập'} onChangeText={this.onChangeUserName} error={this.state.usernameError} errorContent={this.state.usernameErrorContent} />
+          <TextInput onHandleSubmit={this.handleSignUp} label={'Email'} onChangeText={this.onChangeEmail} error={this.state.emailError} errorContent={this.state.emailErrorContent} />
+          <TextInput onHandleSubmit={this.handleSignUp} label={'Mật khẩu'} type={'password'} onChangeText={this.onChangePassword} error={this.state.passwordError} errorContent={this.state.passwordErrorContent} />
+          <TextInput onHandleSubmit={this.handleSignUp} label={'Xác nhận mật khẩu'} type={'password'} onChangeText={this.onChangeReconfirmPassword} error={this.state.reconfirmPasswordError} errorContent={this.state.reconfirmPasswordErrorContent} />
 
           <div className="Login-option-container">
             <div className="Login-option-container-item">

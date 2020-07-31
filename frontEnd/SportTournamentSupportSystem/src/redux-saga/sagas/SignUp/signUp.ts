@@ -1,17 +1,19 @@
 import { call, takeLatest, put } from 'redux-saga/effects';
 import { query, METHOD } from 'utils/socketApi';
-import { IRequest, IParams } from 'interfaces/common';
+import { IRequest, IParams, IBigRequest } from 'interfaces/common';
 import { SIGNUP, COMMON_SHOW_NOTIFICATION } from 'redux-saga/actions';
 
-const signUp = (data: IParams) => {
-  const uri = '/users';
-  const params = { ...data };
-  return query(uri, METHOD.POST, params);
+const signUp = (data: IParams, path: string | number, param: IParams) => {
+  const uri = 'users';
+  const datas = { ...data };
+  const paths = path;
+  const params = { ...param };
+  return query(uri, METHOD.POST, datas, params, paths);
 };
 
-function* doSignUp(request: IRequest<IParams>) {
+function* doSignUp(request: IRequest<IBigRequest>) {
   try {
-    const response = yield call(signUp, request.data);
+    const response = yield call(signUp, request.data.data, request.data.path, request.data.param);
     const data = response.data;
     yield put({
       type: request.response.success,
@@ -22,7 +24,7 @@ function* doSignUp(request: IRequest<IParams>) {
       type: COMMON_SHOW_NOTIFICATION,
       data: {
         type: 'error',
-        title: 'SignUp',
+        title: 'Sign Up',
         content: 'error',
         time: new Date(),
       },

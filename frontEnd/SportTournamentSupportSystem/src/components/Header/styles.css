@@ -79,3 +79,49 @@
 .Button-container :hover {
   cursor: pointer;
 }
+
+.UserOption-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  padding-right: 20px;
+}
+
+.UserOption-name-text {
+  margin-right: 15px;
+  margin-left: 15px;
+}
+
+.UserOption-avatar-container {
+  width: 60px;
+}
+
+.UserOption-dropdown-container {
+  position: absolute;
+  width: 250px;
+  background-color: black;
+  top: 50px;
+  border: 1px solid white;
+}
+
+.UserOption-dropdown-item-container {
+  display: flex;
+  align-items: center;
+  height: 50px;
+  background-color: red;
+  padding-left: 15px;
+}
+
+.UserOption-dropdown-item-container1 {
+  background-color: #272a33;
+}
+
+.UserOption-dropdown-item-container2 {
+  background-color: #3d4351;
+}
+
+.Right-container-hover :hover {
+  cursor: pointer;
+  background-color: black;
+}

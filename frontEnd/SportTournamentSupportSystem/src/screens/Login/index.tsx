@@ -1,12 +1,17 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import ReduxBlockUi from 'react-block-ui/redux';
+import { Link } from 'react-router-dom';
 import TextInput from 'components/TextInput';
-import { IParams } from 'interfaces/common';
+import { IBigRequest } from 'interfaces/common';
+import { IState } from 'redux-saga/reducers';
+import { LOGIN } from 'redux-saga/actions';
 import { login } from './actions';
+import { LOGIN_SUCCESS, LOGIN_FAILED } from './reducers';
 import './styles.css';
 
 interface ILoginProps extends React.ClassAttributes<Login> {
-  login(params: IParams): void;
+  login(params: IBigRequest): void;
 }
 
 interface ILoginState {
@@ -44,7 +49,7 @@ class Login extends React.Component<ILoginProps, ILoginState> {
     let passwordErrorContent = '';
     let usernameErrorContent = '';
     let usernameError = false;
-    if (this.state.password.includes(' ')) {
+    if (this.state.password.includes(' ') || this.state.password.trim() === '') {
       passwordError = true;
       passwordErrorContent = 'Mật khẩu không được trống, và không chứa dấu cách';
     }
@@ -68,8 +73,12 @@ class Login extends React.Component<ILoginProps, ILoginState> {
       return;
     }
     const params = {
-      username: this.state.username,
-      password: this.state.password,
+      path: '',
+      param: {},
+      data: {
+        username: this.state.username,
+        password: this.state.password,
+      },
     };
 
     this.props.login(params);
@@ -78,44 +87,56 @@ class Login extends React.Component<ILoginProps, ILoginState> {
   render() {
     return (
       <div className="Container-login">
-        <div className="Container-login-middle">
-          <h2>Đăng nhập</h2>
-          <p className="Long-introduction">Chào mừng! Vui lòng nhập thông tin đăng nhập của bạn hoặc đăng nhập bằng tài khoản mạng xã hội</p>
-          <p>Đăng nhập với</p>
-          <div className="Alternate-login-container">
-            <div className="Alternate-login-option1 Alternate-login-option"><p className="Alternate-login-option-text">FACEBOOK</p></div>
-            <div className="Alternate-login-option2 Alternate-login-option"><p className="Alternate-login-option-text">GOOGLE</p></div>
-          </div>
-          <p>Hoặc</p>
+        <ReduxBlockUi
+          tag="div"
+          block={LOGIN}
+          unblock={[LOGIN_SUCCESS, LOGIN_FAILED]}
+        >
+          <div className="Container-login-middle">
+            <h2>Đăng nhập</h2>
+            <p className="Long-introduction">Chào mừng! Vui lòng nhập thông tin đăng nhập của bạn hoặc đăng nhập bằng tài khoản mạng xã hội</p>
+            <p>Đăng nhập với</p>
+            <div className="Alternate-login-container">
+              <div className="Alternate-login-option1 Alternate-login-option"><p className="Alternate-login-option-text">FACEBOOK</p></div>
+              <div className="Alternate-login-option2 Alternate-login-option"><p className="Alternate-login-option-text">GOOGLE</p></div>
+            </div>
+            <p>Hoặc</p>
 
-
-          <TextInput label={'Tên đăng nhập'} onChangeText={this.onChangeUserName} error={this.state.usernameError} errorContent={this.state.usernameErrorContent} />
-          <TextInput label={'Mật khẩu'} type={'password'} onChangeText={this.onChangePassword} error={this.state.passwordError} errorContent={this.state.passwordErrorContent} />
-          <div className="Login-option-container">
-            <div className="Login-option-container-item">
-              <label className="Checkbox-label">
-                <input type="checkbox" />
+            <TextInput label={'Tên đăng nhập'} onChangeText={this.onChangeUserName} error={this.state.usernameError} errorContent={this.state.usernameErrorContent} onHandleSubmit={this.handleLogin} />
+            <TextInput label={'Mật khẩu'} type={'password'} onChangeText={this.onChangePassword} error={this.state.passwordError} errorContent={this.state.passwordErrorContent} onHandleSubmit={this.handleLogin} />
+            <div className="Login-option-container">
+              <div className="Login-option-container-item">
+                <label className="Checkbox-label">
+                  <input type="checkbox" />
             Nhớ tài khoản trên thiết bị này
           </label>
+              </div>
+              <div className="Login-option-container-item Login-option-container-item1">
+                <Link to={'/forgotPassword'}>
+                  <p className="Forgot-password">Quên mật khẩu</p>
+                </Link>
+              </div>
             </div>
-            <div className="Login-option-container-item Login-option-container-item1">
-              <p className="Forgot-password">Quên mật khẩu</p>
+            <div className="Button-login-container">
+              <div className="Button-login" onClick={this.handleLogin}>
+                <h4 className="Button-login-text">Đăng nhập</h4>
+              </div>
             </div>
-          </div>
-          <div className="Button-login-container">
-            <div className="Button-login" onClick={this.handleLogin}>
-              <h4 className="Button-login-text">Đăng nhập</h4>
-            </div>
-          </div>
 
-        </div>
+          </div>
+        </ReduxBlockUi>
       </div>
     );
   }
 }
 
+const mapStateToProps = (state: IState) => {
+  return {
+  };
+};
+
 export default connect(
-  null,
+  mapStateToProps,
   {
     login,
   }

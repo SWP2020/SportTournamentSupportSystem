@@ -11,20 +11,22 @@ export enum METHOD {
 export async function query<T>(
   uri: string,
   method: METHOD,
-  params: IParams = {}
+  data: IParams = {},
+  params: IParams = {},
+  path: string | number,
 ) {
-  const baseUrl = 'http://10.22.177.194:8090/';
+  const baseUrl = 'http://192.168.43.170:8090/';
   const realUrl = `${baseUrl}${uri}`;
 
   return new Promise<IResponse<T>>((resolve: Function, reject: Function) => {
     switch (method) {
       case METHOD.POST: {
-        axios.post(realUrl, params)
+        axios.post(`${realUrl}${path !== '' ? `/${path}` : ''}`, null, { params, data })
           .then((response) => {
-            console.log('response', response);
+            console.log('response1', response);
             resolve(response);
           }).catch((error) => {
-            console.log('error', error);
+            console.log('error1', error);
             reject(error);
           });
         break;
@@ -34,7 +36,15 @@ export async function query<T>(
         break;
       }
       case METHOD.GET: {
-
+        axios.get(`${realUrl}${path !== '' ? `/${path}` : ''}`, { params, data })
+          // axios.get(`${realUrl}/${params.id}`)
+          .then((response) => {
+            console.log('response1', response);
+            resolve(response);
+          }).catch((error) => {
+            console.log('error1', error);
+            reject(error);
+          });
         break;
       }
       case METHOD.DELETE: {

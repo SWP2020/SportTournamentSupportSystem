@@ -7,7 +7,7 @@ import { GET_BRACKET_BOARD_INFO_SUCCESS } from 'components/BracketBoard/reducers
 const queryBracketBoardInfo = (data: IParams) => {
   const uri = 'user';
   const params = { ...data };
-  return query(uri, METHOD.GET, params);
+  // return query(uri, METHOD.GET, params);
 };
 
 function* doQueryBracketBoardInfo(request: IRequest<IParams>) {
