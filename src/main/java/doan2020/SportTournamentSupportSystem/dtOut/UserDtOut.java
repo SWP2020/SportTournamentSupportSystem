@@ -20,9 +20,11 @@ public class UserDtOut {
 	
 	private String imageprofile;
 	
-	private boolean active;
+	private String status;
 	
 	private String createdate;
+	
+	private String address;
 	
 	private int age;
 
@@ -30,7 +32,7 @@ public class UserDtOut {
 		
 	}
 	public UserDtOut(Long userID, String username, String password, String firstname, String lastname, String dob,
-			boolean gender, String email, String imageprofile, boolean active, String createdate, int age) {
+			boolean gender, String email, String imageprofile, String status, String createdate, int age, String address) {
 		super();
 		this.userID = userID;
 		this.username = username;
@@ -41,9 +43,10 @@ public class UserDtOut {
 		this.gender = gender;
 		this.email = email;
 		this.imageprofile = imageprofile;
-		this.active = active;
+		this.status = status;
 		this.createdate = createdate;
 		this.age = age;
+		this.address = address;
 	}
 
 	public Long getUserID() {
@@ -118,14 +121,6 @@ public class UserDtOut {
 		this.imageprofile = imageprofile;
 	}
 
-	public boolean isActive() {
-		return active;
-	}
-
-	public void setActive(boolean active) {
-		this.active = active;
-	}
-
 	public String getCreatedate() {
 		return createdate;
 	}
@@ -139,6 +134,20 @@ public class UserDtOut {
 	public void setAge(int age) {
 		this.age = age;
 	}
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	
+	
 	
 	
 }

@@ -35,6 +35,10 @@ public class CommentEntity{
 	
 	private Date modifiedDate;
 	
+	private String status;
+	
+	private String url;
+	
 
 	@ManyToOne
 	@JoinColumn(name = "authorId")
@@ -57,36 +61,52 @@ public class CommentEntity{
 		this.content = content;
 	}
 	
-	public String getCreatedby() {
+	public String getCreatedBy() {
 		return createdBy;
 	}
 	
-	public void setCreatedby(String createdBy) {
+	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
 	}
 	
-	public Date getCreateddate() {
+	public Date getCreatedDate() {
 		return createdDate;
 	}
 	
-	public void setCreateddate(Date createdDate) {
+	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
 	}
 	
-	public String getModifiedby() {
+	public String getModifiedBy() {
 		return modifiedBy;
 	}
 	
-	public void setModifiedby(String modifiedBy) {
+	public void setModifiedBy(String modifiedBy) {
 		this.modifiedBy = modifiedBy;
 	}
 	
-	public Date getModifieddate() {
+	public Date getModifiedDate() {
 		return modifiedDate;
 	}
 	
-	public void setModifieddate(Date modifiedDate) {
+	public void setModifiedDate(Date modifiedDate) {
 		this.modifiedDate = modifiedDate;
+	}
+	
+	public String getStatus() {
+		return status;
+	}
+	
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	
+	public String getUrl() {
+		return url;
+	}
+	
+	public void setUrl(String url) {
+		this.url = url;
 	}
 	
 	public UserEntity getAuthor() {

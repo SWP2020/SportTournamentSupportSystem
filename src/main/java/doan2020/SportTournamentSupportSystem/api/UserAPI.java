@@ -150,13 +150,15 @@ public class UserAPI {
 			RoleEntity roleEntity = roleService.findOneByName("ROLE_USER");
 			if (roleEntity != null)
 				user.setRole(roleEntity);
-			user.setActive(false);
+			user.setStatus("not active");
 
 			userService.addNewUsers(user);
+			
+			UserDtOut userDtOut = userConverter.toDTO(user);
 
 			verificationTokenService.createVerification(user.getEmail(), user.getUsername());
 
-			result.put("User", user);
+			result.put("User", userDtOut);
 
 			error.put("messageCode", 0);
 			error.put("message", "Register successfully");

@@ -40,6 +40,10 @@ public class PermissionEntity{
 	
 	private Date modifiedDate;
 	
+	private String status;
+	
+	private String url;
+	
 
 
 	public Long getId() {
@@ -62,52 +66,68 @@ public class PermissionEntity{
 		this.description = description;
 	}
 	
-	public boolean getCan_edit() {
+	public boolean getCanEdit() {
 		return can_edit;
 	}
 	
-	public void setCan_edit(boolean can_edit) {
+	public void setCanEdit(boolean can_edit) {
 		this.can_edit = can_edit;
 	}
 	
-	public boolean getCan_delete() {
+	public boolean getCanDelete() {
 		return can_delete;
 	}
 	
-	public void setCan_delete(boolean can_delete) {
+	public void setCanDelete(boolean can_delete) {
 		this.can_delete = can_delete;
 	}
 	
-	public String getCreatedby() {
+	public String getCreatedBy() {
 		return createdBy;
 	}
 	
-	public void setCreatedby(String createdBy) {
+	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
 	}
 	
-	public Date getCreateddate() {
+	public Date getCreatedDate() {
 		return createdDate;
 	}
 	
-	public void setCreateddate(Date createdDate) {
+	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
 	}
 	
-	public String getModifiedby() {
+	public String getModifiedBy() {
 		return modifiedBy;
 	}
 	
-	public void setModifiedby(String modifiedBy) {
+	public void setModifiedBy(String modifiedBy) {
 		this.modifiedBy = modifiedBy;
 	}
 	
-	public Date getModifieddate() {
+	public Date getModifiedDate() {
 		return modifiedDate;
 	}
 	
-	public void setModifieddate(Date modifiedDate) {
+	public void setModifiedDate(Date modifiedDate) {
 		this.modifiedDate = modifiedDate;
+	}
+	
+	public String getStatus() {
+		return status;
+	}
+	
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	
+	public String getUrl() {
+		return url;
+	}
+	
+	public void setUrl(String url) {
+		this.url = url;
 	}
 	
 

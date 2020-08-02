@@ -25,11 +25,17 @@ public class ResultEntity{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	private int setNumber;
+//	@NotNull
+//	private Long matchId;
+//	
+//	@NotNull
+//	private Long teamId;
+	
+	private int setNo;
 	
 	private float score;
 	
-	private boolean isWinner;
+	private int rank;
 	
 	private String createdBy;
 	
@@ -38,6 +44,10 @@ public class ResultEntity{
 	private String modifiedBy;
 	
 	private Date modifiedDate;
+	
+	private String status;
+	
+	private String url;
 	
 
 	@ManyToOne
@@ -53,12 +63,28 @@ public class ResultEntity{
 		return id;
 	}
 	
-	public int getSetnumber() {
-		return setNumber;
+//	public Long getMatchId() {
+//		return matchId;
+//	}
+//	
+//	public void setMatchId(Long matchId) {
+//		this.matchId = matchId;
+//	}
+//	
+//	public Long getTeamId() {
+//		return teamId;
+//	}
+//	
+//	public void setTeamId(Long teamId) {
+//		this.teamId = teamId;
+//	}
+	
+	public int getSetNo() {
+		return setNo;
 	}
 	
-	public void setSetnumber(int setNumber) {
-		this.setNumber = setNumber;
+	public void setSetNo(int setNo) {
+		this.setNo = setNo;
 	}
 	
 	public float getScore() {
@@ -69,44 +95,60 @@ public class ResultEntity{
 		this.score = score;
 	}
 	
-	public boolean getIswinner() {
-		return isWinner;
+	public int getRank() {
+		return rank;
 	}
 	
-	public void setIswinner(boolean isWinner) {
-		this.isWinner = isWinner;
+	public void setRank(int rank) {
+		this.rank = rank;
 	}
 	
-	public String getCreatedby() {
+	public String getCreatedBy() {
 		return createdBy;
 	}
 	
-	public void setCreatedby(String createdBy) {
+	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
 	}
 	
-	public Date getCreateddate() {
+	public Date getCreatedDate() {
 		return createdDate;
 	}
 	
-	public void setCreateddate(Date createdDate) {
+	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
 	}
 	
-	public String getModifiedby() {
+	public String getModifiedBy() {
 		return modifiedBy;
 	}
 	
-	public void setModifiedby(String modifiedBy) {
+	public void setModifiedBy(String modifiedBy) {
 		this.modifiedBy = modifiedBy;
 	}
 	
-	public Date getModifieddate() {
+	public Date getModifiedDate() {
 		return modifiedDate;
 	}
 	
-	public void setModifieddate(Date modifiedDate) {
+	public void setModifiedDate(Date modifiedDate) {
 		this.modifiedDate = modifiedDate;
+	}
+	
+	public String getStatus() {
+		return status;
+	}
+	
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	
+	public String getUrl() {
+		return url;
+	}
+	
+	public void setUrl(String url) {
+		this.url = url;
 	}
 	
 	public MatchEntity getMatch() {

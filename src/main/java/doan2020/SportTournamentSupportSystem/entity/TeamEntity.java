@@ -38,8 +38,6 @@ public class TeamEntity{
 	
 	private String description;
 	
-	private String status;
-	
 	private String createdBy;
 	
 	private Date createdDate;
@@ -48,18 +46,18 @@ public class TeamEntity{
 	
 	private Date modifiedDate;
 	
+	private String status;
+	
+	private String url;
+	
 
 	@ManyToOne
 	@JoinColumn(name = "creatorId")
 	private UserEntity creator;
 	
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinTable(
-		name = "team_competition",
-		joinColumns = @JoinColumn(name = "team_id"),
-		inverseJoinColumns = @JoinColumn(name = "competition_id")
-	)
-	private Collection<CompetitionEntity> competitionsList;
+	@ManyToOne
+	@JoinColumn(name = "competitionId")
+	private CompetitionEntity competition;
 	
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(
@@ -69,16 +67,14 @@ public class TeamEntity{
 	)
 	private Collection<MatchEntity> matchesList;
 	
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinTable(
-		name = "team_player",
-		joinColumns = @JoinColumn(name = "team_id"),
-		inverseJoinColumns = @JoinColumn(name = "player_id")
-	)
-	private Collection<PlayerEntity> playersList;
-	
+	@OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
+	private Collection<PlayerEntity> players;
+
 	@OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
 	private Collection<ResultEntity> results;
+
+	@OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
+	private Collection<RegisterForEntity> register_form;
 
 
 	public Long getId() {
@@ -88,25 +84,57 @@ public class TeamEntity{
 	public String getFullName() {
 		return fullName;
 	}
-
+	
 	public void setFullName(String fullName) {
 		this.fullName = fullName;
 	}
-
+	
 	public String getShortName() {
 		return shortName;
 	}
-
+	
 	public void setShortName(String shortName) {
 		this.shortName = shortName;
 	}
-
+	
 	public String getDescription() {
 		return description;
 	}
 	
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	
+	public String getCreatedBy() {
+		return createdBy;
+	}
+	
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+	
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+	
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+	
+	public String getModifiedBy() {
+		return modifiedBy;
+	}
+	
+	public void setModifiedBy(String modifiedBy) {
+		this.modifiedBy = modifiedBy;
+	}
+	
+	public Date getModifiedDate() {
+		return modifiedDate;
+	}
+	
+	public void setModifiedDate(Date modifiedDate) {
+		this.modifiedDate = modifiedDate;
 	}
 	
 	public String getStatus() {
@@ -117,36 +145,12 @@ public class TeamEntity{
 		this.status = status;
 	}
 	
-	public String getCreatedby() {
-		return createdBy;
+	public String getUrl() {
+		return url;
 	}
 	
-	public void setCreatedby(String createdBy) {
-		this.createdBy = createdBy;
-	}
-	
-	public Date getCreateddate() {
-		return createdDate;
-	}
-	
-	public void setCreateddate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
-	
-	public String getModifiedby() {
-		return modifiedBy;
-	}
-	
-	public void setModifiedby(String modifiedBy) {
-		this.modifiedBy = modifiedBy;
-	}
-	
-	public Date getModifieddate() {
-		return modifiedDate;
-	}
-	
-	public void setModifieddate(Date modifiedDate) {
-		this.modifiedDate = modifiedDate;
+	public void setUrl(String url) {
+		this.url = url;
 	}
 	
 	public UserEntity getCreator() {
@@ -157,28 +161,28 @@ public class TeamEntity{
 		this.creator = creator;
 	}
 	
-	public Collection<CompetitionEntity> getCompetitionslist() {
-		return competitionsList;
+	public CompetitionEntity getCompetition() {
+		return competition;
 	}
 	
-	public void setCompetitionslist(Collection<CompetitionEntity> competitionsList) {
-		this.competitionsList = competitionsList;
+	public void setCompetition(CompetitionEntity competition) {
+		this.competition = competition;
 	}
 	
-	public Collection<MatchEntity> getMatcheslist() {
+	public Collection<MatchEntity> getMatchesList() {
 		return matchesList;
 	}
 	
-	public void setMatcheslist(Collection<MatchEntity> matchesList) {
+	public void setMatchesList(Collection<MatchEntity> matchesList) {
 		this.matchesList = matchesList;
 	}
 	
-	public Collection<PlayerEntity> getPlayerslist() {
-		return playersList;
+	public Collection<PlayerEntity> getPlayers() {
+		return players;
 	}
 	
-	public void setPlayerslist(Collection<PlayerEntity> playersList) {
-		this.playersList = playersList;
+	public void setPlayers(Collection<PlayerEntity> players) {
+		this.players = players;
 	}
 	
 	public Collection<ResultEntity> getResults() {
@@ -187,6 +191,14 @@ public class TeamEntity{
 	
 	public void setResults(Collection<ResultEntity> results) {
 		this.results = results;
+	}
+	
+	public Collection<RegisterForEntity> getRegisterForm() {
+		return register_form;
+	}
+	
+	public void setRegisterForm(Collection<RegisterForEntity> register_form) {
+		this.register_form = register_form;
 	}
 	
 

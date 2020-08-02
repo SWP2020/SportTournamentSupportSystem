@@ -11,7 +11,6 @@ import doan2020.SportTournamentSupportSystem.entity.SportEntity;
 import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
 import doan2020.SportTournamentSupportSystem.service.ISportService;
 import doan2020.SportTournamentSupportSystem.service.ITournamentService;
-import doan2020.SportTournamentSupportSystem.service.IUserService;
 
 @Component
 public class CompetitionConverter {
@@ -92,10 +91,10 @@ public class CompetitionConverter {
 	public CompetitionDtOut toDTO(CompetitionEntity competitionEntity) {
 		CompetitionDtOut competitionDtOut = new CompetitionDtOut();
 		try {
-		competitionDtOut.setCreatedby(competitionEntity.getCreatedby());
-		competitionDtOut.setCreateddate(competitionEntity.getCreateddate());
-		competitionDtOut.setModifiedby(competitionEntity.getModifiedby());
-		competitionDtOut.setModifieddate(competitionEntity.getModifieddate());
+		competitionDtOut.setCreatedby(competitionEntity.getCreatedBy());
+		competitionDtOut.setCreateddate(competitionEntity.getCreatedDate());
+		competitionDtOut.setModifiedby(competitionEntity.getModifiedBy());
+		competitionDtOut.setModifieddate(competitionEntity.getModifiedDate());
 		competitionDtOut.setName(competitionEntity.getName());
 		competitionDtOut.setStatus(competitionEntity.getStatus());
 		competitionDtOut.setId(competitionEntity.getId());

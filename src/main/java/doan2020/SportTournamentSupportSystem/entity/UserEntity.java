@@ -4,11 +4,6 @@ package doan2020.SportTournamentSupportSystem.entity;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.EntityListeners;
-
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.util.Date;
 import javax.persistence.GenerationType;
@@ -23,7 +18,6 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinTable;
 import java.util.Collection;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 
 
 
@@ -49,6 +43,8 @@ public class UserEntity{
 	
 	private String address;
 	
+	private String phoneNumber;
+	
 	private boolean gender;
 	
 	private Date dob;
@@ -59,21 +55,17 @@ public class UserEntity{
 	
 	private String background;
 	
-	private boolean active;
-	
-	private String url;
-	
-	@CreatedBy
 	private String createdBy;
 	
-	@CreatedDate
 	private Date createdDate;
 	
-	@LastModifiedBy
 	private String modifiedBy;
 	
-	@LastModifiedDate
 	private Date modifiedDate;
+	
+	private String status;
+	
+	private String url;
 	
 
 	@ManyToOne
@@ -96,7 +88,10 @@ public class UserEntity{
 	)
 	private Collection<PostEntity> postsList;
 	
-	@OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL)
+	@ManyToMany(mappedBy = "usersList")
+	private Collection<NotificationEntity> notificationsList;
+	
+	@OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
 	private Collection<ReportEntity> reports;
 
 	@OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
@@ -110,9 +105,7 @@ public class UserEntity{
 
 	@OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
 	private Collection<TournamentEntity> tournaments;
-    
-	@OneToOne(mappedBy = "userEntity", cascade = CascadeType.ALL)
-    private VerificationToken verificationToken;
+
 
 	public Long getId() {
 		return id;
@@ -134,19 +127,19 @@ public class UserEntity{
 		this.password = password;
 	}
 	
-	public String getFirstname() {
+	public String getFirstName() {
 		return firstName;
 	}
 	
-	public void setFirstname(String firstName) {
+	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
 	
-	public String getLastname() {
+	public String getLastName() {
 		return lastName;
 	}
 	
-	public void setLastname(String lastName) {
+	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
 	
@@ -156,6 +149,14 @@ public class UserEntity{
 	
 	public void setAddress(String address) {
 		this.address = address;
+	}
+	
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+	
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
 	}
 	
 	public boolean getGender() {
@@ -198,12 +199,44 @@ public class UserEntity{
 		this.background = background;
 	}
 	
-	public boolean getActive() {
-		return active;
+	public String getCreatedBy() {
+		return createdBy;
 	}
 	
-	public void setActive(boolean active) {
-		this.active = active;
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+	
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+	
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+	
+	public String getModifiedBy() {
+		return modifiedBy;
+	}
+	
+	public void setModifiedBy(String modifiedBy) {
+		this.modifiedBy = modifiedBy;
+	}
+	
+	public Date getModifiedDate() {
+		return modifiedDate;
+	}
+	
+	public void setModifiedDate(Date modifiedDate) {
+		this.modifiedDate = modifiedDate;
+	}
+	
+	public String getStatus() {
+		return status;
+	}
+	
+	public void setStatus(String status) {
+		this.status = status;
 	}
 	
 	public String getUrl() {
@@ -214,38 +247,6 @@ public class UserEntity{
 		this.url = url;
 	}
 	
-	public String getCreatedby() {
-		return createdBy;
-	}
-	
-	public void setCreatedby(String createdBy) {
-		this.createdBy = createdBy;
-	}
-	
-	public Date getCreateddate() {
-		return createdDate;
-	}
-	
-	public void setCreateddate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
-	
-	public String getModifiedby() {
-		return modifiedBy;
-	}
-	
-	public void setModifiedby(String modifiedBy) {
-		this.modifiedBy = modifiedBy;
-	}
-	
-	public Date getModifieddate() {
-		return modifiedDate;
-	}
-	
-	public void setModifieddate(Date modifiedDate) {
-		this.modifiedDate = modifiedDate;
-	}
-	
 	public RoleEntity getRole() {
 		return role;
 	}
@@ -254,20 +255,28 @@ public class UserEntity{
 		this.role = role;
 	}
 	
-	public Collection<TournamentEntity> getTournamentslist() {
+	public Collection<TournamentEntity> getTournamentsList() {
 		return tournamentsList;
 	}
 	
-	public void setTournamentslist(Collection<TournamentEntity> tournamentsList) {
+	public void setTournamentsList(Collection<TournamentEntity> tournamentsList) {
 		this.tournamentsList = tournamentsList;
 	}
 	
-	public Collection<PostEntity> getPostslist() {
+	public Collection<PostEntity> getPostsList() {
 		return postsList;
 	}
 	
-	public void setPostslist(Collection<PostEntity> postsList) {
+	public void setPostsList(Collection<PostEntity> postsList) {
 		this.postsList = postsList;
+	}
+	
+	public Collection<NotificationEntity> getNotificationsList() {
+		return notificationsList;
+	}
+	
+	public void setNotificationsList(Collection<NotificationEntity> notificationsList) {
+		this.notificationsList = notificationsList;
 	}
 	
 	public Collection<ReportEntity> getReports() {
@@ -308,14 +317,6 @@ public class UserEntity{
 	
 	public void setTournaments(Collection<TournamentEntity> tournaments) {
 		this.tournaments = tournaments;
-	}
-	
-	public VerificationToken getVerificationToken() {
-		return verificationToken;
-	}
-
-	public void setVerificationToken(VerificationToken verificationToken) {
-		this.verificationToken = verificationToken;
 	}
 	
 

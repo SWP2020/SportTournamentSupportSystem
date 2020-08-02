@@ -40,14 +40,14 @@ public class UserConverter {
 			dto.setUserID(entity.getId());
 		}
 		dto.setUsername(entity.getUsername());
-		dto.setActive(entity.getActive());
+		dto.setStatus(entity.getStatus());
 		
 		System.out.println("CP1");
-		dto.setCreatedate(validator.formatDate(entity.getCreateddate()));
+		dto.setCreatedate(validator.formatDate(entity.getCreatedDate()));
 		System.out.println("CP2");
 		dto.setDob(validator.formatDate(entity.getDob()));
 		dto.setEmail(entity.getEmail());
-		dto.setFirstname(entity.getFirstname());
+		dto.setFirstname(entity.getFirstName());
 		dto.setGender(entity.getGender());
 		dto.setImageprofile(entity.getAvatar());
 		dto.setLastname(dto.getLastname());

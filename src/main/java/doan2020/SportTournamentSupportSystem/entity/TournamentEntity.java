@@ -46,10 +46,6 @@ public class TournamentEntity{
 	
 	private String donor;
 	
-	private String status;
-	
-	private String url;
-	
 	private String createdBy;
 	
 	private Date createdDate;
@@ -57,6 +53,10 @@ public class TournamentEntity{
 	private String modifiedBy;
 	
 	private Date modifiedDate;
+	
+	private String status;
+	
+	private String url;
 	
 
 	@ManyToOne
@@ -141,6 +141,38 @@ public class TournamentEntity{
 		this.donor = donor;
 	}
 	
+	public String getCreatedBy() {
+		return createdBy;
+	}
+	
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+	
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+	
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+	
+	public String getModifiedBy() {
+		return modifiedBy;
+	}
+	
+	public void setModifiedBy(String modifiedBy) {
+		this.modifiedBy = modifiedBy;
+	}
+	
+	public Date getModifiedDate() {
+		return modifiedDate;
+	}
+	
+	public void setModifiedDate(Date modifiedDate) {
+		this.modifiedDate = modifiedDate;
+	}
+	
 	public String getStatus() {
 		return status;
 	}
@@ -157,38 +189,6 @@ public class TournamentEntity{
 		this.url = url;
 	}
 	
-	public String getCreatedby() {
-		return createdBy;
-	}
-	
-	public void setCreatedby(String createdBy) {
-		this.createdBy = createdBy;
-	}
-	
-	public Date getCreateddate() {
-		return createdDate;
-	}
-	
-	public void setCreateddate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
-	
-	public String getModifiedby() {
-		return modifiedBy;
-	}
-	
-	public void setModifiedby(String modifiedBy) {
-		this.modifiedBy = modifiedBy;
-	}
-	
-	public Date getModifieddate() {
-		return modifiedDate;
-	}
-	
-	public void setModifieddate(Date modifiedDate) {
-		this.modifiedDate = modifiedDate;
-	}
-	
 	public UserEntity getCreator() {
 		return creator;
 	}
@@ -197,11 +197,11 @@ public class TournamentEntity{
 		this.creator = creator;
 	}
 	
-	public Collection<UserEntity> getUserslist() {
+	public Collection<UserEntity> getUsersList() {
 		return usersList;
 	}
 	
-	public void setUserslist(Collection<UserEntity> usersList) {
+	public void setUsersList(Collection<UserEntity> usersList) {
 		this.usersList = usersList;
 	}
 	
