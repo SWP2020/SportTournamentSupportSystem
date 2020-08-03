@@ -76,8 +76,12 @@ public class TeamAPI {
 			TeamDtOut resDTO = converter.toDTO(teamEntity);
 			teamDtOuts.add(resDTO);
 			}
-			System.out.println(teamDtOuts.get(0).getFullName());
-			System.out.println("a");
+			int total = list.size();
+			int totalPage = total / limit;
+			if (total % limit != 0) {
+				totalPage++;
+			}
+			result.put("total page", totalPage);
 			result.put("list Team", teamDtOuts);
 			config.put("global", 0);
 			error.put("messageCode", 0);
@@ -138,8 +142,12 @@ public class TeamAPI {
 			TeamDtOut resDTO = converter.toDTO(teamEntity);
 			teamDtOuts.add(resDTO);
 			}
-			System.out.println(teamDtOuts.get(0).getFullName());
-			System.out.println("a");
+			int total = list.size();
+			int totalPage = total / limit;
+			if (total % limit != 0) {
+				totalPage++;
+			}
+			result.put("total page", totalPage);
 			result.put("list Team", teamDtOuts);
 			config.put("global", 0);
 			error.put("messageCode", 0);

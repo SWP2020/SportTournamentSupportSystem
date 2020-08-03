@@ -4,26 +4,51 @@ import java.util.Date;
 
 public class CompetitionDtOut {
 
-	private Long competitionId;
-
+private Long id;
+	
 	private String name;
-
+	
+	private String description;
+	
+	private boolean groupStage;
+	
 	private String status;
-
-	private String createdBy;
-
-	private Date createdDate;
-
-	private String modifiedBy;
-
-	private Date modifiedDate;
-
-	public Long getCompetitionId() {
-		return competitionId;
+	
+	private Long url;
+	
+	private Long tournamentId;
+	
+	private Long sportId;
+	
+	private Long mainFormatId;
+	
+	private Long groupStageFormatId;
+	
+	public CompetitionDtOut() {
+		
 	}
 
-	public void setId(Long competitionId) {
-		this.competitionId = competitionId;
+	public CompetitionDtOut(Long id, String name, String description, boolean groupStage, String status, Long url,
+			Long tournamentId, Long sportId, Long mainFormatId, Long groupStageFormatId) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.description = description;
+		this.groupStage = groupStage;
+		this.status = status;
+		this.url = url;
+		this.tournamentId = tournamentId;
+		this.sportId = sportId;
+		this.mainFormatId = mainFormatId;
+		this.groupStageFormatId = groupStageFormatId;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getName() {
@@ -34,6 +59,22 @@ public class CompetitionDtOut {
 		this.name = name;
 	}
 
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public boolean isGroupStage() {
+		return groupStage;
+	}
+
+	public void setGroupStage(boolean groupStage) {
+		this.groupStage = groupStage;
+	}
+
 	public String getStatus() {
 		return status;
 	}
@@ -42,35 +83,47 @@ public class CompetitionDtOut {
 		this.status = status;
 	}
 
-	public String getCreatedby() {
-		return createdBy;
+	public Long getUrl() {
+		return url;
 	}
 
-	public void setCreatedby(String createdBy) {
-		this.createdBy = createdBy;
+	public void setUrl(Long url) {
+		this.url = url;
 	}
 
-	public Date getCreateddate() {
-		return createdDate;
+	public Long getTournamentId() {
+		return tournamentId;
 	}
 
-	public void setCreateddate(Date createdDate) {
-		this.createdDate = createdDate;
+	public void setTournamentId(Long tournamentId) {
+		this.tournamentId = tournamentId;
 	}
 
-	public String getModifiedby() {
-		return modifiedBy;
+	public Long getSportId() {
+		return sportId;
 	}
 
-	public void setModifiedby(String modifiedBy) {
-		this.modifiedBy = modifiedBy;
+	public void setSportId(Long sportId) {
+		this.sportId = sportId;
 	}
 
-	public Date getModifieddate() {
-		return modifiedDate;
+	public Long getMainFormatId() {
+		return mainFormatId;
 	}
 
-	public void setModifieddate(Date modifiedDate) {
-		this.modifiedDate = modifiedDate;
+	public void setMainFormatId(Long mainFormatId) {
+		this.mainFormatId = mainFormatId;
 	}
+
+	public Long getGroupStageFormatId() {
+		return groupStageFormatId;
+	}
+
+	public void setGroupStageFormatId(Long groupStageFormatId) {
+		this.groupStageFormatId = groupStageFormatId;
+	}
+	
+	
+
+	
 }

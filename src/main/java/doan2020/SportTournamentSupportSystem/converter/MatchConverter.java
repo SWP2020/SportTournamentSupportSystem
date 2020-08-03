@@ -19,6 +19,7 @@ import doan2020.SportTournamentSupportSystem.entity.UserEntity;
 import doan2020.SportTournamentSupportSystem.service.ICompetitionService;
 import doan2020.SportTournamentSupportSystem.service.IUserService;
 import doan2020.SportTournamentSupportSystem.service.impl.UserService;
+import doan2020.SportTournamentSupportSystem.validator.Validator;
 import net.bytebuddy.implementation.bytecode.Throw;
 
 @Component
@@ -26,6 +27,9 @@ public class MatchConverter{
 	
 	@Autowired
 	ICompetitionService competitionService;
+	
+	@Autowired
+	private Validator validator;
 	
 	public MatchEntity toEntity(Map<String, Object> map) throws Exception{
 		MatchEntity entity = new MatchEntity();
@@ -35,14 +39,14 @@ public class MatchConverter{
 			entity.setNumOfSet((int) map.get("numOfSet"));
 			
 			String expected = String.valueOf(map.get("expectedDate"));
-			Date expectedDate = new SimpleDateFormat("yyyy-mm-dd").parse(expected);
-			entity.setExpectedDate((Date) map.get("expectedDate"));
+			Date expectedDate = validator.formatStringToDate(expected);
+			entity.setExpectedDate(expectedDate);
 			
 			entity.setExpectedPlace((String) map.get("expectedPlace"));
 			
 			String real = String.valueOf(map.get("realDate"));
-			Date realDate = new SimpleDateFormat("yyyy-mm-dd").parse(real);
-			entity.setRealDate((Date) map.get("realDate"));
+			Date realDate = validator.formatStringToDate(real);
+			entity.setRealDate(realDate);
 			
 			entity.setRealPlace((String) map.get("realPlace"));
 			entity.setStatus((String) map.get("status"));
@@ -65,9 +69,9 @@ public class MatchConverter{
 			dto.setId(entity.getId());
 			dto.setName(entity.getName());
 			dto.setNumOfSet(entity.getNumOfSet());
-			dto.setExpectedDate(entity.getExpectedDate());
+			dto.setExpectedDate(validator.formatDateToString(entity.getExpectedDate()));
 			dto.setExpectedPlace(entity.getExpectedPlace());
-			dto.setRealDate(entity.getRealDate());
+			dto.setRealDate(validator.formatDateToString(entity.getRealDate()));
 			dto.setRealPlace(entity.getRealPlace());
 			dto.setStatus(entity.getStatus());
 			dto.setCompetitionId(entity.getCompetition().getId());

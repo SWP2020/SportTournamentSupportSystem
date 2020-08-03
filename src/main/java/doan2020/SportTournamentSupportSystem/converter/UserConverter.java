@@ -37,24 +37,26 @@ public class UserConverter {
 	public UserDtOut toDTO(UserEntity entity) {
 		UserDtOut dto = new UserDtOut();
 		if (entity.getId() != null) {
-			dto.setUserID(entity.getId());
+			dto.setId(entity.getId());
 		}
 		dto.setUsername(entity.getUsername());
 		dto.setStatus(entity.getStatus());
 		
-		System.out.println("CP1");
-		dto.setCreatedate(validator.formatDate(entity.getCreatedDate()));
-		System.out.println("CP2");
-		dto.setDob(validator.formatDate(entity.getDob()));
+		dto.setAddress(entity.getAddress());
+		dto.setAvatar(entity.getAvatar());
+		dto.setBackground(entity.getBackground());
+		String dob = validator.formatDateToString(entity.getDob());
+		dto.setDob(dob);
 		dto.setEmail(entity.getEmail());
-		dto.setFirstname(entity.getFirstName());
+		dto.setFirstName(entity.getFirstName());
 		dto.setGender(entity.getGender());
-		dto.setImageprofile(entity.getAvatar());
-		dto.setLastname(dto.getLastname());
+		dto.setLastName(entity.getLastName());
 		dto.setPassword(entity.getPassword());
-		System.out.println("CP3");
-		dto.setAge(validator.ConvertDobToAge(validator.formatDate(entity.getDob())));
-		System.out.println("CP4");
+		dto.setPhoneNumber(entity.getPhoneNumber());
+		dto.setStatus(entity.getStatus());
+		dto.setUrl(entity.getUrl());
+		dto.setUsername(entity.getUsername());
+		dto.setAge(validator.ConvertDobToAge(dob));
 		return dto;
 	}
 
@@ -75,6 +77,10 @@ public class UserConverter {
 		
 		if (dto.getEmail() != null) {
 			entity.setEmail(dto.getEmail());
+		}
+		
+		if (dto.getPassword() != null) {
+			entity.setPassword(passwordEncoder.encode(dto.getPassword()));
 		}
 		
 		return entity;

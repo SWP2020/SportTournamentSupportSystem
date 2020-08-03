@@ -1,8 +1,10 @@
 package doan2020.SportTournamentSupportSystem.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,7 +19,7 @@ public class CompetitionService implements ICompetitionService {
 
 	@Autowired
 	private CompetitionRepository competitionRepository;
-	
+
 	@Autowired
 	private TournamentRepository tournamentRepository;
 
@@ -62,6 +64,22 @@ public class CompetitionService implements ICompetitionService {
 		TournamentEntity entity = new TournamentEntity();
 		entity = tournamentRepository.getOne(id);
 		return entity;
+	}
+
+	@Override
+	public List<CompetitionEntity> findByTournamentId(Pageable pageable, Long tournamentId) {
+		List<CompetitionEntity> competitionEntities = new ArrayList<CompetitionEntity>();
+
+		competitionEntities = competitionRepository.findByTournamentId(pageable, tournamentId).getContent();
+		return competitionEntities;
+	}
+
+	@Override
+	public List<CompetitionEntity> findByTournamentId(Long tournamentId) {
+		List<CompetitionEntity> competitionEntities = new ArrayList<CompetitionEntity>();
+
+		competitionEntities = competitionRepository.findByTournamentId(tournamentId);
+		return competitionEntities;
 	}
 
 }
