@@ -15,4 +15,6 @@ public interface TeamRepository extends JpaRepository<TeamEntity, Long> {
 	TeamEntity findOneById(Long id);
 	
 	Page<TeamEntity> findByCreatorId(Long creatorId, Pageable pageable);
+	
+	Page<TeamEntity> findByCompetitionId(Long competitionId, Pageable pageable);
 }
