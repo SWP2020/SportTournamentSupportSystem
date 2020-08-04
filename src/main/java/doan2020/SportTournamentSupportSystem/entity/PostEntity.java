@@ -32,6 +32,8 @@ public class PostEntity{
 	@NotNull
 	private String title;
 	
+	private boolean systemPost;
+	
 	private String content;
 	
 	private String createdBy;
@@ -41,6 +43,10 @@ public class PostEntity{
 	private String modifiedBy;
 	
 	private Date modifiedDate;
+	
+	private String status;
+	
+	private String url;
 	
 
 	@ManyToOne
@@ -57,6 +63,9 @@ public class PostEntity{
 	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
 	private Collection<CommentEntity> comments;
 
+	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+	private Collection<NotificationEntity> notifications;
+
 
 	public Long getId() {
 		return id;
@@ -70,6 +79,14 @@ public class PostEntity{
 		this.title = title;
 	}
 	
+	public boolean getSystemPost() {
+		return systemPost;
+	}
+	
+	public void setSystemPost(boolean systemPost) {
+		this.systemPost = systemPost;
+	}
+	
 	public String getContent() {
 		return content;
 	}
@@ -78,36 +95,52 @@ public class PostEntity{
 		this.content = content;
 	}
 	
-	public String getCreatedby() {
+	public String getCreatedBy() {
 		return createdBy;
 	}
 	
-	public void setCreatedby(String createdBy) {
+	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
 	}
 	
-	public Date getCreateddate() {
+	public Date getCreatedDate() {
 		return createdDate;
 	}
 	
-	public void setCreateddate(Date createdDate) {
+	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
 	}
 	
-	public String getModifiedby() {
+	public String getModifiedBy() {
 		return modifiedBy;
 	}
 	
-	public void setModifiedby(String modifiedBy) {
+	public void setModifiedBy(String modifiedBy) {
 		this.modifiedBy = modifiedBy;
 	}
 	
-	public Date getModifieddate() {
+	public Date getModifiedDate() {
 		return modifiedDate;
 	}
 	
-	public void setModifieddate(Date modifiedDate) {
+	public void setModifiedDate(Date modifiedDate) {
 		this.modifiedDate = modifiedDate;
+	}
+	
+	public String getStatus() {
+		return status;
+	}
+	
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	
+	public String getUrl() {
+		return url;
+	}
+	
+	public void setUrl(String url) {
+		this.url = url;
 	}
 	
 	public TournamentEntity getTournament() {
@@ -126,11 +159,11 @@ public class PostEntity{
 		this.author = author;
 	}
 	
-	public Collection<UserEntity> getUserslist() {
+	public Collection<UserEntity> getUsersList() {
 		return usersList;
 	}
 	
-	public void setUserslist(Collection<UserEntity> usersList) {
+	public void setUsersList(Collection<UserEntity> usersList) {
 		this.usersList = usersList;
 	}
 	
@@ -140,6 +173,14 @@ public class PostEntity{
 	
 	public void setComments(Collection<CommentEntity> comments) {
 		this.comments = comments;
+	}
+	
+	public Collection<NotificationEntity> getNotifications() {
+		return notifications;
+	}
+	
+	public void setNotifications(Collection<NotificationEntity> notifications) {
+		this.notifications = notifications;
 	}
 	
 

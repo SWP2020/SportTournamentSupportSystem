@@ -1,7 +1,6 @@
 package doan2020.SportTournamentSupportSystem.service.impl;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
@@ -16,7 +15,6 @@ import doan2020.SportTournamentSupportSystem.entity.UserEntity;
 import doan2020.SportTournamentSupportSystem.repository.UserRepository;
 import doan2020.SportTournamentSupportSystem.response.Response;
 import doan2020.SportTournamentSupportSystem.service.ILoginService;
-import doan2020.SportTournamentSupportSystem.service.IUserService;
 
 @Service
 public class LoginService implements ILoginService {
@@ -44,7 +42,7 @@ public class LoginService implements ILoginService {
 			boolean checkPW = passwordEncoder.matches(user.getPassword(), findUser.getPassword());
 			System.out.println("check pass OK");
 			if (StringUtils.equals(user.getUsername(), findUser.getUsername()) && checkPW) {
-				if (findUser.getActive()) {
+				if (findUser.getStatus().equals("active")) {
 
 					String token = jwtService.generateTokenLogin(user.getUsername());
 					UserDtOut userDtOut = userConverter.toDTO(findUser);

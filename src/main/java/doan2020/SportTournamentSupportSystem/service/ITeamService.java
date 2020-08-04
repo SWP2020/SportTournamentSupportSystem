@@ -18,4 +18,6 @@ public interface ITeamService {
 	public TeamEntity update(Long id, TeamEntity team);
 	
 	public Collection<TeamEntity> findAllByCreator(Long creator, Pageable pageable);
+	
+	public Collection<TeamEntity> findAllByCompetitionId(Long competitionId, Pageable pageable);
 }

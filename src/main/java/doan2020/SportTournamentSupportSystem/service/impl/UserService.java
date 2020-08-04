@@ -30,17 +30,6 @@ public class UserService implements IUserService {
 		}
 		return oldUserEntity;
 	}
-	
-//	@Override
-//	@Transactional
-//	public UserEntity findOneById(Long id) {
-//		System.out.println("Find one");
-//		List<UserEntity> x = userRepository.findAll();
-//		for (UserEntity e: x) {
-//			System.out.println(e.getUsername());
-//		}
-//		return null;
-//	}
 
 	@Override
 	public List<UserEntity> findAll(Pageable pageable) {

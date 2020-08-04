@@ -2,6 +2,8 @@ package doan2020.SportTournamentSupportSystem.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
+
 import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
 import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
 
@@ -17,4 +19,8 @@ public interface ICompetitionService {
 	public List<CompetitionEntity> findAllCompetition();
 	
 	public void deleteCompetition(CompetitionEntity competitionEntity);
+	
+	public List<CompetitionEntity> findByTournamentId(Pageable pageable, Long tournamentId);
+	
+	public List<CompetitionEntity> findByTournamentId(Long tournamentId);
 }

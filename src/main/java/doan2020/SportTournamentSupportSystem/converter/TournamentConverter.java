@@ -73,12 +73,13 @@ public class TournamentConverter{
 			dto.setCreatorId(entity.getCreator().getId());
 			System.out.println("CP3");
 			dto.setOpeningLocation(entity.getOpeningLocation());
-			dto.setOpeningTime(validator.formatDate(entity.getOpeningTime()));
+			dto.setOpeningTime(validator.formatDateToString(entity.getOpeningTime()));
 			dto.setClosingLocation(entity.getClosingLocation());
-			dto.setClosingTime(validator.formatDate(entity.getClosingTime()));
+			dto.setClosingTime(validator.formatDateToString(entity.getClosingTime()));
 			dto.setDonor(entity.getDonor());
 			dto.setStatus(entity.getStatus());
 			dto.setUrl(entity.getUrl());
+			dto.setProcess(0);
 			System.out.println("CP4");
 		} catch (Exception e) {
 			System.out.println("Has exception in TournamentConverter.toDTO");

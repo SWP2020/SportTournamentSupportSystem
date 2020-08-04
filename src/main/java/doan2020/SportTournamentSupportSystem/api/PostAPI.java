@@ -87,7 +87,12 @@ public class PostAPI {
 				postDtOuts.add(resDTO);
 				
 			}
-
+			int total = list.size();
+			int totalPage = total / limit;
+			if (total % limit != 0) {
+				totalPage++;
+			}
+			result.put("total page", totalPage);
 			result.put("list post", postDtOuts);
 			config.put("global", 0);
 			error.put("messageCode", 0);
@@ -161,7 +166,12 @@ public class PostAPI {
 				postDtOuts.add(resDTO);
 				
 			}
-
+			int total = list.size();
+			int totalPage = total / limit;
+			if (total % limit != 0) {
+				totalPage++;
+			}
+			result.put("total page", totalPage);
 			result.put("list post", postDtOuts);
 			config.put("global", 0);
 			error.put("messageCode", 0);

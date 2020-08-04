@@ -88,7 +88,12 @@ public class MatchAPI {
 				matchDtOuts.add(resDTO);
 				
 			}
-
+			int total = list.size();
+			int totalPage = total / limit;
+			if (total % limit != 0) {
+				totalPage++;
+			}
+			result.put("total page", totalPage);
 			result.put("list Match", matchDtOuts);
 			config.put("global", 0);
 			error.put("messageCode", 0);

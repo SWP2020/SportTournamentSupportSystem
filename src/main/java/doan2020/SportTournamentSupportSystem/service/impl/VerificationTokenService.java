@@ -80,7 +80,7 @@ public class VerificationTokenService implements IVerificationTokenService{
 
         verificationToken.setConfirmedDateTime(LocalDateTime.now());
         verificationToken.setStatus(VerificationToken.STATUS_VERIFIED);
-        verificationToken.getUser().setActive(true);
+        verificationToken.getUser().setStatus("active");;
         verificationTokenRepository.save(verificationToken);
         error.put("messageCode", "001");
 		error.put("message", "You have successfully verified your email address.");

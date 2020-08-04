@@ -79,4 +79,10 @@ public class TeamService implements ITeamService {
 		// TODO Auto-generated method stub
 		return (Collection<TeamEntity>) teamRepository.findByCreatorId(creator, pageable).getContent();
 	}
+
+	@Override
+	public Collection<TeamEntity> findAllByCompetitionId(Long competitionId, Pageable pageable) {
+		// TODO Auto-generated method stub
+		return (Collection<TeamEntity>) teamRepository.findByCompetitionId(competitionId, pageable).getContent();
+	}
 }

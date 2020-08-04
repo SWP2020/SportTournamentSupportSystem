@@ -1,20 +1,14 @@
 package doan2020.SportTournamentSupportSystem.dtOut;
 
-import java.util.Date;
-
-import doan2020.SportTournamentSupportSystem.entity.UserEntity;
-
 public class TournamentDtOut {
 
-	private Long id;
-
+    private Long id;
+	
 	private String fullName;
-
+	
 	private String shortName;
 	
 	private String description;
-
-	private Long creatorId;
 	
 	private String openingLocation;
 	
@@ -28,7 +22,15 @@ public class TournamentDtOut {
 	
 	private String status;
 	
+	private int process;
+	
 	private String url;
+	
+    private Long creatorId;
+    
+    private int countOfPlayer;
+    
+    private String listSport;
 
 	public TournamentDtOut() {
 		
@@ -36,7 +38,7 @@ public class TournamentDtOut {
 
 	public TournamentDtOut(Long id, String fullName, String shortName, String description,
 			Long creatorId, String openingLocation, String openingTime, String closingLocation, String closingTime,
-			String donor, String status, String url) {
+			String donor, String status, String url, int process) {
 		super();
 		this.id = id;
 		this.fullName = fullName;
@@ -50,6 +52,7 @@ public class TournamentDtOut {
 		this.donor = donor;
 		this.status = status;
 		this.url = url;
+		this.process = process;
 	}
 
 	public Long getId() {
@@ -147,5 +150,33 @@ public class TournamentDtOut {
 	public void setUrl(String url) {
 		this.url = url;
 	}
+
+	public int getProcess() {
+		return process;
+	}
+
+	public void setProcess(int process) {
+		this.process = process;
+	}
+
+	public int getCountOfPlayer() {
+		return countOfPlayer;
+	}
+
+	public void setCountOfPlayer(int countOfPlayer) {
+		this.countOfPlayer = countOfPlayer;
+	}
+
+	public String getListSport() {
+		return listSport;
+	}
+
+	public void setListSport(String listSport) {
+		this.listSport = listSport;
+	}
+	
+	
+	
+	
 
 }

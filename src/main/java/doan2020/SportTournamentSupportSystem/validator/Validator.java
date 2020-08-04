@@ -10,11 +10,21 @@ import org.springframework.stereotype.Component;
 @Component
 public class Validator {
 
-	public String formatDate(Date date) {
+	public String formatDateToString(Date date) {
 		try {
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 			String strDate = formatter.format(date);
 			return strDate;
+		} catch (Exception e) {
+			return null;
+		}
+	}
+	
+	public Date formatStringToDate(String date) {
+		try {
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+			Date dateExpected = formatter.parse(date);
+			return dateExpected;
 		} catch (Exception e) {
 			return null;
 		}

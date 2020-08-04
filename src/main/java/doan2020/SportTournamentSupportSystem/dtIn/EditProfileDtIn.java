@@ -10,6 +10,7 @@ public class EditProfileDtIn {
     private boolean gender;
 	private String address;
 	private String email;
+	private String password;
 	
 	public EditProfileDtIn() {
 		
@@ -69,6 +70,14 @@ public class EditProfileDtIn {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 	
 	

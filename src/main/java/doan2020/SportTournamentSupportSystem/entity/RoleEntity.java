@@ -43,6 +43,10 @@ public class RoleEntity{
 	
 	private Date modifiedDate;
 	
+	private String status;
+	
+	private String url;
+	
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(
@@ -76,43 +80,59 @@ public class RoleEntity{
 		this.description = description;
 	}
 	
-	public String getCreatedby() {
+	public String getCreatedBy() {
 		return createdBy;
 	}
 	
-	public void setCreatedby(String createdBy) {
+	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
 	}
 	
-	public Date getCreateddate() {
+	public Date getCreatedDate() {
 		return createdDate;
 	}
 	
-	public void setCreateddate(Date createdDate) {
+	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
 	}
 	
-	public String getModifiedby() {
+	public String getModifiedBy() {
 		return modifiedBy;
 	}
 	
-	public void setModifiedby(String modifiedBy) {
+	public void setModifiedBy(String modifiedBy) {
 		this.modifiedBy = modifiedBy;
 	}
 	
-	public Date getModifieddate() {
+	public Date getModifiedDate() {
 		return modifiedDate;
 	}
 	
-	public void setModifieddate(Date modifiedDate) {
+	public void setModifiedDate(Date modifiedDate) {
 		this.modifiedDate = modifiedDate;
 	}
 	
-	public Collection<ApiEntity> getApislist() {
+	public String getStatus() {
+		return status;
+	}
+	
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	
+	public String getUrl() {
+		return url;
+	}
+	
+	public void setUrl(String url) {
+		this.url = url;
+	}
+	
+	public Collection<ApiEntity> getApisList() {
 		return apisList;
 	}
 	
-	public void setApislist(Collection<ApiEntity> apisList) {
+	public void setApisList(Collection<ApiEntity> apisList) {
 		this.apisList = apisList;
 	}
 	

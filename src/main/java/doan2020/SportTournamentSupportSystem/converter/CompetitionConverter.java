@@ -11,7 +11,6 @@ import doan2020.SportTournamentSupportSystem.entity.SportEntity;
 import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
 import doan2020.SportTournamentSupportSystem.service.ISportService;
 import doan2020.SportTournamentSupportSystem.service.ITournamentService;
-import doan2020.SportTournamentSupportSystem.service.IUserService;
 
 @Component
 public class CompetitionConverter {
@@ -66,9 +65,10 @@ public class CompetitionConverter {
 		if(competitionDtIn.getStatus() != null) {
 			competitionEntity.setStatus(competitionDtIn.getName());
 		}
-//		if(competitionDtIn.getDescription() != null) {
-//			competitionEntity.setDescription(competitionDtIn.getDescription());
-//		}
+		
+		if(competitionDtIn.getDescription() != null) {
+			competitionEntity.setDescription(competitionDtIn.getDescription());
+		}
 		
 		if(competitionDtIn.getTournamentID() != null) {
 			tournamentEntity = tournamentService.findOneById(competitionDtIn.getTournamentID());
@@ -92,15 +92,19 @@ public class CompetitionConverter {
 	public CompetitionDtOut toDTO(CompetitionEntity competitionEntity) {
 		CompetitionDtOut competitionDtOut = new CompetitionDtOut();
 		try {
-		competitionDtOut.setCreatedby(competitionEntity.getCreatedby());
-		competitionDtOut.setCreateddate(competitionEntity.getCreateddate());
-		competitionDtOut.setModifiedby(competitionEntity.getModifiedby());
-		competitionDtOut.setModifieddate(competitionEntity.getModifieddate());
+	    competitionDtOut.setDescription(competitionEntity.getDescription());
+	    competitionDtOut.setGroupStage(competitionEntity.getGroupStage());
+	    competitionDtOut.setGroupStageFormatId(competitionEntity.getGroupStageFormat().getId());
+	    competitionDtOut.setMainFormatId(competitionEntity.getMainFormat().getId());
+	    competitionDtOut.setSportId(competitionEntity.getSport().getId());
+	    competitionDtOut.setTournamentId(competitionEntity.getTournament().getId());
 		competitionDtOut.setName(competitionEntity.getName());
 		competitionDtOut.setStatus(competitionEntity.getStatus());
 		competitionDtOut.setId(competitionEntity.getId());
+		System.out.println("pass");
 		}catch (Exception e) {
 			// TODO: handle exception
+			System.out.println("fail");
 		}
 		
 		return competitionDtOut;

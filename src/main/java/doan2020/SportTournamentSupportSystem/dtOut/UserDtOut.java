@@ -2,56 +2,66 @@ package doan2020.SportTournamentSupportSystem.dtOut;
 
 public class UserDtOut {
 
-	private Long userID;
-
-	private String username;
-
-	private String password;
-
-	private String firstname;
-
-	private String lastname;
+    private Long id;
 	
-	private String dob;
+	private String username;
+	
+	private String password;
+	
+	private String firstName;
+	
+	private String lastName;
+	
+	private String address;
+	
+	private String phoneNumber;
 	
 	private boolean gender;
 	
+	private String dob;
+	
 	private String email;
 	
-	private String imageprofile;
+	private String avatar;
 	
-	private boolean active;
+	private String background;
 	
-	private String createdate;
+	private String status;
+	
+	private String url;
 	
 	private int age;
 
 	public UserDtOut() {
 		
 	}
-	public UserDtOut(Long userID, String username, String password, String firstname, String lastname, String dob,
-			boolean gender, String email, String imageprofile, boolean active, String createdate, int age) {
+
+	public UserDtOut(Long id, String username, String password, String firstName, String lastName, String address,
+			String phoneNumber, boolean gender, String dob, String email, String avatar, String background, String status,
+			String url, int age) {
 		super();
-		this.userID = userID;
+		this.id = id;
 		this.username = username;
 		this.password = password;
-		this.firstname = firstname;
-		this.lastname = lastname;
-		this.dob = dob;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.address = address;
+		this.phoneNumber = phoneNumber;
 		this.gender = gender;
+		this.dob = dob;
 		this.email = email;
-		this.imageprofile = imageprofile;
-		this.active = active;
-		this.createdate = createdate;
-		this.age = age;
+		this.avatar = avatar;
+		this.background = background;
+		this.status = status;
+		this.url = url;
 	}
 
-	public Long getUserID() {
-		return userID;
+	public Long getId() {
+		return id;
 	}
 
-	public void setUserID(Long userID) {
-		this.userID = userID;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getUsername() {
@@ -70,28 +80,36 @@ public class UserDtOut {
 		this.password = password;
 	}
 
-	public String getFirstname() {
-		return firstname;
+	public String getFirstName() {
+		return firstName;
 	}
 
-	public void setFirstname(String firstname) {
-		this.firstname = firstname;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
 	}
 
-	public String getLastname() {
-		return lastname;
+	public String getLastName() {
+		return lastName;
 	}
 
-	public void setLastname(String lastname) {
-		this.lastname = lastname;
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 
-	public String getDob() {
-		return dob;
+	public String getAddress() {
+		return address;
 	}
 
-	public void setDob(String dob) {
-		this.dob = dob;
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
 	}
 
 	public boolean isGender() {
@@ -102,6 +120,14 @@ public class UserDtOut {
 		this.gender = gender;
 	}
 
+	public String getDob() {
+		return dob;
+	}
+
+	public void setDob(String dob) {
+		this.dob = dob;
+	}
+
 	public String getEmail() {
 		return email;
 	}
@@ -110,35 +136,44 @@ public class UserDtOut {
 		this.email = email;
 	}
 
-	public String getImageprofile() {
-		return imageprofile;
+	public String getAvatar() {
+		return avatar;
 	}
 
-	public void setImageprofile(String imageprofile) {
-		this.imageprofile = imageprofile;
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
 	}
 
-	public boolean isActive() {
-		return active;
+	public String getBackground() {
+		return background;
 	}
 
-	public void setActive(boolean active) {
-		this.active = active;
+	public void setBackground(String background) {
+		this.background = background;
 	}
 
-	public String getCreatedate() {
-		return createdate;
+	public String getStatus() {
+		return status;
 	}
 
-	public void setCreatedate(String createdate) {
-		this.createdate = createdate;
+	public void setStatus(String status) {
+		this.status = status;
 	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
 	public int getAge() {
 		return age;
 	}
+
 	public void setAge(int age) {
 		this.age = age;
 	}
-	
 	
 }
