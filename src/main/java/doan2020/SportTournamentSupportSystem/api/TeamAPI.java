@@ -53,7 +53,7 @@ public class TeamAPI {
 //		System.out.println("2");
 
 		if (page == null) {
-			result.put("team", null);
+			result.put("teams", null);
 			config.put("global", 0);
 			error.put("messageCode", 1);
 			error.put("message", "Required team id");
@@ -78,7 +78,7 @@ public class TeamAPI {
 			}
 			System.out.println(teamDtOuts.get(0).getFullName());
 			System.out.println("a");
-			result.put("list Team", teamDtOuts);
+			result.put("teams", teamDtOuts);
 			config.put("global", 0);
 			error.put("messageCode", 0);
 			error.put("message", "Found");
@@ -86,7 +86,7 @@ public class TeamAPI {
 			System.out.println("true");
 
 		} catch (Exception e) {
-			result.put("team", null);
+			result.put("teams", null);
 			config.put("global", 0);
 			error.put("messageCode", 1);
 			error.put("message", "Team is not exist");
@@ -115,7 +115,7 @@ public class TeamAPI {
 //		System.out.println("2");
 
 		if (page == null || id == null) {
-			result.put("team", null);
+			result.put("teams", null);
 			config.put("global", 0);
 			error.put("messageCode", 1);
 			error.put("message", "Required page and UserId");
@@ -140,7 +140,7 @@ public class TeamAPI {
 			}
 			System.out.println(teamDtOuts.get(0).getFullName());
 			System.out.println("a");
-			result.put("list Team", teamDtOuts);
+			result.put("teams", teamDtOuts);
 			config.put("global", 0);
 			error.put("messageCode", 0);
 			error.put("message", "Found");
@@ -148,7 +148,7 @@ public class TeamAPI {
 			System.out.println("true");
 
 		} catch (Exception e) {
-			result.put("team", null);
+			result.put("teams", null);
 			config.put("global", 0);
 			error.put("messageCode", 1);
 			error.put("message", "Team is not exist");

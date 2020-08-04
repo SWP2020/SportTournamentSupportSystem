@@ -47,7 +47,7 @@ public class UserConverter {
 		System.out.println("CP2");
 		dto.setDob(validator.formatDate(entity.getDob()));
 		dto.setEmail(entity.getEmail());
-		dto.setFirstname(entity.getFirstname());
+		dto.setFirstname(entity.getFirstName());
 		dto.setGender(entity.getGender());
 		dto.setImageprofile(entity.getAvatar());
 		dto.setLastname(dto.getLastname());

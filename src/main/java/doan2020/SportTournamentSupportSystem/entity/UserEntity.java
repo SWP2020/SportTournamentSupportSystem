@@ -134,19 +134,19 @@ public class UserEntity{
 		this.password = password;
 	}
 	
-	public String getFirstname() {
+	public String getFirstName() {
 		return firstName;
 	}
 	
-	public void setFirstname(String firstName) {
+	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
 	
-	public String getLastname() {
+	public String getLastName() {
 		return lastName;
 	}
 	
-	public void setLastname(String lastName) {
+	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
 	

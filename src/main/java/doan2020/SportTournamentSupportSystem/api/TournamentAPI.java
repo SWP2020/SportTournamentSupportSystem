@@ -42,7 +42,7 @@ public class TournamentAPI {
 	 */
 	@GetMapping("/getAll")
 	public ResponseEntity<Response> getTournamentPaging(@RequestParam(value = "page") Integer page) {
-		System.out.println("getTournament");
+		System.out.println("getTournamentPaging");
 		HttpStatus httpStatus = HttpStatus.OK;
 		Response response = new Response();
 		Map<String, Object> config = new HashMap<String, Object>();
@@ -108,7 +108,7 @@ public class TournamentAPI {
 
 	@GetMapping("/getAllByUserId")
 	public ResponseEntity<Response> getTournamentPagingByUserId(@RequestParam(value = "page") Integer page, @RequestParam(value = "id") Long id) {
-		System.out.println("getTournament");
+		System.out.println("getTournamentPagingByUserId");
 		HttpStatus httpStatus = HttpStatus.OK;
 		Response response = new Response();
 		Map<String, Object> config = new HashMap<String, Object>();
@@ -119,7 +119,7 @@ public class TournamentAPI {
 //		System.out.println("2");
 
 		if (page == null || id == null) {
-			result.put("tournament", null);
+			result.put("tournaments", null);
 			config.put("global", 0);
 			error.put("messageCode", 1);
 			error.put("message", "Required tournament's page!");
@@ -146,7 +146,7 @@ public class TournamentAPI {
 			}
 			System.out.println(tournamentDtOuts.get(0).getFullName());
 			System.out.println("a");
-			result.put("list tournament", tournamentDtOuts);
+			result.put("tournaments", tournamentDtOuts);
 			config.put("global", 0);
 			error.put("messageCode", 0);
 			error.put("message", "Found");
@@ -154,7 +154,7 @@ public class TournamentAPI {
 			System.out.println("true");
 
 		} catch (Exception e) {
-			result.put("tournament", null);
+			result.put("tournaments", null);
 			config.put("global", 0);
 			error.put("messageCode", 1);
 			error.put("message", "Tournament is not exist");

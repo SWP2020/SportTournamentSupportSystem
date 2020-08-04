@@ -187,6 +187,9 @@ public class UserAPI {
 				oldUserEntity = userService.findOneById(id);
 				if (oldUserEntity != null) {
 					userEntity = userConverter.toEntity(editProfileDtIn, oldUserEntity);
+					System.out.println(userEntity.getFirstName());
+					System.out.println(userEntity.getLastName());
+					System.out.println(userEntity.getAddress());
 					userService.editUser(userEntity);
 					httpStatus = HttpStatus.OK;
 					error.put("messageCode", 0);
