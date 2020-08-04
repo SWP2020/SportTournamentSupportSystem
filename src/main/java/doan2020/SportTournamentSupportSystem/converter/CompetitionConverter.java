@@ -93,15 +93,23 @@ public class CompetitionConverter {
 		CompetitionDtOut competitionDtOut = new CompetitionDtOut();
 		try {
 	    competitionDtOut.setDescription(competitionEntity.getDescription());
+	    System.out.println("pass1");
 	    competitionDtOut.setGroupStage(competitionEntity.getGroupStage());
+	    System.out.println("pass2");
 	    competitionDtOut.setGroupStageFormatId(competitionEntity.getGroupStageFormat().getId());
+	    System.out.println("pass3");
 	    competitionDtOut.setMainFormatId(competitionEntity.getMainFormat().getId());
+	    System.out.println("pass4");
 	    competitionDtOut.setSportId(competitionEntity.getSport().getId());
+	    System.out.println("pass5");
 	    competitionDtOut.setTournamentId(competitionEntity.getTournament().getId());
+	    System.out.println("pass6");
 		competitionDtOut.setName(competitionEntity.getName());
+		System.out.println("pass7");
 		competitionDtOut.setStatus(competitionEntity.getStatus());
+		System.out.println("pass8");
 		competitionDtOut.setId(competitionEntity.getId());
-		System.out.println("pass");
+		System.out.println("pass9");
 		}catch (Exception e) {
 			// TODO: handle exception
 			System.out.println("fail");
