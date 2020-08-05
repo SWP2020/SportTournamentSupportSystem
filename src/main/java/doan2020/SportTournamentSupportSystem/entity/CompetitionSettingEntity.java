@@ -56,116 +56,116 @@ public class CompetitionSettingEntity{
 	private CompetitionEntity competition;
 	
 	@OneToMany(mappedBy = "competitionSetting", cascade = CascadeType.ALL)
-	private Collection<RegisterForEntity> register_form;
+	private Collection<RegisterFormEntity> register_forms;
 
 
-	public Long getId() {
-		return id;
-	}
-	
-	public int getMaxNumberOfTeam() {
-		return maxNumberOfTeam;
-	}
-	
-	public void setMaxNumberOfTeam(int maxNumberOfTeam) {
-		this.maxNumberOfTeam = maxNumberOfTeam;
-	}
-	
-	public int getMaxMemberPerTeam() {
-		return maxMemberPerTeam;
-	}
-	
-	public void setMaxMemberPerTeam(int maxMemberPerTeam) {
-		this.maxMemberPerTeam = maxMemberPerTeam;
-	}
-	
-	public int getNumberOfTable() {
-		return numberOfTable;
-	}
-	
-	public void setNumberOfTable(int numberOfTable) {
-		this.numberOfTable = numberOfTable;
-	}
-	
-	public int getNumberOfTeamPassPerTable() {
-		return numberOfTeamPassPerTable;
-	}
-	
-	public void setNumberOfTeamPassPerTable(int numberOfTeamPassPerTable) {
-		this.numberOfTeamPassPerTable = numberOfTeamPassPerTable;
-	}
-	
-	public boolean getHomeGame() {
-		return homeGame;
-	}
-	
-	public void setHomeGame(boolean homeGame) {
-		this.homeGame = homeGame;
-	}
-	
-	public String getCreatedBy() {
-		return createdBy;
-	}
-	
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
-	
-	public Date getCreatedDate() {
-		return createdDate;
-	}
-	
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
-	
-	public String getModifiedBy() {
-		return modifiedBy;
-	}
-	
-	public void setModifiedBy(String modifiedBy) {
-		this.modifiedBy = modifiedBy;
-	}
-	
-	public Date getModifiedDate() {
-		return modifiedDate;
-	}
-	
-	public void setModifiedDate(Date modifiedDate) {
-		this.modifiedDate = modifiedDate;
-	}
-	
-	public String getStatus() {
-		return status;
-	}
-	
-	public void setStatus(String status) {
-		this.status = status;
-	}
-	
-	public String getUrl() {
-		return url;
-	}
-	
-	public void setUrl(String url) {
-		this.url = url;
-	}
-	
-	public CompetitionEntity getCompetition() {
-		return competition;
-	}
-	
-	public void setCompetition(CompetitionEntity competition) {
-		this.competition = competition;
-	}
-	
-	public Collection<RegisterForEntity> getRegisterForm() {
-		return register_form;
-	}
-	
-	public void setRegisterForm(Collection<RegisterForEntity> register_form) {
-		this.register_form = register_form;
-	}
-	
+public Long getId() {
+	return id;
+}
+
+public int getMaxNumberOfTeam() {
+	return maxNumberOfTeam;
+}
+
+public void setMaxNumberOfTeam(int maxNumberOfTeam) {
+	this.maxNumberOfTeam = maxNumberOfTeam;
+}
+
+public int getMaxMemberPerTeam() {
+	return maxMemberPerTeam;
+}
+
+public void setMaxMemberPerTeam(int maxMemberPerTeam) {
+	this.maxMemberPerTeam = maxMemberPerTeam;
+}
+
+public int getNumberOfTable() {
+	return numberOfTable;
+}
+
+public void setNumberOfTable(int numberOfTable) {
+	this.numberOfTable = numberOfTable;
+}
+
+public int getNumberOfTeamPassPerTable() {
+	return numberOfTeamPassPerTable;
+}
+
+public void setNumberOfTeamPassPerTable(int numberOfTeamPassPerTable) {
+	this.numberOfTeamPassPerTable = numberOfTeamPassPerTable;
+}
+
+public boolean getHomeGame() {
+	return homeGame;
+}
+
+public void setHomeGame(boolean homeGame) {
+	this.homeGame = homeGame;
+}
+
+public String getCreatedBy() {
+	return createdBy;
+}
+
+public void setCreatedBy(String createdBy) {
+	this.createdBy = createdBy;
+}
+
+public Date getCreatedDate() {
+	return createdDate;
+}
+
+public void setCreatedDate(Date createdDate) {
+	this.createdDate = createdDate;
+}
+
+public String getModifiedBy() {
+	return modifiedBy;
+}
+
+public void setModifiedBy(String modifiedBy) {
+	this.modifiedBy = modifiedBy;
+}
+
+public Date getModifiedDate() {
+	return modifiedDate;
+}
+
+public void setModifiedDate(Date modifiedDate) {
+	this.modifiedDate = modifiedDate;
+}
+
+public String getStatus() {
+	return status;
+}
+
+public void setStatus(String status) {
+	this.status = status;
+}
+
+public String getUrl() {
+	return url;
+}
+
+public void setUrl(String url) {
+	this.url = url;
+}
+
+public CompetitionEntity getCompetition() {
+	return competition;
+}
+
+public void setCompetition(CompetitionEntity competition) {
+	this.competition = competition;
+}
+
+public Collection<RegisterFormEntity> getRegisterForms() {
+	return register_forms;
+}
+
+public void setRegisterForms(Collection<RegisterFormEntity> register_forms) {
+	this.register_forms = register_forms;
+}
+
 
 }

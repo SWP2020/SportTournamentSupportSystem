@@ -1,17 +1,14 @@
+
 package doan2020.SportTournamentSupportSystem.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
-import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
 import doan2020.SportTournamentSupportSystem.repository.CompetitionRepository;
-import doan2020.SportTournamentSupportSystem.repository.TournamentRepository;
 import doan2020.SportTournamentSupportSystem.service.ICompetitionService;
 
 @Service
@@ -20,66 +17,66 @@ public class CompetitionService implements ICompetitionService {
 	@Autowired
 	private CompetitionRepository competitionRepository;
 
-	@Autowired
-	private TournamentRepository tournamentRepository;
-
 	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public void addCompetition(CompetitionEntity competitionEntity) {
-		competitionRepository.save(competitionEntity);
+	public CompetitionEntity create(CompetitionEntity competitionEntity) {
+		CompetitionEntity newEntity = null;
+		try {
+			newEntity = competitionRepository.save(competitionEntity);
+		} catch (Exception e) {
+			return null;
+		}
+		return newEntity;
 	}
 
 	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public void editCompetition(CompetitionEntity competitionEntity) {
-		competitionRepository.save(competitionEntity);
+	public CompetitionEntity update(Long id, CompetitionEntity newEntity) {
+		CompetitionEntity updatedEntity = null;
+		try {
+			updatedEntity = competitionRepository.findOneById(id);
 
+			updatedEntity.setName(newEntity.getName());
+			updatedEntity.setDescription(newEntity.getDescription());
+			updatedEntity.setTournament(newEntity.getTournament());
+			updatedEntity.setSport(newEntity.getSport());
+			updatedEntity.setMainFormat(newEntity.getMainFormat());
+			updatedEntity.setGroupStage(newEntity.getGroupStage());
+			updatedEntity.setGroupStageFormat(newEntity.getGroupStageFormat());
+			updatedEntity.setCreatedBy(newEntity.getCreatedBy());
+			updatedEntity.setCreatedDate(newEntity.getCreatedDate());
+			updatedEntity.setModifiedBy(newEntity.getModifiedBy());
+			updatedEntity.setModifiedDate(newEntity.getModifiedDate());
+			updatedEntity.setStatus(newEntity.getStatus());
+			updatedEntity.setUrl(newEntity.getUrl());
+			updatedEntity = competitionRepository.save(updatedEntity);
+		} catch (Exception e) {
+			return null;
+		}
+        
+		return updatedEntity;
 	}
 
 	@Override
-	public List<CompetitionEntity> findAllCompetition() {
-		List<CompetitionEntity> competitionEntities = competitionRepository.findAll();
-		return competitionEntities;
-	}
-
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public void deleteCompetition(CompetitionEntity competitionEntity) {
-		// TODO Auto-generated method stub
-		competitionRepository.delete(competitionEntity);
-
+	public CompetitionEntity delete(Long id) {
+		CompetitionEntity deletedEntity = null;
+		try {
+			deletedEntity = competitionRepository.findOneById(id);
+			deletedEntity.setStatus("deleted");
+			deletedEntity = competitionRepository.save(deletedEntity);
+		} catch (Exception e) {
+			return null;
+		}
+		return deletedEntity;
 	}
 
 	@Override
 	public CompetitionEntity findOneById(Long id) {
-		CompetitionEntity competitionEntity = null;
-		if (id != null) {
-			competitionEntity = competitionRepository.findOneById(id);
+		CompetitionEntity foundEntity = null;
+		try {
+			foundEntity = competitionRepository.findOneById(id);
+		} catch (Exception e) {
+			return null;
 		}
-		return competitionEntity;
-	}
-
-	@Override
-	public TournamentEntity findOneByTournamentID(Long id) {
-		TournamentEntity entity = new TournamentEntity();
-		entity = tournamentRepository.getOne(id);
-		return entity;
-	}
-
-	@Override
-	public List<CompetitionEntity> findByTournamentId(Pageable pageable, Long tournamentId) {
-		List<CompetitionEntity> competitionEntities = new ArrayList<CompetitionEntity>();
-
-		competitionEntities = competitionRepository.findByTournamentId(pageable, tournamentId).getContent();
-		return competitionEntities;
-	}
-
-	@Override
-	public List<CompetitionEntity> findByTournamentId(Long tournamentId) {
-		List<CompetitionEntity> competitionEntities = new ArrayList<CompetitionEntity>();
-
-		competitionEntities = competitionRepository.findByTournamentId(tournamentId);
-		return competitionEntities;
+		return foundEntity;
 	}
 
 }

@@ -24,45 +24,45 @@ import doan2020.SportTournamentSupportSystem.service.impl.VerificationTokenServi
 @RequestMapping("/login")
 public class LoginAPI {
 
-	@Autowired
-	private LoginService loginService;
-	
-	@Autowired
-	VerificationTokenService verificationTokenService;
-
-	@PostMapping
-	public ResponseEntity<Response> login(@RequestBody LoginDtIn user) {
-		HttpStatus httpStatus = HttpStatus.OK;
-		Response response = new Response();
-		try {
-			System.out.println(user.getUsername());
-			response = loginService.checkLogin(user);
-			if (response.getResult().containsKey("Authentication")) {
-
-				httpStatus = HttpStatus.OK;
-			}
-		} catch (Exception ex) {
-			httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-		}
-		return new ResponseEntity<Response>(response, httpStatus);
-	}
-	
-	
-	
-	@GetMapping("/verify-authentication")
-    public ResponseEntity<Response> verifyEmail(@RequestBody VerifyAuthenticationDtIn VerifyAuthenticationDtIn) {
-		HttpStatus httpStatus = null;
-		Response response = new Response();
-		Map<String, Object> result = new HashMap<String, Object>();
-		Map<String, Object> error = new HashMap<String, Object>();
-	    try {
-	    	response = verificationTokenService.verifyEmail(VerifyAuthenticationDtIn);
-	        httpStatus = HttpStatus.OK;
-
-	    } catch (Exception ex) {
-	      httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-	    }
-	    return new ResponseEntity<Response>(response, httpStatus);
-    }
+//	@Autowired
+//	private LoginService loginService;
+//	
+//	@Autowired
+//	VerificationTokenService verificationTokenService;
+//
+//	@PostMapping
+//	public ResponseEntity<Response> login(@RequestBody LoginDtIn user) {
+//		HttpStatus httpStatus = HttpStatus.OK;
+//		Response response = new Response();
+//		try {
+//			System.out.println(user.getUsername());
+//			response = loginService.checkLogin(user);
+//			if (response.getResult().containsKey("Authentication")) {
+//
+//				httpStatus = HttpStatus.OK;
+//			}
+//		} catch (Exception ex) {
+//			httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+//		}
+//		return new ResponseEntity<Response>(response, httpStatus);
+//	}
+//	
+//	
+//	
+//	@GetMapping("/verify-authentication")
+//    public ResponseEntity<Response> verifyEmail(@RequestBody VerifyAuthenticationDtIn VerifyAuthenticationDtIn) {
+//		HttpStatus httpStatus = null;
+//		Response response = new Response();
+//		Map<String, Object> result = new HashMap<String, Object>();
+//		Map<String, Object> error = new HashMap<String, Object>();
+//	    try {
+//	    	response = verificationTokenService.verifyEmail(VerifyAuthenticationDtIn);
+//	        httpStatus = HttpStatus.OK;
+//
+//	    } catch (Exception ex) {
+//	      httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+//	    }
+//	    return new ResponseEntity<Response>(response, httpStatus);
+//    }
 
 }

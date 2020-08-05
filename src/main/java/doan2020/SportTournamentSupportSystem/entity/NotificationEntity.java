@@ -61,89 +61,89 @@ public class NotificationEntity{
 	private Collection<UserEntity> usersList;
 	
 
-	public Long getId() {
-		return id;
-	}
-	
-	public String getTitle() {
-		return title;
-	}
-	
-	public void setTitle(String title) {
-		this.title = title;
-	}
-	
-	public String getContent() {
-		return content;
-	}
-	
-	public void setContent(String content) {
-		this.content = content;
-	}
-	
-	public String getCreatedBy() {
-		return createdBy;
-	}
-	
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
-	
-	public Date getCreatedDate() {
-		return createdDate;
-	}
-	
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
-	
-	public String getModifiedBy() {
-		return modifiedBy;
-	}
-	
-	public void setModifiedBy(String modifiedBy) {
-		this.modifiedBy = modifiedBy;
-	}
-	
-	public Date getModifiedDate() {
-		return modifiedDate;
-	}
-	
-	public void setModifiedDate(Date modifiedDate) {
-		this.modifiedDate = modifiedDate;
-	}
-	
-	public String getStatus() {
-		return status;
-	}
-	
-	public void setStatus(String status) {
-		this.status = status;
-	}
-	
-	public String getUrl() {
-		return url;
-	}
-	
-	public void setUrl(String url) {
-		this.url = url;
-	}
-	
-	public PostEntity getPost() {
-		return post;
-	}
-	
-	public void setPost(PostEntity post) {
-		this.post = post;
-	}
-	
-	public Collection<UserEntity> getUsersList() {
-		return usersList;
-	}
-	
-	public void setUsersList(Collection<UserEntity> usersList) {
-		this.usersList = usersList;
-	}
-	
+public Long getId() {
+	return id;
+}
+
+public String getTitle() {
+	return title;
+}
+
+public void setTitle(String title) {
+	this.title = title;
+}
+
+public String getContent() {
+	return content;
+}
+
+public void setContent(String content) {
+	this.content = content;
+}
+
+public String getCreatedBy() {
+	return createdBy;
+}
+
+public void setCreatedBy(String createdBy) {
+	this.createdBy = createdBy;
+}
+
+public Date getCreatedDate() {
+	return createdDate;
+}
+
+public void setCreatedDate(Date createdDate) {
+	this.createdDate = createdDate;
+}
+
+public String getModifiedBy() {
+	return modifiedBy;
+}
+
+public void setModifiedBy(String modifiedBy) {
+	this.modifiedBy = modifiedBy;
+}
+
+public Date getModifiedDate() {
+	return modifiedDate;
+}
+
+public void setModifiedDate(Date modifiedDate) {
+	this.modifiedDate = modifiedDate;
+}
+
+public String getStatus() {
+	return status;
+}
+
+public void setStatus(String status) {
+	this.status = status;
+}
+
+public String getUrl() {
+	return url;
+}
+
+public void setUrl(String url) {
+	this.url = url;
+}
+
+public PostEntity getPost() {
+	return post;
+}
+
+public void setPost(PostEntity post) {
+	this.post = post;
+}
+
+public Collection<UserEntity> getUsersList() {
+	return usersList;
+}
+
+public void setUsersList(Collection<UserEntity> usersList) {
+	this.usersList = usersList;
+}
+
 
 }

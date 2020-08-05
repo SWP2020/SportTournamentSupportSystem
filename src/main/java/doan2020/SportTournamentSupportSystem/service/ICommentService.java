@@ -1,19 +1,21 @@
+
 package doan2020.SportTournamentSupportSystem.service;
 
-import java.util.List;
-
+import java.util.Collection;
+import org.springframework.data.domain.Pageable;
 import doan2020.SportTournamentSupportSystem.entity.CommentEntity;
 
 public interface ICommentService {
-	CommentEntity findOneById(Long id);
-
-	List<CommentEntity> findByPostId(Long postId);
 	
-	List<CommentEntity> findByAuthorId(Long authorId);
+	public CommentEntity findOneById(Long id);
 	
-	void addComment(CommentEntity commentEntity);
+//	public Collection<CommentEntity> findAll(Pageable pageable);
 	
-	void editComment(CommentEntity commentEntity);
+	public CommentEntity create(CommentEntity commentEntity);
 	
-	void deleteComment(CommentEntity commentEntity);
+	public CommentEntity update(Long id, CommentEntity newEntity);
+	
+//	public Collection<CommentEntity> findAll();
+	
+	public CommentEntity delete(Long id);
 }

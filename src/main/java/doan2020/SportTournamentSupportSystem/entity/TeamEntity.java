@@ -34,6 +34,7 @@ public class TeamEntity{
 	@NotNull
 	private String fullName;
 	
+	@NotNull
 	private String shortName;
 	
 	private String description;
@@ -74,132 +75,132 @@ public class TeamEntity{
 	private Collection<ResultEntity> results;
 
 	@OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
-	private Collection<RegisterForEntity> register_form;
+	private Collection<RegisterFormEntity> register_forms;
 
 
-	public Long getId() {
-		return id;
-	}
-	
-	public String getFullName() {
-		return fullName;
-	}
-	
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
-	}
-	
-	public String getShortName() {
-		return shortName;
-	}
-	
-	public void setShortName(String shortName) {
-		this.shortName = shortName;
-	}
-	
-	public String getDescription() {
-		return description;
-	}
-	
-	public void setDescription(String description) {
-		this.description = description;
-	}
-	
-	public String getCreatedBy() {
-		return createdBy;
-	}
-	
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
-	
-	public Date getCreatedDate() {
-		return createdDate;
-	}
-	
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
-	
-	public String getModifiedBy() {
-		return modifiedBy;
-	}
-	
-	public void setModifiedBy(String modifiedBy) {
-		this.modifiedBy = modifiedBy;
-	}
-	
-	public Date getModifiedDate() {
-		return modifiedDate;
-	}
-	
-	public void setModifiedDate(Date modifiedDate) {
-		this.modifiedDate = modifiedDate;
-	}
-	
-	public String getStatus() {
-		return status;
-	}
-	
-	public void setStatus(String status) {
-		this.status = status;
-	}
-	
-	public String getUrl() {
-		return url;
-	}
-	
-	public void setUrl(String url) {
-		this.url = url;
-	}
-	
-	public UserEntity getCreator() {
-		return creator;
-	}
-	
-	public void setCreator(UserEntity creator) {
-		this.creator = creator;
-	}
-	
-	public CompetitionEntity getCompetition() {
-		return competition;
-	}
-	
-	public void setCompetition(CompetitionEntity competition) {
-		this.competition = competition;
-	}
-	
-	public Collection<MatchEntity> getMatchesList() {
-		return matchesList;
-	}
-	
-	public void setMatchesList(Collection<MatchEntity> matchesList) {
-		this.matchesList = matchesList;
-	}
-	
-	public Collection<PlayerEntity> getPlayers() {
-		return players;
-	}
-	
-	public void setPlayers(Collection<PlayerEntity> players) {
-		this.players = players;
-	}
-	
-	public Collection<ResultEntity> getResults() {
-		return results;
-	}
-	
-	public void setResults(Collection<ResultEntity> results) {
-		this.results = results;
-	}
-	
-	public Collection<RegisterForEntity> getRegisterForm() {
-		return register_form;
-	}
-	
-	public void setRegisterForm(Collection<RegisterForEntity> register_form) {
-		this.register_form = register_form;
-	}
-	
+public Long getId() {
+	return id;
+}
+
+public String getFullName() {
+	return fullName;
+}
+
+public void setFullName(String fullName) {
+	this.fullName = fullName;
+}
+
+public String getShortName() {
+	return shortName;
+}
+
+public void setShortName(String shortName) {
+	this.shortName = shortName;
+}
+
+public String getDescription() {
+	return description;
+}
+
+public void setDescription(String description) {
+	this.description = description;
+}
+
+public String getCreatedBy() {
+	return createdBy;
+}
+
+public void setCreatedBy(String createdBy) {
+	this.createdBy = createdBy;
+}
+
+public Date getCreatedDate() {
+	return createdDate;
+}
+
+public void setCreatedDate(Date createdDate) {
+	this.createdDate = createdDate;
+}
+
+public String getModifiedBy() {
+	return modifiedBy;
+}
+
+public void setModifiedBy(String modifiedBy) {
+	this.modifiedBy = modifiedBy;
+}
+
+public Date getModifiedDate() {
+	return modifiedDate;
+}
+
+public void setModifiedDate(Date modifiedDate) {
+	this.modifiedDate = modifiedDate;
+}
+
+public String getStatus() {
+	return status;
+}
+
+public void setStatus(String status) {
+	this.status = status;
+}
+
+public String getUrl() {
+	return url;
+}
+
+public void setUrl(String url) {
+	this.url = url;
+}
+
+public UserEntity getCreator() {
+	return creator;
+}
+
+public void setCreator(UserEntity creator) {
+	this.creator = creator;
+}
+
+public CompetitionEntity getCompetition() {
+	return competition;
+}
+
+public void setCompetition(CompetitionEntity competition) {
+	this.competition = competition;
+}
+
+public Collection<MatchEntity> getMatchesList() {
+	return matchesList;
+}
+
+public void setMatchesList(Collection<MatchEntity> matchesList) {
+	this.matchesList = matchesList;
+}
+
+public Collection<PlayerEntity> getPlayers() {
+	return players;
+}
+
+public void setPlayers(Collection<PlayerEntity> players) {
+	this.players = players;
+}
+
+public Collection<ResultEntity> getResults() {
+	return results;
+}
+
+public void setResults(Collection<ResultEntity> results) {
+	this.results = results;
+}
+
+public Collection<RegisterFormEntity> getRegisterForms() {
+	return register_forms;
+}
+
+public void setRegisterForms(Collection<RegisterFormEntity> register_forms) {
+	this.register_forms = register_forms;
+}
+
 
 }

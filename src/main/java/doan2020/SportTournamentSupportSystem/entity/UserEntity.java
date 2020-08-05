@@ -107,217 +107,217 @@ public class UserEntity{
 	private Collection<TournamentEntity> tournaments;
 
 
-	public Long getId() {
-		return id;
-	}
-	
-	public String getUsername() {
-		return username;
-	}
-	
-	public void setUsername(String username) {
-		this.username = username;
-	}
-	
-	public String getPassword() {
-		return password;
-	}
-	
-	public void setPassword(String password) {
-		this.password = password;
-	}
-	
-	public String getFirstName() {
-		return firstName;
-	}
-	
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-	
-	public String getLastName() {
-		return lastName;
-	}
-	
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-	
-	public String getAddress() {
-		return address;
-	}
-	
-	public void setAddress(String address) {
-		this.address = address;
-	}
-	
-	public String getPhoneNumber() {
-		return phoneNumber;
-	}
-	
-	public void setPhoneNumber(String phoneNumber) {
-		this.phoneNumber = phoneNumber;
-	}
-	
-	public boolean getGender() {
-		return gender;
-	}
-	
-	public void setGender(boolean gender) {
-		this.gender = gender;
-	}
-	
-	public Date getDob() {
-		return dob;
-	}
-	
-	public void setDob(Date dob) {
-		this.dob = dob;
-	}
-	
-	public String getEmail() {
-		return email;
-	}
-	
-	public void setEmail(String email) {
-		this.email = email;
-	}
-	
-	public String getAvatar() {
-		return avatar;
-	}
-	
-	public void setAvatar(String avatar) {
-		this.avatar = avatar;
-	}
-	
-	public String getBackground() {
-		return background;
-	}
-	
-	public void setBackground(String background) {
-		this.background = background;
-	}
-	
-	public String getCreatedBy() {
-		return createdBy;
-	}
-	
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
-	
-	public Date getCreatedDate() {
-		return createdDate;
-	}
-	
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
-	
-	public String getModifiedBy() {
-		return modifiedBy;
-	}
-	
-	public void setModifiedBy(String modifiedBy) {
-		this.modifiedBy = modifiedBy;
-	}
-	
-	public Date getModifiedDate() {
-		return modifiedDate;
-	}
-	
-	public void setModifiedDate(Date modifiedDate) {
-		this.modifiedDate = modifiedDate;
-	}
-	
-	public String getStatus() {
-		return status;
-	}
-	
-	public void setStatus(String status) {
-		this.status = status;
-	}
-	
-	public String getUrl() {
-		return url;
-	}
-	
-	public void setUrl(String url) {
-		this.url = url;
-	}
-	
-	public RoleEntity getRole() {
-		return role;
-	}
-	
-	public void setRole(RoleEntity role) {
-		this.role = role;
-	}
-	
-	public Collection<TournamentEntity> getTournamentsList() {
-		return tournamentsList;
-	}
-	
-	public void setTournamentsList(Collection<TournamentEntity> tournamentsList) {
-		this.tournamentsList = tournamentsList;
-	}
-	
-	public Collection<PostEntity> getPostsList() {
-		return postsList;
-	}
-	
-	public void setPostsList(Collection<PostEntity> postsList) {
-		this.postsList = postsList;
-	}
-	
-	public Collection<NotificationEntity> getNotificationsList() {
-		return notificationsList;
-	}
-	
-	public void setNotificationsList(Collection<NotificationEntity> notificationsList) {
-		this.notificationsList = notificationsList;
-	}
-	
-	public Collection<ReportEntity> getReports() {
-		return reports;
-	}
-	
-	public void setReports(Collection<ReportEntity> reports) {
-		this.reports = reports;
-	}
-	
-	public Collection<CommentEntity> getComments() {
-		return comments;
-	}
-	
-	public void setComments(Collection<CommentEntity> comments) {
-		this.comments = comments;
-	}
-	
-	public Collection<PostEntity> getPosts() {
-		return posts;
-	}
-	
-	public void setPosts(Collection<PostEntity> posts) {
-		this.posts = posts;
-	}
-	
-	public Collection<TeamEntity> getTeams() {
-		return teams;
-	}
-	
-	public void setTeams(Collection<TeamEntity> teams) {
-		this.teams = teams;
-	}
-	
-	public Collection<TournamentEntity> getTournaments() {
-		return tournaments;
-	}
-	
-	public void setTournaments(Collection<TournamentEntity> tournaments) {
-		this.tournaments = tournaments;
-	}
-	
+public Long getId() {
+	return id;
+}
+
+public String getUsername() {
+	return username;
+}
+
+public void setUsername(String username) {
+	this.username = username;
+}
+
+public String getPassword() {
+	return password;
+}
+
+public void setPassword(String password) {
+	this.password = password;
+}
+
+public String getFirstName() {
+	return firstName;
+}
+
+public void setFirstName(String firstName) {
+	this.firstName = firstName;
+}
+
+public String getLastName() {
+	return lastName;
+}
+
+public void setLastName(String lastName) {
+	this.lastName = lastName;
+}
+
+public String getAddress() {
+	return address;
+}
+
+public void setAddress(String address) {
+	this.address = address;
+}
+
+public String getPhoneNumber() {
+	return phoneNumber;
+}
+
+public void setPhoneNumber(String phoneNumber) {
+	this.phoneNumber = phoneNumber;
+}
+
+public boolean getGender() {
+	return gender;
+}
+
+public void setGender(boolean gender) {
+	this.gender = gender;
+}
+
+public Date getDob() {
+	return dob;
+}
+
+public void setDob(Date dob) {
+	this.dob = dob;
+}
+
+public String getEmail() {
+	return email;
+}
+
+public void setEmail(String email) {
+	this.email = email;
+}
+
+public String getAvatar() {
+	return avatar;
+}
+
+public void setAvatar(String avatar) {
+	this.avatar = avatar;
+}
+
+public String getBackground() {
+	return background;
+}
+
+public void setBackground(String background) {
+	this.background = background;
+}
+
+public String getCreatedBy() {
+	return createdBy;
+}
+
+public void setCreatedBy(String createdBy) {
+	this.createdBy = createdBy;
+}
+
+public Date getCreatedDate() {
+	return createdDate;
+}
+
+public void setCreatedDate(Date createdDate) {
+	this.createdDate = createdDate;
+}
+
+public String getModifiedBy() {
+	return modifiedBy;
+}
+
+public void setModifiedBy(String modifiedBy) {
+	this.modifiedBy = modifiedBy;
+}
+
+public Date getModifiedDate() {
+	return modifiedDate;
+}
+
+public void setModifiedDate(Date modifiedDate) {
+	this.modifiedDate = modifiedDate;
+}
+
+public String getStatus() {
+	return status;
+}
+
+public void setStatus(String status) {
+	this.status = status;
+}
+
+public String getUrl() {
+	return url;
+}
+
+public void setUrl(String url) {
+	this.url = url;
+}
+
+public RoleEntity getRole() {
+	return role;
+}
+
+public void setRole(RoleEntity role) {
+	this.role = role;
+}
+
+public Collection<TournamentEntity> getTournamentsList() {
+	return tournamentsList;
+}
+
+public void setTournamentsList(Collection<TournamentEntity> tournamentsList) {
+	this.tournamentsList = tournamentsList;
+}
+
+public Collection<PostEntity> getPostsList() {
+	return postsList;
+}
+
+public void setPostsList(Collection<PostEntity> postsList) {
+	this.postsList = postsList;
+}
+
+public Collection<NotificationEntity> getNotificationsList() {
+	return notificationsList;
+}
+
+public void setNotificationsList(Collection<NotificationEntity> notificationsList) {
+	this.notificationsList = notificationsList;
+}
+
+public Collection<ReportEntity> getReports() {
+	return reports;
+}
+
+public void setReports(Collection<ReportEntity> reports) {
+	this.reports = reports;
+}
+
+public Collection<CommentEntity> getComments() {
+	return comments;
+}
+
+public void setComments(Collection<CommentEntity> comments) {
+	this.comments = comments;
+}
+
+public Collection<PostEntity> getPosts() {
+	return posts;
+}
+
+public void setPosts(Collection<PostEntity> posts) {
+	this.posts = posts;
+}
+
+public Collection<TeamEntity> getTeams() {
+	return teams;
+}
+
+public void setTeams(Collection<TeamEntity> teams) {
+	this.teams = teams;
+}
+
+public Collection<TournamentEntity> getTournaments() {
+	return tournaments;
+}
+
+public void setTournaments(Collection<TournamentEntity> tournaments) {
+	this.tournaments = tournaments;
+}
+
 
 }

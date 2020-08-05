@@ -67,121 +67,121 @@ public class PostEntity{
 	private Collection<NotificationEntity> notifications;
 
 
-	public Long getId() {
-		return id;
-	}
-	
-	public String getTitle() {
-		return title;
-	}
-	
-	public void setTitle(String title) {
-		this.title = title;
-	}
-	
-	public boolean getSystemPost() {
-		return systemPost;
-	}
-	
-	public void setSystemPost(boolean systemPost) {
-		this.systemPost = systemPost;
-	}
-	
-	public String getContent() {
-		return content;
-	}
-	
-	public void setContent(String content) {
-		this.content = content;
-	}
-	
-	public String getCreatedBy() {
-		return createdBy;
-	}
-	
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
-	
-	public Date getCreatedDate() {
-		return createdDate;
-	}
-	
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
-	
-	public String getModifiedBy() {
-		return modifiedBy;
-	}
-	
-	public void setModifiedBy(String modifiedBy) {
-		this.modifiedBy = modifiedBy;
-	}
-	
-	public Date getModifiedDate() {
-		return modifiedDate;
-	}
-	
-	public void setModifiedDate(Date modifiedDate) {
-		this.modifiedDate = modifiedDate;
-	}
-	
-	public String getStatus() {
-		return status;
-	}
-	
-	public void setStatus(String status) {
-		this.status = status;
-	}
-	
-	public String getUrl() {
-		return url;
-	}
-	
-	public void setUrl(String url) {
-		this.url = url;
-	}
-	
-	public TournamentEntity getTournament() {
-		return tournament;
-	}
-	
-	public void setTournament(TournamentEntity tournament) {
-		this.tournament = tournament;
-	}
-	
-	public UserEntity getAuthor() {
-		return author;
-	}
-	
-	public void setAuthor(UserEntity author) {
-		this.author = author;
-	}
-	
-	public Collection<UserEntity> getUsersList() {
-		return usersList;
-	}
-	
-	public void setUsersList(Collection<UserEntity> usersList) {
-		this.usersList = usersList;
-	}
-	
-	public Collection<CommentEntity> getComments() {
-		return comments;
-	}
-	
-	public void setComments(Collection<CommentEntity> comments) {
-		this.comments = comments;
-	}
-	
-	public Collection<NotificationEntity> getNotifications() {
-		return notifications;
-	}
-	
-	public void setNotifications(Collection<NotificationEntity> notifications) {
-		this.notifications = notifications;
-	}
-	
+public Long getId() {
+	return id;
+}
+
+public String getTitle() {
+	return title;
+}
+
+public void setTitle(String title) {
+	this.title = title;
+}
+
+public boolean getSystemPost() {
+	return systemPost;
+}
+
+public void setSystemPost(boolean systemPost) {
+	this.systemPost = systemPost;
+}
+
+public String getContent() {
+	return content;
+}
+
+public void setContent(String content) {
+	this.content = content;
+}
+
+public String getCreatedBy() {
+	return createdBy;
+}
+
+public void setCreatedBy(String createdBy) {
+	this.createdBy = createdBy;
+}
+
+public Date getCreatedDate() {
+	return createdDate;
+}
+
+public void setCreatedDate(Date createdDate) {
+	this.createdDate = createdDate;
+}
+
+public String getModifiedBy() {
+	return modifiedBy;
+}
+
+public void setModifiedBy(String modifiedBy) {
+	this.modifiedBy = modifiedBy;
+}
+
+public Date getModifiedDate() {
+	return modifiedDate;
+}
+
+public void setModifiedDate(Date modifiedDate) {
+	this.modifiedDate = modifiedDate;
+}
+
+public String getStatus() {
+	return status;
+}
+
+public void setStatus(String status) {
+	this.status = status;
+}
+
+public String getUrl() {
+	return url;
+}
+
+public void setUrl(String url) {
+	this.url = url;
+}
+
+public TournamentEntity getTournament() {
+	return tournament;
+}
+
+public void setTournament(TournamentEntity tournament) {
+	this.tournament = tournament;
+}
+
+public UserEntity getAuthor() {
+	return author;
+}
+
+public void setAuthor(UserEntity author) {
+	this.author = author;
+}
+
+public Collection<UserEntity> getUsersList() {
+	return usersList;
+}
+
+public void setUsersList(Collection<UserEntity> usersList) {
+	this.usersList = usersList;
+}
+
+public Collection<CommentEntity> getComments() {
+	return comments;
+}
+
+public void setComments(Collection<CommentEntity> comments) {
+	this.comments = comments;
+}
+
+public Collection<NotificationEntity> getNotifications() {
+	return notifications;
+}
+
+public void setNotifications(Collection<NotificationEntity> notifications) {
+	this.notifications = notifications;
+}
+
 
 }

@@ -1,3 +1,4 @@
+
 package doan2020.SportTournamentSupportSystem.service.impl;
 
 import java.util.Collection;
@@ -17,72 +18,63 @@ public class TeamService implements ITeamService {
 	private TeamRepository teamRepository;
 
 	@Override
-	public void addOne(TeamEntity team) {
-
-		teamRepository.save(team);
-
-	}
-
-	@Override
-	public void addMany(Collection<TeamEntity> teams) {
-		for (TeamEntity team : teams)
-			teamRepository.save(team);
-
-	}
-
-	@Override
-	public TeamEntity findById(Long id) {
-		TeamEntity res = null;
+	public TeamEntity create(TeamEntity teamEntity) {
+		TeamEntity newEntity = null;
 		try {
-			res = teamRepository.findOneById(id);
+			newEntity = teamRepository.save(teamEntity);
 		} catch (Exception e) {
 			return null;
 		}
-
-		return res;
+		return newEntity;
 	}
 
 	@Override
-	public TeamEntity findByName(String name) {
-		TeamEntity res = null;
+	public TeamEntity update(Long id, TeamEntity newEntity) {
+		TeamEntity updatedEntity = null;
 		try {
-			res = teamRepository.findByShortName(name);
+			updatedEntity = teamRepository.findOneById(id);
+
+			updatedEntity.setFullName(newEntity.getFullName());
+			updatedEntity.setShortName(newEntity.getShortName());
+			updatedEntity.setDescription(newEntity.getDescription());
+			updatedEntity.setCreator(newEntity.getCreator());
+			updatedEntity.setCompetition(newEntity.getCompetition());
+			updatedEntity.setCreatedBy(newEntity.getCreatedBy());
+			updatedEntity.setCreatedDate(newEntity.getCreatedDate());
+			updatedEntity.setModifiedBy(newEntity.getModifiedBy());
+			updatedEntity.setModifiedDate(newEntity.getModifiedDate());
+			updatedEntity.setStatus(newEntity.getStatus());
+			updatedEntity.setUrl(newEntity.getUrl());
+			updatedEntity = teamRepository.save(updatedEntity);
 		} catch (Exception e) {
 			return null;
 		}
-
-		return res;
+        
+		return updatedEntity;
 	}
 
 	@Override
-	public Collection<TeamEntity> findAll(Pageable pageable) {
-
-		return teamRepository.findAll(pageable).getContent();
+	public TeamEntity delete(Long id) {
+		TeamEntity deletedEntity = null;
+		try {
+			deletedEntity = teamRepository.findOneById(id);
+			deletedEntity.setStatus("deleted");
+			deletedEntity = teamRepository.save(deletedEntity);
+		} catch (Exception e) {
+			return null;
+		}
+		return deletedEntity;
 	}
 
 	@Override
-	public TeamEntity update(Long id, TeamEntity newData) {
-
-		TeamEntity old = teamRepository.findOneById(id);
-		old.setFullName(newData.getFullName());
-		old.setShortName(newData.getShortName());
-		old.setDescription(newData.getDescription());
-		old.setCreator(newData.getCreator());
-
-		old.setStatus(newData.getStatus());
-		old = teamRepository.save(old);
-		return old;
+	public TeamEntity findOneById(Long id) {
+		TeamEntity foundEntity = null;
+		try {
+			foundEntity = teamRepository.findOneById(id);
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntity;
 	}
 
-	@Override
-	public Collection<TeamEntity> findAllByCreator(Long creator, Pageable pageable) {
-		// TODO Auto-generated method stub
-		return (Collection<TeamEntity>) teamRepository.findByCreatorId(creator, pageable).getContent();
-	}
-
-	@Override
-	public Collection<TeamEntity> findAllByCompetitionId(Long competitionId, Pageable pageable) {
-		// TODO Auto-generated method stub
-		return (Collection<TeamEntity>) teamRepository.findByCompetitionId(competitionId, pageable).getContent();
-	}
 }

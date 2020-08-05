@@ -1,23 +1,21 @@
+
 package doan2020.SportTournamentSupportSystem.service;
 
 import java.util.Collection;
-
 import org.springframework.data.domain.Pageable;
-
 import doan2020.SportTournamentSupportSystem.entity.MatchEntity;
 
 public interface IMatchService {
 	
-	// for schedule
-	public Collection<MatchEntity> findAllByCompetitionId(Long competitionId, Pageable pageable);
+	public MatchEntity findOneById(Long id);
 	
-	// for bracket
-	public Collection<MatchEntity> findAllByCompetitionId(Long competitionId);
-
-	public MatchEntity findById(Long id);
+//	public Collection<MatchEntity> findAll(Pageable pageable);
 	
-	public void addOne(MatchEntity match);
-	public void addMany(Collection<MatchEntity> matches);
+	public MatchEntity create(MatchEntity matchEntity);
 	
-	public MatchEntity update(Long id, MatchEntity match);
+	public MatchEntity update(Long id, MatchEntity newEntity);
+	
+//	public Collection<MatchEntity> findAll();
+	
+	public MatchEntity delete(Long id);
 }

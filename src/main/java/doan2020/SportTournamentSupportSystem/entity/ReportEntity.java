@@ -51,97 +51,97 @@ public class ReportEntity{
 	private UserEntity sender;
 	
 
-	public Long getId() {
-		return id;
-	}
-	
-	public String getType() {
-		return type;
-	}
-	
-	public void setType(String type) {
-		this.type = type;
-	}
-	
-	public String getSubject() {
-		return subject;
-	}
-	
-	public void setSubject(String subject) {
-		this.subject = subject;
-	}
-	
-	public String getContent() {
-		return content;
-	}
-	
-	public void setContent(String content) {
-		this.content = content;
-	}
-	
-	public String getLink() {
-		return link;
-	}
-	
-	public void setLink(String link) {
-		this.link = link;
-	}
-	
-	public String getCreatedBy() {
-		return createdBy;
-	}
-	
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
-	
-	public Date getCreatedDate() {
-		return createdDate;
-	}
-	
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
-	
-	public String getModifiedBy() {
-		return modifiedBy;
-	}
-	
-	public void setModifiedBy(String modifiedBy) {
-		this.modifiedBy = modifiedBy;
-	}
-	
-	public Date getModifiedDate() {
-		return modifiedDate;
-	}
-	
-	public void setModifiedDate(Date modifiedDate) {
-		this.modifiedDate = modifiedDate;
-	}
-	
-	public String getStatus() {
-		return status;
-	}
-	
-	public void setStatus(String status) {
-		this.status = status;
-	}
-	
-	public String getUrl() {
-		return url;
-	}
-	
-	public void setUrl(String url) {
-		this.url = url;
-	}
-	
-	public UserEntity getSender() {
-		return sender;
-	}
-	
-	public void setSender(UserEntity sender) {
-		this.sender = sender;
-	}
-	
+public Long getId() {
+	return id;
+}
+
+public String getType() {
+	return type;
+}
+
+public void setType(String type) {
+	this.type = type;
+}
+
+public String getSubject() {
+	return subject;
+}
+
+public void setSubject(String subject) {
+	this.subject = subject;
+}
+
+public String getContent() {
+	return content;
+}
+
+public void setContent(String content) {
+	this.content = content;
+}
+
+public String getLink() {
+	return link;
+}
+
+public void setLink(String link) {
+	this.link = link;
+}
+
+public String getCreatedBy() {
+	return createdBy;
+}
+
+public void setCreatedBy(String createdBy) {
+	this.createdBy = createdBy;
+}
+
+public Date getCreatedDate() {
+	return createdDate;
+}
+
+public void setCreatedDate(Date createdDate) {
+	this.createdDate = createdDate;
+}
+
+public String getModifiedBy() {
+	return modifiedBy;
+}
+
+public void setModifiedBy(String modifiedBy) {
+	this.modifiedBy = modifiedBy;
+}
+
+public Date getModifiedDate() {
+	return modifiedDate;
+}
+
+public void setModifiedDate(Date modifiedDate) {
+	this.modifiedDate = modifiedDate;
+}
+
+public String getStatus() {
+	return status;
+}
+
+public void setStatus(String status) {
+	this.status = status;
+}
+
+public String getUrl() {
+	return url;
+}
+
+public void setUrl(String url) {
+	this.url = url;
+}
+
+public UserEntity getSender() {
+	return sender;
+}
+
+public void setSender(UserEntity sender) {
+	this.sender = sender;
+}
+
 
 }
