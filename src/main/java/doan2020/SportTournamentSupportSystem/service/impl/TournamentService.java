@@ -1,3 +1,4 @@
+
 package doan2020.SportTournamentSupportSystem.service.impl;
 
 import java.util.Collection;
@@ -17,72 +18,67 @@ public class TournamentService implements ITournamentService {
 	private TournamentRepository tournamentRepository;
 
 	@Override
-	public void addOne(TournamentEntity tournament) {
-		
-		tournamentRepository.save(tournament);
-
+	public TournamentEntity create(TournamentEntity tournamentEntity) {
+		TournamentEntity newEntity = null;
+		try {
+			newEntity = tournamentRepository.save(tournamentEntity);
+		} catch (Exception e) {
+			return null;
+		}
+		return newEntity;
 	}
 
 	@Override
-	public void addMany(Collection<TournamentEntity> tournaments) {
-		for (TournamentEntity tournament : tournaments)
-			tournamentRepository.save(tournament);
+	public TournamentEntity update(Long id, TournamentEntity newEntity) {
+		TournamentEntity updatedEntity = null;
+		try {
+			updatedEntity = tournamentRepository.findOneById(id);
 
+			updatedEntity.setFullName(newEntity.getFullName());
+			updatedEntity.setShortName(newEntity.getShortName());
+			updatedEntity.setDescription(newEntity.getDescription());
+			updatedEntity.setCreator(newEntity.getCreator());
+			updatedEntity.setOpeningLocation(newEntity.getOpeningLocation());
+			updatedEntity.setOpeningTime(newEntity.getOpeningTime());
+			updatedEntity.setClosingLocation(newEntity.getClosingLocation());
+			updatedEntity.setClosingTime(newEntity.getClosingTime());
+			updatedEntity.setDonor(newEntity.getDonor());
+			updatedEntity.setCreatedBy(newEntity.getCreatedBy());
+			updatedEntity.setCreatedDate(newEntity.getCreatedDate());
+			updatedEntity.setModifiedBy(newEntity.getModifiedBy());
+			updatedEntity.setModifiedDate(newEntity.getModifiedDate());
+			updatedEntity.setStatus(newEntity.getStatus());
+			updatedEntity.setUrl(newEntity.getUrl());
+			updatedEntity = tournamentRepository.save(updatedEntity);
+		} catch (Exception e) {
+			return null;
+		}
+        
+		return updatedEntity;
+	}
+
+	@Override
+	public TournamentEntity delete(Long id) {
+		TournamentEntity deletedEntity = null;
+		try {
+			deletedEntity = tournamentRepository.findOneById(id);
+			deletedEntity.setStatus("deleted");
+			deletedEntity = tournamentRepository.save(deletedEntity);
+		} catch (Exception e) {
+			return null;
+		}
+		return deletedEntity;
 	}
 
 	@Override
 	public TournamentEntity findOneById(Long id) {
-		TournamentEntity res = null;
+		TournamentEntity foundEntity = null;
 		try {
-			res = tournamentRepository.findOneById(id);
-		} catch (Exception e) {
-			System.out.println("Has exceoption in TournamentService.findById");
-			return null;
-		}
-		
-		return res;
-	}
-
-	@Override
-	public TournamentEntity findByName(String name) {
-		TournamentEntity res = null;
-		try {
-			res = tournamentRepository.findByShortName(name);
+			foundEntity = tournamentRepository.findOneById(id);
 		} catch (Exception e) {
 			return null;
 		}
-		
-		return res;
+		return foundEntity;
 	}
 
-	@Override
-	public Collection<TournamentEntity> findAll(Pageable pageable) {
-		
-		return (Collection<TournamentEntity>) tournamentRepository.findAll(pageable).getContent();
-	}
-
-	@Override
-	public TournamentEntity update(Long id, TournamentEntity newData) {
-		
-		TournamentEntity old = tournamentRepository.findOneById(id);
-		old.setFullName(newData.getFullName());
-		old.setShortName(newData.getShortName());
-		old.setDescription(newData.getDescription());
-		old.setCreator(newData.getCreator());
-		old.setOpeningLocation(newData.getOpeningLocation());
-		old.setOpeningTime(newData.getOpeningTime());
-		old.setClosingLocation(newData.getClosingLocation());
-		old.setClosingTime(newData.getClosingTime());
-		old.setDonor(newData.getDonor());
-		old.setStatus(newData.getStatus());
-		old.setUrl(newData.getUrl());
-		old = tournamentRepository.save(old);
-		return old;
-	}
-
-	@Override
-	public Collection<TournamentEntity> findAllByCreator(Pageable pageable, Long creatorId) {
-		// TODO Auto-generated method stub
-		return (Collection<TournamentEntity>) tournamentRepository.findByCreatorId(creatorId, pageable).getContent();
-	}
 }

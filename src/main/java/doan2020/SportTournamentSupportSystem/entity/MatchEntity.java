@@ -74,153 +74,153 @@ public class MatchEntity{
 	private Collection<ResultEntity> results;
 
 
-	public Long getId() {
-		return id;
-	}
-	
-	public String getName() {
-		return name;
-	}
-	
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-	public int getNumOfSet() {
-		return numOfSet;
-	}
-	
-	public void setNumOfSet(int numOfSet) {
-		this.numOfSet = numOfSet;
-	}
-	
-	public Date getExpectedDate() {
-		return expectedDate;
-	}
-	
-	public void setExpectedDate(Date expectedDate) {
-		this.expectedDate = expectedDate;
-	}
-	
-	public String getExpectedPlace() {
-		return expectedPlace;
-	}
-	
-	public void setExpectedPlace(String expectedPlace) {
-		this.expectedPlace = expectedPlace;
-	}
-	
-	public Date getRealDate() {
-		return realDate;
-	}
-	
-	public void setRealDate(Date realDate) {
-		this.realDate = realDate;
-	}
-	
-	public String getRealPlace() {
-		return realPlace;
-	}
-	
-	public void setRealPlace(String realPlace) {
-		this.realPlace = realPlace;
-	}
-	
-	public int getRoundNo() {
-		return roundNo;
-	}
-	
-	public void setRoundNo(int roundNo) {
-		this.roundNo = roundNo;
-	}
-	
-	public String getCreatedBy() {
-		return createdBy;
-	}
-	
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
-	
-	public Date getCreatedDate() {
-		return createdDate;
-	}
-	
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
-	
-	public String getModifiedBy() {
-		return modifiedBy;
-	}
-	
-	public void setModifiedBy(String modifiedBy) {
-		this.modifiedBy = modifiedBy;
-	}
-	
-	public Date getModifiedDate() {
-		return modifiedDate;
-	}
-	
-	public void setModifiedDate(Date modifiedDate) {
-		this.modifiedDate = modifiedDate;
-	}
-	
-	public String getStatus() {
-		return status;
-	}
-	
-	public void setStatus(String status) {
-		this.status = status;
-	}
-	
-	public String getUrl() {
-		return url;
-	}
-	
-	public void setUrl(String url) {
-		this.url = url;
-	}
-	
-	public CompetitionEntity getCompetition() {
-		return competition;
-	}
-	
-	public void setCompetition(CompetitionEntity competition) {
-		this.competition = competition;
-	}
-	
-	public MatchEntity getNextMatch() {
-		return nextMatch;
-	}
-	
-	public void setNextMatch(MatchEntity nextMatch) {
-		this.nextMatch = nextMatch;
-	}
-	
-	public Collection<TeamEntity> getTeamsList() {
-		return teamsList;
-	}
-	
-	public void setTeamsList(Collection<TeamEntity> teamsList) {
-		this.teamsList = teamsList;
-	}
-	
-	public Collection<MatchEntity> getMatches() {
-		return matches;
-	}
-	
-	public void setMatches(Collection<MatchEntity> matches) {
-		this.matches = matches;
-	}
-	
-	public Collection<ResultEntity> getResults() {
-		return results;
-	}
-	
-	public void setResults(Collection<ResultEntity> results) {
-		this.results = results;
-	}
-	
+public Long getId() {
+	return id;
+}
+
+public String getName() {
+	return name;
+}
+
+public void setName(String name) {
+	this.name = name;
+}
+
+public int getNumOfSet() {
+	return numOfSet;
+}
+
+public void setNumOfSet(int numOfSet) {
+	this.numOfSet = numOfSet;
+}
+
+public Date getExpectedDate() {
+	return expectedDate;
+}
+
+public void setExpectedDate(Date expectedDate) {
+	this.expectedDate = expectedDate;
+}
+
+public String getExpectedPlace() {
+	return expectedPlace;
+}
+
+public void setExpectedPlace(String expectedPlace) {
+	this.expectedPlace = expectedPlace;
+}
+
+public Date getRealDate() {
+	return realDate;
+}
+
+public void setRealDate(Date realDate) {
+	this.realDate = realDate;
+}
+
+public String getRealPlace() {
+	return realPlace;
+}
+
+public void setRealPlace(String realPlace) {
+	this.realPlace = realPlace;
+}
+
+public int getRoundNo() {
+	return roundNo;
+}
+
+public void setRoundNo(int roundNo) {
+	this.roundNo = roundNo;
+}
+
+public String getCreatedBy() {
+	return createdBy;
+}
+
+public void setCreatedBy(String createdBy) {
+	this.createdBy = createdBy;
+}
+
+public Date getCreatedDate() {
+	return createdDate;
+}
+
+public void setCreatedDate(Date createdDate) {
+	this.createdDate = createdDate;
+}
+
+public String getModifiedBy() {
+	return modifiedBy;
+}
+
+public void setModifiedBy(String modifiedBy) {
+	this.modifiedBy = modifiedBy;
+}
+
+public Date getModifiedDate() {
+	return modifiedDate;
+}
+
+public void setModifiedDate(Date modifiedDate) {
+	this.modifiedDate = modifiedDate;
+}
+
+public String getStatus() {
+	return status;
+}
+
+public void setStatus(String status) {
+	this.status = status;
+}
+
+public String getUrl() {
+	return url;
+}
+
+public void setUrl(String url) {
+	this.url = url;
+}
+
+public CompetitionEntity getCompetition() {
+	return competition;
+}
+
+public void setCompetition(CompetitionEntity competition) {
+	this.competition = competition;
+}
+
+public MatchEntity getNextMatch() {
+	return nextMatch;
+}
+
+public void setNextMatch(MatchEntity nextMatch) {
+	this.nextMatch = nextMatch;
+}
+
+public Collection<TeamEntity> getTeamsList() {
+	return teamsList;
+}
+
+public void setTeamsList(Collection<TeamEntity> teamsList) {
+	this.teamsList = teamsList;
+}
+
+public Collection<MatchEntity> getMatches() {
+	return matches;
+}
+
+public void setMatches(Collection<MatchEntity> matches) {
+	this.matches = matches;
+}
+
+public Collection<ResultEntity> getResults() {
+	return results;
+}
+
+public void setResults(Collection<ResultEntity> results) {
+	this.results = results;
+}
+
 
 }

@@ -1,70 +1,81 @@
+
 package doan2020.SportTournamentSupportSystem.service.impl;
 
-import java.util.List;
+import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import doan2020.SportTournamentSupportSystem.converter.PlayerConverter;
-import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
 import doan2020.SportTournamentSupportSystem.entity.PlayerEntity;
 import doan2020.SportTournamentSupportSystem.repository.PlayerRepository;
 import doan2020.SportTournamentSupportSystem.service.IPlayerService;
 
 @Service
-public class PlayerService implements IPlayerService{
-	
+public class PlayerService implements IPlayerService {
+
 	@Autowired
 	private PlayerRepository playerRepository;
-	
-	@Autowired
-	private PlayerConverter playerConverter;
-	
+
 	@Override
-	public PlayerEntity findOneById(Long id) {
-		PlayerEntity playerEntity = null;
+	public PlayerEntity create(PlayerEntity playerEntity) {
+		PlayerEntity newEntity = null;
 		try {
-		playerEntity = playerRepository.findOneById(id);
-		}catch (Exception e) {
+			newEntity = playerRepository.save(playerEntity);
+		} catch (Exception e) {
 			return null;
 		}
-		return playerEntity;
+		return newEntity;
 	}
 
 	@Override
-	public void addOnePlayer(PlayerEntity playerEntity) {
-		
-		playerRepository.save(playerEntity);
-	}
+	public PlayerEntity update(Long id, PlayerEntity newEntity) {
+		PlayerEntity updatedEntity = null;
+		try {
+			updatedEntity = playerRepository.findOneById(id);
 
-
-	@Override
-	public void addManyPlayer(List<PlayerEntity> playerEntitys) {
-		// TODO Auto-generated method stub
-		for(PlayerEntity playerEntity: playerEntitys) {
-			playerRepository.save(playerEntity);
+			updatedEntity.setFirstName(newEntity.getFirstName());
+			updatedEntity.setLastName(newEntity.getLastName());
+			updatedEntity.setGender(newEntity.getGender());
+			updatedEntity.setDob(newEntity.getDob());
+			updatedEntity.setEmail(newEntity.getEmail());
+			updatedEntity.setTeam(newEntity.getTeam());
+			updatedEntity.setCreatedBy(newEntity.getCreatedBy());
+			updatedEntity.setCreatedDate(newEntity.getCreatedDate());
+			updatedEntity.setModifiedBy(newEntity.getModifiedBy());
+			updatedEntity.setModifiedDate(newEntity.getModifiedDate());
+			updatedEntity.setStatus(newEntity.getStatus());
+			updatedEntity.setUrl(newEntity.getUrl());
+			updatedEntity = playerRepository.save(updatedEntity);
+		} catch (Exception e) {
+			return null;
 		}
-		
-	}
-	
-	@Override
-	public void editPlayer(PlayerEntity playerEntity) {
-		playerRepository.save(playerEntity);
+        
+		return updatedEntity;
 	}
 
 	@Override
-	public void deletePlayer(PlayerEntity playerEntity) {
-		// TODO Auto-generated method stub
-		
+	public PlayerEntity delete(Long id) {
+		PlayerEntity deletedEntity = null;
+		try {
+			deletedEntity = playerRepository.findOneById(id);
+			deletedEntity.setStatus("deleted");
+			deletedEntity = playerRepository.save(deletedEntity);
+		} catch (Exception e) {
+			return null;
+		}
+		return deletedEntity;
 	}
 
 	@Override
-	public List<PlayerEntity> findByTeamId(Long teamId) {
-		List<PlayerEntity> playerEntities = playerRepository.findByTeamId(teamId);
-		return playerEntities;
+	public PlayerEntity findOneById(Long id) {
+		PlayerEntity foundEntity = null;
+		try {
+			foundEntity = playerRepository.findOneById(id);
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntity;
 	}
-
-
-	
 
 }
