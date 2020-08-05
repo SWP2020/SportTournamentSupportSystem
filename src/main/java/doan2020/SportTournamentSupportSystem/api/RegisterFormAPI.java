@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import doan2020.SportTournamentSupportSystem.converter.RegisterFormConverter;
 import doan2020.SportTournamentSupportSystem.dto.ApiDTO;
+import doan2020.SportTournamentSupportSystem.dto.RegisterFormDTO;
 import doan2020.SportTournamentSupportSystem.response.Response;
 
 @RestController
@@ -97,7 +98,7 @@ public class RegisterFormAPI {
 	}
 	
 	@PostMapping("")
-	public ResponseEntity<Response> createRegisterForm(@RequestBody ApiDTO apiDTO) {
+	public ResponseEntity<Response> createRegisterForm(@RequestBody RegisterFormDTO registerFormDTO) {
 		System.out.println("RegisterFormAPI - createRegisterForm");
 		HttpStatus httpStatus = null;
 		httpStatus = HttpStatus.OK;

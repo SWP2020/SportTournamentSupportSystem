@@ -16,21 +16,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import doan2020.SportTournamentSupportSystem.converter.NotificationConverter;
-import doan2020.SportTournamentSupportSystem.dto.NotificationDTO;
+import doan2020.SportTournamentSupportSystem.converter.SportConverter;
+import doan2020.SportTournamentSupportSystem.dto.SportDTO;
 import doan2020.SportTournamentSupportSystem.response.Response;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/notification")
-public class NotificationAPI {
+@RequestMapping("/sport")
+public class SportAPI {
 	
 	@Autowired
-	private NotificationConverter converter;
-	
+	private SportConverter converter;
+
 	@GetMapping("/getOne")
-	public ResponseEntity<Response> getOneNotification(@RequestParam(value = "id") Long id) {
-		System.out.println("NotificationAPI - getOneNotification");
+	public ResponseEntity<Response> getOneSport(@RequestParam(value = "id") Long id) {
+		System.out.println("SportAPI - getOneSport");
 		HttpStatus httpStatus = null;
 		httpStatus = HttpStatus.OK;
 		Response response = new Response();
@@ -39,32 +39,32 @@ public class NotificationAPI {
 		Map<String, Object> error = new HashMap<String, Object>();
 
 		try {
-			System.out.println("NotificationAPI - cp1");
-			result.put("Notification", null);
+			System.out.println("SportAPI - cp1");
+			result.put("Sport", null);
 			config.put("global", 0);
 			error.put("messageCode", 0);
 			error.put("message", "");
-			System.out.println("NotificationAPI - cp2");
+			System.out.println("SportAPI - cp2");
 		} catch (Exception e) {
-			System.out.println("NotificationAPI - exception");
-			result.put("Notification", null);
+			System.out.println("SportAPI - exception");
+			result.put("Sport", null);
 			config.put("global", 0);
 			error.put("messageCode", 1);
 			error.put("message", "");
 		}
 
-		System.out.println("NotificationAPI - cp3");
+		System.out.println("SportAPI - cp3");
 		response.setError(error);
 		response.setResult(result);
 		response.setConfig(config);
-		System.out.println("NotificationAPI - cp pass");
+		System.out.println("SportAPI - cp pass");
 		return new ResponseEntity<Response>(response, httpStatus);
 
 	}
 	
 	@GetMapping("/getAll")
-	public ResponseEntity<Response> getAllNotification(@RequestParam(value = "page") Integer page) {
-		System.out.println("NotificationAPI - getAllNotification");
+	public ResponseEntity<Response> getAllSport(@RequestParam(value = "page") Integer page) {
+		System.out.println("SportAPI - getAllSport");
 		HttpStatus httpStatus = null;
 		httpStatus = HttpStatus.OK;
 		Response response = new Response();
@@ -73,32 +73,32 @@ public class NotificationAPI {
 		Map<String, Object> error = new HashMap<String, Object>();
 
 		try {
-			System.out.println("NotificationAPI - cp1");
-			result.put("Notification", null);
+			System.out.println("SportAPI - cp1");
+			result.put("Sport", null);
 			config.put("global", 0);
 			error.put("messageCode", 0);
 			error.put("message", "");
-			System.out.println("NotificationAPI - cp2");
+			System.out.println("SportAPI - cp2");
 		} catch (Exception e) {
-			System.out.println("CompetitionSettingAPI - exception");
-			result.put("Notification", null);
+			System.out.println("SportAPI - exception");
+			result.put("Sport", null);
 			config.put("global", 0);
 			error.put("messageCode", 1);
 			error.put("message", "");
 		}
 
-		System.out.println("NotificationAPI - cp3");
+		System.out.println("SportAPI - cp3");
 		response.setError(error);
 		response.setResult(result);
 		response.setConfig(config);
-		System.out.println("NotificationAPI - cp pass");
+		System.out.println("SportAPI - cp pass");
 		return new ResponseEntity<Response>(response, httpStatus);
 
 	}
 	
 	@PostMapping("")
-	public ResponseEntity<Response> createNotification(@RequestBody NotificationDTO notificationDTO) {
-		System.out.println("NotificationAPI - createNotification");
+	public ResponseEntity<Response> createSport(@RequestBody SportDTO SportDTO) {
+		System.out.println("SportAPI - createSport");
 		HttpStatus httpStatus = null;
 		httpStatus = HttpStatus.OK;
 		Response response = new Response();
@@ -107,32 +107,32 @@ public class NotificationAPI {
 		Map<String, Object> error = new HashMap<String, Object>();
 
 		try {
-			System.out.println("NotificationAPI - cp1");
-			result.put("Notification", null);
+			System.out.println("SportAPI - cp1");
+			result.put("Sport", null);
 			config.put("global", 0);
 			error.put("messageCode", 0);
 			error.put("message", "");
-			System.out.println("NotificationAPI - cp2");
+			System.out.println("SportAPI - cp2");
 		} catch (Exception e) {
-			System.out.println("NotificationAPI - exception");
-			result.put("Notification", null);
+			System.out.println("SportAPI - exception");
+			result.put("Sport", null);
 			config.put("global", 0);
 			error.put("messageCode", 1);
 			error.put("message", "");
 		}
 
-		System.out.println("NotificationAPI - cp3");
+		System.out.println("SportAPI - cp3");
 		response.setError(error);
 		response.setResult(result);
 		response.setConfig(config);
-		System.out.println("NotificationAPI - cp pass");
+		System.out.println("SportAPI - cp pass");
 		return new ResponseEntity<Response>(response, httpStatus);
 
 	}
 	
 	@PutMapping("")
-	public ResponseEntity<Response> editNotification(@RequestParam(value = "id") Long id) {
-		System.out.println("NotificationAPI - editNotification");
+	public ResponseEntity<Response> editSport(@RequestParam(value = "id") Long id) {
+		System.out.println("SportAPI - editAPI");
 		HttpStatus httpStatus = null;
 		httpStatus = HttpStatus.OK;
 		Response response = new Response();
@@ -141,32 +141,32 @@ public class NotificationAPI {
 		Map<String, Object> error = new HashMap<String, Object>();
 
 		try {
-			System.out.println("NotificationAPI - cp1");
-			result.put("Notification", null);
+			System.out.println("SportAPI - cp1");
+			result.put("Sport", null);
 			config.put("global", 0);
 			error.put("messageCode", 0);
 			error.put("message", "");
-			System.out.println("NotificationAPI - cp2");
+			System.out.println("SportAPI - cp2");
 		} catch (Exception e) {
-			System.out.println("NotificationAPI - exception");
-			result.put("Notification", null);
+			System.out.println("SportAPI - exception");
+			result.put("Sport", null);
 			config.put("global", 0);
 			error.put("messageCode", 1);
 			error.put("message", "");
 		}
 
-		System.out.println("NotificationAPI - cp3");
+		System.out.println("SportAPI - cp3");
 		response.setError(error);
 		response.setResult(result);
 		response.setConfig(config);
-		System.out.println("NotificationAPI - cp pass");
+		System.out.println("SportAPI - cp pass");
 		return new ResponseEntity<Response>(response, httpStatus);
 
 	}
 	
 	@DeleteMapping("")
-	public ResponseEntity<Response> deleteNotification(@RequestParam(value = "id") Long id) {
-		System.out.println("NotificationAPI - deleteNotification");
+	public ResponseEntity<Response> deleteSport(@RequestParam(value = "id") Long id) {
+		System.out.println("SportAPI - deleteSport");
 		HttpStatus httpStatus = null;
 		httpStatus = HttpStatus.OK;
 		Response response = new Response();
@@ -175,25 +175,25 @@ public class NotificationAPI {
 		Map<String, Object> error = new HashMap<String, Object>();
 
 		try {
-			System.out.println("NotificationAPI - cp1");
-			result.put("Notification", null);
+			System.out.println("SportAPI - cp1");
+			result.put("Sport", null);
 			config.put("global", 0);
 			error.put("messageCode", 0);
 			error.put("message", "");
-			System.out.println("NotificationAPI - cp2");
+			System.out.println("SportAPI - cp2");
 		} catch (Exception e) {
-			System.out.println("NotificationAPI - exception");
-			result.put("Notification", null);
+			System.out.println("SportAPI - exception");
+			result.put("Sport", null);
 			config.put("global", 0);
 			error.put("messageCode", 1);
 			error.put("message", "");
 		}
 
-		System.out.println("NotificationAPI - cp3");
+		System.out.println("SportAPI - cp3");
 		response.setError(error);
 		response.setResult(result);
 		response.setConfig(config);
-		System.out.println("NotificationAPI - cp pass");
+		System.out.println("SportAPI - cp pass");
 		return new ResponseEntity<Response>(response, httpStatus);
 
 	}
