@@ -1,7 +1,7 @@
 
 package doan2020.SportTournamentSupportSystem.dto;
 
-public class ScoringUniDTO{
+public class ScoringUnitDTO{
 
 	private Long id;
 	private String fullName;
@@ -10,10 +10,10 @@ public class ScoringUniDTO{
 	private String status;
 	private String url;
 
-	public ScoringUniDTO(){
+	public ScoringUnitDTO(){
 	}
 
-	public ScoringUniDTO(Long id, String fullName, String shortName, String description, String status, String url){
+	public ScoringUnitDTO(Long id, String fullName, String shortName, String description, String status, String url){
 		this.id = id;
 		this.fullName = fullName;
 		this.shortName = shortName;

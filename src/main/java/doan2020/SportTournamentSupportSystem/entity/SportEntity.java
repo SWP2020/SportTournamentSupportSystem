@@ -50,7 +50,7 @@ public class SportEntity{
 
 	@ManyToOne
 	@JoinColumn(name = "scoringUnitId")
-	private ScoringUniEntity scoringUnit;
+	private ScoringUnitEntity scoringUnit;
 	
 	@OneToMany(mappedBy = "sport", cascade = CascadeType.ALL)
 	private Collection<CompetitionEntity> competitions;
@@ -132,11 +132,11 @@ public void setUrl(String url) {
 	this.url = url;
 }
 
-public ScoringUniEntity getScoringUnit() {
+public ScoringUnitEntity getScoringUnit() {
 	return scoringUnit;
 }
 
-public void setScoringUnit(ScoringUniEntity scoringUnit) {
+public void setScoringUnit(ScoringUnitEntity scoringUnit) {
 	this.scoringUnit = scoringUnit;
 }
 

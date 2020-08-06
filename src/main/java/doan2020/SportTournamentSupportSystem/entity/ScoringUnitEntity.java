@@ -19,7 +19,7 @@ import java.util.Collection;
 @Entity
 @Table(name = "scoring_unit")
 @EntityListeners(AuditingEntityListener.class)
-public class ScoringUniEntity{
+public class ScoringUnitEntity{
 
 	@Id
 	@NotNull

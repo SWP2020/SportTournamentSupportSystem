@@ -7,19 +7,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import doan2020.SportTournamentSupportSystem.entity.ScoringUniEntity;
+import doan2020.SportTournamentSupportSystem.entity.ScoringUnitEntity;
 import doan2020.SportTournamentSupportSystem.repository.ScoringUniRepository;
-import doan2020.SportTournamentSupportSystem.service.IScoringUniService;
+import doan2020.SportTournamentSupportSystem.service.IScoringUnitService;
 
 @Service
-public class ScoringUniService implements IScoringUniService {
+public class ScoringUnitService implements IScoringUnitService {
 
 	@Autowired
 	private ScoringUniRepository scoringUniRepository;
 
 	@Override
-	public ScoringUniEntity create(ScoringUniEntity scoringUniEntity) {
-		ScoringUniEntity newEntity = null;
+	public ScoringUnitEntity create(ScoringUnitEntity scoringUniEntity) {
+		ScoringUnitEntity newEntity = null;
 		try {
 			newEntity = scoringUniRepository.save(scoringUniEntity);
 		} catch (Exception e) {
@@ -29,8 +29,8 @@ public class ScoringUniService implements IScoringUniService {
 	}
 
 	@Override
-	public ScoringUniEntity update(Long id, ScoringUniEntity newEntity) {
-		ScoringUniEntity updatedEntity = null;
+	public ScoringUnitEntity update(Long id, ScoringUnitEntity newEntity) {
+		ScoringUnitEntity updatedEntity = null;
 		try {
 			updatedEntity = scoringUniRepository.findOneById(id);
 
@@ -52,8 +52,8 @@ public class ScoringUniService implements IScoringUniService {
 	}
 
 	@Override
-	public ScoringUniEntity delete(Long id) {
-		ScoringUniEntity deletedEntity = null;
+	public ScoringUnitEntity delete(Long id) {
+		ScoringUnitEntity deletedEntity = null;
 		try {
 			deletedEntity = scoringUniRepository.findOneById(id);
 			deletedEntity.setStatus("deleted");
@@ -65,8 +65,8 @@ public class ScoringUniService implements IScoringUniService {
 	}
 
 	@Override
-	public ScoringUniEntity findOneById(Long id) {
-		ScoringUniEntity foundEntity = null;
+	public ScoringUnitEntity findOneById(Long id) {
+		ScoringUnitEntity foundEntity = null;
 		try {
 			foundEntity = scoringUniRepository.findOneById(id);
 		} catch (Exception e) {
