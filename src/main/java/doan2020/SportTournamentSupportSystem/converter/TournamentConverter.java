@@ -25,14 +25,17 @@ public class TournamentConverter{
 		TournamentEntity entity = new TournamentEntity();
 		System.out.println("In toEntity:");
 		try {
-			entity.setFullName(dto.getFullName());
-			entity.setShortName(dto.getShortName());
+			if (dto.getFullName() != null)
+				entity.setFullName(dto.getFullName());
+			if (dto.getShortName() != null)
+				entity.setShortName(dto.getShortName());
 			entity.setDescription(dto.getDescription());
 			
-			Long tournamentCreatorId = dto.getCreatorId();
-			UserEntity tournamentCreator = userService.findOneById(tournamentCreatorId);
-			entity.setCreator(tournamentCreator);
-			
+			if (dto.getCreatorId() != null) {
+				Long tournamentCreatorId = dto.getCreatorId();
+				UserEntity tournamentCreator = userService.findOneById(tournamentCreatorId);
+				entity.setCreator(tournamentCreator);
+			}
 			entity.setOpeningLocation(dto.getOpeningLocation());
 			
 			Date openingTime = validator.formatStringToDate(dto.getOpeningTime());
