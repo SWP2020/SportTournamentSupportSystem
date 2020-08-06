@@ -67,6 +67,7 @@ public class UserConverter {
 		System.out.println("UserConverter: toDTO: start");
 		UserDTO dto = new UserDTO();
 		try {
+			dto.setId(entity.getId());
 			dto.setUsername(entity.getUsername());
 //			dto.setPassword(entity.getPassword());
 			dto.setFirstName(entity.getFirstName());
