@@ -30,11 +30,18 @@ public class UserConverter {
 		System.out.println("UserConverter: toEntity: start");
 		UserEntity entity = new UserEntity();
 		try {
-			entity.setUsername(dto.getUsername());
+			if (dto.getUsername() != null)
+				entity.setUsername(dto.getUsername());
 			
-			String userPassword = passwordEncoder.encode(dto.getPassword());
-
-			entity.setPassword(userPassword);
+			System.out.println(dto.getPassword());
+			
+			String userPassword = null;
+			
+			if(dto.getPassword() != null) {
+				userPassword = passwordEncoder.encode(dto.getPassword());
+				entity.setPassword(userPassword);
+			}
+			System.out.println("UserConverter: toEntity: CP");
 			
 			entity.setFirstName(dto.getFirstName());
 			entity.setLastName(dto.getLastName());
@@ -42,17 +49,25 @@ public class UserConverter {
 			entity.setPhoneNumber(dto.getPhoneNumber());
 			entity.setGender(dto.getGender());
 			
+			System.out.println("UserConverter: toEntity: CP1");
 			Date userDob = validator.formatStringToDate(dto.getDob());
 			entity.setDob(userDob);
 			
-			entity.setEmail(dto.getEmail());
-			entity.setAvatar(dto.getAvatar());
-			entity.setBackground(dto.getBackground());
+			System.out.println("UserConverter: toEntity: CP2");
+			if (dto.getEmail() != null)
+				entity.setEmail(dto.getEmail());
+			if (dto.getAvatar() != null)
+				entity.setAvatar(dto.getAvatar());
+			if (dto.getBackground() != null)
+				entity.setBackground(dto.getBackground());
 			
-			Long userRoleId = dto.getRoleId();
-			RoleEntity userRole = roleService.findOneById(userRoleId);
-			entity.setRole(userRole);
-			
+			System.out.println("UserConverter: toEntity: CP3");
+			if (dto.getRoleId() != null) {
+				Long userRoleId = dto.getRoleId();
+				RoleEntity userRole = roleService.findOneById(userRoleId);
+				entity.setRole(userRole);
+			}
+			System.out.println("UserConverter: toEntity: CP4");
 			entity.setStatus(dto.getStatus());
 			entity.setUrl(dto.getUrl());
 			System.out.println("UserConverter: toEntity: no exception");
@@ -76,23 +91,26 @@ public class UserConverter {
 			dto.setAddress(entity.getAddress());
 			dto.setPhoneNumber(entity.getPhoneNumber());
 			dto.setGender(entity.getGender());
+			System.out.println("UserConverter: toEntity: CP1");
 			
 			String userDob = validator.formatDateToString(entity.getDob());
 			dto.setDob(userDob);
-			
+			System.out.println("UserConverter: toEntity: CP2");
 			dto.setEmail(entity.getEmail());
 			dto.setAvatar(entity.getAvatar());
 			dto.setBackground(entity.getBackground());
 			
+			System.out.println("UserConverter: toEntity: CP3");
 			RoleEntity userRole = entity.getRole();
 			Long userRoleId = userRole.getId();
 			dto.setRoleId(userRoleId);
 			
+			System.out.println("UserConverter: toEntity: CP4");
 			dto.setStatus(entity.getStatus());
 			dto.setUrl(entity.getUrl());
-			System.out.println("UserConverter: toEntity: no exception");
+			System.out.println("UserConverter: toDTO: no exception");
 		} catch (Exception e) {
-			System.out.println("UserConverter: toEntity: has exception");
+			System.out.println("UserConverter: toDTO: has exception");
 			return null;
 		}
 		System.out.println("UserConverter: toDTO: finish");

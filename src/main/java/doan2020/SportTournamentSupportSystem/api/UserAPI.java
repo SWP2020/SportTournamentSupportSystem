@@ -196,7 +196,7 @@ public class UserAPI {
 		Map<String, Object> error = new HashMap<String, Object>();
 		try {
 			UserEntity newUser = userConverter.toEntity(userDTO);
-
+			
 			UserEntity userCheckUsername = userService.findByUsername(newUser.getUsername());
 			UserEntity userCheckEmail = userService.findByEmail(newUser.getEmail());
 
@@ -238,6 +238,7 @@ public class UserAPI {
 	/* ---------------- Edit Profile User ------------------------ */
 	@PutMapping("")
 	public ResponseEntity<Response> editUser(@RequestParam(value = "id") Long id, @RequestBody UserDTO dto) {
+		System.out.println("UserAPI: editUser: start");
 		HttpStatus httpStatus = HttpStatus.OK;
 		Response response = new Response();
 		Map<String, Object> config = new HashMap<String, Object>();
@@ -247,14 +248,18 @@ public class UserAPI {
 			UserEntity userEntity = new UserEntity();
 			if (id != null) {
 				userEntity = userConverter.toEntity(dto);
-				userService.update(id, userEntity);
+				userEntity = userService.update(id, userEntity);
+				
+				result.put("User", userConverter.toDTO(userEntity));
 				error.put("MessageCode", 0);
 				error.put("Message", "Edit Profile User Successfull");
 			} else {
 				error.put("MessageCode", 1);
 				error.put("Message", "required user id");
 			}
+			System.out.println("UserAPI: editUser: no exception");
 		} catch (Exception ex) {
+			System.out.println("UserAPI: editUser: has exception");
 			result.put("User", null);
 			error.put("MessageCode", 1);
 			error.put("Message", "edit  User fail");
@@ -262,6 +267,7 @@ public class UserAPI {
 		response.setError(error);
 		response.setResult(result);
 		response.setConfig(config);
+		System.out.println("UserAPI: editUser: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
 

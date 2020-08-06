@@ -22,19 +22,21 @@ import org.springframework.web.bind.annotation.RestController;
 
 import doan2020.SportTournamentSupportSystem.converter.TournamentConverter;
 import doan2020.SportTournamentSupportSystem.dtOut.TournamentDtOut;
+import doan2020.SportTournamentSupportSystem.dto.TournamentDTO;
 import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
 import doan2020.SportTournamentSupportSystem.response.Response;
 import doan2020.SportTournamentSupportSystem.service.ITournamentService;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/tournaments")
+@RequestMapping("/tournament")
 public class TournamentAPI {
-//	@Autowired
-//	private ITournamentService service;
-//
-//	@Autowired
-//	private TournamentConverter converter;
+	@Autowired
+	private ITournamentService service;
+
+	@Autowired
+	private TournamentConverter converter;
+
 //
 //	/*
 //	 * Tim kiem tournament theo paging
@@ -203,147 +205,142 @@ public class TournamentAPI {
 //	 * Tim kiem tournament theo id hoac name Yeu cau id hoac name phai duoc nhap Neu
 //	 * ca 2 deu duoc nhap vao thi uu tien id
 //	 */
-//	@GetMapping("/getOne")
-//	public ResponseEntity<Response> getTournament(@RequestParam(value = "id", required = false) Long id,
-//			@RequestParam(value = "name", required = false) String name) {
-//		System.out.println("getTournament");
-//		HttpStatus httpStatus = HttpStatus.OK;
-//		Response response = new Response();
-//		Map<String, Object> config = new HashMap<String, Object>();
-//		Map<String, Object> result = new HashMap<String, Object>();
-//		Map<String, Object> error = new HashMap<String, Object>();
-////		System.out.println("2");
-//		System.out.println(id);
-//		System.out.println(name);
-//		if (id == null && name == null) {
-//			result.put("tournament", null);
-//			config.put("global", 0);
-//			error.put("messageCode", 1);
-//			error.put("message", "Required tournament's id or name!");
-//			httpStatus = HttpStatus.OK;
-//			response.setConfig(config);
-//			response.setResult(result);
-//			response.setError(error);
-//			return new ResponseEntity<Response>(response, httpStatus);
-//		}
-//
-//		TournamentEntity res;
-//
-//		if (id == null) {
-//			System.out.println("Find by name");
-//			res = service.findByName(name);
-//		} else {
-//			System.out.println("Find by Id");
-//			res = service.findOneById(id);
-//		}
-//
-//		if (res == null) {
-//			result.put("tournament", null);
-//			config.put("global", 0);
-//			error.put("messageCode", 1);
-//			error.put("message", "tournament is not exist");
-//			response.setConfig(config);
-//			response.setResult(result);
-//			response.setError(error);
-//			return new ResponseEntity<Response>(response, httpStatus);
-//		}
-//
-//		try {
-//
-//			TournamentDtOut resDTO = converter.toDTO(res);
-//			System.out.println("Convert OK");
-//
-//			result.put("tournament", resDTO);
-//			config.put("global", 0);
-//			error.put("messageCode", 0);
-//			error.put("message", "Found");
-//
-//		} catch (Exception e) {
-//			result.put("tournament", null);
-//			config.put("global", 0);
-//			error.put("messageCode", 1);
-//			error.put("message", "Tournament is not exist");
-//		}
-//
-//		response.setConfig(config);
-//		response.setResult(result);
-//		response.setError(error);
-//
-//		return new ResponseEntity<Response>(response, httpStatus);
-//	}
-//
-//	/*
-//	 * Tao moi mot Tournament
-//	 * 
-//	 */
-//	@PostMapping
-//	@CrossOrigin
-//	public ResponseEntity<Response> createTournament(@RequestBody Map<String, Object> newTournament) {
-//		System.out.println("createTournament");
-//		HttpStatus httpStatus = HttpStatus.OK;
-//		Response response = new Response();
-//		Map<String, Object> config = new HashMap<String, Object>();
-//		Map<String, Object> result = new HashMap<String, Object>();
-//		Map<String, Object> error = new HashMap<String, Object>();
-//		try {
-//			TournamentEntity tournamentEntity = converter.toEntity(newTournament);
-//			System.out.println("convert OK");
-//			service.addOne(tournamentEntity);
-//			System.out.println("add OK");
-//			TournamentDtOut dto = converter.toDTO(tournamentEntity);
-//			System.out.println("convert OK");
-//			result.put("tournament", dto);
-//			config.put("global", 0);
-//			error.put("messageCode", 0);
-//			error.put("message", "Tournament create successfuly");
-//		} catch (Exception e) {
-//			result.put("tournament", null);
-//			config.put("global", 0);
-//			error.put("messageCode", 1);
-//			error.put("message", "Tournament create fail");
-//		}
-//
-//		response.setConfig(config);
-//		response.setResult(result);
-//		response.setError(error);
-//		return new ResponseEntity<Response>(response, httpStatus);
-//	}
-//
-//	/*
-//	 * Edit mot Tournament
-//	 * 
-//	 */
-//	@PutMapping
-//	@CrossOrigin
-//	public ResponseEntity<Response> editTournament(@RequestBody Map<String, Object> tournament, @RequestParam Long id) {
-//		System.out.println("editTournament");
-//		HttpStatus httpStatus = HttpStatus.OK;
-//		Response response = new Response();
-//		Map<String, Object> config = new HashMap<String, Object>();
-//		Map<String, Object> result = new HashMap<String, Object>();
-//		Map<String, Object> error = new HashMap<String, Object>();
-//		try {
-//			TournamentEntity tournamentEntity = converter.toEntity(tournament);
-//			System.out.println("convert OK");
-//			TournamentEntity newTournament = service.update(id, tournamentEntity);
-//			System.out.println("add OK");
-//			TournamentDtOut dto = converter.toDTO(newTournament);
-//			System.out.println("convert OK");
-//			result.put("tournament", dto);
-//			config.put("global", 0);
-//			error.put("messageCode", 0);
-//			error.put("message", "Tournament create successfuly");
-//		} catch (Exception e) {
-//			result.put("tournament", null);
-//			config.put("global", 0);
-//			error.put("messageCode", 1);
-//			error.put("message", "Tournament create fail");
-//		}
-//
-//		response.setConfig(config);
-//		response.setResult(result);
-//		response.setError(error);
-//		return new ResponseEntity<Response>(response, httpStatus);
-//	}
+	@GetMapping("")
+	public ResponseEntity<Response> getTournament(@RequestParam(value = "id", required = false) Long id) {
+		System.out.println("TournamentAPI: getTournament: no exception");
+		HttpStatus httpStatus = HttpStatus.OK;
+		Response response = new Response();
+		Map<String, Object> config = new HashMap<String, Object>();
+		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> error = new HashMap<String, Object>();
+		TournamentEntity tournamentEntity = new TournamentEntity();
+		TournamentDTO tournamentDTO = new TournamentDTO();
+		try {
+			if (id == null) { // id null
+				result.put("Tournament", null);
+				config.put("Global", 0);
+				error.put("MessageCode", 1);
+				error.put("Message", "Required param id");
+			} else { // id not null
+				
+				tournamentEntity = service.findOneById(id);
+				
+				if (tournamentEntity == null) { // not found
+					result.put("Tournament", null);
+					config.put("Global", 0);
+					error.put("MessageCode", 1);
+					error.put("Message", "Not found");
+				} else { // found
+					
+					tournamentDTO = converter.toDTO(tournamentEntity);
+					
+					result.put("Tournament", tournamentDTO);
+					config.put("Global", 0);
+					error.put("MessageCode", 0);
+					error.put("Message", "Found");
+				}
+			}
+			System.out.println("TournamentAPI: getTournament: no exception");
+		} catch (Exception e) {
+			System.out.println("TournamentAPI: getTournament: has exception");
+			result.put("Tournament", null);
+			config.put("Global", 0);
+			error.put("MessageCode", 1);
+			error.put("Message", "Server error");
+		}
+
+		response.setConfig(config);
+		response.setResult(result);
+		response.setError(error);
+		System.out.println("TournamentAPI: getTournament: finish");
+		return new ResponseEntity<Response>(response, httpStatus);
+	}
+
+	/*
+	 * Tao moi mot Tournament
+	 * 
+	 */
+	@PostMapping
+	@CrossOrigin
+	public ResponseEntity<Response> createTournament(@RequestBody TournamentDTO newTournament) {
+		System.out.println("TournamentAPI: createTournament: start");
+		HttpStatus httpStatus = HttpStatus.OK;
+		Response response = new Response();
+		Map<String, Object> config = new HashMap<String, Object>();
+		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> error = new HashMap<String, Object>();
+		TournamentEntity tournamentEntity = new TournamentEntity();
+		
+		try {
+			tournamentEntity = converter.toEntity(newTournament);
+			
+			tournamentEntity = service.create(tournamentEntity);
+			
+			TournamentDTO dto = converter.toDTO(tournamentEntity);
+
+			result.put("Tournament", dto);
+			config.put("Global", 0);
+			error.put("MessageCode", 0);
+			error.put("Message", "Tournament create successfuly");
+			System.out.println("TournamentAPI: createTournament: no exception");
+		} catch (Exception e) {
+			System.out.println("TournamentAPI: createTournament: has exception");
+			result.put("Tournament", null);
+			config.put("Global", 0);
+			error.put("MessageCode", 1);
+			error.put("Message", "Server error");
+		}
+
+		response.setConfig(config);
+		response.setResult(result);
+		response.setError(error);
+		System.out.println("TournamentAPI: createTournament: finish");
+		return new ResponseEntity<Response>(response, httpStatus);
+	}
+
+	/*
+	 * Edit mot Tournament
+	 * 
+	 */
+	@PutMapping
+	@CrossOrigin
+	public ResponseEntity<Response> editTournament(
+			@RequestBody TournamentDTO tournament,
+			@RequestParam Long id) {
+		System.out.println("TournamentAPI: editTournament: start");
+		
+		HttpStatus httpStatus = HttpStatus.OK;
+		Response response = new Response();
+		Map<String, Object> config = new HashMap<String, Object>();
+		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> error = new HashMap<String, Object>();
+		TournamentEntity tournamentEntity = new TournamentEntity();
+		
+		try {
+			tournamentEntity = converter.toEntity(tournament);
+			
+			tournamentEntity = service.update(id, tournamentEntity);
+			
+			TournamentDTO dto = converter.toDTO(tournamentEntity);
+
+			result.put("Tournament", dto);
+			config.put("Global", 0);
+			error.put("MessageCode", 0);
+			error.put("Message", "Tournament update successfuly");
+			System.out.println("TournamentAPI: editTournament: no exception");
+		} catch (Exception e) {
+			System.out.println("TournamentAPI: editTournament: has exception");
+			result.put("Tournament", null);
+			config.put("Global", 0);
+			error.put("MessageCode", 1);
+			error.put("Message", "Server error");
+		}
+
+		response.setConfig(config);
+		response.setResult(result);
+		response.setError(error);
+		System.out.println("TournamentAPI: editTournament: finish");
+		return new ResponseEntity<Response>(response, httpStatus);
+	}
 
 }

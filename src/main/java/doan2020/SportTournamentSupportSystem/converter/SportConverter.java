@@ -18,13 +18,16 @@ public class SportConverter {
 		System.out.println("SportConverter: toEntity: start");
 		SportEntity entity = new SportEntity();
 		try {
-			entity.setFullName(dto.getFullName());
-			entity.setShortName(dto.getShortName());
+			if (dto.getFullName() != null)
+				entity.setFullName(dto.getFullName());
+			if (dto.getShortName() != null)
+				entity.setShortName(dto.getShortName());
 			
-			Long sportScoringUnitId = dto.getScoringUnitId();
-			ScoringUnitEntity sportScoringUnit = scoringUnitService.findOneById(sportScoringUnitId);
-			entity.setScoringUnit(sportScoringUnit);
-			
+			if (dto.getScoringUnitId() != null) {
+				Long sportScoringUnitId = dto.getScoringUnitId();
+				ScoringUnitEntity sportScoringUnit = scoringUnitService.findOneById(sportScoringUnitId);
+				entity.setScoringUnit(sportScoringUnit);
+			}
 			entity.setDescription(dto.getDescription());
 			
 			entity.setStatus(dto.getStatus());
