@@ -6,8 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import doan2020.SportTournamentSupportSystem.dtIn.EditProfileDtIn;
-import doan2020.SportTournamentSupportSystem.dtOut.UserDtOut;
 import doan2020.SportTournamentSupportSystem.dto.UserDTO;
 import doan2020.SportTournamentSupportSystem.entity.RoleEntity;
 import doan2020.SportTournamentSupportSystem.entity.UserEntity;
@@ -65,11 +63,31 @@ public class UserConverter {
 		return entity;
 	}
 
-	public UserDtOut toDTO(UserEntity entity) {
+	public UserDTO toDTO(UserEntity entity) {
 		System.out.println("UserConverter: toDTO: start");
-		UserDtOut dto = new UserDtOut();
+		UserDTO dto = new UserDTO();
 		try {
+			dto.setUsername(entity.getUsername());
+//			dto.setPassword(entity.getPassword());
+			dto.setFirstName(entity.getFirstName());
+			dto.setLastName(entity.getLastName());
+			dto.setAddress(entity.getAddress());
+			dto.setPhoneNumber(entity.getPhoneNumber());
+			dto.setGender(entity.getGender());
 			
+			String userDob = validator.formatDateToString(entity.getDob());
+			dto.setDob(userDob);
+			
+			dto.setEmail(entity.getEmail());
+			dto.setAvatar(entity.getAvatar());
+			dto.setBackground(entity.getBackground());
+			
+			RoleEntity userRole = entity.getRole();
+			Long userRoleId = userRole.getId();
+			dto.setRoleId(userRoleId);
+			
+			dto.setStatus(entity.getStatus());
+			dto.setUrl(entity.getUrl());
 			System.out.println("UserConverter: toEntity: no exception");
 		} catch (Exception e) {
 			System.out.println("UserConverter: toEntity: has exception");
