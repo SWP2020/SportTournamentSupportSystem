@@ -101,6 +101,7 @@ public class LoginAPI {
 					}
 				}
 			}
+			System.out.println("LoginAPI: login: no exception");
 		} catch (Exception e) {
 			System.out.println("LoginAPI: login: has exception");
 			result.put("User", null);
@@ -113,6 +114,7 @@ public class LoginAPI {
 		response.setError(error);
 		response.setResult(result);
 		response.setConfig(config);
+		System.out.println("LoginAPI: login: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
 

@@ -46,7 +46,8 @@ public class UserAPI {
 
 	/* get One User */
 
-	@GetMapping("/getById")
+
+	@GetMapping("")
 	public ResponseEntity<Response> getById(@RequestParam(value = "id") Long id) {
 		System.out.println("UserAPI - getById");
 		Response response = new Response();

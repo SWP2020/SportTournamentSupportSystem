@@ -42,40 +42,53 @@ public class UsersAPI {
 	private UserConverter userConverter;
 
 	/* ---------------- GET ALL USER ------------------------ */
-	@GetMapping("")
-	public ResponseEntity<Response> getAllUser(@RequestParam(value = "page", required = false) Integer page) {
+	@GetMapping()
+	public ResponseEntity<Response> getAllUser(
+			@RequestParam(value = "page", required = false) Integer page,
+			@RequestParam(value = "limit", required = false) Integer limit) {
+		System.out.println("UsersAPI: getAllUser: start");
+		
 		Response response = new Response();
 		Map<String, Object> config = new HashMap<String, Object>();
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
-		List<UserDTO> listUsers = new ArrayList<>();
 		HttpStatus httpStatus = HttpStatus.OK;
+		
+		List<UserEntity> findPage = new ArrayList<>();
+		List<UserDTO> findPageDTO = new ArrayList<>();
+		
 		try {
-			if (page != null) {
-				Sort sortable = Sort.by("userID").ascending();
-				int limit = 10;
-				Pageable pageable = PageRequest.of(page - 1, limit, sortable);
-				List<UserEntity> ListUserEntity = (List<UserEntity>) userService.findAll(pageable);
+			if (limit == null)
+				limit = 10;
+			if (limit == 0)
+				limit = 10;
+			if (page == null)
+				page = 1;
 
-				for (UserEntity user : ListUserEntity) {
-					UserDTO userDTO = userConverter.toDTO(user);
-					listUsers.add(userDTO);
-					result.put("listUsers", listUsers);
-					error.put("messageCode", 0);
-					error.put("message", "get List Users successfully");
-				}
-			} else {
-				error.put("messageCode", 1);
-				error.put("message", "list Users is not exist");
+			Pageable pageable = PageRequest.of(page - 1, limit);
+			findPage = (List<UserEntity>) userService.findAll(pageable);
+			
+			
+			for (UserEntity entity : findPage) {
+				UserDTO dto = userConverter.toDTO(entity);
+				findPageDTO.add(dto);
 			}
+			
+			result.put("Users", findPageDTO);
+			error.put("MessageCode", 0);
+			error.put("Message", "Get page successfully");
+			
+			System.out.println("UsersAPI: getAllUser: no exception");
 		} catch (Exception e) {
-			result.put("listUsers", null);
-			error.put("messageCode", 1);
-			error.put("message", "get List Users fail");
+			System.out.println("UsersAPI: getAllUser: has exception");
+			result.put("Users", findPageDTO);
+			error.put("MessageCode", 1);
+			error.put("Message", "Server error");
 		}
 		response.setError(error);
 		response.setResult(result);
 		response.setConfig(config);
+		System.out.println("UsersAPI: getAllUser: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
 
 	}
