@@ -42,7 +42,7 @@ public class CompetitionFormatConverter {
 			System.out.println("CompetitionFormatConverter: toDTO: no exception");
 		} catch (Exception e) {
 			System.out.println("CompetitionFormatConverter: toDTO: has exception");
-			throw e;
+			return null;
 		}
 		
 		System.out.println("CompetitionFormatConverter: toDTO: finish");

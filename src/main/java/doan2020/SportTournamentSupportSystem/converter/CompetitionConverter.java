@@ -92,7 +92,7 @@ public class CompetitionConverter {
 			System.out.println("CompetitionConverter: toDTO: no exception");
 		} catch (Exception e) {
 			System.out.println("CompetitionConverter: toDTO: has exception");
-			throw e;
+			return null;
 		}
 		
 		System.out.println("CompetitionConverter: toDTO: finish");

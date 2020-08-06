@@ -85,7 +85,7 @@ public class TournamentConverter{
 			System.out.println("TournamentConverter: toDTO: no exception");
 		} catch (Exception e) {
 			System.out.println("TournamentConverter: toDTO: has exception");
-			throw e;
+			return null;
 		}
 		
 		System.out.println("TournamentConverter: toDTO: finish");
