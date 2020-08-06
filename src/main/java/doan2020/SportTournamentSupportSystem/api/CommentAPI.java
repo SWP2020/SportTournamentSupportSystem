@@ -27,7 +27,7 @@ import doan2020.SportTournamentSupportSystem.service.ICommentService;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/comments")
+@RequestMapping("/comment")
 public class CommentAPI {
 //	@Autowired
 //	private ICommentService CommentService;
