@@ -18,4 +18,6 @@ public interface ITournamentService {
 //	public Collection<TournamentEntity> findAll();
 	
 	public TournamentEntity delete(Long id);
+	
+	public Collection<TournamentEntity> findByCreatorId(Pageable pageable, Long creatorId);
 }

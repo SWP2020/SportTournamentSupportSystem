@@ -12,8 +12,10 @@ public class ScoringUnitConverter {
 		System.out.println("ScoringUnitConverter: toEntity: start");
 		ScoringUnitEntity entity = new ScoringUnitEntity();
 		try {
-			entity.setFullName(dto.getFullName());
-			entity.setShortName(dto.getShortName());
+			if (dto.getFullName() != null)
+				entity.setFullName(dto.getFullName());
+			if (dto.getShortName() != null)
+				entity.setShortName(dto.getShortName());
 			entity.setDescription(dto.getDescription());
 			
 			entity.setStatus(dto.getStatus());

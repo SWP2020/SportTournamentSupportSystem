@@ -23,17 +23,24 @@ public class TeamConverter{
 		System.out.println("TeamConverter: toEntity: start");
 		TeamEntity entity = new TeamEntity();
 		try {
-			entity.setFullName(dto.getFullName());
-			entity.setShortName(dto.getShortName());
+			
+			if (dto.getFullName() != null)
+				entity.setFullName(dto.getFullName());
+			if (dto.getShortName() != null)
+				entity.setShortName(dto.getShortName());
 			entity.setDescription(dto.getDescription());
 			
-			Long teamCompetitionId = dto.getCompetitionId();
-			CompetitionEntity teamCompetition = competitionService.findOneById(teamCompetitionId);
-			entity.setCompetition(teamCompetition);
+			if (dto.getCompetitionId() != null) {
+				Long teamCompetitionId = dto.getCompetitionId();
+				CompetitionEntity teamCompetition = competitionService.findOneById(teamCompetitionId);
+				entity.setCompetition(teamCompetition);
+			}
 			
-			Long teamCreatorId = dto.getCreatorId();
-			UserEntity teamCreator = userService.findOneById(teamCreatorId);
-			entity.setCreator(teamCreator);
+			if (dto.getCreatorId() != null) {
+				Long teamCreatorId = dto.getCreatorId();
+				UserEntity teamCreator = userService.findOneById(teamCreatorId);
+				entity.setCreator(teamCreator);
+			}
 			
 			entity.setStatus(dto.getStatus());
 			entity.setUrl(dto.getUrl());

@@ -12,9 +12,11 @@ public class ApiConverter {
 		System.out.println("ApiConverter: toEntity: start");
 		ApiEntity entity = new ApiEntity();
 		try {
-			entity.setName(dto.getName());
+			if (dto.getName() != null)
+				entity.setName(dto.getName());
 			entity.setDescription(dto.getDescription());
-			entity.setMethod(dto.getMethod());
+			if (dto.getMethod() != null)
+				entity.setMethod(dto.getMethod());
 			entity.setStatus(dto.getStatus());
 			entity.setUrl(dto.getUrl());
 			System.out.println("ApiConverter: toEntity: no exception");

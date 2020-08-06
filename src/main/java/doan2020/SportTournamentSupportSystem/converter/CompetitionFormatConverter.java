@@ -15,9 +15,10 @@ public class CompetitionFormatConverter {
 		System.out.println("CompetitionFormatConverter: toEntity: start");
 		CompetitionFormatEntity entity = new CompetitionFormatEntity();
 		try {
-			entity.setName(dto.getName());
+			if (dto.getName() != null)
+				entity.setName(dto.getName());
+
 			entity.setDescription(dto.getDescription());
-			
 			entity.setStatus(dto.getStatus());
 			entity.setUrl(dto.getUrl());
 			System.out.println("CompetitionFormatConverter: toEntity: no exception");

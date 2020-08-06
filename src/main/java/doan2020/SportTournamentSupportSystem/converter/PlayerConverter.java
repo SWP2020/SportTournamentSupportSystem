@@ -38,9 +38,11 @@ public class PlayerConverter {
 			
 			entity.setEmail(dto.getEmail());
 			
-			Long playerTeamId = dto.getTeamId();
-			TeamEntity playerTeam = teamService.findOneById(playerTeamId);
-			entity.setTeam(playerTeam);
+			if (dto.getTeamId() != null) {
+				Long playerTeamId = dto.getTeamId();
+				TeamEntity playerTeam = teamService.findOneById(playerTeamId);
+				entity.setTeam(playerTeam);
+			}
 			
 			entity.setStatus(dto.getStatus());
 			entity.setUrl(dto.getUrl());

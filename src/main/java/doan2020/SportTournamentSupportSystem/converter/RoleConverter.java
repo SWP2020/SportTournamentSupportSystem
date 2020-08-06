@@ -12,7 +12,9 @@ public class RoleConverter {
 		System.out.println("RoleConverter: toEntity: start");
 		RoleEntity entity = new RoleEntity();
 		try {
-			entity.setName(dto.getName());
+			if (dto.getName() != null)
+				entity.setName(dto.getName());
+
 			entity.setDescription(dto.getDescription());
 			
 			entity.setStatus(dto.getStatus());
