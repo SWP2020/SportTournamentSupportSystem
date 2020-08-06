@@ -13,4 +13,5 @@ public interface VerificationTokenRepository extends JpaRepository<VerificationT
 	List<VerificationToken> findByUserEntityEmailAndUserEntity(String email,UserEntity userEntity);
 
 	List<VerificationToken> findByToken(String token);
+	
 }

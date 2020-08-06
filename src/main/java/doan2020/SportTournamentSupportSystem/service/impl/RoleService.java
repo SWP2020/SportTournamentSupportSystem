@@ -74,4 +74,15 @@ public class RoleService implements IRoleService {
 		return foundEntity;
 	}
 
+	@Override
+	public RoleEntity findOneByName(String name) {
+		RoleEntity foundEntity = null;
+		try {
+			foundEntity = roleRepository.findOneByName(name);
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntity;
+	}
+
 }

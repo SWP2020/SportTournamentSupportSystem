@@ -84,4 +84,37 @@ public class UserService implements IUserService {
 		return foundEntity;
 	}
 
+	@Override
+	public UserEntity findByUsername(String username) {
+		UserEntity foundEntity = null;
+		try {
+			foundEntity = userRepository.findByUsername(username);
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntity;
+	}
+
+	@Override
+	public Collection<UserEntity> findAll(Pageable pageable) {
+		Collection<UserEntity> userEntities = null;
+		try {
+			userEntities = userRepository.findAll(pageable).getContent();
+		} catch (Exception e) {
+			return null;
+		}
+		return userEntities;
+	}
+
+	@Override
+	public Collection<UserEntity> findAll() {
+		Collection<UserEntity> userEntities = null;
+		try {
+			userEntities = userRepository.findAll();
+		} catch (Exception e) {
+			return null;
+		}
+		return userEntities;
+	}
+
 }

@@ -31,10 +31,12 @@ public class UserConverter {
 		UserEntity entity = new UserEntity();
 		try {
 			
-			String userPassword = passwordEncoder.encode(dto.getUsername());
-			entity.setUsername(userPassword);
 			
-			entity.setPassword(dto.getPassword());
+			
+			String userPassword = passwordEncoder.encode(dto.getUsername());
+			entity.setUsername(dto.getUsername());
+			
+			entity.setPassword(userPassword);
 			entity.setFirstName(dto.getFirstName());
 			entity.setLastName(dto.getLastName());
 			entity.setAddress(dto.getAddress());
@@ -67,6 +69,7 @@ public class UserConverter {
 		System.out.println("UserConverter: toDTO: start");
 		UserDTO dto = new UserDTO();
 		try {
+			dto.setId(entity.getId());
 			dto.setUsername(entity.getUsername());
 //			dto.setPassword(entity.getPassword());
 			dto.setFirstName(entity.getFirstName());
