@@ -30,7 +30,7 @@ public class Validator {
 		}
 	}
 	
-	public int ConvertDobToAge(String dobEntity) {
+	public int convertDobToAge(String dobEntity) {
 		int res = -1;
 		try {
 			LocalDate dob = LocalDate.parse(dobEntity);
