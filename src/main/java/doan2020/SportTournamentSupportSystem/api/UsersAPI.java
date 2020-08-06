@@ -59,9 +59,9 @@ public class UsersAPI {
 		
 		try {
 			if (limit == null)
-				limit = 10;
+				limit = 3;
 			if (limit == 0)
-				limit = 10;
+				limit = 3;
 			if (page == null)
 				page = 1;
 

@@ -72,11 +72,49 @@ public class CompetitionService implements ICompetitionService {
 	public CompetitionEntity findOneById(Long id) {
 		CompetitionEntity foundEntity = null;
 		try {
+			System.out.println(foundEntity.toString());
 			foundEntity = competitionRepository.findOneById(id);
+			System.out.println(foundEntity.toString());
+			System.out.println("true");
 		} catch (Exception e) {
+			System.out.println("false");
 			return null;
 		}
 		return foundEntity;
+	}
+
+	@Override
+	public Collection<CompetitionEntity> findAll(Pageable pageable) {
+		Collection<CompetitionEntity> foundEntitys = null;
+		try {
+			foundEntitys = (Collection<CompetitionEntity>) competitionRepository.findAll(pageable).getContent();
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntitys;
+	}
+
+	@Override
+	public Collection<CompetitionEntity> findByTournamentId(Pageable pageable, Long tournamentId) {
+		Collection<CompetitionEntity> foundEntitys = null;
+		try {
+			foundEntitys = (Collection<CompetitionEntity>) competitionRepository.findByTournamentId(pageable, tournamentId).getContent();
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntitys;
+	}
+
+	@Override
+	public Collection<CompetitionEntity> findByTournamentIdAndSportId(Pageable pageable, Long tournamentId,
+			Long sportId) {
+		Collection<CompetitionEntity> foundEntitys = null;
+		try {
+			foundEntitys = (Collection<CompetitionEntity>) competitionRepository.findByTournamentIdAndSportId(pageable, tournamentId, sportId).getContent();
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntitys;
 	}
 
 }
