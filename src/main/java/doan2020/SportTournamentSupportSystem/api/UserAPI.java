@@ -46,8 +46,9 @@ public class UserAPI {
 
 	/* get One User */
 
-	@GetMapping("/getOne")
-	public ResponseEntity<Response> getUserInfor(@RequestParam(value = "id") Long id) {
+	@GetMapping("/getById")
+	public ResponseEntity<Response> getById(@RequestParam(value = "id") Long id) {
+		System.out.println("UserAPI - getById");
 		Response response = new Response();
 		HttpStatus httpStatus = HttpStatus.OK;
 		Map<String, Object> config = new HashMap<String, Object>();
@@ -55,17 +56,30 @@ public class UserAPI {
 		Map<String, Object> error = new HashMap<String, Object>();
 		UserEntity user = new UserEntity();
 		try {
-			user = userService.findOneById(id);
-			if (user == null) {
-				result.put("user", null);
-				config.put("global", 0);
-				error.put("messageCode", 1);
-				error.put("message", "user is not exist");
+			if(id == null) {
+				System.out.println("UserAPI - getById - cp1");
+				result.put("User", null);
+				config.put("Global", 0);
+				error.put("MessageCode", 1);
+				error.put("Message", "required id");
 				response.setConfig(config);
 				response.setResult(result);
 				response.setError(error);
 				return new ResponseEntity<Response>(response, httpStatus);
 			}
+			user = userService.findOneById(id);
+			if (user == null) {
+				System.out.println("UserAPI - getById - cp2");
+				result.put("user", null);
+				config.put("Global", 0);
+				error.put("MessageCode", 1);
+				error.put("Message", "user is not exist");
+				response.setConfig(config);
+				response.setResult(result);
+				response.setError(error);
+				return new ResponseEntity<Response>(response, httpStatus);
+			}
+			System.out.println("UserAPI - getById - cp3");
 			UserDTO userDTO = userConverter.toDTO(user);
 			
 			int countOfTournament = user.getTournaments().size();
@@ -74,12 +88,117 @@ public class UserAPI {
 			result.put("User", userDTO);
 			result.put("countOfTournament", countOfTournament);
 			result.put("countOfTeam", countOfTeam);
-			error.put("messageCode", 0);
-			error.put("message", "get User successfully");
+			error.put("MessageCode", 0);
+			error.put("Message", "get User successfully");
 		} catch (Exception e) {
+			System.out.println("UserAPI - getById - exception");
 			result.put("listUsers", null);
-			error.put("messageCode", 1);
-			error.put("message", "get User fail");
+			error.put("MessageCode", 1);
+			error.put("Message", "get User fail");
+		}
+		response.setError(error);
+		response.setResult(result);
+		response.setConfig(config);
+
+		return new ResponseEntity<Response>(response, httpStatus);
+	}
+	
+	@GetMapping("/getByUserName")
+	public ResponseEntity<Response> getByUserName(@RequestParam(value = "userName") String userName) {
+		System.out.println("UserAPI - getByUserName");
+		Response response = new Response();
+		HttpStatus httpStatus = HttpStatus.OK;
+		Map<String, Object> config = new HashMap<String, Object>();
+		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> error = new HashMap<String, Object>();
+		UserEntity user = new UserEntity();
+		try {
+			if(userName == null) {
+				System.out.println("UserAPI - getByUserName - cp1");
+				result.put("User", null);
+				config.put("Global", 0);
+				error.put("MessageCode", 1);
+				error.put("Message", "required userName");
+				response.setConfig(config);
+				response.setResult(result);
+				response.setError(error);
+				return new ResponseEntity<Response>(response, httpStatus);
+			}
+			user = userService.findByUsername(userName);
+			if (user == null) {
+				System.out.println("UserAPI - getByUserName - cp2");
+				result.put("user", null);
+				config.put("Global", 0);
+				error.put("MessageCode", 1);
+				error.put("Message", "UserName is not exist");
+				response.setConfig(config);
+				response.setResult(result);
+				response.setError(error);
+				return new ResponseEntity<Response>(response, httpStatus);
+			}
+			System.out.println("UserAPI - getById - cp3");
+			UserDTO userDTO = userConverter.toDTO(user);
+			
+			result.put("User", userDTO);
+			error.put("MessageCode", 0);
+			error.put("Message", "UserName is exist");
+		} catch (Exception e) {
+			System.out.println("UserAPI - getByUserName - exception");
+			result.put("listUsers", null);
+			error.put("MessageCode", 1);
+			error.put("Message", "get User fail");
+		}
+		response.setError(error);
+		response.setResult(result);
+		response.setConfig(config);
+
+		return new ResponseEntity<Response>(response, httpStatus);
+	}
+	
+	@GetMapping("/getByEmail")
+	public ResponseEntity<Response> getByEmail(@RequestParam(value = "email") String email) {
+		System.out.println("UserAPI - getByEmail");
+		Response response = new Response();
+		HttpStatus httpStatus = HttpStatus.OK;
+		Map<String, Object> config = new HashMap<String, Object>();
+		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> error = new HashMap<String, Object>();
+		UserEntity user = new UserEntity();
+		try {
+			if(email == null) {
+				System.out.println("UserAPI - getByEmail - cp1");
+				result.put("User", null);
+				config.put("Global", 0);
+				error.put("MessageCode", 1);
+				error.put("Message", "required email");
+				response.setConfig(config);
+				response.setResult(result);
+				response.setError(error);
+				return new ResponseEntity<Response>(response, httpStatus);
+			}
+			user = userService.findByEmail(email);
+			if (user == null) {
+				System.out.println("UserAPI - getByEmail - cp2");
+				result.put("user", null);
+				config.put("Global", 0);
+				error.put("MessageCode", 1);
+				error.put("Message", "email is not exist");
+				response.setConfig(config);
+				response.setResult(result);
+				response.setError(error);
+				return new ResponseEntity<Response>(response, httpStatus);
+			}
+			System.out.println("UserAPI - getByEmail - cp3");
+			UserDTO userDTO = userConverter.toDTO(user);
+			
+			result.put("User", userDTO);
+			error.put("MessageCode", 0);
+			error.put("Message", "email is exist");
+		} catch (Exception e) {
+			System.out.println("UserAPI - getByEmail - exception");
+			result.put("listUsers", null);
+			error.put("MessageCode", 1);
+			error.put("Message", "get User fail");
 		}
 		response.setError(error);
 		response.setResult(result);
@@ -101,8 +220,8 @@ public class UserAPI {
 			List<UserEntity> listUser = (List<UserEntity>) userService.findAll();
 			for (UserEntity userExist : listUser) {
 				if (StringUtils.equals(user.getUsername(), userExist.getUsername())) {
-					error.put("messageCode", 1);
-					error.put("message", "User is Exists");
+					error.put("MessageCode", 1);
+					error.put("Message", "User is Exists");
 					response.setError(error);
 					response.setResult(result);
 					response.setConfig(config);
@@ -110,8 +229,8 @@ public class UserAPI {
 				}
 
 				if (StringUtils.equals(user.getEmail(), userExist.getEmail())) {
-					error.put("messageCode", 1);
-					error.put("message", "Email is Exists");
+					error.put("MessageCode", 1);
+					error.put("Message", "Email is Exists");
 					response.setError(error);
 					response.setResult(result);
 					response.setConfig(config);
@@ -131,14 +250,14 @@ public class UserAPI {
 
 			result.put("User", userDTO);
 
-			error.put("messageCode", 0);
-			error.put("message", "Register successfully");
+			error.put("MessageCode", 0);
+			error.put("Message", "Register successfully");
 			httpStatus = HttpStatus.OK;
 
 		} catch (Exception e) {
 			result.put("User", null);
-			error.put("messageCode", 1);
-			error.put("message", "register  User fail");
+			error.put("MessageCode", 1);
+			error.put("Message", "register  User fail");
 		}
 		response.setError(error);
 		response.setResult(result);
@@ -160,16 +279,16 @@ public class UserAPI {
 			if (id != null) {
 					userEntity = userConverter.toEntity(dto);
 					userService.update(id, userEntity);
-					error.put("messageCode", 0);
-					error.put("message", "Edit Profile User Successfull");
+					error.put("MessageCode", 0);
+					error.put("Message", "Edit Profile User Successfull");
 				} else {
-					error.put("messageCode", 1);
-					error.put("message", "required user id");
+					error.put("MessageCode", 1);
+					error.put("Message", "required user id");
 				}
 		} catch (Exception ex) {
 			result.put("User", null);
-			error.put("messageCode", 1);
-			error.put("message", "edit  User fail");
+			error.put("MessageCode", 1);
+			error.put("Message", "edit  User fail");
 		}
 		response.setError(error);
 		response.setResult(result);
@@ -189,17 +308,17 @@ public class UserAPI {
 		try {
 			if (id != null) {
 					userService.delete(id);
-					error.put("messageCode", 0);
-					error.put("message", "Delete User Successfull");
+					error.put("MessageCode", 0);
+					error.put("Message", "Delete User Successfull");
 				} else {
 					httpStatus = HttpStatus.NOT_FOUND;
-					error.put("messageCode", 1);
-					error.put("message", "required user id");
+					error.put("MessageCode", 1);
+					error.put("Message", "required user id");
 				}	
 		} catch (Exception e) {
 			result.put("User", null);
-			error.put("messageCode", 1);
-			error.put("message", "delete  User fail");
+			error.put("MessageCode", 1);
+			error.put("Message", "delete  User fail");
 		}
 		response.setError(error);
 		response.setResult(result);
@@ -217,12 +336,12 @@ public class UserAPI {
 		httpStatus = HttpStatus.OK;
 		try {
 			if (verificationTokenService.createVerification(registerDtIn.getEmail(), registerDtIn.getUsername())) {
-				error.put("messageCode", 0);
-				error.put("message", "Sending mail successfully");
+				error.put("MessageCode", 0);
+				error.put("Message", "Sending mail successfully");
 
 			} else {
-				error.put("messageCode", 1);
-				error.put("message", "Sending mail fail");
+				error.put("MessageCode", 1);
+				error.put("Message", "Sending mail fail");
 				response.setError(error);
 				response.setResult(result);
 				response.setConfig(config);
@@ -233,8 +352,8 @@ public class UserAPI {
 
 		} catch (Exception e) {
 			result.put("User", null);
-			error.put("messageCode", 1);
-			error.put("message", "send  Mail fail");
+			error.put("MessageCode", 1);
+			error.put("Message", "send  Mail fail");
 		}
 		response.setError(error);
 		response.setResult(result);
