@@ -46,165 +46,142 @@ public class UserAPI {
 
 	/* get One User */
 
-
 	@GetMapping("")
 	public ResponseEntity<Response> getById(@RequestParam(value = "id") Long id) {
-		System.out.println("UserAPI - getById");
+		System.out.println("UserAPI: getById: start");
 		Response response = new Response();
 		HttpStatus httpStatus = HttpStatus.OK;
 		Map<String, Object> config = new HashMap<String, Object>();
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
 		UserEntity user = new UserEntity();
+		UserDTO dto = new UserDTO();
+
 		try {
-			if(id == null) {
-				System.out.println("UserAPI - getById - cp1");
+			if (id == null) {// id null
 				result.put("User", null);
 				config.put("Global", 0);
 				error.put("MessageCode", 1);
-				error.put("Message", "required id");
-				response.setConfig(config);
-				response.setResult(result);
-				response.setError(error);
-				return new ResponseEntity<Response>(response, httpStatus);
+				error.put("Message", "Required param id");
+			} else {// id not null
+				user = userService.findOneById(id);
+				if (user == null) {// not found
+					result.put("User", null);
+					config.put("Global", 0);
+					error.put("MessageCode", 1);
+					error.put("Message", "Not found");
+				} else {// found
+					dto = userConverter.toDTO(user);
+					result.put("User", dto);
+					config.put("Global", 0);
+					error.put("MessageCode", 0);
+					error.put("Message", "Found");
+				}
 			}
-			user = userService.findOneById(id);
-			if (user == null) {
-				System.out.println("UserAPI - getById - cp2");
-				result.put("user", null);
-				config.put("Global", 0);
-				error.put("MessageCode", 1);
-				error.put("Message", "user is not exist");
-				response.setConfig(config);
-				response.setResult(result);
-				response.setError(error);
-				return new ResponseEntity<Response>(response, httpStatus);
-			}
-			System.out.println("UserAPI - getById - cp3");
-			UserDTO userDTO = userConverter.toDTO(user);
-			
-			int countOfTournament = user.getTournaments().size();
-			int countOfTeam = user.getTeams().size();
-			
-			result.put("User", userDTO);
-			result.put("countOfTournament", countOfTournament);
-			result.put("countOfTeam", countOfTeam);
-			error.put("MessageCode", 0);
-			error.put("Message", "get User successfully");
+			System.out.println("UserAPI: getById: no exception");
+
 		} catch (Exception e) {
-			System.out.println("UserAPI - getById - exception");
-			result.put("listUsers", null);
+			System.out.println("UserAPI: getById: has exception");
+			result.put("User", null);
 			error.put("MessageCode", 1);
-			error.put("Message", "get User fail");
+			error.put("Message", "Server error");
 		}
+
 		response.setError(error);
 		response.setResult(result);
 		response.setConfig(config);
-
+		System.out.println("UserAPI: getById: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
-	
+
 	@GetMapping("/getByUsername")
-	public ResponseEntity<Response> getByUserName(@RequestParam(value = "username") String userName) {
-		System.out.println("UserAPI - getByUserName");
+	public ResponseEntity<Response> getByUserName(@RequestParam(value = "username") String username) {
+		System.out.println("UserAPI: getByUserName: start");
 		Response response = new Response();
 		HttpStatus httpStatus = HttpStatus.OK;
 		Map<String, Object> config = new HashMap<String, Object>();
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
 		UserEntity user = new UserEntity();
+		UserDTO dto = new UserDTO();
+
 		try {
-			if(userName == null) {
-				System.out.println("UserAPI - getByUserName - cp1");
+			if (username == null) {// username null
 				result.put("User", null);
 				config.put("Global", 0);
 				error.put("MessageCode", 1);
-				error.put("Message", "required userName");
-				response.setConfig(config);
-				response.setResult(result);
-				response.setError(error);
-				return new ResponseEntity<Response>(response, httpStatus);
+				error.put("Message", "Required param username");
+			} else {// username not null
+				user = userService.findByUsername(username);
+				if (user == null) {// not found
+					result.put("User", null);
+					config.put("Global", 0);
+					error.put("MessageCode", 1);
+					error.put("Message", "Not found");
+				} else {// found
+					dto = userConverter.toDTO(user);
+					result.put("User", dto);
+					config.put("Global", 0);
+					error.put("MessageCode", 0);
+					error.put("Message", "Found");
+				}
 			}
-			user = userService.findByUsername(userName);
-			if (user == null) {
-				System.out.println("UserAPI - getByUserName - cp2");
-				result.put("user", null);
-				config.put("Global", 0);
-				error.put("MessageCode", 1);
-				error.put("Message", "UserName is not exist");
-				response.setConfig(config);
-				response.setResult(result);
-				response.setError(error);
-				return new ResponseEntity<Response>(response, httpStatus);
-			}
-			System.out.println("UserAPI - getById - cp3");
-			UserDTO userDTO = userConverter.toDTO(user);
-			
-			result.put("User", userDTO);
-			error.put("MessageCode", 0);
-			error.put("Message", "UserName is exist");
+			System.out.println("UserAPI: getByUserName: no exception");
 		} catch (Exception e) {
-			System.out.println("UserAPI - getByUserName - exception");
-			result.put("listUsers", null);
+			System.out.println("UserAPI: getByUserName: has exception");
+			result.put("User", null);
 			error.put("MessageCode", 1);
-			error.put("Message", "get User fail");
+			error.put("Message", "Server error");
 		}
 		response.setError(error);
 		response.setResult(result);
 		response.setConfig(config);
-
+		System.out.println("UserAPI: getByUserName: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
-	
+
 	@GetMapping("/getByEmail")
 	public ResponseEntity<Response> getByEmail(@RequestParam(value = "email") String email) {
-		System.out.println("UserAPI - getByEmail");
+		System.out.println("UserAPI: getByUserName: start");
 		Response response = new Response();
 		HttpStatus httpStatus = HttpStatus.OK;
 		Map<String, Object> config = new HashMap<String, Object>();
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
 		UserEntity user = new UserEntity();
+		UserDTO dto = new UserDTO();
 		try {
-			if(email == null) {
-				System.out.println("UserAPI - getByEmail - cp1");
+			if (email == null) {// email null
 				result.put("User", null);
 				config.put("Global", 0);
 				error.put("MessageCode", 1);
-				error.put("Message", "required email");
-				response.setConfig(config);
-				response.setResult(result);
-				response.setError(error);
-				return new ResponseEntity<Response>(response, httpStatus);
+				error.put("Message", "Required param email");
+			} else {// email not null
+				user = userService.findByEmail(email);
+				if (user == null) {// not found
+					result.put("User", null);
+					config.put("Global", 0);
+					error.put("MessageCode", 1);
+					error.put("Message", "Not found");
+				} else {// found
+					dto = userConverter.toDTO(user);
+					result.put("User", dto);
+					config.put("Global", 0);
+					error.put("MessageCode", 0);
+					error.put("Message", "Found");
+				}
 			}
-			user = userService.findByEmail(email);
-			if (user == null) {
-				System.out.println("UserAPI - getByEmail - cp2");
-				result.put("user", null);
-				config.put("Global", 0);
-				error.put("MessageCode", 1);
-				error.put("Message", "email is not exist");
-				response.setConfig(config);
-				response.setResult(result);
-				response.setError(error);
-				return new ResponseEntity<Response>(response, httpStatus);
-			}
-			System.out.println("UserAPI - getByEmail - cp3");
-			UserDTO userDTO = userConverter.toDTO(user);
-			
-			result.put("User", userDTO);
-			error.put("MessageCode", 0);
-			error.put("Message", "email is exist");
+			System.out.println("UserAPI: getByUserName: no exception");
 		} catch (Exception e) {
-			System.out.println("UserAPI - getByEmail - exception");
-			result.put("listUsers", null);
+			System.out.println("UserAPI: getByUserName: has exception");
+			result.put("User", null);
 			error.put("MessageCode", 1);
-			error.put("Message", "get User fail");
+			error.put("Message", "Server error");
 		}
 		response.setError(error);
 		response.setResult(result);
 		response.setConfig(config);
-
+		System.out.println("UserAPI: getByUserName: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
 
@@ -212,64 +189,55 @@ public class UserAPI {
 	@PostMapping
 	public ResponseEntity<Response> createUser(@RequestBody UserDTO userDTO) {
 		HttpStatus httpStatus = HttpStatus.OK;
+		System.out.println("UserAPI: createUser: start");
 		Response response = new Response();
 		Map<String, Object> config = new HashMap<String, Object>();
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
 		try {
-			UserEntity user = userConverter.toEntity(userDTO);
-			List<UserEntity> listUser = (List<UserEntity>) userService.findAll();
-			for (UserEntity userExist : listUser) {
-				if (StringUtils.equals(user.getUsername(), userExist.getUsername())) {
-					error.put("MessageCode", 1);
-					error.put("Message", "User is Exists");
-					response.setError(error);
-					response.setResult(result);
-					response.setConfig(config);
-					return new ResponseEntity<Response>(response, httpStatus);
-				}
+			UserEntity newUser = userConverter.toEntity(userDTO);
 
-				if (StringUtils.equals(user.getEmail(), userExist.getEmail())) {
-					error.put("MessageCode", 1);
-					error.put("Message", "Email is Exists");
-					response.setError(error);
-					response.setResult(result);
-					response.setConfig(config);
-					return new ResponseEntity<Response>(response, httpStatus);
-				}
+			UserEntity userCheckUsername = userService.findByUsername(newUser.getUsername());
+			UserEntity userCheckEmail = userService.findByEmail(newUser.getEmail());
+
+			if (userCheckUsername != null || userCheckEmail != null) {// User exist
+				error.put("MessageCode", 1);
+				error.put("Message", "User is Exists");
+			} else {
+
+				RoleEntity roleEntity = roleService.findOneByName("ROLE_USER");
+				if (roleEntity != null)
+					newUser.setRole(roleEntity);
+				newUser.setStatus("deactive");
+
+				newUser = userService.create(newUser);
+
+				userDTO = userConverter.toDTO(newUser);
+
+				verificationTokenService.createVerification(newUser.getEmail(), newUser.getUsername());
+
+				result.put("User", userDTO);
+
+				error.put("MessageCode", 0);
+				error.put("Message", "Create user successful");
 			}
-			RoleEntity roleEntity = roleService.findOneByName("ROLE_USER");
-			if (roleEntity != null)
-				user.setRole(roleEntity);
-			user.setStatus("not active");
-
-			userService.create(user);
-			
-			userDTO = userConverter.toDTO(user);
-
-			verificationTokenService.createVerification(user.getEmail(), user.getUsername());
-
-			result.put("User", userDTO);
-
-			error.put("MessageCode", 0);
-			error.put("Message", "Register successfully");
-			httpStatus = HttpStatus.OK;
-
+			System.out.println("UserAPI: createUser: no exception");
 		} catch (Exception e) {
+			System.out.println("UserAPI: createUser: has exception");
 			result.put("User", null);
 			error.put("MessageCode", 1);
-			error.put("Message", "register  User fail");
+			error.put("Message", "Server error");
 		}
 		response.setError(error);
 		response.setResult(result);
 		response.setConfig(config);
+		System.out.println("UserAPI: createUser: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
 
 	/* ---------------- Edit Profile User ------------------------ */
 	@PutMapping("")
-	public ResponseEntity<Response> editUser(@RequestParam(value = "id") Long id,
-			@RequestBody UserDTO dto) {
+	public ResponseEntity<Response> editUser(@RequestParam(value = "id") Long id, @RequestBody UserDTO dto) {
 		HttpStatus httpStatus = HttpStatus.OK;
 		Response response = new Response();
 		Map<String, Object> config = new HashMap<String, Object>();
@@ -278,14 +246,14 @@ public class UserAPI {
 		try {
 			UserEntity userEntity = new UserEntity();
 			if (id != null) {
-					userEntity = userConverter.toEntity(dto);
-					userService.update(id, userEntity);
-					error.put("MessageCode", 0);
-					error.put("Message", "Edit Profile User Successfull");
-				} else {
-					error.put("MessageCode", 1);
-					error.put("Message", "required user id");
-				}
+				userEntity = userConverter.toEntity(dto);
+				userService.update(id, userEntity);
+				error.put("MessageCode", 0);
+				error.put("Message", "Edit Profile User Successfull");
+			} else {
+				error.put("MessageCode", 1);
+				error.put("Message", "required user id");
+			}
 		} catch (Exception ex) {
 			result.put("User", null);
 			error.put("MessageCode", 1);
@@ -308,14 +276,14 @@ public class UserAPI {
 		Map<String, Object> error = new HashMap<String, Object>();
 		try {
 			if (id != null) {
-					userService.delete(id);
-					error.put("MessageCode", 0);
-					error.put("Message", "Delete User Successfull");
-				} else {
-					httpStatus = HttpStatus.NOT_FOUND;
-					error.put("MessageCode", 1);
-					error.put("Message", "required user id");
-				}	
+				userService.delete(id);
+				error.put("MessageCode", 0);
+				error.put("Message", "Delete User Successfull");
+			} else {
+				httpStatus = HttpStatus.NOT_FOUND;
+				error.put("MessageCode", 1);
+				error.put("Message", "required user id");
+			}
 		} catch (Exception e) {
 			result.put("User", null);
 			error.put("MessageCode", 1);
@@ -349,8 +317,6 @@ public class UserAPI {
 				return new ResponseEntity<Response>(response, httpStatus);
 			}
 
-			
-
 		} catch (Exception e) {
 			result.put("User", null);
 			error.put("MessageCode", 1);
@@ -362,23 +328,23 @@ public class UserAPI {
 		return new ResponseEntity<Response>(response, httpStatus);
 
 	}
-	
+
 	@PostMapping("/forgotPassword")
-	public ResponseEntity<Response> forgotPassword(@RequestBody RegisterDtIn registerDtIn){
+	public ResponseEntity<Response> forgotPassword(@RequestBody RegisterDtIn registerDtIn) {
 		Response response = new Response();
 		HttpStatus httpStatus = null;
 		Map<String, Object> config = new HashMap<String, Object>();
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
 		try {
-			
-		}catch (Exception e) {
+
+		} catch (Exception e) {
 			// TODO: handle exception
 		}
 		response.setError(error);
 		response.setResult(result);
 		response.setConfig(config);
-		
+
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
 
