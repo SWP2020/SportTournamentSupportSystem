@@ -117,4 +117,15 @@ public class UserService implements IUserService {
 		return userEntities;
 	}
 
+	@Override
+	public UserEntity findByEmail(String email) {
+		UserEntity foundEntity = null;
+		try {
+			foundEntity = userRepository.findByEmail(email);
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntity;
+	}
+
 }
