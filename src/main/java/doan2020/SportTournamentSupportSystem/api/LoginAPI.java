@@ -54,7 +54,7 @@ public class LoginAPI {
 
 	@PostMapping
 	public ResponseEntity<Response> login(@RequestBody LoginDtIn user) {
-		System.out.println("LoginAPI - login");
+		System.out.println("LoginAPI: login: start");
 		HttpStatus httpStatus = null;
 		httpStatus = HttpStatus.OK;
 		Response response = new Response();
@@ -62,62 +62,57 @@ public class LoginAPI {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
 		try {
-			System.out.println(user.getUsername());
 			UserEntity findUser = userService.findByUsername(user.getUsername());
-			System.out.println(findUser);
-			boolean checkPW = passwordEncoder.matches(user.getPassword(), findUser.getPassword());
-			System.out.println("LoginAPI- check pass OK");
-			if (StringUtils.equals(user.getUsername(), findUser.getUsername()) && checkPW) {
-				System.out.println("LoginAPI- cp1");
-				if (findUser.getStatus().equals("active")) {
-					System.out.println("LoginAPI- cp2");
-					String token = jwtService.generateTokenLogin(user.getUsername());
-					UserDTO userDtO = converter.toDTO(findUser);
+			if (findUser == null) { // User is not Exist
+				System.out.println("LoginAPI: login: User is not Exist");
+				result.put("User", null);
+				result.put("Authentication", null);
+				config.put("Global", 0);
+				error.put("MessageCode", 1);
+				error.put("Message", "User is not Exist");
+			} else { // User exist
+				if (!findUser.getStatus().equals("active")) { // User is not active
+					System.out.println("LoginAPI: login: User is not active");
+					result.put("User", null);
+					result.put("Authentication", null);
+					config.put("Global", 0);
+					error.put("MessageCode", 1);
+					error.put("Message", "User is not active");
+				} else { // User is active
+					boolean checkPW = passwordEncoder.matches(user.getPassword(), findUser.getPassword());
+					if (!checkPW) {// password wrong
+						System.out.println("LoginAPI: login: Password wrong");
+						result.put("User", null);
+						result.put("Authentication", null);
+						config.put("Global", 0);
+						error.put("MessageCode", 1);
+						error.put("Message", "Password wrong");
+					} else {// password right
+						UserDTO userDTO = converter.toDTO(findUser);
+						String token = jwtService.generateTokenLogin(user.getUsername());
 
-					System.out.println("convert OK");
-
-					result.put("User", userDtO);
-					result.put("Authentication", token);
-					config.put("global", 0);
-					error.put("messageCode", 0);
-					error.put("message", "login Successfull");
-
-					System.out.println("LoginAPI- cp3");
-				} else {
-					System.out.println("LoginAPI- cp4");
-					config.put("global", 0);
-					error.put("messageCode", 1);
-					error.put("message", "User is not active");
-					System.out.println("LoginAPI- cp5");
-					response.setError(error);
-					response.setResult(result);
-					response.setConfig(config);
-					return new ResponseEntity<Response>(response, httpStatus);
+						result.put("User", userDTO);
+						result.put("Authentication", token);
+						config.put("Global", 0);
+						error.put("MessageCode", 0);
+						error.put("Message", "Login successfull");
+					
+						System.out.println("LoginAPI: login: " + findUser.getUsername() + " login success");
+					}
 				}
-			} else {
-				System.out.println("cp6");
-				config.put("global", 0);
-				error.put("messageCode", 1);
-				error.put("message", "UserName or PassWrong is Wrong");
-				System.out.println("cp7");
-				response.setError(error);
-				response.setResult(result);
-				response.setConfig(config);
-				return new ResponseEntity<Response>(response, httpStatus);
 			}
 		} catch (Exception e) {
-			System.out.println("LoginAPI - exception");
+			System.out.println("LoginAPI: login: has exception");
 			result.put("User", null);
-			config.put("global", 0);
-			error.put("messageCode", 1);
-			error.put("message", "Login Fail");
+			config.put("Global", 0);
+			error.put("MessageCode", 1);
+			error.put("Message", "Server error");
 		}
 
-		System.out.println("LoginAPI - cp8");
+		
 		response.setError(error);
 		response.setResult(result);
 		response.setConfig(config);
-		System.out.println("LoginAPI - cp pass");
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
 
@@ -133,46 +128,46 @@ public class LoginAPI {
 
 		try {
 			String token = verifyAuthenticationDtIn.getCode();
-	        List<VerificationToken> verificationTokens = verificationTokenService.findByToken(token);
-	        if (verificationTokens.isEmpty()) {
-	        	error.put("messageCode", "002");
-				error.put("message", "Invalid token.");
+			List<VerificationToken> verificationTokens = verificationTokenService.findByToken(token);
+			if (verificationTokens.isEmpty()) {
+				error.put("MessageCode", 2);
+				error.put("Message", "Invalid token.");
 				response.setError(error);
 				response.setError(error);
 				response.setResult(result);
 				response.setConfig(config);
 				return new ResponseEntity<Response>(response, httpStatus);
-	        }
+			}
 
-	        VerificationToken verificationToken = verificationTokens.get(0);
-	        if (verificationToken.getExpiredDateTime().isBefore(LocalDateTime.now())) {
-	        	error.put("messageCode", "002");
-				error.put("message", "Expired token.");
+			VerificationToken verificationToken = verificationTokens.get(0);
+			if (verificationToken.getExpiredDateTime().isBefore(LocalDateTime.now())) {
+				error.put("MessageCode", 2);
+				error.put("Message", "Expired token.");
 				response.setError(error);
 				response.setError(error);
 				response.setResult(result);
 				response.setConfig(config);
 				return new ResponseEntity<Response>(response, httpStatus);
-	        }
+			}
 
-	        verificationToken.setConfirmedDateTime(LocalDateTime.now());
-	        verificationToken.setStatus(VerificationToken.STATUS_VERIFIED);
-	        verificationToken.getUser().setStatus("active");
-	        
-	        verificationToken = verificationTokenService.verifyEmail(verificationToken);
-	        
+			verificationToken.setConfirmedDateTime(LocalDateTime.now());
+			verificationToken.setStatus(VerificationToken.STATUS_VERIFIED);
+			verificationToken.getUser().setStatus("active");
+
+			verificationToken = verificationTokenService.verifyEmail(verificationToken);
+
 			System.out.println("LoginAPI - cp1");
 			result.put("verificationToken", verificationToken);
-			config.put("global", 0);
-			error.put("messageCode", 0);
-			error.put("message", "");
+			config.put("Global", 0);
+			error.put("MessageCode", 0);
+			error.put("Message", "");
 			System.out.println("LoginAPI - cp2");
 		} catch (Exception e) {
 			System.out.println("LoginAPI - exception");
-			result.put("verificationToken", null);
-			config.put("global", 0);
-			error.put("messageCode", 1);
-			error.put("message", "");
+			result.put("VerificationToken", null);
+			config.put("Global", 0);
+			error.put("MessageCode", 1);
+			error.put("Message", "");
 		}
 
 		System.out.println("LoginAPI - cp3");
