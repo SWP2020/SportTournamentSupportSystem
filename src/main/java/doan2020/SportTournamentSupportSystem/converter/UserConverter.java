@@ -32,7 +32,8 @@ public class UserConverter {
 		try {
 			entity.setUsername(dto.getUsername());
 			
-			String userPassword = passwordEncoder.encode(dto.getUsername());
+			String userPassword = passwordEncoder.encode(dto.getPassword());
+
 			entity.setPassword(userPassword);
 			
 			entity.setFirstName(dto.getFirstName());
