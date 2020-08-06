@@ -103,8 +103,8 @@ public class UserAPI {
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
 	
-	@GetMapping("/getByUserName")
-	public ResponseEntity<Response> getByUserName(@RequestParam(value = "userName") String userName) {
+	@GetMapping("/getByUsername")
+	public ResponseEntity<Response> getByUserName(@RequestParam(value = "username") String userName) {
 		System.out.println("UserAPI - getByUserName");
 		Response response = new Response();
 		HttpStatus httpStatus = HttpStatus.OK;
