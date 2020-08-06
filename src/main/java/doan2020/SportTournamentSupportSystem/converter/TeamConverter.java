@@ -50,6 +50,7 @@ public class TeamConverter{
 		System.out.println("TeamConverter: toDTO: finish");
 		TeamDTO dto = new TeamDTO();
 		try {
+			dto.setId(entity.getId());
 			dto.setFullName(entity.getFullName());
 			dto.setShortName(entity.getShortName());
 			dto.setDescription(entity.getDescription());
