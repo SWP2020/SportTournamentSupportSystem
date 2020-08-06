@@ -46,7 +46,7 @@ public class UserAPI {
 
 	/* get One User */
 
-	@GetMapping("/getOne")
+	@GetMapping("")
 	public ResponseEntity<Response> getUserInfor(@RequestParam(value = "id") Long id) {
 		Response response = new Response();
 		HttpStatus httpStatus = HttpStatus.OK;
