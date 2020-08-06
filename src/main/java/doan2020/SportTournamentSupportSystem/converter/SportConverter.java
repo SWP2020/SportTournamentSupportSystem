@@ -56,7 +56,7 @@ public class SportConverter {
 			System.out.println("SportConverter: toDTO: no exception");
 		} catch (Exception e) {
 			System.out.println("SportConverter: toDTO: has exception");
-			throw e;
+			return null;
 		}
 		
 		System.out.println("SportConverter: toDTO: finish");
