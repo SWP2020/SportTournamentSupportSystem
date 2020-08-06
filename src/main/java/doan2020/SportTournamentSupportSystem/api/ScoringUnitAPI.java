@@ -16,17 +16,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import doan2020.SportTournamentSupportSystem.converter.ScoringUniConverter;
-import doan2020.SportTournamentSupportSystem.dto.ScoringUniDTO;
+import doan2020.SportTournamentSupportSystem.converter.ScoringUnitConverter;
+import doan2020.SportTournamentSupportSystem.dto.ScoringUnitDTO;
 import doan2020.SportTournamentSupportSystem.response.Response;
 
 @RestController
 @CrossOrigin
 @RequestMapping("/scoringUni")
-public class ScoringUniAPI {
+public class ScoringUnitAPI {
 
 	@Autowired
-	private ScoringUniConverter converter;
+	private ScoringUnitConverter converter;
 
 	@GetMapping("/getOne")
 	public ResponseEntity<Response> getOneScoringUni(@RequestParam(value = "id") Long id) {
@@ -97,7 +97,7 @@ public class ScoringUniAPI {
 	}
 	
 	@PostMapping("")
-	public ResponseEntity<Response> createScoringUni(@RequestBody ScoringUniDTO ScoringUniDTO) {
+	public ResponseEntity<Response> createScoringUni(@RequestBody ScoringUnitDTO ScoringUniDTO) {
 		System.out.println("ScoringUniAPI - createScoringUni");
 		HttpStatus httpStatus = null;
 		httpStatus = HttpStatus.OK;

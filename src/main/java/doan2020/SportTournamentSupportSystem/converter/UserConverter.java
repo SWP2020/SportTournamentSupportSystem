@@ -30,13 +30,12 @@ public class UserConverter {
 		System.out.println("UserConverter: toEntity: start");
 		UserEntity entity = new UserEntity();
 		try {
-			
-			
-			
-			String userPassword = passwordEncoder.encode(dto.getUsername());
 			entity.setUsername(dto.getUsername());
 			
+			String userPassword = passwordEncoder.encode(dto.getPassword());
+
 			entity.setPassword(userPassword);
+			
 			entity.setFirstName(dto.getFirstName());
 			entity.setLastName(dto.getLastName());
 			entity.setAddress(dto.getAddress());

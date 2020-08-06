@@ -1,13 +1,11 @@
 package doan2020.SportTournamentSupportSystem.converter;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import doan2020.SportTournamentSupportSystem.dtOut.TournamentDtOut;
+import doan2020.SportTournamentSupportSystem.dto.TournamentDTO;
 import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
 import doan2020.SportTournamentSupportSystem.entity.UserEntity;
 import doan2020.SportTournamentSupportSystem.service.IUserService;
@@ -22,71 +20,75 @@ public class TournamentConverter{
 	@Autowired
 	private Validator validator;
 	
-	public TournamentEntity toEntity(Map<String, Object> map) throws Exception{
+	public TournamentEntity toEntity(TournamentDTO dto){
+		System.out.println("TournamentConverter: toEntity: start");
 		TournamentEntity entity = new TournamentEntity();
 		System.out.println("In toEntity:");
 		try {
-			entity.setFullName((String) map.get("fullName"));
-			entity.setShortName((String) map.get("shortName"));
-			entity.setDescription((String) map.get("description"));
+			entity.setFullName(dto.getFullName());
+			entity.setShortName(dto.getShortName());
+			entity.setDescription(dto.getDescription());
 			
-			Long id = Long.parseLong(String.valueOf(map.get("creatorId")));
-			UserEntity creator = userService.findOneById(id);
-					
-			entity.setCreator(creator);
+			Long tournamentCreatorId = dto.getCreatorId();
+			UserEntity tournamentCreator = userService.findOneById(tournamentCreatorId);
+			entity.setCreator(tournamentCreator);
 			
-			entity.setOpeningLocation((String) map.get("openingLocation"));
+			entity.setOpeningLocation(dto.getOpeningLocation());
 			
-			String open = String.valueOf(map.get("openingTime"));
-			Date openingTime = new SimpleDateFormat("yyyy-mm-dd").parse(open);
+			Date openingTime = validator.formatStringToDate(dto.getOpeningTime());
 			entity.setOpeningTime(openingTime);
 			
-			entity.setClosingLocation((String) map.get("closingLocation"));
+			entity.setClosingLocation(dto.getClosingLocation());
 			
-			String close = String.valueOf(map.get("closingTime"));
-			Date closingTime = new SimpleDateFormat("yyyy-mm-dd").parse(close);
-			entity.setClosingTime(closingTime);
+			Date closingTime = validator.formatStringToDate(dto.getClosingTime());
+			entity.setOpeningTime(closingTime);
 			
-			entity.setDonor((String) map.get("donor"));
-			entity.setStatus((String) map.get("status"));
-			entity.setUrl((String) map.get("url"));
+			entity.setDonor(dto.getDonor());
+			entity.setStatus(dto.getStatus());
+			entity.setUrl(dto.getUrl());
+			System.out.println("TournamentConverter: toEntity: no exception");
 		}catch (Exception e) {
-			System.out.println("Has Exception");
-			throw e;
+			System.out.println("TournamentConverter: toEntity: has exception");
+			return null;
 		}
-		System.out.println("Out toEntity with no Exception");
+		System.out.println("TournamentConverter: toEntity: finish");
 		return entity;
 	}
 
-	public TournamentDtOut toDTO(TournamentEntity entity) throws Exception {
-		
-		TournamentDtOut dto = new TournamentDtOut();
-		
-		
+	public TournamentDTO toDTO(TournamentEntity entity){
+		System.out.println("TournamentConverter: toDTO: finish");
+		TournamentDTO dto = new TournamentDTO();
 		try {
-			System.out.println("CP1");
 			dto.setId(entity.getId());
 			dto.setFullName(entity.getFullName());
 			dto.setShortName(entity.getShortName());
 			dto.setDescription(entity.getDescription());
-			System.out.println("CP2");
-			dto.setCreatorId(entity.getCreator().getId());
-			System.out.println("CP3");
+			
+			
+			UserEntity tournamentCreator = entity.getCreator();
+			Long tournamentCreatorId = tournamentCreator.getId();
+			dto.setCreatorId(tournamentCreatorId);
+			
 			dto.setOpeningLocation(entity.getOpeningLocation());
-			dto.setOpeningTime(validator.formatDateToString(entity.getOpeningTime()));
+			
+			String openingTime = validator.formatDateToString(entity.getOpeningTime());
+			dto.setOpeningTime(openingTime);
+			
 			dto.setClosingLocation(entity.getClosingLocation());
-			dto.setClosingTime(validator.formatDateToString(entity.getClosingTime()));
+			
+			String closingTime = validator.formatDateToString(entity.getClosingTime());
+			dto.setClosingTime(closingTime);
+			
 			dto.setDonor(entity.getDonor());
 			dto.setStatus(entity.getStatus());
 			dto.setUrl(entity.getUrl());
-			dto.setProcess(0);
-			System.out.println("CP4");
+			System.out.println("TournamentConverter: toDTO: no exception");
 		} catch (Exception e) {
-			System.out.println("Has exception in TournamentConverter.toDTO");
-			throw e;
+			System.out.println("TournamentConverter: toDTO: has exception");
+			return null;
 		}
 		
-		
+		System.out.println("TournamentConverter: toDTO: finish");
 		return dto;
 	}
 
