@@ -34,7 +34,7 @@ public class CommentService implements ICommentService {
 		try {
 			updatedEntity = commentRepository.findOneById(id);
 
-			updatedEntity.setAuthor(newEntity.getAuthor());
+			updatedEntity.setCreator(newEntity.getCreator());
 			updatedEntity.setPost(newEntity.getPost());
 			updatedEntity.setContent(newEntity.getContent());
 			updatedEntity.setCreatedBy(newEntity.getCreatedBy());

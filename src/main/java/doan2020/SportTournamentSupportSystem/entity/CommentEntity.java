@@ -41,8 +41,8 @@ public class CommentEntity{
 	
 
 	@ManyToOne
-	@JoinColumn(name = "authorId")
-	private UserEntity author;
+	@JoinColumn(name = "creatorId")
+	private UserEntity creator;
 	
 	@ManyToOne
 	@JoinColumn(name = "postId")
@@ -109,12 +109,12 @@ public void setUrl(String url) {
 	this.url = url;
 }
 
-public UserEntity getAuthor() {
-	return author;
+public UserEntity getCreator() {
+	return creator;
 }
 
-public void setAuthor(UserEntity author) {
-	this.author = author;
+public void setCreator(UserEntity creator) {
+	this.creator = creator;
 }
 
 public PostEntity getPost() {

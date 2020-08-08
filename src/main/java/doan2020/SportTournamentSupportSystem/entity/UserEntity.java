@@ -94,10 +94,10 @@ public class UserEntity{
 	@OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
 	private Collection<ReportEntity> reports;
 
-	@OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
 	private Collection<CommentEntity> comments;
 
-	@OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
 	private Collection<PostEntity> posts;
 
 	@OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)

@@ -12,5 +12,5 @@ public interface PostRepository extends JpaRepository<PostEntity, Long>{
     
     Page<PostEntity> findByTournamentId(Pageable pageable, Long tournamentId);
     
-    Page<PostEntity> findByAuthorId(Pageable pageable, Long authorId);
+    Page<PostEntity> findByCreatorId(Pageable pageable, Long creatorId);
 }

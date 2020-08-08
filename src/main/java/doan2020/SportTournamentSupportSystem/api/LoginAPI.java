@@ -7,9 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.print.attribute.standard.DateTimeAtCompleted;
-
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +23,6 @@ import doan2020.SportTournamentSupportSystem.dtIn.LoginDtIn;
 import doan2020.SportTournamentSupportSystem.dtIn.VerifyAuthenticationDtIn;
 import doan2020.SportTournamentSupportSystem.dto.UserDTO;
 import doan2020.SportTournamentSupportSystem.entity.UserEntity;
-import doan2020.SportTournamentSupportSystem.entity.VerificationToken;
 import doan2020.SportTournamentSupportSystem.entity.VerificationTokenEntity;
 import doan2020.SportTournamentSupportSystem.response.Response;
 import doan2020.SportTournamentSupportSystem.service.IVerificationTokenService;
@@ -135,9 +131,9 @@ public class LoginAPI {
 
 		try {
 			String token = verifyAuthenticationDtIn.getCode();
-			List<VerificationTokenEntity> verificationTokens = verificationTokenService.findByToken(token);
-			if (verificationTokens.isEmpty()) {
-				error.put("MessageCode", 2);
+			VerificationTokenEntity verificationToken = verificationTokenService.findOneByToken(token);
+			if (verificationToken == null) {
+				error.put("MessageCode", 1);
 				error.put("Message", "Invalid token.");
 				response.setError(error);
 				response.setError(error);
@@ -148,11 +144,10 @@ public class LoginAPI {
 			
 			Date in = new Date();
 			LocalDateTime ldt = LocalDateTime.ofInstant(in.toInstant(), ZoneId.systemDefault());
-			Date out = Date.from(ldt.atZone(ZoneId.systemDefault()).toInstant());
+			Date confirmedDateTime = Date.from(ldt.atZone(ZoneId.systemDefault()).toInstant());
 			
-			VerificationTokenEntity verificationToken = verificationTokens.get(0);
-			if (verificationToken.getExpiredDateTime().isBefore(out)) {
-				error.put("MessageCode", 2);
+			if (verificationToken.getExpiredDateTime().compareTo(confirmedDateTime) < 0) {
+				error.put("MessageCode", 1);
 				error.put("Message", "Expired token.");
 				response.setError(error);
 				response.setError(error);
@@ -161,14 +156,14 @@ public class LoginAPI {
 				return new ResponseEntity<Response>(response, httpStatus);
 			}
 			
-			verificationToken.setConfirmedDateTime(LocalDateTime.now());
-			verificationToken.setStatus(VerificationToken.STATUS_VERIFIED);
+			verificationToken.setConfirmedDateTime(confirmedDateTime);
+			verificationToken.setStatus("STATUS_VERIFIED");
 			verificationToken.getUser().setStatus("active");
 
 			verificationToken = verificationTokenService.verifyEmail(verificationToken);
 
 			System.out.println("LoginAPI - cp1");
-			result.put("verificationToken", verificationToken);
+//			result.put("verificationToken", verificationToken);
 			config.put("Global", 0);
 			error.put("MessageCode", 0);
 			error.put("Message", "");

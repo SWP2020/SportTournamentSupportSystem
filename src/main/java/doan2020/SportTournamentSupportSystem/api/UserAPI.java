@@ -302,7 +302,7 @@ public class UserAPI {
 	}
 
 	@PostMapping("/sendMail")
-	public ResponseEntity<Response> sendMail(@RequestBody RegisterDtIn registerDtIn) {
+	public ResponseEntity<Response> sendMail(@RequestBody UserDTO userDTO) {
 		Response response = new Response();
 		HttpStatus httpStatus = null;
 		Map<String, Object> config = new HashMap<String, Object>();
@@ -310,7 +310,7 @@ public class UserAPI {
 		Map<String, Object> error = new HashMap<String, Object>();
 		httpStatus = HttpStatus.OK;
 		try {
-			if (verificationTokenService.createVerification(registerDtIn.getEmail(), registerDtIn.getUsername())) {
+			if (verificationTokenService.createVerification(userDTO.getEmail(), userDTO.getUsername())) {
 				error.put("MessageCode", 0);
 				error.put("Message", "Sending mail successfully");
 
@@ -336,7 +336,7 @@ public class UserAPI {
 	}
 
 	@PostMapping("/forgotPassword")
-	public ResponseEntity<Response> forgotPassword(@RequestBody RegisterDtIn registerDtIn) {
+	public ResponseEntity<Response> forgotPassword(@RequestBody UserDTO userDTO) {
 		Response response = new Response();
 		HttpStatus httpStatus = null;
 		Map<String, Object> config = new HashMap<String, Object>();

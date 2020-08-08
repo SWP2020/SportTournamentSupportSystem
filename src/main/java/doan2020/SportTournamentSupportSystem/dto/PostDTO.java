@@ -5,7 +5,7 @@ public class PostDTO{
 
 	private Long id;
 	private String title;
-	private Long authorId;
+	private Long creatorId;
 	private Long tournamentId;
 	private boolean systemPost;
 	private String content;
@@ -15,10 +15,10 @@ public class PostDTO{
 	public PostDTO(){
 	}
 
-	public PostDTO(Long id, String title, Long authorId, Long tournamentId, boolean systemPost, String content, String status, String url){
+	public PostDTO(Long id, String title, Long creatorId, Long tournamentId, boolean systemPost, String content, String status, String url){
 		this.id = id;
 		this.title = title;
-		this.authorId = authorId;
+		this.creatorId = creatorId;
 		this.tournamentId = tournamentId;
 		this.systemPost = systemPost;
 		this.content = content;
@@ -43,12 +43,12 @@ public class PostDTO{
 		this.title = title;
 	}
 	
-	public Long getAuthorId() {
-		return authorId;
+	public Long getCreatorId() {
+		return creatorId;
 	}
 	
-	public void setAuthorId(Long authorId) {
-		this.authorId = authorId;
+	public void setCreatorId(Long creatorId) {
+		this.creatorId = creatorId;
 	}
 	
 	public Long getTournamentId() {

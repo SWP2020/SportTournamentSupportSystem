@@ -4,7 +4,7 @@ package doan2020.SportTournamentSupportSystem.dto;
 public class CommentDTO{
 
 	private Long id;
-	private Long authorId;
+	private Long creatorId;
 	private Long postId;
 	private String content;
 	private String status;
@@ -13,9 +13,9 @@ public class CommentDTO{
 	public CommentDTO(){
 	}
 
-	public CommentDTO(Long id, Long authorId, Long postId, String content, String status, String url){
+	public CommentDTO(Long id, Long creatorId, Long postId, String content, String status, String url){
 		this.id = id;
-		this.authorId = authorId;
+		this.creatorId = creatorId;
 		this.postId = postId;
 		this.content = content;
 		this.status = status;
@@ -31,12 +31,12 @@ public class CommentDTO{
 		this.id = id;
 	}
 	
-	public Long getAuthorId() {
-		return authorId;
+	public Long getCreatorId() {
+		return creatorId;
 	}
 	
-	public void setAuthorId(Long authorId) {
-		this.authorId = authorId;
+	public void setCreatorId(Long creatorId) {
+		this.creatorId = creatorId;
 	}
 	
 	public Long getPostId() {

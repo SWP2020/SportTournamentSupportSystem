@@ -54,8 +54,8 @@ public class PostEntity{
 	private TournamentEntity tournament;
 	
 	@ManyToOne
-	@JoinColumn(name = "authorId")
-	private UserEntity author;
+	@JoinColumn(name = "creatorId")
+	private UserEntity creator;
 	
 	@ManyToMany(mappedBy = "postsList")
 	private Collection<UserEntity> usersList;
@@ -151,12 +151,12 @@ public void setTournament(TournamentEntity tournament) {
 	this.tournament = tournament;
 }
 
-public UserEntity getAuthor() {
-	return author;
+public UserEntity getCreator() {
+	return creator;
 }
 
-public void setAuthor(UserEntity author) {
-	this.author = author;
+public void setCreator(UserEntity creator) {
+	this.creator = creator;
 }
 
 public Collection<UserEntity> getUsersList() {
