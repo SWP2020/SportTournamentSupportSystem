@@ -1,14 +1,11 @@
 package doan2020.SportTournamentSupportSystem.converter;
 
-import java.util.Date;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import doan2020.SportTournamentSupportSystem.dto.RegisterFormDTO;
-import doan2020.SportTournamentSupportSystem.dto.RegisterFormDTO;
 import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
-import doan2020.SportTournamentSupportSystem.entity.RegisterFormEntity;
+import doan2020.SportTournamentSupportSystem.entity.CompetitionSettingEntity;
 import doan2020.SportTournamentSupportSystem.entity.RegisterFormEntity;
 import doan2020.SportTournamentSupportSystem.entity.TeamEntity;
 import doan2020.SportTournamentSupportSystem.service.ICompetitionService;
@@ -40,8 +37,8 @@ public class RegisterFormConverter {
 			
 			if (dto.getCompetitionSettingId() != null) {
 				Long competitionSettingId = dto.getCompetitionSettingId();
-				CompetitionEntity competitionSetting = competitionService.findOneById(competitionSettingId);
-				entity.setCompetition(competitionSetting);
+				CompetitionSettingEntity competitionSetting = competitionSettingService.findOneById(competitionSettingId);
+				entity.setCompetitionSetting(competitionSetting);
 			}
 			
 			if (dto.getTeamId() != null) {

@@ -3,10 +3,7 @@ package doan2020.SportTournamentSupportSystem.converter;
 import org.springframework.stereotype.Component;
 
 import doan2020.SportTournamentSupportSystem.dto.CompetitionFormatDTO;
-
 import doan2020.SportTournamentSupportSystem.entity.CompetitionFormatEntity;
-import doan2020.SportTournamentSupportSystem.entity.SportEntity;
-import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
 
 @Component
 public class CompetitionFormatConverter {

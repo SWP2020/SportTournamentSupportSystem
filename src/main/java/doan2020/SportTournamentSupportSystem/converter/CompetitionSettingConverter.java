@@ -4,13 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import doan2020.SportTournamentSupportSystem.dto.CompetitionSettingDTO;
-import doan2020.SportTournamentSupportSystem.dto.CompetitionSettingDTO;
 import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
 import doan2020.SportTournamentSupportSystem.entity.CompetitionSettingEntity;
-import doan2020.SportTournamentSupportSystem.entity.CompetitionSettingEntity;
-import doan2020.SportTournamentSupportSystem.entity.PostEntity;
-import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
-import doan2020.SportTournamentSupportSystem.entity.UserEntity;
 import doan2020.SportTournamentSupportSystem.service.ICompetitionService;
 
 @Component

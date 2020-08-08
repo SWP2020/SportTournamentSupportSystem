@@ -5,14 +5,9 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import doan2020.SportTournamentSupportSystem.dtIn.PlayerDtIn;
-import doan2020.SportTournamentSupportSystem.dtOut.PlayerDtOut;
 import doan2020.SportTournamentSupportSystem.dto.PlayerDTO;
-import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
 import doan2020.SportTournamentSupportSystem.entity.PlayerEntity;
 import doan2020.SportTournamentSupportSystem.entity.TeamEntity;
-import doan2020.SportTournamentSupportSystem.entity.UserEntity;
-import doan2020.SportTournamentSupportSystem.service.IPlayerService;
 import doan2020.SportTournamentSupportSystem.service.ITeamService;
 import doan2020.SportTournamentSupportSystem.validator.Validator;
 
