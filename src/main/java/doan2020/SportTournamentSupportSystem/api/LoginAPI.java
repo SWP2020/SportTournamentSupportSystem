@@ -161,7 +161,7 @@ public class LoginAPI {
 				return new ResponseEntity<Response>(response, httpStatus);
 			}
 			
-			verificationToken.setConfirmedDateTime((Date)LocalDateTime.now());
+			verificationToken.setConfirmedDateTime(LocalDateTime.now());
 			verificationToken.setStatus(VerificationToken.STATUS_VERIFIED);
 			verificationToken.getUser().setStatus("active");
 
