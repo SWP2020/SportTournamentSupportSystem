@@ -2,7 +2,11 @@
 package doan2020.SportTournamentSupportSystem.service;
 
 import java.util.Collection;
+import java.util.List;
+
 import org.springframework.data.domain.Pageable;
+
+import doan2020.SportTournamentSupportSystem.entity.UserEntity;
 import doan2020.SportTournamentSupportSystem.entity.VerificationTokenEntity;
 
 public interface IVerificationTokenService {
@@ -18,4 +22,12 @@ public interface IVerificationTokenService {
 //	public Collection<VerificationTokenEntity> findAll();
 	
 	public VerificationTokenEntity delete(Long id);
+	
+	public boolean createVerification(String email, String UserName);
+
+	public VerificationTokenEntity verifyEmail(VerificationTokenEntity verificationToken);
+
+	public List<VerificationTokenEntity> findByUserEntityEmailAndUserEntity(String email, UserEntity userEntity);
+
+	public List<VerificationTokenEntity> findByToken(String token);
 }
