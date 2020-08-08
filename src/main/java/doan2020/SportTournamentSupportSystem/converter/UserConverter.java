@@ -50,8 +50,8 @@ public class UserConverter {
 			entity.setGender(dto.getGender());
 			
 			System.out.println("UserConverter: toEntity: CP1");
-			Date userDob = validator.formatStringToDate(dto.getDob());
-			entity.setDob(userDob);
+			Date dob = validator.formatStringToDate(dto.getDob());
+			entity.setDob(dob);
 			
 			System.out.println("UserConverter: toEntity: CP2");
 			if (dto.getEmail() != null)
@@ -63,9 +63,9 @@ public class UserConverter {
 			
 			System.out.println("UserConverter: toEntity: CP3");
 			if (dto.getRoleId() != null) {
-				Long userRoleId = dto.getRoleId();
-				RoleEntity userRole = roleService.findOneById(userRoleId);
-				entity.setRole(userRole);
+				Long roleId = dto.getRoleId();
+				RoleEntity role = roleService.findOneById(roleId);
+				entity.setRole(role);
 			}
 			System.out.println("UserConverter: toEntity: CP4");
 			entity.setStatus(dto.getStatus());
@@ -93,8 +93,8 @@ public class UserConverter {
 			dto.setGender(entity.getGender());
 			System.out.println("UserConverter: toEntity: CP1");
 			
-			String userDob = validator.formatDateToString(entity.getDob());
-			dto.setDob(userDob);
+			String dob = validator.formatDateToString(entity.getDob());
+			dto.setDob(dob);
 			System.out.println("UserConverter: toEntity: CP2");
 			dto.setEmail(entity.getEmail());
 			dto.setAvatar(entity.getAvatar());
