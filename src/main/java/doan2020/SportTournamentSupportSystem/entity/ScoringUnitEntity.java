@@ -17,7 +17,7 @@ import java.util.Collection;
 
 
 @Entity
-@Table(name = "scoring_unit")
+@Table(name = "scoring_units")
 @EntityListeners(AuditingEntityListener.class)
 public class ScoringUnitEntity{
 

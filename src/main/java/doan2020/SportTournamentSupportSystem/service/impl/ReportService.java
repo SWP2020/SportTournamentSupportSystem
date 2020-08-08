@@ -35,10 +35,9 @@ public class ReportService implements IReportService {
 			updatedEntity = reportRepository.findOneById(id);
 
 			updatedEntity.setSender(newEntity.getSender());
-			updatedEntity.setType(newEntity.getType());
 			updatedEntity.setSubject(newEntity.getSubject());
 			updatedEntity.setContent(newEntity.getContent());
-			updatedEntity.setLink(newEntity.getLink());
+			updatedEntity.setTournament(newEntity.getTournament());
 			updatedEntity.setCreatedBy(newEntity.getCreatedBy());
 			updatedEntity.setCreatedDate(newEntity.getCreatedDate());
 			updatedEntity.setModifiedBy(newEntity.getModifiedBy());

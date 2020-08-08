@@ -6,20 +6,20 @@ public class PermissionDTO{
 	private Long id;
 	private String name;
 	private String description;
-	private boolean can_edit;
-	private boolean can_delete;
+	private boolean canEdit;
+	private boolean canDelete;
 	private String status;
 	private String url;
 
 	public PermissionDTO(){
 	}
 
-	public PermissionDTO(Long id, String name, String description, boolean can_edit, boolean can_delete, String status, String url){
+	public PermissionDTO(Long id, String name, String description, boolean canEdit, boolean canDelete, String status, String url){
 		this.id = id;
 		this.name = name;
 		this.description = description;
-		this.can_edit = can_edit;
-		this.can_delete = can_delete;
+		this.canEdit = canEdit;
+		this.canDelete = canDelete;
 		this.status = status;
 		this.url = url;
 	}
@@ -50,19 +50,19 @@ public class PermissionDTO{
 	}
 	
 	public boolean getCanEdit() {
-		return can_edit;
+		return canEdit;
 	}
 	
-	public void setCanEdit(boolean can_edit) {
-		this.can_edit = can_edit;
+	public void setCanEdit(boolean canEdit) {
+		this.canEdit = canEdit;
 	}
 	
 	public boolean getCanDelete() {
-		return can_delete;
+		return canDelete;
 	}
 	
-	public void setCanDelete(boolean can_delete) {
-		this.can_delete = can_delete;
+	public void setCanDelete(boolean canDelete) {
+		this.canDelete = canDelete;
 	}
 	
 	public String getStatus() {
