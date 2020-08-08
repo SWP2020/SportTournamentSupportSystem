@@ -31,15 +31,15 @@ public class TeamConverter{
 			entity.setDescription(dto.getDescription());
 			
 			if (dto.getCompetitionId() != null) {
-				Long teamCompetitionId = dto.getCompetitionId();
-				CompetitionEntity teamCompetition = competitionService.findOneById(teamCompetitionId);
-				entity.setCompetition(teamCompetition);
+				Long competitionId = dto.getCompetitionId();
+				CompetitionEntity competition = competitionService.findOneById(competitionId);
+				entity.setCompetition(competition);
 			}
 			
 			if (dto.getCreatorId() != null) {
-				Long teamCreatorId = dto.getCreatorId();
-				UserEntity teamCreator = userService.findOneById(teamCreatorId);
-				entity.setCreator(teamCreator);
+				Long creatorId = dto.getCreatorId();
+				UserEntity creator = userService.findOneById(creatorId);
+				entity.setCreator(creator);
 			}
 			
 			entity.setStatus(dto.getStatus());
@@ -62,13 +62,13 @@ public class TeamConverter{
 			dto.setShortName(entity.getShortName());
 			dto.setDescription(entity.getDescription());
 			
-			UserEntity teamCreator = entity.getCreator();
-			Long teamCreatorId = teamCreator.getId();
-			dto.setCreatorId(teamCreatorId);
+			UserEntity creator = entity.getCreator();
+			Long creatorId = creator.getId();
+			dto.setCreatorId(creatorId);
 			
-			CompetitionEntity teamCompetition = entity.getCompetition();
-			Long teamCompetitionId = teamCompetition.getId();
-			dto.setCompetitionId(teamCompetitionId);
+			CompetitionEntity competition = entity.getCompetition();
+			Long competitionId = competition.getId();
+			dto.setCompetitionId(competitionId);
 			
 			dto.setStatus(entity.getStatus());
 			dto.setUrl(entity.getUrl());
