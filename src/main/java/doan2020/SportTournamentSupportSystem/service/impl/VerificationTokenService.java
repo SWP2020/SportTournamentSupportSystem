@@ -1,13 +1,13 @@
+
 package doan2020.SportTournamentSupportSystem.service.impl;
 
-import java.util.List;
+import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import doan2020.SportTournamentSupportSystem.entity.UserEntity;
-import doan2020.SportTournamentSupportSystem.entity.VerificationToken;
-import doan2020.SportTournamentSupportSystem.repository.UserRepository;
+import doan2020.SportTournamentSupportSystem.entity.VerificationTokenEntity;
 import doan2020.SportTournamentSupportSystem.repository.VerificationTokenRepository;
 import doan2020.SportTournamentSupportSystem.service.IVerificationTokenService;
 
@@ -15,72 +15,66 @@ import doan2020.SportTournamentSupportSystem.service.IVerificationTokenService;
 public class VerificationTokenService implements IVerificationTokenService {
 
 	@Autowired
-	private UserRepository userRepository;
-	@Autowired
 	private VerificationTokenRepository verificationTokenRepository;
-	@Autowired
-	private SendingMailService sendingMailService;
 
-	@Autowired
-	public VerificationTokenService(UserRepository userRepository,
-			VerificationTokenRepository verificationTokenRepository, SendingMailService sendingMailService) {
-		this.userRepository = userRepository;
-		this.verificationTokenRepository = verificationTokenRepository;
-		this.sendingMailService = sendingMailService;
-	}
-
-	public boolean createVerification(String email, String UserName) {
-		List<UserEntity> users = userRepository.findByEmailAndUsername(email, UserName);
-		UserEntity user;
-		if (users.isEmpty()) {
-			return false;
-		} else {
-			user = users.get(0);
-		}
-
-		List<VerificationToken> verificationTokens = verificationTokenRepository
-				.findByUserEntityEmailAndUserEntity(email, user);
-		VerificationToken verificationToken;
-		if (verificationTokens.isEmpty()) {
-			verificationToken = new VerificationToken();
-			verificationToken.setUser(user);
-			verificationTokenRepository.save(verificationToken);
-		} else {
-			verificationToken = verificationTokens.get(0);
-		}
-
-		sendingMailService.sendVerificationMail(email, verificationToken.getToken());
-		return true;
-	}
-
-	public VerificationToken verifyEmail(VerificationToken verificationToken) {
-		VerificationToken token = new VerificationToken();
+	@Override
+	public VerificationTokenEntity create(VerificationTokenEntity verificationTokenEntity) {
+		VerificationTokenEntity newEntity = null;
 		try {
-			token = verificationTokenRepository.save(verificationToken);
+			newEntity = verificationTokenRepository.save(verificationTokenEntity);
 		} catch (Exception e) {
 			return null;
 		}
-		return token;
+		return newEntity;
 	}
 
-	public List<VerificationToken> findByUserEntityEmailAndUserEntity(String email, UserEntity userEntity) {
-		List<VerificationToken> verificationTokens = null;
+	@Override
+	public VerificationTokenEntity update(Long id, VerificationTokenEntity newEntity) {
+		VerificationTokenEntity updatedEntity = null;
 		try {
-			verificationTokens = verificationTokenRepository.findByUserEntityEmailAndUserEntity(email, userEntity);
+			updatedEntity = verificationTokenRepository.findOneById(id);
+
+			updatedEntity.setToken(newEntity.getToken());
+			updatedEntity.setExpiredDateTime(newEntity.getExpiredDateTime());
+			updatedEntity.setIssuedDateTime(newEntity.getIssuedDateTime());
+			updatedEntity.setConfirmedDateTime(newEntity.getConfirmedDateTime());
+			updatedEntity.setUser(newEntity.getUser());
+			updatedEntity.setCreatedBy(newEntity.getCreatedBy());
+			updatedEntity.setCreatedDate(newEntity.getCreatedDate());
+			updatedEntity.setModifiedBy(newEntity.getModifiedBy());
+			updatedEntity.setModifiedDate(newEntity.getModifiedDate());
+			updatedEntity.setStatus(newEntity.getStatus());
+			updatedEntity.setUrl(newEntity.getUrl());
+			updatedEntity = verificationTokenRepository.save(updatedEntity);
 		} catch (Exception e) {
 			return null;
 		}
-		return verificationTokens;
+        
+		return updatedEntity;
 	}
 
-	public List<VerificationToken> findByToken(String token) {
-		List<VerificationToken> verificationTokens = null;
+	@Override
+	public VerificationTokenEntity delete(Long id) {
+		VerificationTokenEntity deletedEntity = null;
 		try {
-			verificationTokens = verificationTokenRepository.findByToken(token);
+			deletedEntity = verificationTokenRepository.findOneById(id);
+			deletedEntity.setStatus("deleted");
+			deletedEntity = verificationTokenRepository.save(deletedEntity);
 		} catch (Exception e) {
 			return null;
 		}
-		return verificationTokens;
+		return deletedEntity;
+	}
+
+	@Override
+	public VerificationTokenEntity findOneById(Long id) {
+		VerificationTokenEntity foundEntity = null;
+		try {
+			foundEntity = verificationTokenRepository.findOneById(id);
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntity;
 	}
 
 }
