@@ -106,6 +106,9 @@ public class UserEntity{
 	@OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
 	private Collection<TournamentEntity> tournaments;
 
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	private Collection<VerificationTokenEntity> verification_tokens;
+
 
 public Long getId() {
 	return id;
@@ -317,6 +320,14 @@ public Collection<TournamentEntity> getTournaments() {
 
 public void setTournaments(Collection<TournamentEntity> tournaments) {
 	this.tournaments = tournaments;
+}
+
+public Collection<VerificationTokenEntity> getVerificationTokens() {
+	return verification_tokens;
+}
+
+public void setVerificationTokens(Collection<VerificationTokenEntity> verification_tokens) {
+	this.verification_tokens = verification_tokens;
 }
 
 

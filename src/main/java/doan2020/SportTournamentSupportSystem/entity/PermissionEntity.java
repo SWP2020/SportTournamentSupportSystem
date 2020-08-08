@@ -28,9 +28,9 @@ public class PermissionEntity{
 	
 	private String description;
 	
-	private boolean can_edit;
+	private boolean canEdit;
 	
-	private boolean can_delete;
+	private boolean canDelete;
 	
 	private String createdBy;
 	
@@ -67,19 +67,19 @@ public void setDescription(String description) {
 }
 
 public boolean getCanEdit() {
-	return can_edit;
+	return canEdit;
 }
 
-public void setCanEdit(boolean can_edit) {
-	this.can_edit = can_edit;
+public void setCanEdit(boolean canEdit) {
+	this.canEdit = canEdit;
 }
 
 public boolean getCanDelete() {
-	return can_delete;
+	return canDelete;
 }
 
-public void setCanDelete(boolean can_delete) {
-	this.can_delete = can_delete;
+public void setCanDelete(boolean canDelete) {
+	this.canDelete = canDelete;
 }
 
 public String getCreatedBy() {

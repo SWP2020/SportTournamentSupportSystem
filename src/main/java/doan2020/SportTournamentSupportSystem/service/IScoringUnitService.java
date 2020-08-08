@@ -9,13 +9,13 @@ public interface IScoringUnitService {
 	
 	public ScoringUnitEntity findOneById(Long id);
 	
-//	public Collection<ScoringUniEntity> findAll(Pageable pageable);
+//	public Collection<ScoringUnitEntity> findAll(Pageable pageable);
 	
-	public ScoringUnitEntity create(ScoringUnitEntity scoringUniEntity);
+	public ScoringUnitEntity create(ScoringUnitEntity scoringUnitEntity);
 	
 	public ScoringUnitEntity update(Long id, ScoringUnitEntity newEntity);
 	
-//	public Collection<ScoringUniEntity> findAll();
+//	public Collection<ScoringUnitEntity> findAll();
 	
 	public ScoringUnitEntity delete(Long id);
 }

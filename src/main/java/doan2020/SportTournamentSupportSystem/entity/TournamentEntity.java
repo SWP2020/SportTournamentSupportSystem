@@ -67,6 +67,9 @@ public class TournamentEntity{
 	private Collection<UserEntity> usersList;
 	
 	@OneToMany(mappedBy = "tournament", cascade = CascadeType.ALL)
+	private Collection<ReportEntity> reports;
+
+	@OneToMany(mappedBy = "tournament", cascade = CascadeType.ALL)
 	private Collection<CompetitionEntity> competitions;
 
 	@OneToMany(mappedBy = "tournament", cascade = CascadeType.ALL)
@@ -203,6 +206,14 @@ public Collection<UserEntity> getUsersList() {
 
 public void setUsersList(Collection<UserEntity> usersList) {
 	this.usersList = usersList;
+}
+
+public Collection<ReportEntity> getReports() {
+	return reports;
+}
+
+public void setReports(Collection<ReportEntity> reports) {
+	this.reports = reports;
 }
 
 public Collection<CompetitionEntity> getCompetitions() {

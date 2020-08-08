@@ -1,6 +1,7 @@
 
 package doan2020.SportTournamentSupportSystem.service.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,10 +73,10 @@ public class CompetitionService implements ICompetitionService {
 	public CompetitionEntity findOneById(Long id) {
 		CompetitionEntity foundEntity = null;
 		try {
-			System.out.println(foundEntity.toString());
+			ArrayList<CompetitionEntity> list = (ArrayList<CompetitionEntity>)competitionRepository.findAll();
+			System.out.println(list.size());
 			foundEntity = competitionRepository.findOneById(id);
-			System.out.println(foundEntity.toString());
-			System.out.println("true");
+			
 		} catch (Exception e) {
 			System.out.println("false");
 			return null;

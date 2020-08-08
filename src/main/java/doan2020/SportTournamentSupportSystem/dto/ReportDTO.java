@@ -5,23 +5,21 @@ public class ReportDTO{
 
 	private Long id;
 	private Long senderId;
-	private String type;
 	private String subject;
 	private String content;
-	private String link;
+	private Long tournamentId;
 	private String status;
 	private String url;
 
 	public ReportDTO(){
 	}
 
-	public ReportDTO(Long id, Long senderId, String type, String subject, String content, String link, String status, String url){
+	public ReportDTO(Long id, Long senderId, String subject, String content, Long tournamentId, String status, String url){
 		this.id = id;
 		this.senderId = senderId;
-		this.type = type;
 		this.subject = subject;
 		this.content = content;
-		this.link = link;
+		this.tournamentId = tournamentId;
 		this.status = status;
 		this.url = url;
 	}
@@ -43,14 +41,6 @@ public class ReportDTO{
 		this.senderId = senderId;
 	}
 	
-	public String getType() {
-		return type;
-	}
-	
-	public void setType(String type) {
-		this.type = type;
-	}
-	
 	public String getSubject() {
 		return subject;
 	}
@@ -67,12 +57,12 @@ public class ReportDTO{
 		this.content = content;
 	}
 	
-	public String getLink() {
-		return link;
+	public Long getTournamentId() {
+		return tournamentId;
 	}
 	
-	public void setLink(String link) {
-		this.link = link;
+	public void setTournamentId(Long tournamentId) {
+		this.tournamentId = tournamentId;
 	}
 	
 	public String getStatus() {

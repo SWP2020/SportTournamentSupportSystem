@@ -25,13 +25,9 @@ public class ReportEntity{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	private String type;
-	
 	private String subject;
 	
 	private String content;
-	
-	private String link;
 	
 	private String createdBy;
 	
@@ -50,17 +46,13 @@ public class ReportEntity{
 	@JoinColumn(name = "senderId")
 	private UserEntity sender;
 	
+	@ManyToOne
+	@JoinColumn(name = "tournamentId")
+	private TournamentEntity tournament;
+	
 
 public Long getId() {
 	return id;
-}
-
-public String getType() {
-	return type;
-}
-
-public void setType(String type) {
-	this.type = type;
 }
 
 public String getSubject() {
@@ -77,14 +69,6 @@ public String getContent() {
 
 public void setContent(String content) {
 	this.content = content;
-}
-
-public String getLink() {
-	return link;
-}
-
-public void setLink(String link) {
-	this.link = link;
 }
 
 public String getCreatedBy() {
@@ -141,6 +125,14 @@ public UserEntity getSender() {
 
 public void setSender(UserEntity sender) {
 	this.sender = sender;
+}
+
+public TournamentEntity getTournament() {
+	return tournament;
+}
+
+public void setTournament(TournamentEntity tournament) {
+	this.tournament = tournament;
 }
 
 
