@@ -49,13 +49,15 @@ public class CompetitionAPI {
 		try {
 
 			if (id == null) {// id not exist
-				System.out.println("Competition API - GetCompetiton - cp1");
+				System.out.println("Competition API - GetCompetiton - cp0");
 				result.put("Competition", null);
 				config.put("Global", 0);
 				error.put("MessageCode", 1);
 				error.put("Message", "Requried id");
 			} else {// id exist
+				System.out.println(id);
 				competitionEntity = CompetitionService.findOneById(id);
+				System.out.println(competitionEntity);
 				System.out.println("Competition API - GetCompetiton - cp1");
 				if (competitionEntity == null) {// competition is not exist
 					System.out.println("Competition API - GetCompetiton - cp2");

@@ -10,28 +10,28 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import com.sun.istack.NotNull;
 import javax.persistence.GeneratedValue;
-import javax.persistence.OneToMany;
-import javax.persistence.CascadeType;
-import java.util.Collection;
+import javax.persistence.ManyToOne;
+import javax.persistence.JoinColumn;
 
 
 
 @Entity
-@Table(name = "scoring_units")
+@Table(name = "verification_tokens")
 @EntityListeners(AuditingEntityListener.class)
-public class ScoringUnitEntity{
+public class VerificationTokenEntity{
 
 	@Id
 	@NotNull
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@NotNull
-	private String fullName;
+	private String token;
 	
-	private String shortName;
+	private Date expiredDateTime;
 	
-	private String description;
+	private Date issuedDateTime;
+	
+	private Date confirmedDateTime;
 	
 	private String createdBy;
 	
@@ -46,36 +46,45 @@ public class ScoringUnitEntity{
 	private String url;
 	
 
-	@OneToMany(mappedBy = "scoringUnit", cascade = CascadeType.ALL)
-	private Collection<SportEntity> sports;
-
+	@ManyToOne
+	@JoinColumn(name = "userId")
+	private UserEntity user;
+	
 
 public Long getId() {
 	return id;
 }
 
-public String getFullName() {
-	return fullName;
+public String getToken() {
+	return token;
 }
 
-public void setFullName(String fullName) {
-	this.fullName = fullName;
+public void setToken(String token) {
+	this.token = token;
 }
 
-public String getShortName() {
-	return shortName;
+public Date getExpiredDateTime() {
+	return expiredDateTime;
 }
 
-public void setShortName(String shortName) {
-	this.shortName = shortName;
+public void setExpiredDateTime(Date expiredDateTime) {
+	this.expiredDateTime = expiredDateTime;
 }
 
-public String getDescription() {
-	return description;
+public Date getIssuedDateTime() {
+	return issuedDateTime;
 }
 
-public void setDescription(String description) {
-	this.description = description;
+public void setIssuedDateTime(Date issuedDateTime) {
+	this.issuedDateTime = issuedDateTime;
+}
+
+public Date getConfirmedDateTime() {
+	return confirmedDateTime;
+}
+
+public void setConfirmedDateTime(Date confirmedDateTime) {
+	this.confirmedDateTime = confirmedDateTime;
 }
 
 public String getCreatedBy() {
@@ -126,12 +135,12 @@ public void setUrl(String url) {
 	this.url = url;
 }
 
-public Collection<SportEntity> getSports() {
-	return sports;
+public UserEntity getUser() {
+	return user;
 }
 
-public void setSports(Collection<SportEntity> sports) {
-	this.sports = sports;
+public void setUser(UserEntity user) {
+	this.user = user;
 }
 
 
