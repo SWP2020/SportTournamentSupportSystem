@@ -33,7 +33,7 @@ public class CompetitionService implements ICompetitionService {
 	public CompetitionEntity update(Long id, CompetitionEntity newEntity) {
 		CompetitionEntity updatedEntity = null;
 		try {
-			updatedEntity = competitionRepository.findOneById(id);
+			updatedEntity = competitionRepository.getOne(id);
 
 			updatedEntity.setName(newEntity.getName());
 			updatedEntity.setDescription(newEntity.getDescription());
@@ -73,10 +73,10 @@ public class CompetitionService implements ICompetitionService {
 	public CompetitionEntity findOneById(Long id) {
 		CompetitionEntity foundEntity = null;
 		try {
-			ArrayList<CompetitionEntity> list = (ArrayList<CompetitionEntity>)competitionRepository.findAll();
-			System.out.println(list.size());
-			foundEntity = competitionRepository.findOneById(id);
-			
+			System.out.println(foundEntity.toString());
+			foundEntity = competitionRepository.getOne(id);
+			System.out.println(foundEntity.toString());
+			System.out.println("true");
 		} catch (Exception e) {
 			System.out.println("false");
 			return null;

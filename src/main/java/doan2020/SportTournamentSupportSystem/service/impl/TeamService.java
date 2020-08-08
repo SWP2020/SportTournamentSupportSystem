@@ -70,11 +70,44 @@ public class TeamService implements ITeamService {
 	public TeamEntity findOneById(Long id) {
 		TeamEntity foundEntity = null;
 		try {
-			foundEntity = teamRepository.findOneById(id);
+			foundEntity = teamRepository.getOne(id);
 		} catch (Exception e) {
 			return null;
 		}
 		return foundEntity;
+	}
+
+	@Override
+	public Collection<TeamEntity> findAll(Pageable pageable) {
+		Collection<TeamEntity> foundEntitys = null;
+		try {
+			foundEntitys = teamRepository.findAll(pageable).getContent();
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntitys;
+	}
+
+	@Override
+	public Collection<TeamEntity> findAll() {
+		Collection<TeamEntity> foundEntitys = null;
+		try {
+			foundEntitys = teamRepository.findAll();
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntitys;
+	}
+
+	@Override
+	public Collection<TeamEntity> findByCreatorId(Pageable pageable, Long creatorId) {
+		Collection<TeamEntity> foundEntitys = null;
+		try {
+			foundEntitys = teamRepository.findByCreatorId(pageable, creatorId).getContent();
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntitys;
 	}
 
 }
