@@ -77,4 +77,48 @@ public class PostService implements IPostService {
 		return foundEntity;
 	}
 
+	@Override
+	public Collection<PostEntity> findAll(Pageable pageable) {
+		Collection<PostEntity> foundEntitys = null;
+		try {
+			foundEntitys = postRepository.findAll(pageable).getContent();
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntitys;
+	}
+
+	@Override
+	public Collection<PostEntity> findAll() {
+		Collection<PostEntity> foundEntitys = null;
+		try {
+			foundEntitys = postRepository.findAll();
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntitys;
+	}
+
+	@Override
+	public Collection<PostEntity> findByTournamentId(Pageable pageable, Long tournamentId) {
+		Collection<PostEntity> foundEntitys = null;
+		try {
+			foundEntitys = postRepository.findByTournamentId(pageable, tournamentId).getContent();
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntitys;
+	}
+
+	@Override
+	public Collection<PostEntity> findByUserId(Pageable pageable, Long UserId) {
+		Collection<PostEntity> foundEntitys = null;
+		try {
+			foundEntitys = postRepository.findByAuthorId(pageable, UserId).getContent();
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntitys;
+	}
+
 }
