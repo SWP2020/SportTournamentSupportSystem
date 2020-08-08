@@ -33,29 +33,29 @@ public class CompetitionConverter {
 			entity.setDescription(dto.getDescription());
 			
 			if (dto.getTournamentId() != null) {
-				Long competitionTournamentId = dto.getTournamentId();
-				TournamentEntity competitionTournament = tournamentService.findOneById(competitionTournamentId);
-				entity.setTournament(competitionTournament);
+				Long tournamentId = dto.getTournamentId();
+				TournamentEntity tournament = tournamentService.findOneById(tournamentId);
+				entity.setTournament(tournament);
 			}
 			
 			if (dto.getSportId() != null) {
-	            Long competitionSportId = dto.getSportId();
-				SportEntity competitionSport = sportService.findOneById(competitionSportId);
-				entity.setSport(competitionSport);
+	            Long sportId = dto.getSportId();
+				SportEntity sport = sportService.findOneById(sportId);
+				entity.setSport(sport);
 			}
 			
 			if (dto.getMainFormatId() != null) {
-				Long competitionMainFormatId = dto.getMainFormatId();
-				CompetitionFormatEntity competitionMainFormat = competitionFormatService.findOneById(competitionMainFormatId);
-				entity.setMainFormat(competitionMainFormat);
+				Long mainFormatId = dto.getMainFormatId();
+				CompetitionFormatEntity mainFormat = competitionFormatService.findOneById(mainFormatId);
+				entity.setMainFormat(mainFormat);
 			}
 			
 			entity.setGroupStage(dto.getGroupStage());
 			
 			if (entity.getGroupStage() && dto.getGroupStageFormatId() != null) {
-				Long competitionGroupStageFormatId = dto.getGroupStageFormatId();
-				CompetitionFormatEntity competitionGroupStageFormat = competitionFormatService.findOneById(competitionGroupStageFormatId);
-				entity.setGroupStageFormat(competitionGroupStageFormat);
+				Long groupStageFormatId = dto.getGroupStageFormatId();
+				CompetitionFormatEntity groupStageFormat = competitionFormatService.findOneById(groupStageFormatId);
+				entity.setGroupStageFormat(groupStageFormat);
 			}
 			
 			entity.setStatus(dto.getStatus());
@@ -78,23 +78,23 @@ public class CompetitionConverter {
 			dto.setName(entity.getName());
 			dto.setDescription(entity.getDescription());
 			
-			TournamentEntity competitionTournament = entity.getTournament();
-			Long competitionTournamentId = competitionTournament.getId();
-			dto.setTournamentId(competitionTournamentId);
+			TournamentEntity tournament = entity.getTournament();
+			Long tournamentId = tournament.getId();
+			dto.setTournamentId(tournamentId);
 			
-			SportEntity competitionSport = entity.getSport();
-			Long competitionSportId = competitionSport.getId();
-			dto.setSportId(competitionSportId);
+			SportEntity sport = entity.getSport();
+			Long sportId = sport.getId();
+			dto.setSportId(sportId);
 			
-			CompetitionFormatEntity competitionMainFormat = entity.getMainFormat();
-			Long competitionMainFormatId = competitionMainFormat.getId();
-			dto.setMainFormatId(competitionMainFormatId);
+			CompetitionFormatEntity mainFormat = entity.getMainFormat();
+			Long mainFormatId = mainFormat.getId();
+			dto.setMainFormatId(mainFormatId);
 			
 			dto.setGroupStage(entity.getGroupStage());
 			
-			CompetitionFormatEntity competitionGroupStageFormat = entity.getGroupStageFormat();
-			Long competitionGroupStageFormatId = competitionGroupStageFormat.getId();
-			dto.setGroupStageFormatId(competitionGroupStageFormatId);
+			CompetitionFormatEntity groupStageFormat = entity.getGroupStageFormat();
+			Long groupStageFormatId = groupStageFormat.getId();
+			dto.setGroupStageFormatId(groupStageFormatId);
 			
 			dto.setStatus(entity.getStatus());
 			dto.setUrl(entity.getUrl());
