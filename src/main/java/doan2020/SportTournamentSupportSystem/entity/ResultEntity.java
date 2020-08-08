@@ -29,7 +29,7 @@ public class ResultEntity{
 	
 	private float score;
 	
-	private int rank;
+	private int ranking;
 	
 	private String createdBy;
 	
@@ -74,11 +74,11 @@ public void setScore(float score) {
 }
 
 public int getRank() {
-	return rank;
+	return ranking;
 }
 
 public void setRank(int rank) {
-	this.rank = rank;
+	this.ranking = rank;
 }
 
 public String getCreatedBy() {

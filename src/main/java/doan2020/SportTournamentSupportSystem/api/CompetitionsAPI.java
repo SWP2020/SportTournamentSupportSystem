@@ -93,8 +93,7 @@ public class CompetitionsAPI {
 	@GetMapping("/getByTournamentId")
 	public ResponseEntity<Response> getAllCompetitonByTournamentId(
 			@RequestParam(value = "page", required = false) Integer page,
-			@RequestParam(value = "limit", required = false) Integer limit, @RequestParam("tournamentId") Long tournamentId,
-			@RequestParam("sportId") Long sportId) {
+			@RequestParam(value = "limit", required = false) Integer limit, @RequestParam("tournamentId") Long tournamentId) {
 		System.out.println("CompetitionsAPI: getAllCompetitonByTournamentId: start");
 
 		Response response = new Response();

@@ -1,10 +1,7 @@
 
 package doan2020.SportTournamentSupportSystem.service;
 
-import java.util.Collection;
 import java.util.List;
-
-import org.springframework.data.domain.Pageable;
 
 import doan2020.SportTournamentSupportSystem.entity.UserEntity;
 import doan2020.SportTournamentSupportSystem.entity.VerificationTokenEntity;
@@ -29,5 +26,5 @@ public interface IVerificationTokenService {
 
 	public List<VerificationTokenEntity> findByUserEntityEmailAndUserEntity(String email, UserEntity userEntity);
 
-	public List<VerificationTokenEntity> findByToken(String token);
+	public VerificationTokenEntity findOneByToken(String token);
 }

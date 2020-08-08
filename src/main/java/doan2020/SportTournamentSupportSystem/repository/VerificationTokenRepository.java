@@ -10,8 +10,9 @@ import doan2020.SportTournamentSupportSystem.entity.VerificationTokenEntity;
 
 @Repository
 public interface VerificationTokenRepository extends JpaRepository<VerificationTokenEntity, Long> {
-	List<VerificationTokenEntity> findByUserEntityEmailAndUserEntity(String email,UserEntity userEntity);
+	List<VerificationTokenEntity> findByUserEmailAndUser(String email,UserEntity userEntity);
 
-	List<VerificationTokenEntity> findByToken(String token);
+	VerificationTokenEntity findOneByToken(String token);
+	
 	VerificationTokenEntity findOneById(Long id);
 }

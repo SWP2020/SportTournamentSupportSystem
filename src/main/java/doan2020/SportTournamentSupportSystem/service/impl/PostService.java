@@ -35,7 +35,7 @@ public class PostService implements IPostService {
 			updatedEntity = postRepository.findOneById(id);
 
 			updatedEntity.setTitle(newEntity.getTitle());
-			updatedEntity.setAuthor(newEntity.getAuthor());
+			updatedEntity.setCreator(newEntity.getCreator());
 			updatedEntity.setTournament(newEntity.getTournament());
 			updatedEntity.setSystemPost(newEntity.getSystemPost());
 			updatedEntity.setContent(newEntity.getContent());
@@ -114,7 +114,7 @@ public class PostService implements IPostService {
 	public Collection<PostEntity> findByUserId(Pageable pageable, Long UserId) {
 		Collection<PostEntity> foundEntitys = null;
 		try {
-			foundEntitys = postRepository.findByAuthorId(pageable, UserId).getContent();
+			foundEntitys = postRepository.findByCreatorId(pageable, UserId).getContent();
 		} catch (Exception e) {
 			return null;
 		}

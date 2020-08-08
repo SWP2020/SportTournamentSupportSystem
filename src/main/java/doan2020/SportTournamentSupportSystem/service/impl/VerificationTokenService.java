@@ -1,7 +1,11 @@
 
 package doan2020.SportTournamentSupportSystem.service.impl;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -95,19 +99,26 @@ public class VerificationTokenService implements IVerificationTokenService {
 	}
 
 	public boolean createVerification(String email, String UserName) {
-		List<UserEntity> users = userRepository.findByEmailAndUsername(email, UserName);
-		UserEntity user;
-		if (users.isEmpty()) {
+		UserEntity user = userRepository.findByEmailAndUsername(email, UserName);
+		if (user == null) {
 			return false;
-		} else {
-			user = users.get(0);
 		}
 
 		List<VerificationTokenEntity> verificationTokens = verificationTokenRepository
-				.findByUserEntityEmailAndUserEntity(email, user);
+				.findByUserEmailAndUser(email, user);
 		VerificationTokenEntity verificationToken;
 		if (verificationTokens.isEmpty()) {
 			verificationToken = new VerificationTokenEntity();
+			String token = UUID.randomUUID().toString();
+			verificationToken.setToken(token);
+			LocalDateTime issuedDateTimeTemp = LocalDateTime.now();
+			Date issuedDateTime = Date.from(issuedDateTimeTemp.atZone(ZoneId.systemDefault()).toInstant());
+			verificationToken.setIssuedDateTime(issuedDateTime);
+			LocalDateTime expiredDateTimetemp = issuedDateTimeTemp.plusDays(7);
+			Date expiredDateTime = Date.from(expiredDateTimetemp.atZone(ZoneId.systemDefault()).toInstant());
+			verificationToken.setExpiredDateTime(expiredDateTime);
+	        String status = "STATUS_PENDING";
+	        verificationToken.setStatus(status);
 			verificationToken.setUser(user);
 			verificationTokenRepository.save(verificationToken);
 		} else {
@@ -131,21 +142,21 @@ public class VerificationTokenService implements IVerificationTokenService {
 	public List<VerificationTokenEntity> findByUserEntityEmailAndUserEntity(String email, UserEntity userEntity) {
 		List<VerificationTokenEntity> verificationTokens = null;
 		try {
-			verificationTokens = verificationTokenRepository.findByUserEntityEmailAndUserEntity(email, userEntity);
+			verificationTokens = verificationTokenRepository.findByUserEmailAndUser(email, userEntity);
 		} catch (Exception e) {
 			return null;
 		}
 		return verificationTokens;
 	}
 
-	public List<VerificationTokenEntity> findByToken(String token) {
-		List<VerificationTokenEntity> verificationTokens = null;
+	public VerificationTokenEntity findOneByToken(String token) {
+		VerificationTokenEntity verificationToken = null;
 		try {
-			verificationTokens = verificationTokenRepository.findByToken(token);
+			verificationToken = verificationTokenRepository.findOneByToken(token);
 		} catch (Exception e) {
 			return null;
 		}
-		return verificationTokens;
+		return verificationToken;
 	}
 	
 }

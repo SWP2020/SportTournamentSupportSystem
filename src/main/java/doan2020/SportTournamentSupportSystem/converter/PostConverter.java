@@ -27,9 +27,9 @@ public class PostConverter{
 		System.out.println("PostConverter: toDTO: finish");
 		PostEntity entity = new PostEntity();
 		try {
-			if(dto.getAuthorId() != null) {
-			UserEntity userEntity = userService.findOneById(dto.getAuthorId());
-			entity.setAuthor(userEntity);
+			if(dto.getCreatorId() != null) {
+			UserEntity userEntity = userService.findOneById(dto.getCreatorId());
+			entity.setCreator(userEntity);
 			}
 			entity.setContent(dto.getContent());
 			entity.setStatus(dto.getStatus());
@@ -57,7 +57,7 @@ public class PostConverter{
 		PostDTO dto = new PostDTO();
 		try {
 			
-			dto.setAuthorId(entity.getAuthor().getId());
+			dto.setCreatorId(entity.getCreator().getId());
 			dto.setContent(entity.getContent());
 			dto.setId(entity.getId());
 			dto.setStatus(entity.getStatus());
