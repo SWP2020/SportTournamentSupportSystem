@@ -54,6 +54,7 @@ public class ReportConverter {
 		System.out.println("ReportConverter: toDTO: start");
 		ReportDTO dto = new ReportDTO();
 		try {
+			dto.setId(entity.getId());
 			dto.setSenderId(entity.getSender().getId());
 			dto.setSubject(entity.getSubject());
 

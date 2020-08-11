@@ -76,4 +76,48 @@ public class ReportService implements IReportService {
 		return foundEntity;
 	}
 
+	@Override
+	public Collection<ReportEntity> findAll(Pageable pageable) {
+		Collection<ReportEntity> foundEntitys = null;
+		try {
+			foundEntitys = reportRepository.findAll(pageable).getContent();
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntitys;
+	}
+
+	@Override
+	public Collection<ReportEntity> findBySenderId(Pageable pageable, Long senderId) {
+		Collection<ReportEntity> foundEntitys = null;
+		try {
+			foundEntitys = reportRepository.findBySenderId(pageable, senderId).getContent();
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntitys;
+	}
+
+	@Override
+	public Collection<ReportEntity> findByTournamentId(Pageable pageable, Long tournamentId) {
+		Collection<ReportEntity> foundEntitys = null;
+		try {
+			foundEntitys = reportRepository.findByTournamentId(pageable, tournamentId).getContent();
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntitys;
+	}
+
+	@Override
+	public int countReports() {
+		int count = 0;
+		try {
+			count = (int) reportRepository.count();
+		} catch (Exception e) {
+			return 0;
+		}
+		return count;
+	}
+
 }
