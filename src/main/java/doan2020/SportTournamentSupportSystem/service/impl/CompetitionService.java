@@ -33,7 +33,7 @@ public class CompetitionService implements ICompetitionService {
 		CompetitionEntity updatedEntity = null;
 		try {
 			updatedEntity = competitionRepository.findOneById(id);
-
+			
 			updatedEntity.setName(newEntity.getName());
 			updatedEntity.setDescription(newEntity.getDescription());
 			updatedEntity.setTournament(newEntity.getTournament());
@@ -49,7 +49,7 @@ public class CompetitionService implements ICompetitionService {
 			updatedEntity.setUrl(newEntity.getUrl());
 			updatedEntity = competitionRepository.save(updatedEntity);
 		} catch (Exception e) {
-			return null;
+			System.out.println("CompetitionService: update: has exception");
 		}
         
 		return updatedEntity;

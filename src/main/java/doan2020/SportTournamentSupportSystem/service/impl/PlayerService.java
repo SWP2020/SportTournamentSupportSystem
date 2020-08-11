@@ -77,5 +77,16 @@ public class PlayerService implements IPlayerService {
 		}
 		return foundEntity;
 	}
-
+	
+	
+	@Override
+	public Collection<PlayerEntity> findByTeamId(Long teamId) {
+		Collection<PlayerEntity> players = null;
+		try {
+			players = playerRepository.findByTeamId(teamId);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return players;
+	}
 }

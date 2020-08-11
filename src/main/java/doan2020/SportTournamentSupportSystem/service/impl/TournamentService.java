@@ -98,5 +98,16 @@ public class TournamentService implements ITournamentService {
 		}
 		return findTournaments;
 	}
+	
+	@Override
+	public Collection<TournamentEntity> findAll(Pageable pageable) {
+		Collection<TournamentEntity> findTournaments = null;
+		try {
+			findTournaments = tournamentRepository.findAll(pageable).getContent();
+		} catch (Exception e) {
+			return null;
+		}
+		return findTournaments;
+	}
 
 }

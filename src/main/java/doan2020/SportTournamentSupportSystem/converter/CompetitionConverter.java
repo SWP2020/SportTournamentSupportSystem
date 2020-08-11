@@ -30,6 +30,7 @@ public class CompetitionConverter {
 		try {
 			if (dto.getName() != null)
 				entity.setName(dto.getName());
+			
 			entity.setDescription(dto.getDescription());
 			
 			if (dto.getTournamentId() != null) {
@@ -50,13 +51,17 @@ public class CompetitionConverter {
 				entity.setMainFormat(mainFormat);
 			}
 			
+			System.out.println("CompetitionConverter: toEntity: CP 1");
 			entity.setGroupStage(dto.getGroupStage());
+			System.out.println("CompetitionConverter: toEntity: CP 2");
 			
 			if (entity.getGroupStage() && dto.getGroupStageFormatId() != null) {
 				Long groupStageFormatId = dto.getGroupStageFormatId();
 				CompetitionFormatEntity groupStageFormat = competitionFormatService.findOneById(groupStageFormatId);
 				entity.setGroupStageFormat(groupStageFormat);
 			}
+			
+			System.out.println("CompetitionConverter: toEntity: CP 3");
 			
 			entity.setStatus(dto.getStatus());
 			entity.setUrl(dto.getUrl());

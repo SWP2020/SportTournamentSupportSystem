@@ -1,6 +1,7 @@
 package doan2020.SportTournamentSupportSystem.api;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,8 @@ import org.springframework.web.bind.annotation.RestController;
 import doan2020.SportTournamentSupportSystem.converter.TournamentConverter;
 import doan2020.SportTournamentSupportSystem.dtOut.TournamentDtOut;
 import doan2020.SportTournamentSupportSystem.dto.TournamentDTO;
+import doan2020.SportTournamentSupportSystem.dto.TournamentDTO;
+import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
 import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
 import doan2020.SportTournamentSupportSystem.entity.UserEntity;
 import doan2020.SportTournamentSupportSystem.response.Response;
@@ -127,6 +130,55 @@ public class TournamentsAPI {
 	/*
 	 * Tim kiem tournament theo paging by UserId
 	 */
+	
+	@GetMapping("")
+	public ResponseEntity<Response> getAllTournament(
+			@RequestParam(value = "page", required = false) Integer page,
+			@RequestParam(value = "limit", required = false) Integer limit) {
+		System.out.println("TournamentsAPI: getAllTournament: start");
+
+		Response response = new Response();
+		Map<String, Object> config = new HashMap<String, Object>();
+		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> error = new HashMap<String, Object>();
+		HttpStatus httpStatus = HttpStatus.OK;
+
+		Collection<TournamentEntity> findPage = new ArrayList<>();
+		List<TournamentDTO> findPageDTO = new ArrayList<>();
+
+		try {
+			if (limit == null)
+				limit = 10;
+			if (limit == 0)
+				limit = 10;
+			if (page == null)
+				page = 1;
+
+			Pageable pageable = PageRequest.of(page - 1, limit);
+			findPage = service.findAll(pageable);
+
+			for (TournamentEntity entity : findPage) {
+				TournamentDTO dto = converter.toDTO(entity);
+				findPageDTO.add(dto);
+			}
+
+			result.put("Tournaments", findPageDTO);
+			error.put("MessageCode", 0);
+			error.put("Message", "Get page successfully");
+
+			System.out.println("TournamentsAPI: getAllTournament: no exception");
+		} catch (Exception e) {
+			System.out.println("TournamentsAPI: getAllTournament: has exception");
+			result.put("Users", findPageDTO);
+			error.put("MessageCode", 1);
+			error.put("Message", "Server error");
+		}
+		response.setError(error);
+		response.setResult(result);
+		response.setConfig(config);
+		System.out.println("TournamentsAPI: getAllTournament: finish");
+		return new ResponseEntity<Response>(response, httpStatus);
+	}
 
 	@GetMapping("/getByUserId")
 	public ResponseEntity<Response> getTournamentsPagingByUserId(
