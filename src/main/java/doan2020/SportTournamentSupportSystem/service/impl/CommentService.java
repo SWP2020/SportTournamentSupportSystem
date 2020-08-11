@@ -75,4 +75,48 @@ public class CommentService implements ICommentService {
 		return foundEntity;
 	}
 
+	@Override
+	public Collection<CommentEntity> findAll(Pageable pageable) {
+		Collection<CommentEntity> foundEntitys = null;
+		try {
+			foundEntitys = commentRepository.findAll(pageable).getContent();
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntitys;
+	}
+
+	@Override
+	public Collection<CommentEntity> findAll() {
+		Collection<CommentEntity> foundEntitys = null;
+		try {
+			foundEntitys = commentRepository.findAll();
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntitys;
+	}
+
+	@Override
+	public Collection<CommentEntity> findByPostId(Long postId) {
+		Collection<CommentEntity> foundEntitys = null;
+		try {
+			foundEntitys = commentRepository.findByPostId(postId);
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntitys;
+	}
+
+	@Override
+	public Collection<CommentEntity> findByUserId(Long userId) {
+		Collection<CommentEntity> foundEntitys = null;
+		try {
+			foundEntitys = commentRepository.findByCreatorId(userId);
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntitys;
+	}
+
 }

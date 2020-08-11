@@ -216,7 +216,7 @@ public class TournamentsAPI {
 				UserEntity creator = userService.findOneById(userId);
 				int totalEntity = creator.getTournaments().size();
 				totalPage = totalEntity / limit;
-				if (totalPage % limit != 0)
+				if (totalEntity % limit != 0)
 					totalPage++;
 				
 				for (TournamentEntity entity: tournamentEntities) {
