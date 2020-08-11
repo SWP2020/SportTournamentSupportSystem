@@ -23,7 +23,7 @@ import doan2020.SportTournamentSupportSystem.service.IMatchService;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/matches")
+@RequestMapping("/match")
 public class MatchAPI {
 	@Autowired
 	private MatchConverter converter;
