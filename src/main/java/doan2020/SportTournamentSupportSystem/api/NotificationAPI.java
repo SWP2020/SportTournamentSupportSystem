@@ -17,8 +17,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import doan2020.SportTournamentSupportSystem.converter.NotificationConverter;
+import doan2020.SportTournamentSupportSystem.converter.NotificationConverter;
 import doan2020.SportTournamentSupportSystem.dto.NotificationDTO;
+import doan2020.SportTournamentSupportSystem.dto.NotificationDTO;
+import doan2020.SportTournamentSupportSystem.entity.NotificationEntity;
 import doan2020.SportTournamentSupportSystem.response.Response;
+import doan2020.SportTournamentSupportSystem.service.INotificationService;
 
 @RestController
 @CrossOrigin
@@ -28,174 +32,146 @@ public class NotificationAPI {
 	@Autowired
 	private NotificationConverter converter;
 	
-	@GetMapping("/getOne")
-	public ResponseEntity<Response> getOneNotification(@RequestParam(value = "id") Long id) {
-		System.out.println("NotificationAPI - getOneNotification");
-		HttpStatus httpStatus = null;
-		httpStatus = HttpStatus.OK;
-		Response response = new Response();
-		Map<String, Object> config = new HashMap<String, Object>();
-		Map<String, Object> result = new HashMap<String, Object>();
-		Map<String, Object> error = new HashMap<String, Object>();
-
-		try {
-			System.out.println("NotificationAPI - cp1");
-			result.put("Notification", null);
-			config.put("global", 0);
-			error.put("messageCode", 0);
-			error.put("message", "");
-			System.out.println("NotificationAPI - cp2");
-		} catch (Exception e) {
-			System.out.println("NotificationAPI - exception");
-			result.put("Notification", null);
-			config.put("global", 0);
-			error.put("messageCode", 1);
-			error.put("message", "");
-		}
-
-		System.out.println("NotificationAPI - cp3");
-		response.setError(error);
-		response.setResult(result);
-		response.setConfig(config);
-		System.out.println("NotificationAPI - cp pass");
-		return new ResponseEntity<Response>(response, httpStatus);
-
-	}
+	@Autowired
+	private INotificationService service;
 	
-	@GetMapping("/getAll")
-	public ResponseEntity<Response> getAllNotification(@RequestParam(value = "page") Integer page) {
-		System.out.println("NotificationAPI - getAllNotification");
-		HttpStatus httpStatus = null;
-		httpStatus = HttpStatus.OK;
-		Response response = new Response();
-		Map<String, Object> config = new HashMap<String, Object>();
-		Map<String, Object> result = new HashMap<String, Object>();
-		Map<String, Object> error = new HashMap<String, Object>();
-
-		try {
-			System.out.println("NotificationAPI - cp1");
-			result.put("Notification", null);
-			config.put("global", 0);
-			error.put("messageCode", 0);
-			error.put("message", "");
-			System.out.println("NotificationAPI - cp2");
-		} catch (Exception e) {
-			System.out.println("CompetitionSettingAPI - exception");
-			result.put("Notification", null);
-			config.put("global", 0);
-			error.put("messageCode", 1);
-			error.put("message", "");
-		}
-
-		System.out.println("NotificationAPI - cp3");
-		response.setError(error);
-		response.setResult(result);
-		response.setConfig(config);
-		System.out.println("NotificationAPI - cp pass");
-		return new ResponseEntity<Response>(response, httpStatus);
-
-	}
 	
-	@PostMapping("")
-	public ResponseEntity<Response> createNotification(@RequestBody NotificationDTO notificationDTO) {
-		System.out.println("NotificationAPI - createNotification");
-		HttpStatus httpStatus = null;
-		httpStatus = HttpStatus.OK;
+	@GetMapping("")
+	public ResponseEntity<Response> getNotification(@RequestParam(value = "id", required = false) Long id) {
+		System.out.println("NotificationAPI: getNotification: no exception");
+		HttpStatus httpStatus = HttpStatus.OK;
 		Response response = new Response();
 		Map<String, Object> config = new HashMap<String, Object>();
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
-
+		NotificationEntity notificationEntity = new NotificationEntity();
+		NotificationDTO notificationDTO = new NotificationDTO();
 		try {
-			System.out.println("NotificationAPI - cp1");
-			result.put("Notification", null);
-			config.put("global", 0);
-			error.put("messageCode", 0);
-			error.put("message", "");
-			System.out.println("NotificationAPI - cp2");
+			if (id == null) { // id null
+				result.put("Notification", null);
+				config.put("Global", 0);
+				error.put("MessageCode", 1);
+				error.put("Message", "Required param id");
+			} else { // id not null
+				
+				notificationEntity = service.findOneById(id);
+				
+				if (notificationEntity == null) { // not found
+					result.put("Notification", null);
+					config.put("Global", 0);
+					error.put("MessageCode", 1);
+					error.put("Message", "Not found");
+				} else { // found
+					
+					notificationDTO = converter.toDTO(notificationEntity);
+					
+					result.put("Notification", notificationDTO);
+					config.put("Global", 0);
+					error.put("MessageCode", 0);
+					error.put("Message", "Found");
+				}
+			}
+			System.out.println("NotificationAPI: getNotification: no exception");
 		} catch (Exception e) {
-			System.out.println("NotificationAPI - exception");
+			System.out.println("NotificationAPI: getNotification: has exception");
 			result.put("Notification", null);
-			config.put("global", 0);
-			error.put("messageCode", 1);
-			error.put("message", "");
+			config.put("Global", 0);
+			error.put("MessageCode", 1);
+			error.put("Message", "Server error");
 		}
 
-		System.out.println("NotificationAPI - cp3");
-		response.setError(error);
-		response.setResult(result);
 		response.setConfig(config);
-		System.out.println("NotificationAPI - cp pass");
+		response.setResult(result);
+		response.setError(error);
+		System.out.println("NotificationAPI: getNotification: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
-
 	}
-	
-	@PutMapping("")
-	public ResponseEntity<Response> editNotification(@RequestParam(value = "id") Long id) {
-		System.out.println("NotificationAPI - editNotification");
-		HttpStatus httpStatus = null;
-		httpStatus = HttpStatus.OK;
+
+	/*
+	 * Tao moi mot Notification
+	 * 
+	 */
+	@PostMapping
+	@CrossOrigin
+	public ResponseEntity<Response> createNotification(@RequestBody NotificationDTO newNotification) {
+		System.out.println("NotificationAPI: createNotification: start");
+		HttpStatus httpStatus = HttpStatus.OK;
 		Response response = new Response();
 		Map<String, Object> config = new HashMap<String, Object>();
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
-
+		NotificationEntity notificationEntity = new NotificationEntity();
+		
 		try {
-			System.out.println("NotificationAPI - cp1");
-			result.put("Notification", null);
-			config.put("global", 0);
-			error.put("messageCode", 0);
-			error.put("message", "");
-			System.out.println("NotificationAPI - cp2");
+			notificationEntity = converter.toEntity(newNotification);
+			
+			notificationEntity = service.create(notificationEntity);
+			
+			NotificationDTO dto = converter.toDTO(notificationEntity);
+
+			result.put("Notification", dto);
+			config.put("Global", 0);
+			error.put("MessageCode", 0);
+			error.put("Message", "Notification create successfuly");
+			System.out.println("NotificationAPI: createNotification: no exception");
 		} catch (Exception e) {
-			System.out.println("NotificationAPI - exception");
+			System.out.println("NotificationAPI: createNotification: has exception");
 			result.put("Notification", null);
-			config.put("global", 0);
-			error.put("messageCode", 1);
-			error.put("message", "");
+			config.put("Global", 0);
+			error.put("MessageCode", 1);
+			error.put("Message", "Server error");
 		}
 
-		System.out.println("NotificationAPI - cp3");
-		response.setError(error);
-		response.setResult(result);
 		response.setConfig(config);
-		System.out.println("NotificationAPI - cp pass");
+		response.setResult(result);
+		response.setError(error);
+		System.out.println("NotificationAPI: createNotification: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
-
 	}
-	
-	@DeleteMapping("")
-	public ResponseEntity<Response> deleteNotification(@RequestParam(value = "id") Long id) {
-		System.out.println("NotificationAPI - deleteNotification");
-		HttpStatus httpStatus = null;
-		httpStatus = HttpStatus.OK;
+
+	/*
+	 * Edit mot Notification
+	 * 
+	 */
+	@PutMapping
+	@CrossOrigin
+	public ResponseEntity<Response> editNotification(
+			@RequestBody NotificationDTO notification,
+			@RequestParam Long id) {
+		System.out.println("NotificationAPI: editNotification: start");
+		
+		HttpStatus httpStatus = HttpStatus.OK;
 		Response response = new Response();
 		Map<String, Object> config = new HashMap<String, Object>();
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
-
+		NotificationEntity notificationEntity = new NotificationEntity();
+		
 		try {
-			System.out.println("NotificationAPI - cp1");
-			result.put("Notification", null);
-			config.put("global", 0);
-			error.put("messageCode", 0);
-			error.put("message", "");
-			System.out.println("NotificationAPI - cp2");
+			notificationEntity = converter.toEntity(notification);
+			
+			notificationEntity = service.update(id, notificationEntity);
+			
+			NotificationDTO dto = converter.toDTO(notificationEntity);
+
+			result.put("Notification", dto);
+			config.put("Global", 0);
+			error.put("MessageCode", 0);
+			error.put("Message", "Notification update successfuly");
+			System.out.println("NotificationAPI: editNotification: no exception");
 		} catch (Exception e) {
-			System.out.println("NotificationAPI - exception");
+			System.out.println("NotificationAPI: editNotification: has exception");
 			result.put("Notification", null);
-			config.put("global", 0);
-			error.put("messageCode", 1);
-			error.put("message", "");
+			config.put("Global", 0);
+			error.put("MessageCode", 1);
+			error.put("Message", "Server error");
 		}
 
-		System.out.println("NotificationAPI - cp3");
-		response.setError(error);
-		response.setResult(result);
 		response.setConfig(config);
-		System.out.println("NotificationAPI - cp pass");
+		response.setResult(result);
+		response.setError(error);
+		System.out.println("NotificationAPI: editNotification: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
-
 	}
 
 }

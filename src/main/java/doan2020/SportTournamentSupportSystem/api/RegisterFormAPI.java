@@ -17,9 +17,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import doan2020.SportTournamentSupportSystem.converter.RegisterFormConverter;
+import doan2020.SportTournamentSupportSystem.converter.RegisterFormConverter;
 import doan2020.SportTournamentSupportSystem.dto.ApiDTO;
 import doan2020.SportTournamentSupportSystem.dto.RegisterFormDTO;
+import doan2020.SportTournamentSupportSystem.dto.RegisterFormDTO;
+import doan2020.SportTournamentSupportSystem.entity.RegisterFormEntity;
 import doan2020.SportTournamentSupportSystem.response.Response;
+import doan2020.SportTournamentSupportSystem.service.IRegisterFormService;
 
 @RestController
 @CrossOrigin
@@ -29,174 +33,146 @@ public class RegisterFormAPI {
 	@Autowired
 	private RegisterFormConverter converter;
 	
-	@GetMapping("/getOne")
-	public ResponseEntity<Response> getOneRegisterForm(@RequestParam(value = "id") Long id) {
-		System.out.println("RegisterFormAPI - getOneRegisterForm");
-		HttpStatus httpStatus = null;
-		httpStatus = HttpStatus.OK;
-		Response response = new Response();
-		Map<String, Object> config = new HashMap<String, Object>();
-		Map<String, Object> result = new HashMap<String, Object>();
-		Map<String, Object> error = new HashMap<String, Object>();
-
-		try {
-			System.out.println("RegisterFormAPI - cp1");
-			result.put("RegisterForm", null);
-			config.put("global", 0);
-			error.put("messageCode", 0);
-			error.put("message", "");
-			System.out.println("RegisterFormAPI - cp2");
-		} catch (Exception e) {
-			System.out.println("RegisterFormAPI - exception");
-			result.put("RegisterForm", null);
-			config.put("global", 0);
-			error.put("messageCode", 1);
-			error.put("message", "");
-		}
-
-		System.out.println("RegisterFormAPI - cp3");
-		response.setError(error);
-		response.setResult(result);
-		response.setConfig(config);
-		System.out.println("RegisterFormAPI - cp pass");
-		return new ResponseEntity<Response>(response, httpStatus);
-
-	}
+	@Autowired
+	private IRegisterFormService service;
 	
-	@GetMapping("/getAll")
-	public ResponseEntity<Response> getAllRegisterForm(@RequestParam(value = "page") Integer page) {
-		System.out.println("RegisterFormAPI - getAllRegisterForm");
-		HttpStatus httpStatus = null;
-		httpStatus = HttpStatus.OK;
-		Response response = new Response();
-		Map<String, Object> config = new HashMap<String, Object>();
-		Map<String, Object> result = new HashMap<String, Object>();
-		Map<String, Object> error = new HashMap<String, Object>();
-
-		try {
-			System.out.println("RegisterFormAPI - cp1");
-			result.put("RegisterForm", null);
-			config.put("global", 0);
-			error.put("messageCode", 0);
-			error.put("message", "");
-			System.out.println("RegisterFormAPI - cp2");
-		} catch (Exception e) {
-			System.out.println("RegisterFormAPI - exception");
-			result.put("RegisterForm", null);
-			config.put("global", 0);
-			error.put("messageCode", 1);
-			error.put("message", "");
-		}
-
-		System.out.println("RegisterFormAPI - cp3");
-		response.setError(error);
-		response.setResult(result);
-		response.setConfig(config);
-		System.out.println("RegisterFormAPI - cp pass");
-		return new ResponseEntity<Response>(response, httpStatus);
-
-	}
 	
-	@PostMapping("")
-	public ResponseEntity<Response> createRegisterForm(@RequestBody RegisterFormDTO registerFormDTO) {
-		System.out.println("RegisterFormAPI - createRegisterForm");
-		HttpStatus httpStatus = null;
-		httpStatus = HttpStatus.OK;
+	@GetMapping("")
+	public ResponseEntity<Response> getRegisterForm(@RequestParam(value = "id", required = false) Long id) {
+		System.out.println("RegisterFormAPI: getRegisterForm: no exception");
+		HttpStatus httpStatus = HttpStatus.OK;
 		Response response = new Response();
 		Map<String, Object> config = new HashMap<String, Object>();
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
-
+		RegisterFormEntity registerFormEntity = new RegisterFormEntity();
+		RegisterFormDTO registerFormDTO = new RegisterFormDTO();
 		try {
-			System.out.println("RegisterFormAPI - cp1");
-			result.put("RegisterForm", null);
-			config.put("global", 0);
-			error.put("messageCode", 0);
-			error.put("message", "");
-			System.out.println("RegisterFormAPI - cp2");
+			if (id == null) { // id null
+				result.put("RegisterForm", null);
+				config.put("Global", 0);
+				error.put("MessageCode", 1);
+				error.put("Message", "Required param id");
+			} else { // id not null
+				
+				registerFormEntity = service.findOneById(id);
+				
+				if (registerFormEntity == null) { // not found
+					result.put("RegisterForm", null);
+					config.put("Global", 0);
+					error.put("MessageCode", 1);
+					error.put("Message", "Not found");
+				} else { // found
+					
+					registerFormDTO = converter.toDTO(registerFormEntity);
+					
+					result.put("RegisterForm", registerFormDTO);
+					config.put("Global", 0);
+					error.put("MessageCode", 0);
+					error.put("Message", "Found");
+				}
+			}
+			System.out.println("RegisterFormAPI: getRegisterForm: no exception");
 		} catch (Exception e) {
-			System.out.println("RegisterFormAPI - exception");
+			System.out.println("RegisterFormAPI: getRegisterForm: has exception");
 			result.put("RegisterForm", null);
-			config.put("global", 0);
-			error.put("messageCode", 1);
-			error.put("message", "");
+			config.put("Global", 0);
+			error.put("MessageCode", 1);
+			error.put("Message", "Server error");
 		}
 
-		System.out.println("RegisterFormAPI - cp3");
-		response.setError(error);
-		response.setResult(result);
 		response.setConfig(config);
-		System.out.println("RegisterFormAPI - cp pass");
+		response.setResult(result);
+		response.setError(error);
+		System.out.println("RegisterFormAPI: getRegisterForm: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
-
 	}
-	
-	@PutMapping("")
-	public ResponseEntity<Response> editRegisterForm(@RequestParam(value = "id") Long id) {
-		System.out.println("RegisterFormAPI - editRegisterForm");
-		HttpStatus httpStatus = null;
-		httpStatus = HttpStatus.OK;
+
+	/*
+	 * Tao moi mot RegisterForm
+	 * 
+	 */
+	@PostMapping
+	@CrossOrigin
+	public ResponseEntity<Response> createRegisterForm(@RequestBody RegisterFormDTO newRegisterForm) {
+		System.out.println("RegisterFormAPI: createRegisterForm: start");
+		HttpStatus httpStatus = HttpStatus.OK;
 		Response response = new Response();
 		Map<String, Object> config = new HashMap<String, Object>();
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
-
+		RegisterFormEntity registerFormEntity = new RegisterFormEntity();
+		
 		try {
-			System.out.println("RegisterFormAPI - cp1");
-			result.put("RegisterForm", null);
-			config.put("global", 0);
-			error.put("messageCode", 0);
-			error.put("message", "");
-			System.out.println("RegisterFormAPI - cp2");
+			registerFormEntity = converter.toEntity(newRegisterForm);
+			
+			registerFormEntity = service.create(registerFormEntity);
+			
+			RegisterFormDTO dto = converter.toDTO(registerFormEntity);
+
+			result.put("RegisterForm", dto);
+			config.put("Global", 0);
+			error.put("MessageCode", 0);
+			error.put("Message", "RegisterForm create successfuly");
+			System.out.println("RegisterFormAPI: createRegisterForm: no exception");
 		} catch (Exception e) {
-			System.out.println("RegisterFormAPI - exception");
+			System.out.println("RegisterFormAPI: createRegisterForm: has exception");
 			result.put("RegisterForm", null);
-			config.put("global", 0);
-			error.put("messageCode", 1);
-			error.put("message", "");
+			config.put("Global", 0);
+			error.put("MessageCode", 1);
+			error.put("Message", "Server error");
 		}
 
-		System.out.println("RegisterFormAPI - cp3");
-		response.setError(error);
-		response.setResult(result);
 		response.setConfig(config);
-		System.out.println("RegisterFormAPI - cp pass");
+		response.setResult(result);
+		response.setError(error);
+		System.out.println("RegisterFormAPI: createRegisterForm: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
-
 	}
-	
-	@DeleteMapping("")
-	public ResponseEntity<Response> deleteApi(@RequestParam(value = "id") Long id) {
-		System.out.println("RegisterFormAPI - deleteRegisterForm");
-		HttpStatus httpStatus = null;
-		httpStatus = HttpStatus.OK;
+
+	/*
+	 * Edit mot RegisterForm
+	 * 
+	 */
+	@PutMapping
+	@CrossOrigin
+	public ResponseEntity<Response> editRegisterForm(
+			@RequestBody RegisterFormDTO registerForm,
+			@RequestParam Long id) {
+		System.out.println("RegisterFormAPI: editRegisterForm: start");
+		
+		HttpStatus httpStatus = HttpStatus.OK;
 		Response response = new Response();
 		Map<String, Object> config = new HashMap<String, Object>();
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
-
+		RegisterFormEntity registerFormEntity = new RegisterFormEntity();
+		
 		try {
-			System.out.println("RegisterFormAPI - cp1");
-			result.put("RegisterForm", null);
-			config.put("global", 0);
-			error.put("messageCode", 0);
-			error.put("message", "");
-			System.out.println("RegisterFormAPI - cp2");
+			registerFormEntity = converter.toEntity(registerForm);
+			
+			registerFormEntity = service.update(id, registerFormEntity);
+			
+			RegisterFormDTO dto = converter.toDTO(registerFormEntity);
+
+			result.put("RegisterForm", dto);
+			config.put("Global", 0);
+			error.put("MessageCode", 0);
+			error.put("Message", "RegisterForm update successfuly");
+			System.out.println("RegisterFormAPI: editRegisterForm: no exception");
 		} catch (Exception e) {
-			System.out.println("RegisterFormAPI - exception");
+			System.out.println("RegisterFormAPI: editRegisterForm: has exception");
 			result.put("RegisterForm", null);
-			config.put("global", 0);
-			error.put("messageCode", 1);
-			error.put("message", "");
+			config.put("Global", 0);
+			error.put("MessageCode", 1);
+			error.put("Message", "Server error");
 		}
 
-		System.out.println("RegisterFormAPI - cp3");
-		response.setError(error);
-		response.setResult(result);
 		response.setConfig(config);
-		System.out.println("RegisterFormAPI - cp pass");
+		response.setResult(result);
+		response.setError(error);
+		System.out.println("RegisterFormAPI: editRegisterForm: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
-
 	}
 
 }

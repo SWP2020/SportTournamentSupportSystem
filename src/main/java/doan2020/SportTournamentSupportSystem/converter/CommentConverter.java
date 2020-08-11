@@ -23,10 +23,10 @@ public class CommentConverter {
 		System.out.println("CommentConverter: toEntity: start");
 		CommentEntity entity = new CommentEntity();
 		try {
-			if (dto.getAuthorId() != null) {
-				Long authorId = dto.getAuthorId();
-				UserEntity author = userService.findOneById(authorId);
-				entity.setAuthor(author);
+			if (dto.getCreatorId() != null) {
+				Long creatorId = dto.getCreatorId();
+				UserEntity creator = userService.findOneById(creatorId);
+				entity.setCreator(creator);
 			}
 			
 			if (dto.getPostId() != null) {
@@ -52,7 +52,7 @@ public class CommentConverter {
 		CommentDTO dto = new CommentDTO();
 		try {
 			dto.setId(entity.getId());
-			dto.setAuthorId(entity.getAuthor().getId());
+			dto.setCreatorId(entity.getCreator().getId());
 			dto.setPostId(entity.getPost().getId());
 			dto.setContent(entity.getContent());
 			dto.setStatus(entity.getStatus());

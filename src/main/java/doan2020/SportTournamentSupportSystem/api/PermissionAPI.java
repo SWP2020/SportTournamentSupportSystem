@@ -17,8 +17,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import doan2020.SportTournamentSupportSystem.converter.PermissionConverter;
+import doan2020.SportTournamentSupportSystem.converter.PermissionConverter;
 import doan2020.SportTournamentSupportSystem.dto.PermissionDTO;
+import doan2020.SportTournamentSupportSystem.dto.PermissionDTO;
+import doan2020.SportTournamentSupportSystem.entity.PermissionEntity;
 import doan2020.SportTournamentSupportSystem.response.Response;
+import doan2020.SportTournamentSupportSystem.service.IPermissionService;
 
 @RestController
 @CrossOrigin
@@ -28,174 +32,146 @@ public class PermissionAPI {
 	@Autowired
 	private PermissionConverter converter;
 	
-	@GetMapping("/getOne")
-	public ResponseEntity<Response> getOnePermission(@RequestParam(value = "id") Long id) {
-		System.out.println("PermissionAPI - getOnePermission");
-		HttpStatus httpStatus = null;
-		httpStatus = HttpStatus.OK;
-		Response response = new Response();
-		Map<String, Object> config = new HashMap<String, Object>();
-		Map<String, Object> result = new HashMap<String, Object>();
-		Map<String, Object> error = new HashMap<String, Object>();
-
-		try {
-			System.out.println("PermissionAPI - cp1");
-			result.put("Permission", null);
-			config.put("global", 0);
-			error.put("messageCode", 0);
-			error.put("message", "");
-			System.out.println("PermissionAPI - cp2");
-		} catch (Exception e) {
-			System.out.println("PermissionAPI - exception");
-			result.put("Permission", null);
-			config.put("global", 0);
-			error.put("messageCode", 1);
-			error.put("message", "");
-		}
-
-		System.out.println("PermissionAPI - cp3");
-		response.setError(error);
-		response.setResult(result);
-		response.setConfig(config);
-		System.out.println("PermissionAPI - cp pass");
-		return new ResponseEntity<Response>(response, httpStatus);
-
-	}
+	@Autowired
+	private IPermissionService service;
 	
-	@GetMapping("/getAll")
-	public ResponseEntity<Response> getAllApi(@RequestParam(value = "page") Integer page) {
-		System.out.println("PermissionAPI - getAllPermission");
-		HttpStatus httpStatus = null;
-		httpStatus = HttpStatus.OK;
-		Response response = new Response();
-		Map<String, Object> config = new HashMap<String, Object>();
-		Map<String, Object> result = new HashMap<String, Object>();
-		Map<String, Object> error = new HashMap<String, Object>();
-
-		try {
-			System.out.println("PermissionAPI - cp1");
-			result.put("Permission", null);
-			config.put("global", 0);
-			error.put("messageCode", 0);
-			error.put("message", "");
-			System.out.println("PermissionAPI - cp2");
-		} catch (Exception e) {
-			System.out.println("PermissionAPI - exception");
-			result.put("Permission", null);
-			config.put("global", 0);
-			error.put("messageCode", 1);
-			error.put("message", "");
-		}
-
-		System.out.println("PermissionAPI - cp3");
-		response.setError(error);
-		response.setResult(result);
-		response.setConfig(config);
-		System.out.println("PermissionAPI - cp pass");
-		return new ResponseEntity<Response>(response, httpStatus);
-
-	}
 	
-	@PostMapping("")
-	public ResponseEntity<Response> createPermission(@RequestBody PermissionDTO PermissionDTO) {
-		System.out.println("PermissionAPI - createPermission");
-		HttpStatus httpStatus = null;
-		httpStatus = HttpStatus.OK;
+	@GetMapping("")
+	public ResponseEntity<Response> getPermission(@RequestParam(value = "id", required = false) Long id) {
+		System.out.println("PermissionAPI: getPermission: no exception");
+		HttpStatus httpStatus = HttpStatus.OK;
 		Response response = new Response();
 		Map<String, Object> config = new HashMap<String, Object>();
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
-
+		PermissionEntity permissionEntity = new PermissionEntity();
+		PermissionDTO permissionDTO = new PermissionDTO();
 		try {
-			System.out.println("PermissionAPI - cp1");
-			result.put("Permission", null);
-			config.put("global", 0);
-			error.put("messageCode", 0);
-			error.put("message", "");
-			System.out.println("ApiAPI - cp2");
+			if (id == null) { // id null
+				result.put("Permission", null);
+				config.put("Global", 0);
+				error.put("MessageCode", 1);
+				error.put("Message", "Required param id");
+			} else { // id not null
+				
+				permissionEntity = service.findOneById(id);
+				
+				if (permissionEntity == null) { // not found
+					result.put("Permission", null);
+					config.put("Global", 0);
+					error.put("MessageCode", 1);
+					error.put("Message", "Not found");
+				} else { // found
+					
+					permissionDTO = converter.toDTO(permissionEntity);
+					
+					result.put("Permission", permissionDTO);
+					config.put("Global", 0);
+					error.put("MessageCode", 0);
+					error.put("Message", "Found");
+				}
+			}
+			System.out.println("PermissionAPI: getPermission: no exception");
 		} catch (Exception e) {
-			System.out.println("PermissionAPI - exception");
+			System.out.println("PermissionAPI: getPermission: has exception");
 			result.put("Permission", null);
-			config.put("global", 0);
-			error.put("messageCode", 1);
-			error.put("message", "");
+			config.put("Global", 0);
+			error.put("MessageCode", 1);
+			error.put("Message", "Server error");
 		}
 
-		System.out.println("PermissionAPI - cp3");
-		response.setError(error);
-		response.setResult(result);
 		response.setConfig(config);
-		System.out.println("PermissionAPI - cp pass");
+		response.setResult(result);
+		response.setError(error);
+		System.out.println("PermissionAPI: getPermission: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
-
 	}
-	
-	@PutMapping("")
-	public ResponseEntity<Response> editPermission(@RequestParam(value = "id") Long id) {
-		System.out.println("PermissionAPI - editPermission");
-		HttpStatus httpStatus = null;
-		httpStatus = HttpStatus.OK;
+
+	/*
+	 * Tao moi mot Permission
+	 * 
+	 */
+	@PostMapping
+	@CrossOrigin
+	public ResponseEntity<Response> createPermission(@RequestBody PermissionDTO newPermission) {
+		System.out.println("PermissionAPI: createPermission: start");
+		HttpStatus httpStatus = HttpStatus.OK;
 		Response response = new Response();
 		Map<String, Object> config = new HashMap<String, Object>();
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
-
+		PermissionEntity permissionEntity = new PermissionEntity();
+		
 		try {
-			System.out.println("PermissionAPI - cp1");
-			result.put("Permission", null);
-			config.put("global", 0);
-			error.put("messageCode", 0);
-			error.put("message", "");
-			System.out.println("PermissionAPI - cp2");
+			permissionEntity = converter.toEntity(newPermission);
+			
+			permissionEntity = service.create(permissionEntity);
+			
+			PermissionDTO dto = converter.toDTO(permissionEntity);
+
+			result.put("Permission", dto);
+			config.put("Global", 0);
+			error.put("MessageCode", 0);
+			error.put("Message", "Permission create successfuly");
+			System.out.println("PermissionAPI: createPermission: no exception");
 		} catch (Exception e) {
-			System.out.println("PermissionAPI - exception");
+			System.out.println("PermissionAPI: createPermission: has exception");
 			result.put("Permission", null);
-			config.put("global", 0);
-			error.put("messageCode", 1);
-			error.put("message", "");
+			config.put("Global", 0);
+			error.put("MessageCode", 1);
+			error.put("Message", "Server error");
 		}
 
-		System.out.println("PermissionAPI - cp3");
-		response.setError(error);
-		response.setResult(result);
 		response.setConfig(config);
-		System.out.println("PermissionAPI - cp pass");
+		response.setResult(result);
+		response.setError(error);
+		System.out.println("PermissionAPI: createPermission: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
-
 	}
-	
-	@DeleteMapping("")
-	public ResponseEntity<Response> deletePermission(@RequestParam(value = "id") Long id) {
-		System.out.println("PermissionAPI - deletePermission");
-		HttpStatus httpStatus = null;
-		httpStatus = HttpStatus.OK;
+
+	/*
+	 * Edit mot Permission
+	 * 
+	 */
+	@PutMapping
+	@CrossOrigin
+	public ResponseEntity<Response> editPermission(
+			@RequestBody PermissionDTO permission,
+			@RequestParam Long id) {
+		System.out.println("PermissionAPI: editPermission: start");
+		
+		HttpStatus httpStatus = HttpStatus.OK;
 		Response response = new Response();
 		Map<String, Object> config = new HashMap<String, Object>();
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
-
+		PermissionEntity permissionEntity = new PermissionEntity();
+		
 		try {
-			System.out.println("PermissionAPI - cp1");
-			result.put("Permission", null);
-			config.put("global", 0);
-			error.put("messageCode", 0);
-			error.put("message", "");
-			System.out.println("PermissionAPI - cp2");
+			permissionEntity = converter.toEntity(permission);
+			
+			permissionEntity = service.update(id, permissionEntity);
+			
+			PermissionDTO dto = converter.toDTO(permissionEntity);
+
+			result.put("Permission", dto);
+			config.put("Global", 0);
+			error.put("MessageCode", 0);
+			error.put("Message", "Permission update successfuly");
+			System.out.println("PermissionAPI: editPermission: no exception");
 		} catch (Exception e) {
-			System.out.println("PermissionAPI - exception");
+			System.out.println("PermissionAPI: editPermission: has exception");
 			result.put("Permission", null);
-			config.put("global", 0);
-			error.put("messageCode", 1);
-			error.put("message", "");
+			config.put("Global", 0);
+			error.put("MessageCode", 1);
+			error.put("Message", "Server error");
 		}
 
-		System.out.println("PermissionAPI - cp3");
-		response.setError(error);
-		response.setResult(result);
 		response.setConfig(config);
-		System.out.println("PermissionAPI - cp pass");
+		response.setResult(result);
+		response.setError(error);
+		System.out.println("PermissionAPI: editPermission: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
-
 	}
 
 }
