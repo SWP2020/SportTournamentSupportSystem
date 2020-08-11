@@ -17,8 +17,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import doan2020.SportTournamentSupportSystem.converter.ResultConverter;
+import doan2020.SportTournamentSupportSystem.converter.ResultConverter;
 import doan2020.SportTournamentSupportSystem.dto.ResultDTO;
+import doan2020.SportTournamentSupportSystem.dto.ResultDTO;
+import doan2020.SportTournamentSupportSystem.entity.ResultEntity;
 import doan2020.SportTournamentSupportSystem.response.Response;
+import doan2020.SportTournamentSupportSystem.service.IResultService;
 
 @RestController
 @CrossOrigin
@@ -27,175 +31,147 @@ public class ResultAPI {
 
 	@Autowired
 	private ResultConverter converter;
-
-	@GetMapping("/getOne")
-	public ResponseEntity<Response> getOneResult(@RequestParam(value = "id") Long id) {
-		System.out.println("ResultAPI - getOneResult");
-		HttpStatus httpStatus = null;
-		httpStatus = HttpStatus.OK;
-		Response response = new Response();
-		Map<String, Object> config = new HashMap<String, Object>();
-		Map<String, Object> result = new HashMap<String, Object>();
-		Map<String, Object> error = new HashMap<String, Object>();
-
-		try {
-			System.out.println("ResultAPI - cp1");
-			result.put("Result", null);
-			config.put("global", 0);
-			error.put("messageCode", 0);
-			error.put("message", "");
-			System.out.println("ResultAPI - cp2");
-		} catch (Exception e) {
-			System.out.println("ResultAPI - exception");
-			result.put("Result", null);
-			config.put("global", 0);
-			error.put("messageCode", 1);
-			error.put("message", "");
-		}
-
-		System.out.println("ResultAPI - cp3");
-		response.setError(error);
-		response.setResult(result);
-		response.setConfig(config);
-		System.out.println("ResultAPI - cp pass");
-		return new ResponseEntity<Response>(response, httpStatus);
-
-	}
 	
-	@GetMapping("/getAll")
-	public ResponseEntity<Response> getAllResult(@RequestParam(value = "page") Integer page) {
-		System.out.println("ResultAPI - getAllResult");
-		HttpStatus httpStatus = null;
-		httpStatus = HttpStatus.OK;
-		Response response = new Response();
-		Map<String, Object> config = new HashMap<String, Object>();
-		Map<String, Object> result = new HashMap<String, Object>();
-		Map<String, Object> error = new HashMap<String, Object>();
-
-		try {
-			System.out.println("ResultAPI - cp1");
-			result.put("Result", null);
-			config.put("global", 0);
-			error.put("messageCode", 0);
-			error.put("message", "");
-			System.out.println("ResultAPI - cp2");
-		} catch (Exception e) {
-			System.out.println("ResultAPI - exception");
-			result.put("Result", null);
-			config.put("global", 0);
-			error.put("messageCode", 1);
-			error.put("message", "");
-		}
-
-		System.out.println("ResultAPI - cp3");
-		response.setError(error);
-		response.setResult(result);
-		response.setConfig(config);
-		System.out.println("ResultAPI - cp pass");
-		return new ResponseEntity<Response>(response, httpStatus);
-
-	}
+	@Autowired
+	private IResultService service;
 	
-	@PostMapping("")
-	public ResponseEntity<Response> createResult(@RequestBody ResultDTO ResultDTO) {
-		System.out.println("ResultAPI - createResult");
-		HttpStatus httpStatus = null;
-		httpStatus = HttpStatus.OK;
-		Response response = new Response();
-		Map<String, Object> config = new HashMap<String, Object>();
-		Map<String, Object> result = new HashMap<String, Object>();
-		Map<String, Object> error = new HashMap<String, Object>();
-
-		try {
-			System.out.println("ResultAPI - cp1");
-			result.put("Result", null);
-			config.put("global", 0);
-			error.put("messageCode", 0);
-			error.put("message", "");
-			System.out.println("ResultAPI - cp2");
-		} catch (Exception e) {
-			System.out.println("ResultAPI - exception");
-			result.put("Result", null);
-			config.put("global", 0);
-			error.put("messageCode", 1);
-			error.put("message", "");
-		}
-
-		System.out.println("ResultAPI - cp3");
-		response.setError(error);
-		response.setResult(result);
-		response.setConfig(config);
-		System.out.println("ResultAPI - cp pass");
-		return new ResponseEntity<Response>(response, httpStatus);
-
-	}
 	
-	@PutMapping("")
-	public ResponseEntity<Response> editResult(@RequestParam(value = "id") Long id) {
-		System.out.println("ResultAPI - editAPI");
-		HttpStatus httpStatus = null;
-		httpStatus = HttpStatus.OK;
+	@GetMapping("")
+	public ResponseEntity<Response> getResult(@RequestParam(value = "id", required = false) Long id) {
+		System.out.println("ResultAPI: getResult: no exception");
+		HttpStatus httpStatus = HttpStatus.OK;
 		Response response = new Response();
 		Map<String, Object> config = new HashMap<String, Object>();
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
-
+		ResultEntity resultEntity = new ResultEntity();
+		ResultDTO resultDTO = new ResultDTO();
 		try {
-			System.out.println("ResultAPI - cp1");
-			result.put("Result", null);
-			config.put("global", 0);
-			error.put("messageCode", 0);
-			error.put("message", "");
-			System.out.println("ResultAPI - cp2");
+			if (id == null) { // id null
+				result.put("Result", null);
+				config.put("Global", 0);
+				error.put("MessageCode", 1);
+				error.put("Message", "Required param id");
+			} else { // id not null
+				
+				resultEntity = service.findOneById(id);
+				
+				if (resultEntity == null) { // not found
+					result.put("Result", null);
+					config.put("Global", 0);
+					error.put("MessageCode", 1);
+					error.put("Message", "Not found");
+				} else { // found
+					
+					resultDTO = converter.toDTO(resultEntity);
+					
+					result.put("Result", resultDTO);
+					config.put("Global", 0);
+					error.put("MessageCode", 0);
+					error.put("Message", "Found");
+				}
+			}
+			System.out.println("ResultAPI: getResult: no exception");
 		} catch (Exception e) {
-			System.out.println("ResultAPI - exception");
+			System.out.println("ResultAPI: getResult: has exception");
 			result.put("Result", null);
-			config.put("global", 0);
-			error.put("messageCode", 1);
-			error.put("message", "");
+			config.put("Global", 0);
+			error.put("MessageCode", 1);
+			error.put("Message", "Server error");
 		}
 
-		System.out.println("ResultAPI - cp3");
-		response.setError(error);
-		response.setResult(result);
 		response.setConfig(config);
-		System.out.println("ResultAPI - cp pass");
+		response.setResult(result);
+		response.setError(error);
+		System.out.println("ResultAPI: getResult: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
-
 	}
-	
-	@DeleteMapping("")
-	public ResponseEntity<Response> deleteResult(@RequestParam(value = "id") Long id) {
-		System.out.println("ResultAPI - deleteResult");
-		HttpStatus httpStatus = null;
-		httpStatus = HttpStatus.OK;
+
+	/*
+	 * Tao moi mot Result
+	 * 
+	 */
+	@PostMapping
+	@CrossOrigin
+	public ResponseEntity<Response> createResult(@RequestBody ResultDTO newResult) {
+		System.out.println("ResultAPI: createResult: start");
+		HttpStatus httpStatus = HttpStatus.OK;
 		Response response = new Response();
 		Map<String, Object> config = new HashMap<String, Object>();
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
-
+		ResultEntity resultEntity = new ResultEntity();
+		
 		try {
-			System.out.println("ResultAPI - cp1");
-			result.put("Result", null);
-			config.put("global", 0);
-			error.put("messageCode", 0);
-			error.put("message", "");
-			System.out.println("ResultAPI - cp2");
+			resultEntity = converter.toEntity(newResult);
+			
+			resultEntity = service.create(resultEntity);
+			
+			ResultDTO dto = converter.toDTO(resultEntity);
+
+			result.put("Result", dto);
+			config.put("Global", 0);
+			error.put("MessageCode", 0);
+			error.put("Message", "Result create successfuly");
+			System.out.println("ResultAPI: createResult: no exception");
 		} catch (Exception e) {
-			System.out.println("ResultAPI - exception");
+			System.out.println("ResultAPI: createResult: has exception");
 			result.put("Result", null);
-			config.put("global", 0);
-			error.put("messageCode", 1);
-			error.put("message", "");
+			config.put("Global", 0);
+			error.put("MessageCode", 1);
+			error.put("Message", "Server error");
 		}
 
-		System.out.println("ResultAPI - cp3");
-		response.setError(error);
-		response.setResult(result);
 		response.setConfig(config);
-		System.out.println("ResultAPI - cp pass");
+		response.setResult(result);
+		response.setError(error);
+		System.out.println("ResultAPI: createResult: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
+	}
 
+	/*
+	 * Edit mot Result
+	 * 
+	 */
+	@PutMapping
+	@CrossOrigin
+	public ResponseEntity<Response> editResult(
+			@RequestBody ResultDTO res,
+			@RequestParam Long id) {
+		System.out.println("ResultAPI: editResult: start");
+		
+		HttpStatus httpStatus = HttpStatus.OK;
+		Response response = new Response();
+		Map<String, Object> config = new HashMap<String, Object>();
+		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> error = new HashMap<String, Object>();
+		ResultEntity resultEntity = new ResultEntity();
+		
+		try {
+			resultEntity = converter.toEntity(res);
+			
+			resultEntity = service.update(id, resultEntity);
+			
+			ResultDTO dto = converter.toDTO(resultEntity);
+
+			result.put("Result", dto);
+			config.put("Global", 0);
+			error.put("MessageCode", 0);
+			error.put("Message", "Result update successfuly");
+			System.out.println("ResultAPI: editResult: no exception");
+		} catch (Exception e) {
+			System.out.println("ResultAPI: editResult: has exception");
+			result.put("Result", null);
+			config.put("Global", 0);
+			error.put("MessageCode", 1);
+			error.put("Message", "Server error");
+		}
+
+		response.setConfig(config);
+		response.setResult(result);
+		response.setError(error);
+		System.out.println("ResultAPI: editResult: finish");
+		return new ResponseEntity<Response>(response, httpStatus);
 	}
 
 }

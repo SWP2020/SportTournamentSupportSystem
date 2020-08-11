@@ -17,8 +17,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import doan2020.SportTournamentSupportSystem.converter.RoleConverter;
+import doan2020.SportTournamentSupportSystem.converter.RoleConverter;
 import doan2020.SportTournamentSupportSystem.dto.RoleDTO;
+import doan2020.SportTournamentSupportSystem.dto.RoleDTO;
+import doan2020.SportTournamentSupportSystem.entity.RoleEntity;
 import doan2020.SportTournamentSupportSystem.response.Response;
+import doan2020.SportTournamentSupportSystem.service.IRoleService;
 
 @RestController
 @CrossOrigin
@@ -27,175 +31,147 @@ public class RoleAPI {
 	
 	@Autowired
 	private RoleConverter converter;
-
-	@GetMapping("/getOne")
-	public ResponseEntity<Response> getOneRole(@RequestParam(value = "id") Long id) {
-		System.out.println("RoleAPI - getOneRole");
-		HttpStatus httpStatus = null;
-		httpStatus = HttpStatus.OK;
-		Response response = new Response();
-		Map<String, Object> config = new HashMap<String, Object>();
-		Map<String, Object> result = new HashMap<String, Object>();
-		Map<String, Object> error = new HashMap<String, Object>();
-
-		try {
-			System.out.println("RoleAPI - cp1");
-			result.put("Role", null);
-			config.put("global", 0);
-			error.put("messageCode", 0);
-			error.put("message", "");
-			System.out.println("RoleAPI - cp2");
-		} catch (Exception e) {
-			System.out.println("RoleAPI - exception");
-			result.put("Role", null);
-			config.put("global", 0);
-			error.put("messageCode", 1);
-			error.put("message", "");
-		}
-
-		System.out.println("RoleAPI - cp3");
-		response.setError(error);
-		response.setResult(result);
-		response.setConfig(config);
-		System.out.println("RoleAPI - cp pass");
-		return new ResponseEntity<Response>(response, httpStatus);
-
-	}
 	
-	@GetMapping("/getAll")
-	public ResponseEntity<Response> getAllRole(@RequestParam(value = "page") Integer page) {
-		System.out.println("RoleAPI - getAllRole");
-		HttpStatus httpStatus = null;
-		httpStatus = HttpStatus.OK;
-		Response response = new Response();
-		Map<String, Object> config = new HashMap<String, Object>();
-		Map<String, Object> result = new HashMap<String, Object>();
-		Map<String, Object> error = new HashMap<String, Object>();
-
-		try {
-			System.out.println("RoleAPI - cp1");
-			result.put("Role", null);
-			config.put("global", 0);
-			error.put("messageCode", 0);
-			error.put("message", "");
-			System.out.println("RoleAPI - cp2");
-		} catch (Exception e) {
-			System.out.println("RoleAPI - exception");
-			result.put("Role", null);
-			config.put("global", 0);
-			error.put("messageCode", 1);
-			error.put("message", "");
-		}
-
-		System.out.println("RoleAPI - cp3");
-		response.setError(error);
-		response.setResult(result);
-		response.setConfig(config);
-		System.out.println("RoleAPI - cp pass");
-		return new ResponseEntity<Response>(response, httpStatus);
-
-	}
+	@Autowired
+	private IRoleService service;
 	
-	@PostMapping("")
-	public ResponseEntity<Response> createRole(@RequestBody RoleDTO RoleDTO) {
-		System.out.println("RoleAPI - createRole");
-		HttpStatus httpStatus = null;
-		httpStatus = HttpStatus.OK;
-		Response response = new Response();
-		Map<String, Object> config = new HashMap<String, Object>();
-		Map<String, Object> result = new HashMap<String, Object>();
-		Map<String, Object> error = new HashMap<String, Object>();
-
-		try {
-			System.out.println("RoleAPI - cp1");
-			result.put("Role", null);
-			config.put("global", 0);
-			error.put("messageCode", 0);
-			error.put("message", "");
-			System.out.println("RoleAPI - cp2");
-		} catch (Exception e) {
-			System.out.println("RoleAPI - exception");
-			result.put("Role", null);
-			config.put("global", 0);
-			error.put("messageCode", 1);
-			error.put("message", "");
-		}
-
-		System.out.println("RoleAPI - cp3");
-		response.setError(error);
-		response.setResult(result);
-		response.setConfig(config);
-		System.out.println("RoleAPI - cp pass");
-		return new ResponseEntity<Response>(response, httpStatus);
-
-	}
 	
-	@PutMapping("")
-	public ResponseEntity<Response> editRole(@RequestParam(value = "id") Long id) {
-		System.out.println("RoleAPI - editAPI");
-		HttpStatus httpStatus = null;
-		httpStatus = HttpStatus.OK;
+	@GetMapping("")
+	public ResponseEntity<Response> getRole(@RequestParam(value = "id", required = false) Long id) {
+		System.out.println("RoleAPI: getRole: no exception");
+		HttpStatus httpStatus = HttpStatus.OK;
 		Response response = new Response();
 		Map<String, Object> config = new HashMap<String, Object>();
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
-
+		RoleEntity roleEntity = new RoleEntity();
+		RoleDTO roleDTO = new RoleDTO();
 		try {
-			System.out.println("RoleAPI - cp1");
-			result.put("Role", null);
-			config.put("global", 0);
-			error.put("messageCode", 0);
-			error.put("message", "");
-			System.out.println("RoleAPI - cp2");
+			if (id == null) { // id null
+				result.put("Role", null);
+				config.put("Global", 0);
+				error.put("MessageCode", 1);
+				error.put("Message", "Required param id");
+			} else { // id not null
+				
+				roleEntity = service.findOneById(id);
+				
+				if (roleEntity == null) { // not found
+					result.put("Role", null);
+					config.put("Global", 0);
+					error.put("MessageCode", 1);
+					error.put("Message", "Not found");
+				} else { // found
+					
+					roleDTO = converter.toDTO(roleEntity);
+					
+					result.put("Role", roleDTO);
+					config.put("Global", 0);
+					error.put("MessageCode", 0);
+					error.put("Message", "Found");
+				}
+			}
+			System.out.println("RoleAPI: getRole: no exception");
 		} catch (Exception e) {
-			System.out.println("RoleAPI - exception");
+			System.out.println("RoleAPI: getRole: has exception");
 			result.put("Role", null);
-			config.put("global", 0);
-			error.put("messageCode", 1);
-			error.put("message", "");
+			config.put("Global", 0);
+			error.put("MessageCode", 1);
+			error.put("Message", "Server error");
 		}
 
-		System.out.println("RoleAPI - cp3");
-		response.setError(error);
-		response.setResult(result);
 		response.setConfig(config);
-		System.out.println("RoleAPI - cp pass");
+		response.setResult(result);
+		response.setError(error);
+		System.out.println("RoleAPI: getRole: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
-
 	}
-	
-	@DeleteMapping("")
-	public ResponseEntity<Response> deleteRole(@RequestParam(value = "id") Long id) {
-		System.out.println("RoleAPI - deleteRole");
-		HttpStatus httpStatus = null;
-		httpStatus = HttpStatus.OK;
+
+	/*
+	 * Tao moi mot Role
+	 * 
+	 */
+	@PostMapping
+	@CrossOrigin
+	public ResponseEntity<Response> createRole(@RequestBody RoleDTO newRole) {
+		System.out.println("RoleAPI: createRole: start");
+		HttpStatus httpStatus = HttpStatus.OK;
 		Response response = new Response();
 		Map<String, Object> config = new HashMap<String, Object>();
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
-
+		RoleEntity roleEntity = new RoleEntity();
+		
 		try {
-			System.out.println("RoleAPI - cp1");
-			result.put("Role", null);
-			config.put("global", 0);
-			error.put("messageCode", 0);
-			error.put("message", "");
-			System.out.println("RoleAPI - cp2");
+			roleEntity = converter.toEntity(newRole);
+			
+			roleEntity = service.create(roleEntity);
+			
+			RoleDTO dto = converter.toDTO(roleEntity);
+
+			result.put("Role", dto);
+			config.put("Global", 0);
+			error.put("MessageCode", 0);
+			error.put("Message", "Role create successfuly");
+			System.out.println("RoleAPI: createRole: no exception");
 		} catch (Exception e) {
-			System.out.println("RoleAPI - exception");
+			System.out.println("RoleAPI: createRole: has exception");
 			result.put("Role", null);
-			config.put("global", 0);
-			error.put("messageCode", 1);
-			error.put("message", "");
+			config.put("Global", 0);
+			error.put("MessageCode", 1);
+			error.put("Message", "Server error");
 		}
 
-		System.out.println("RoleAPI - cp3");
-		response.setError(error);
-		response.setResult(result);
 		response.setConfig(config);
-		System.out.println("RoleAPI - cp pass");
+		response.setResult(result);
+		response.setError(error);
+		System.out.println("RoleAPI: createRole: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
+	}
 
+	/*
+	 * Edit mot Role
+	 * 
+	 */
+	@PutMapping
+	@CrossOrigin
+	public ResponseEntity<Response> editRole(
+			@RequestBody RoleDTO role,
+			@RequestParam Long id) {
+		System.out.println("RoleAPI: editRole: start");
+		
+		HttpStatus httpStatus = HttpStatus.OK;
+		Response response = new Response();
+		Map<String, Object> config = new HashMap<String, Object>();
+		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> error = new HashMap<String, Object>();
+		RoleEntity roleEntity = new RoleEntity();
+		
+		try {
+			roleEntity = converter.toEntity(role);
+			
+			roleEntity = service.update(id, roleEntity);
+			
+			RoleDTO dto = converter.toDTO(roleEntity);
+
+			result.put("Role", dto);
+			config.put("Global", 0);
+			error.put("MessageCode", 0);
+			error.put("Message", "Role update successfuly");
+			System.out.println("RoleAPI: editRole: no exception");
+		} catch (Exception e) {
+			System.out.println("RoleAPI: editRole: has exception");
+			result.put("Role", null);
+			config.put("Global", 0);
+			error.put("MessageCode", 1);
+			error.put("Message", "Server error");
+		}
+
+		response.setConfig(config);
+		response.setResult(result);
+		response.setError(error);
+		System.out.println("RoleAPI: editRole: finish");
+		return new ResponseEntity<Response>(response, httpStatus);
 	}
 
 }

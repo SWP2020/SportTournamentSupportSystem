@@ -38,7 +38,8 @@ public class UserConverter {
 			String userPassword = null;
 			
 			if(dto.getPassword() != null) {
-				userPassword = passwordEncoder.encode(dto.getPassword());
+//				userPassword = passwordEncoder.encode(dto.getPassword());
+				userPassword = dto.getPassword();
 				entity.setPassword(userPassword);
 			}
 			System.out.println("UserConverter: toEntity: CP");

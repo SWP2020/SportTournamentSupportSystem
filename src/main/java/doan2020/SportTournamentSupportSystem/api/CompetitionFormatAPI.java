@@ -17,8 +17,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import doan2020.SportTournamentSupportSystem.converter.CompetitionFormatConverter;
+import doan2020.SportTournamentSupportSystem.converter.CompetitionFormatConverter;
 import doan2020.SportTournamentSupportSystem.dto.CompetitionFormatDTO;
+import doan2020.SportTournamentSupportSystem.dto.CompetitionFormatDTO;
+import doan2020.SportTournamentSupportSystem.entity.CompetitionFormatEntity;
 import doan2020.SportTournamentSupportSystem.response.Response;
+import doan2020.SportTournamentSupportSystem.service.ICompetitionFormatService;
 
 @RestController
 @CrossOrigin
@@ -27,174 +31,146 @@ public class CompetitionFormatAPI {
 
 	@Autowired
 	private CompetitionFormatConverter converter;
-
-	@GetMapping("/getOne")
-	public ResponseEntity<Response> getOneCompetitionFormat(@RequestParam(value = "id") Long id) {
-		System.out.println("CompetitionFormatAPI - getOneCompetitionFormat");
-		HttpStatus httpStatus = null;
-		httpStatus = HttpStatus.OK;
-		Response response = new Response();
-		Map<String, Object> config = new HashMap<String, Object>();
-		Map<String, Object> result = new HashMap<String, Object>();
-		Map<String, Object> error = new HashMap<String, Object>();
-
-		try {
-			System.out.println("CompetitionFormatAPI - cp1");
-			result.put("CompetitionFormat", null);
-			config.put("global", 0);
-			error.put("messageCode", 0);
-			error.put("message", "");
-			System.out.println("CompetitionFormatAPI - cp2");
-		} catch (Exception e) {
-			System.out.println("CompetitionFormatAPI - exception");
-			result.put("CompetitionFormat", null);
-			config.put("global", 0);
-			error.put("messageCode", 1);
-			error.put("message", "");
-		}
-
-		System.out.println("ApiAPI - cp3");
-		response.setError(error);
-		response.setResult(result);
-		response.setConfig(config);
-		System.out.println("ApiAPI - cp pass");
-		return new ResponseEntity<Response>(response, httpStatus);
-
-	}
 	
-	@GetMapping("/getAll")
-	public ResponseEntity<Response> getAllCompetitionFormat(@RequestParam(value = "page") Integer page) {
-		System.out.println("CompetitionFormatAPI - getAllCompetitionFormatAPI");
-		HttpStatus httpStatus = null;
-		httpStatus = HttpStatus.OK;
-		Response response = new Response();
-		Map<String, Object> config = new HashMap<String, Object>();
-		Map<String, Object> result = new HashMap<String, Object>();
-		Map<String, Object> error = new HashMap<String, Object>();
-
-		try {
-			System.out.println("CompetitionFormatAPI - cp1");
-			result.put("CompetitionFormat", null);
-			config.put("global", 0);
-			error.put("messageCode", 0);
-			error.put("message", "");
-			System.out.println("CompetitionFormatAPI - cp2");
-		} catch (Exception e) {
-			System.out.println("CompetitionFormatAPI - exception");
-			result.put("AllCompetitionFormat", null);
-			config.put("global", 0);
-			error.put("messageCode", 1);
-			error.put("message", "");
-		}
-
-		System.out.println("CompetitionFormatAPI - cp3");
-		response.setError(error);
-		response.setResult(result);
-		response.setConfig(config);
-		System.out.println("CompetitionFormatAPI - cp pass");
-		return new ResponseEntity<Response>(response, httpStatus);
-
-	}
+	@Autowired
+	private ICompetitionFormatService service;
 	
-	@PostMapping("")
-	public ResponseEntity<Response> createCompetitionFormat(@RequestBody CompetitionFormatDTO competitionFormatDTO) {
-		System.out.println("CompetitionFormatAPI - createCompetitionFormat");
-		HttpStatus httpStatus = null;
-		httpStatus = HttpStatus.OK;
-		Response response = new Response();
-		Map<String, Object> config = new HashMap<String, Object>();
-		Map<String, Object> result = new HashMap<String, Object>();
-		Map<String, Object> error = new HashMap<String, Object>();
-
-		try {
-			System.out.println("CompetitionFormatAPI - cp1");
-			result.put("CompetitionFormat", null);
-			config.put("global", 0);
-			error.put("messageCode", 0);
-			error.put("message", "");
-			System.out.println("CompetitionFormatAPI - cp2");
-		} catch (Exception e) {
-			System.out.println("CompetitionFormatAPI - exception");
-			result.put("CompetitionFormat", null);
-			config.put("global", 0);
-			error.put("messageCode", 1);
-			error.put("message", "");
-		}
-
-		System.out.println("CompetitionFormatAPI - cp3");
-		response.setError(error);
-		response.setResult(result);
-		response.setConfig(config);
-		System.out.println("CompetitionFormatAPI - cp pass");
-		return new ResponseEntity<Response>(response, httpStatus);
-
-	}
 	
-	@PutMapping("")
-	public ResponseEntity<Response> editCompetitionFormat(@RequestParam(value = "id") Long id) {
-		System.out.println("CompetitionFormatAPI - editCompetitionFormat");
-		HttpStatus httpStatus = null;
-		httpStatus = HttpStatus.OK;
+	@GetMapping("")
+	public ResponseEntity<Response> getCompetitionFormat(@RequestParam(value = "id", required = false) Long id) {
+		System.out.println("CompetitionFormatAPI: getCompetitionFormat: no exception");
+		HttpStatus httpStatus = HttpStatus.OK;
 		Response response = new Response();
 		Map<String, Object> config = new HashMap<String, Object>();
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
-
+		CompetitionFormatEntity competitionFormatEntity = new CompetitionFormatEntity();
+		CompetitionFormatDTO competitionFormatDTO = new CompetitionFormatDTO();
 		try {
-			System.out.println("CompetitionFormatAPI - cp1");
-			result.put("CompetitionFormat", null);
-			config.put("global", 0);
-			error.put("messageCode", 0);
-			error.put("message", "");
-			System.out.println("CompetitionFormatAPI - cp2");
+			if (id == null) { // id null
+				result.put("CompetitionFormat", null);
+				config.put("Global", 0);
+				error.put("MessageCode", 1);
+				error.put("Message", "Required param id");
+			} else { // id not null
+				
+				competitionFormatEntity = service.findOneById(id);
+				
+				if (competitionFormatEntity == null) { // not found
+					result.put("CompetitionFormat", null);
+					config.put("Global", 0);
+					error.put("MessageCode", 1);
+					error.put("Message", "Not found");
+				} else { // found
+					
+					competitionFormatDTO = converter.toDTO(competitionFormatEntity);
+					
+					result.put("CompetitionFormat", competitionFormatDTO);
+					config.put("Global", 0);
+					error.put("MessageCode", 0);
+					error.put("Message", "Found");
+				}
+			}
+			System.out.println("CompetitionFormatAPI: getCompetitionFormat: no exception");
 		} catch (Exception e) {
-			System.out.println("CompetitionFormatAPI - exception");
+			System.out.println("CompetitionFormatAPI: getCompetitionFormat: has exception");
 			result.put("CompetitionFormat", null);
-			config.put("global", 0);
-			error.put("messageCode", 1);
-			error.put("message", "");
+			config.put("Global", 0);
+			error.put("MessageCode", 1);
+			error.put("Message", "Server error");
 		}
 
-		System.out.println("CompetitionFormatAPI - cp3");
-		response.setError(error);
-		response.setResult(result);
 		response.setConfig(config);
-		System.out.println("CompetitionFormatAPI - cp pass");
+		response.setResult(result);
+		response.setError(error);
+		System.out.println("CompetitionFormatAPI: getCompetitionFormat: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
-
 	}
-	
-	@DeleteMapping("")
-	public ResponseEntity<Response> deleteCompetitionFormat(@RequestParam(value = "id") Long id) {
-		System.out.println("CompetitionFormatAPI - deleteCompetitionFormat");
-		HttpStatus httpStatus = null;
-		httpStatus = HttpStatus.OK;
+
+	/*
+	 * Tao moi mot CompetitionFormat
+	 * 
+	 */
+	@PostMapping
+	@CrossOrigin
+	public ResponseEntity<Response> createCompetitionFormat(@RequestBody CompetitionFormatDTO newCompetitionFormat) {
+		System.out.println("CompetitionFormatAPI: createCompetitionFormat: start");
+		HttpStatus httpStatus = HttpStatus.OK;
 		Response response = new Response();
 		Map<String, Object> config = new HashMap<String, Object>();
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
-
+		CompetitionFormatEntity competitionFormatEntity = new CompetitionFormatEntity();
+		
 		try {
-			System.out.println("CompetitionFormatAPI - cp1");
-			result.put("CompetitionFormat", null);
-			config.put("global", 0);
-			error.put("messageCode", 0);
-			error.put("message", "");
-			System.out.println("CompetitionFormatAPI - cp2");
+			competitionFormatEntity = converter.toEntity(newCompetitionFormat);
+			
+			competitionFormatEntity = service.create(competitionFormatEntity);
+			
+			CompetitionFormatDTO dto = converter.toDTO(competitionFormatEntity);
+
+			result.put("CompetitionFormat", dto);
+			config.put("Global", 0);
+			error.put("MessageCode", 0);
+			error.put("Message", "CompetitionFormat create successfuly");
+			System.out.println("CompetitionFormatAPI: createCompetitionFormat: no exception");
 		} catch (Exception e) {
-			System.out.println("CompetitionFormatAPI - exception");
+			System.out.println("CompetitionFormatAPI: createCompetitionFormat: has exception");
 			result.put("CompetitionFormat", null);
-			config.put("global", 0);
-			error.put("messageCode", 1);
-			error.put("message", "");
+			config.put("Global", 0);
+			error.put("MessageCode", 1);
+			error.put("Message", "Server error");
 		}
 
-		System.out.println("CompetitionFormatAPI - cp3");
-		response.setError(error);
-		response.setResult(result);
 		response.setConfig(config);
-		System.out.println("CompetitionFormatAPI - cp pass");
+		response.setResult(result);
+		response.setError(error);
+		System.out.println("CompetitionFormatAPI: createCompetitionFormat: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
+	}
 
+	/*
+	 * Edit mot CompetitionFormat
+	 * 
+	 */
+	@PutMapping
+	@CrossOrigin
+	public ResponseEntity<Response> editCompetitionFormat(
+			@RequestBody CompetitionFormatDTO competitionFormat,
+			@RequestParam Long id) {
+		System.out.println("CompetitionFormatAPI: editCompetitionFormat: start");
+		
+		HttpStatus httpStatus = HttpStatus.OK;
+		Response response = new Response();
+		Map<String, Object> config = new HashMap<String, Object>();
+		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> error = new HashMap<String, Object>();
+		CompetitionFormatEntity competitionFormatEntity = new CompetitionFormatEntity();
+		
+		try {
+			competitionFormatEntity = converter.toEntity(competitionFormat);
+			
+			competitionFormatEntity = service.update(id, competitionFormatEntity);
+			
+			CompetitionFormatDTO dto = converter.toDTO(competitionFormatEntity);
+
+			result.put("CompetitionFormat", dto);
+			config.put("Global", 0);
+			error.put("MessageCode", 0);
+			error.put("Message", "CompetitionFormat update successfuly");
+			System.out.println("CompetitionFormatAPI: editCompetitionFormat: no exception");
+		} catch (Exception e) {
+			System.out.println("CompetitionFormatAPI: editCompetitionFormat: has exception");
+			result.put("CompetitionFormat", null);
+			config.put("Global", 0);
+			error.put("MessageCode", 1);
+			error.put("Message", "Server error");
+		}
+
+		response.setConfig(config);
+		response.setResult(result);
+		response.setError(error);
+		System.out.println("CompetitionFormatAPI: editCompetitionFormat: finish");
+		return new ResponseEntity<Response>(response, httpStatus);
 	}
 }

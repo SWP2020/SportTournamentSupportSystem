@@ -17,8 +17,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import doan2020.SportTournamentSupportSystem.converter.SportConverter;
+import doan2020.SportTournamentSupportSystem.converter.SportConverter;
 import doan2020.SportTournamentSupportSystem.dto.SportDTO;
+import doan2020.SportTournamentSupportSystem.dto.SportDTO;
+import doan2020.SportTournamentSupportSystem.entity.SportEntity;
 import doan2020.SportTournamentSupportSystem.response.Response;
+import doan2020.SportTournamentSupportSystem.service.ISportService;
 
 @RestController
 @CrossOrigin
@@ -27,175 +31,147 @@ public class SportAPI {
 	
 	@Autowired
 	private SportConverter converter;
-
-	@GetMapping("/getOne")
-	public ResponseEntity<Response> getOneSport(@RequestParam(value = "id") Long id) {
-		System.out.println("SportAPI - getOneSport");
-		HttpStatus httpStatus = null;
-		httpStatus = HttpStatus.OK;
-		Response response = new Response();
-		Map<String, Object> config = new HashMap<String, Object>();
-		Map<String, Object> result = new HashMap<String, Object>();
-		Map<String, Object> error = new HashMap<String, Object>();
-
-		try {
-			System.out.println("SportAPI - cp1");
-			result.put("Sport", null);
-			config.put("global", 0);
-			error.put("messageCode", 0);
-			error.put("message", "");
-			System.out.println("SportAPI - cp2");
-		} catch (Exception e) {
-			System.out.println("SportAPI - exception");
-			result.put("Sport", null);
-			config.put("global", 0);
-			error.put("messageCode", 1);
-			error.put("message", "");
-		}
-
-		System.out.println("SportAPI - cp3");
-		response.setError(error);
-		response.setResult(result);
-		response.setConfig(config);
-		System.out.println("SportAPI - cp pass");
-		return new ResponseEntity<Response>(response, httpStatus);
-
-	}
 	
-	@GetMapping("/getAll")
-	public ResponseEntity<Response> getAllSport(@RequestParam(value = "page") Integer page) {
-		System.out.println("SportAPI - getAllSport");
-		HttpStatus httpStatus = null;
-		httpStatus = HttpStatus.OK;
-		Response response = new Response();
-		Map<String, Object> config = new HashMap<String, Object>();
-		Map<String, Object> result = new HashMap<String, Object>();
-		Map<String, Object> error = new HashMap<String, Object>();
-
-		try {
-			System.out.println("SportAPI - cp1");
-			result.put("Sport", null);
-			config.put("global", 0);
-			error.put("messageCode", 0);
-			error.put("message", "");
-			System.out.println("SportAPI - cp2");
-		} catch (Exception e) {
-			System.out.println("SportAPI - exception");
-			result.put("Sport", null);
-			config.put("global", 0);
-			error.put("messageCode", 1);
-			error.put("message", "");
-		}
-
-		System.out.println("SportAPI - cp3");
-		response.setError(error);
-		response.setResult(result);
-		response.setConfig(config);
-		System.out.println("SportAPI - cp pass");
-		return new ResponseEntity<Response>(response, httpStatus);
-
-	}
+	@Autowired
+	private ISportService service;
 	
-	@PostMapping("")
-	public ResponseEntity<Response> createSport(@RequestBody SportDTO SportDTO) {
-		System.out.println("SportAPI - createSport");
-		HttpStatus httpStatus = null;
-		httpStatus = HttpStatus.OK;
-		Response response = new Response();
-		Map<String, Object> config = new HashMap<String, Object>();
-		Map<String, Object> result = new HashMap<String, Object>();
-		Map<String, Object> error = new HashMap<String, Object>();
-
-		try {
-			System.out.println("SportAPI - cp1");
-			result.put("Sport", null);
-			config.put("global", 0);
-			error.put("messageCode", 0);
-			error.put("message", "");
-			System.out.println("SportAPI - cp2");
-		} catch (Exception e) {
-			System.out.println("SportAPI - exception");
-			result.put("Sport", null);
-			config.put("global", 0);
-			error.put("messageCode", 1);
-			error.put("message", "");
-		}
-
-		System.out.println("SportAPI - cp3");
-		response.setError(error);
-		response.setResult(result);
-		response.setConfig(config);
-		System.out.println("SportAPI - cp pass");
-		return new ResponseEntity<Response>(response, httpStatus);
-
-	}
 	
-	@PutMapping("")
-	public ResponseEntity<Response> editSport(@RequestParam(value = "id") Long id) {
-		System.out.println("SportAPI - editAPI");
-		HttpStatus httpStatus = null;
-		httpStatus = HttpStatus.OK;
+	@GetMapping("")
+	public ResponseEntity<Response> getSport(@RequestParam(value = "id", required = false) Long id) {
+		System.out.println("SportAPI: getSport: no exception");
+		HttpStatus httpStatus = HttpStatus.OK;
 		Response response = new Response();
 		Map<String, Object> config = new HashMap<String, Object>();
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
-
+		SportEntity sportEntity = new SportEntity();
+		SportDTO sportDTO = new SportDTO();
 		try {
-			System.out.println("SportAPI - cp1");
-			result.put("Sport", null);
-			config.put("global", 0);
-			error.put("messageCode", 0);
-			error.put("message", "");
-			System.out.println("SportAPI - cp2");
+			if (id == null) { // id null
+				result.put("Sport", null);
+				config.put("Global", 0);
+				error.put("MessageCode", 1);
+				error.put("Message", "Required param id");
+			} else { // id not null
+				
+				sportEntity = service.findOneById(id);
+				
+				if (sportEntity == null) { // not found
+					result.put("Sport", null);
+					config.put("Global", 0);
+					error.put("MessageCode", 1);
+					error.put("Message", "Not found");
+				} else { // found
+					
+					sportDTO = converter.toDTO(sportEntity);
+					
+					result.put("Sport", sportDTO);
+					config.put("Global", 0);
+					error.put("MessageCode", 0);
+					error.put("Message", "Found");
+				}
+			}
+			System.out.println("SportAPI: getSport: no exception");
 		} catch (Exception e) {
-			System.out.println("SportAPI - exception");
+			System.out.println("SportAPI: getSport: has exception");
 			result.put("Sport", null);
-			config.put("global", 0);
-			error.put("messageCode", 1);
-			error.put("message", "");
+			config.put("Global", 0);
+			error.put("MessageCode", 1);
+			error.put("Message", "Server error");
 		}
 
-		System.out.println("SportAPI - cp3");
-		response.setError(error);
-		response.setResult(result);
 		response.setConfig(config);
-		System.out.println("SportAPI - cp pass");
+		response.setResult(result);
+		response.setError(error);
+		System.out.println("SportAPI: getSport: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
-
 	}
-	
-	@DeleteMapping("")
-	public ResponseEntity<Response> deleteSport(@RequestParam(value = "id") Long id) {
-		System.out.println("SportAPI - deleteSport");
-		HttpStatus httpStatus = null;
-		httpStatus = HttpStatus.OK;
+
+	/*
+	 * Tao moi mot Sport
+	 * 
+	 */
+	@PostMapping
+	@CrossOrigin
+	public ResponseEntity<Response> createSport(@RequestBody SportDTO newSport) {
+		System.out.println("SportAPI: createSport: start");
+		HttpStatus httpStatus = HttpStatus.OK;
 		Response response = new Response();
 		Map<String, Object> config = new HashMap<String, Object>();
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
-
+		SportEntity sportEntity = new SportEntity();
+		
 		try {
-			System.out.println("SportAPI - cp1");
-			result.put("Sport", null);
-			config.put("global", 0);
-			error.put("messageCode", 0);
-			error.put("message", "");
-			System.out.println("SportAPI - cp2");
+			sportEntity = converter.toEntity(newSport);
+			
+			sportEntity = service.create(sportEntity);
+			
+			SportDTO dto = converter.toDTO(sportEntity);
+
+			result.put("Sport", dto);
+			config.put("Global", 0);
+			error.put("MessageCode", 0);
+			error.put("Message", "Sport create successfuly");
+			System.out.println("SportAPI: createSport: no exception");
 		} catch (Exception e) {
-			System.out.println("SportAPI - exception");
+			System.out.println("SportAPI: createSport: has exception");
 			result.put("Sport", null);
-			config.put("global", 0);
-			error.put("messageCode", 1);
-			error.put("message", "");
+			config.put("Global", 0);
+			error.put("MessageCode", 1);
+			error.put("Message", "Server error");
 		}
 
-		System.out.println("SportAPI - cp3");
-		response.setError(error);
-		response.setResult(result);
 		response.setConfig(config);
-		System.out.println("SportAPI - cp pass");
+		response.setResult(result);
+		response.setError(error);
+		System.out.println("SportAPI: createSport: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
+	}
 
+	/*
+	 * Edit mot Sport
+	 * 
+	 */
+	@PutMapping
+	@CrossOrigin
+	public ResponseEntity<Response> editSport(
+			@RequestBody SportDTO sport,
+			@RequestParam Long id) {
+		System.out.println("SportAPI: editSport: start");
+		
+		HttpStatus httpStatus = HttpStatus.OK;
+		Response response = new Response();
+		Map<String, Object> config = new HashMap<String, Object>();
+		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> error = new HashMap<String, Object>();
+		SportEntity sportEntity = new SportEntity();
+		
+		try {
+			sportEntity = converter.toEntity(sport);
+			
+			sportEntity = service.update(id, sportEntity);
+			
+			SportDTO dto = converter.toDTO(sportEntity);
+
+			result.put("Sport", dto);
+			config.put("Global", 0);
+			error.put("MessageCode", 0);
+			error.put("Message", "Sport update successfuly");
+			System.out.println("SportAPI: editSport: no exception");
+		} catch (Exception e) {
+			System.out.println("SportAPI: editSport: has exception");
+			result.put("Sport", null);
+			config.put("Global", 0);
+			error.put("MessageCode", 1);
+			error.put("Message", "Server error");
+		}
+
+		response.setConfig(config);
+		response.setResult(result);
+		response.setError(error);
+		System.out.println("SportAPI: editSport: finish");
+		return new ResponseEntity<Response>(response, httpStatus);
 	}
 
 }

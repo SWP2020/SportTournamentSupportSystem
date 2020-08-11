@@ -93,8 +93,10 @@ public class CompetitionConverter {
 			dto.setGroupStage(entity.getGroupStage());
 			
 			CompetitionFormatEntity groupStageFormat = entity.getGroupStageFormat();
-			Long groupStageFormatId = groupStageFormat.getId();
-			dto.setGroupStageFormatId(groupStageFormatId);
+			if (groupStageFormat != null) {
+				Long groupStageFormatId = groupStageFormat.getId();
+				dto.setGroupStageFormatId(groupStageFormatId);
+			}
 			
 			dto.setStatus(entity.getStatus());
 			dto.setUrl(entity.getUrl());

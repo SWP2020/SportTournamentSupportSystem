@@ -80,8 +80,13 @@ public class LoginAPI {
 					error.put("MessageCode", 1);
 					error.put("Message", "User is not active");
 				} else { // User is active
-					boolean checkPW = passwordEncoder.matches(user.getPassword(), findUser.getPassword());
-					if (!checkPW) {// password wrong
+//					boolean checkPW = passwordEncoder.matches(user.getPassword(), findUser.getPassword());
+					int checkPW = user.getPassword().compareTo(findUser.getPassword());
+					System.out.println(user.getPassword());
+					System.out.println(findUser.getPassword());
+					System.out.println(checkPW);
+//					if (!checkPW) {// password wrong
+					if (checkPW != 0) {
 						System.out.println("LoginAPI: login: Password wrong");
 						result.put("User", null);
 						result.put("Authentication", null);
