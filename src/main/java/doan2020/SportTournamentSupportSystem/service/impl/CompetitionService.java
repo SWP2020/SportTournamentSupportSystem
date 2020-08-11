@@ -70,16 +70,15 @@ public class CompetitionService implements ICompetitionService {
 
 	@Override
 	public CompetitionEntity findOneById(Long id) {
+		System.out.println("CompetitionService: findOneById: start");
 		CompetitionEntity foundEntity = null;
 		try {
-			System.out.println(foundEntity.toString());
 			foundEntity = competitionRepository.findOneById(id);
-			System.out.println(foundEntity.toString());
-			System.out.println("true");
+			System.out.println("CompetitionService: findOneById: no exception");
 		} catch (Exception e) {
-			System.out.println(e.getMessage().toString());
-			return null;
+			System.out.println("CompetitionService: findOneById: has exception");
 		}
+		System.out.println("CompetitionService: findOneById: finish");
 		return foundEntity;
 	}
 

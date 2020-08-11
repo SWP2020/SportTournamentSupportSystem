@@ -30,7 +30,7 @@ import doan2020.SportTournamentSupportSystem.service.IPlayerService;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/players")
+@RequestMapping("/player")
 public class PlayerAPI {
 	
 	@Autowired

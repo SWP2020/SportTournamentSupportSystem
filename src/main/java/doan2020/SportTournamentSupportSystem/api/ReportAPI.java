@@ -33,7 +33,7 @@ import doan2020.SportTournamentSupportSystem.service.IReportService;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/reports")
+@RequestMapping("/report")
 public class ReportAPI {
 
 	@Autowired

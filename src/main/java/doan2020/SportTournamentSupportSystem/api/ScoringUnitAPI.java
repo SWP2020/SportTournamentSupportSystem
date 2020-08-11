@@ -26,7 +26,7 @@ import doan2020.SportTournamentSupportSystem.service.IScoringUnitService;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/scoringUni")
+@RequestMapping("/scoringUnit")
 public class ScoringUnitAPI {
 
 	@Autowired
