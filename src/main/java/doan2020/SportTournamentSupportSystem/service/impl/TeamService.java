@@ -109,5 +109,16 @@ public class TeamService implements ITeamService {
 		}
 		return foundEntitys;
 	}
+	
+	@Override
+	public Collection<TeamEntity> findByCompetitionId(Pageable pageable, Long competitionId) {
+		Collection<TeamEntity> foundEntities = null;
+		try {
+			foundEntities = teamRepository.findByCompetitionId(pageable, competitionId).getContent();
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntities;
+	}
 
 }

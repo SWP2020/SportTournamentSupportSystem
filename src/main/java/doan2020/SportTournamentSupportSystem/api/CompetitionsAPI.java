@@ -29,7 +29,7 @@ import doan2020.SportTournamentSupportSystem.service.ICompetitionService;
 public class CompetitionsAPI {
 
 	@Autowired
-	private ICompetitionService CompetitionService;
+	private ICompetitionService competitionService;
 
 	@Autowired
 	private CompetitionConverter competitionConverter;
@@ -61,7 +61,7 @@ public class CompetitionsAPI {
 				page = 1;
 
 			Pageable pageable = PageRequest.of(page - 1, limit);
-			findPage = CompetitionService.findAll(pageable);
+			findPage = competitionService.findAll(pageable);
 
 			for (CompetitionEntity entity : findPage) {
 				CompetitionDTO dto = competitionConverter.toDTO(entity);
@@ -93,7 +93,8 @@ public class CompetitionsAPI {
 	@GetMapping("/getByTournamentId")
 	public ResponseEntity<Response> getAllCompetitonByTournamentId(
 			@RequestParam(value = "page", required = false) Integer page,
-			@RequestParam(value = "limit", required = false) Integer limit, @RequestParam("tournamentId") Long tournamentId) {
+			@RequestParam(value = "limit", required = false) Integer limit,
+			@RequestParam("tournamentId") Long tournamentId) {
 		System.out.println("CompetitionsAPI: getAllCompetitonByTournamentId: start");
 
 		Response response = new Response();
@@ -104,7 +105,7 @@ public class CompetitionsAPI {
 
 		Collection<CompetitionEntity> findPage = new ArrayList<>();
 		List<CompetitionDTO> findPageDTO = new ArrayList<>();
-
+		
 		try {
 			if (limit == null)
 				limit = 3;
@@ -112,9 +113,11 @@ public class CompetitionsAPI {
 				limit = 3;
 			if (page == null)
 				page = 1;
+			
+			System.out.println("CompetitionsAPI: getAllCompetitonByTournamentId: limit: " + limit.toString());
 
 			Pageable pageable = PageRequest.of(page - 1, limit);
-			findPage = CompetitionService.findByTournamentId(pageable, tournamentId);
+			findPage = competitionService.findByTournamentId(pageable, tournamentId);
 
 			for (CompetitionEntity entity : findPage) {
 				CompetitionDTO dto = competitionConverter.toDTO(entity);
@@ -168,7 +171,7 @@ public class CompetitionsAPI {
 				page = 1;
 
 			Pageable pageable = PageRequest.of(page - 1, limit);
-			findPage = CompetitionService.findByTournamentIdAndSportId(pageable, tournamentId, sportId);
+			findPage = competitionService.findByTournamentIdAndSportId(pageable, tournamentId, sportId);
 
 			for (CompetitionEntity entity : findPage) {
 				CompetitionDTO dto = competitionConverter.toDTO(entity);

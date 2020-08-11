@@ -22,4 +22,6 @@ public interface ITeamService {
 	public TeamEntity delete(Long id);
 
 	public Collection<TeamEntity> findByCreatorId(Pageable pageable, Long creatorId);
+	
+	public Collection<TeamEntity> findByCompetitionId(Pageable pageable, Long creatorId);
 }

@@ -18,4 +18,6 @@ public interface IPlayerService {
 //	public Collection<PlayerEntity> findAll();
 	
 	public PlayerEntity delete(Long id);
+	
+	public Collection<PlayerEntity> findByTeamId(Long teamId);
 }

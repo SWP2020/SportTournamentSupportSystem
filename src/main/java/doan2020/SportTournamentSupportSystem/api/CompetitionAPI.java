@@ -113,8 +113,8 @@ public class CompetitionAPI {
 			} else {// convert ok
 				System.out.println("Competition API - createCompetition - cp2");
 				competitionService.create(competitionEntity);
-
-				result.put("Competition", competitionEntity);
+				CompetitionDTO createCompetition = competitionConverter.toDTO(competitionEntity);
+				result.put("Competition", createCompetition);
 				config.put("Global", 0);
 				error.put("MessageCode", 0);
 				error.put("Message", "create new Competition successfull");
@@ -123,7 +123,7 @@ public class CompetitionAPI {
 			System.out.println("Competition API - createCompetition - no exception");
 		} catch (Exception e) {
 			System.out.println("Competition API - createCompetition - has exception");
-			result.put("Competition", competitionEntity);
+			result.put("Competition", null);
 			config.put("Global", 0);
 			error.put("MessageCode", 1);
 			error.put("Message", "server error");
@@ -168,19 +168,19 @@ public class CompetitionAPI {
 					error.put("Message", "edit new Competition fail");
 				} else {// convert ok
 					System.out.println("Competition API - editCompetition - cp3");
-					competitionService.update(id, competitionEntity);
-
-					result.put("Competition", competitionEntity);
+					CompetitionEntity updateEntity = competitionService.update(id, competitionEntity);
+					CompetitionDTO updateCompetition = competitionConverter.toDTO(updateEntity);
+					result.put("Competition", updateCompetition);
 					config.put("Global", 0);
 					error.put("MessageCode", 0);
 					error.put("Message", "edit new Competition successfull");
 					System.out.println("Competition API - editCompetition - cp4");
 				}
 			}
-			System.out.println("Competition API - editCompetition - has no exception");
+			System.out.println("Competition API - editCompetition - no exception");
 		} catch (Exception e) {
 			System.out.println("Competition API - editCompetition - has exception");
-			result.put("Competition", competitionEntity);
+			result.put("Competition", null);
 			config.put("Global", 0);
 			error.put("MessageCode", 1);
 			error.put("Message", "server error");
@@ -188,7 +188,7 @@ public class CompetitionAPI {
 		response.setError(error);
 		response.setResult(result);
 		response.setConfig(config);
-		System.out.println("Competition API - editCompetition - pass");
+		System.out.println("Competition API - editCompetition - finish");
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
 
@@ -213,9 +213,10 @@ public class CompetitionAPI {
 				error.put("MessageCode", 1);
 				error.put("Message", "Required Id");
 			} else {// id is exist
-				competitionService.delete(id);
-
-				result.put("Competition", competitionEntity);
+				competitionEntity = competitionService.delete(id);
+				
+				CompetitionDTO deleteCompetition = competitionConverter.toDTO(competitionEntity);
+				result.put("Competition", deleteCompetition);
 				config.put("Global", 0);
 				error.put("MessageCode", 0);
 				error.put("Message", "Delete Competition successfull");
@@ -225,7 +226,7 @@ public class CompetitionAPI {
 			System.out.println("Competition API - deleteCompetition - has no exception");
 		} catch (Exception e) {
 			System.out.println("Competition API - deleteCompetition - has exception");
-			result.put("Competition", competitionEntity);
+			result.put("Competition", null);
 			config.put("Global", 0);
 			error.put("MessageCode", 1);
 			error.put("Message", "server error");

@@ -201,7 +201,8 @@ public class TeamsAPI {
 	 * Get all team Paging by CompetitionId
 	 */
 	@GetMapping("/getByCompetitionId")
-	public ResponseEntity<Response> getTeamsByCompetitionId(@RequestParam(value = "page", required = false) Integer page,
+	public ResponseEntity<Response> getTeamsByCompetitionId(
+			@RequestParam(value = "page", required = false) Integer page,
 			@RequestParam(value = "limit", required = false) Integer limit,
 			@RequestParam(value = "competitionId") Long competitionId) {
 		System.out.println("TeamsAPI: getByCompetitionId: start");
@@ -231,7 +232,7 @@ public class TeamsAPI {
 				Sort sortable = Sort.by("id").ascending();
 				Pageable pageable = PageRequest.of(page - 1, limit, sortable);
 
-				list = (List<TeamEntity>) service.findByCreatorId(pageable, competitionId);
+				list = (List<TeamEntity>) service.findByCompetitionId(pageable, competitionId);
 
 				if (list.isEmpty()) {// list is not exist
 					result.put("Total page", null);

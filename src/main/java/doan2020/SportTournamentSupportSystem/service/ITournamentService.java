@@ -9,7 +9,7 @@ public interface ITournamentService {
 	
 	public TournamentEntity findOneById(Long id);
 	
-//	public Collection<TournamentEntity> findAll(Pageable pageable);
+	public Collection<TournamentEntity> findAll(Pageable pageable);
 	
 	public TournamentEntity create(TournamentEntity tournamentEntity);
 	
