@@ -1,45 +1,57 @@
 package doan2020.SportTournamentSupportSystem.testApi;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import doan2020.SportTournamentSupportSystem.api.LoginAPI;
+import doan2020.SportTournamentSupportSystem.converter.UserConverter;
 import doan2020.SportTournamentSupportSystem.dtIn.LoginDtIn;
+import doan2020.SportTournamentSupportSystem.response.Response;
+import doan2020.SportTournamentSupportSystem.service.IVerificationTokenService;
+import doan2020.SportTournamentSupportSystem.service.impl.JwtService;
 import doan2020.SportTournamentSupportSystem.service.impl.LoginService;
+import doan2020.SportTournamentSupportSystem.service.impl.UserService;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(LoginAPI.class)
 public class TestLoginAPI {
 	
-	@Autowired
-	private MockMvc mockMvc;
+	@InjectMocks
+	LoginAPI loginApi;
 	
-    @MockBean
-    private LoginService loginService;
-	/*
-	@Autowired
-	  private LoginAPI loginApi;
+	@Mock
+	LoginService loginService;
+	
+	@Mock
+	BCryptPasswordEncoder passwordEncoder;
+
+	@Mock
+	JwtService jwtService;
+
+	@Mock
+	UserService userService;
+
+	@Mock
+	UserConverter converter;
+
+	@Mock
+	IVerificationTokenService verificationTokenService;
 	
 	@Test
 	public void testLogin() {
 		//phần data test (thay đổi theo các test case tương ứng)
-		String username = "test";
+		String username = "Cong";
 		String password = "123456";
 		LoginDtIn user = new LoginDtIn(username, password);
 		
 		//phần expected result
-		HttpStatus expectedHttpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+		HttpStatus expectedHttpStatus = HttpStatus.OK;
 		
 		//phần execute test
 		ResponseEntity<Response> response = loginApi.login(user);
@@ -48,26 +60,5 @@ public class TestLoginAPI {
 		System.out.println(actualHttpStatus);
 		Assert.assertEquals(expectedHttpStatus, actualHttpStatus);
 	}
-	*/
-
-	@Test
-	public void testLogin() throws Exception {
-		//phần data test (thay đổi theo các test case tương ứng)
-		String username = "test";
-		String password = "123456";
-		LoginDtIn user = new LoginDtIn(username, password);
-		
-		//phần execute test
-		mockMvc.perform(post("/login").content(asJsonString(user)).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk()).andReturn();
-	}
 	
-	public static String asJsonString(final Object obj) {
-	    try {
-	        final ObjectMapper mapper = new ObjectMapper();
-	        final String jsonContent = mapper.writeValueAsString(obj);
-	        return jsonContent;
-	    } catch (Exception e) {
-	        throw new RuntimeException(e);
-	    }
-	}
 }
