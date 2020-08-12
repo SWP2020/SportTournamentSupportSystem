@@ -67,6 +67,37 @@ public class UserEntity{
 	
 	private String url;
 	
+	
+
+	public UserEntity(Long id, String username, String password, String firstName, String lastName, String address,
+			String phoneNumber, boolean gender, Date dob, String email, String avatar, String background,
+			String createdBy, Date createdDate, String modifiedBy, Date modifiedDate, String status, String url,
+			RoleEntity role) {
+		super();
+		this.id = id;
+		this.username = username;
+		this.password = password;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.address = address;
+		this.phoneNumber = phoneNumber;
+		this.gender = gender;
+		this.dob = dob;
+		this.email = email;
+		this.avatar = avatar;
+		this.background = background;
+		this.createdBy = createdBy;
+		this.createdDate = createdDate;
+		this.modifiedBy = modifiedBy;
+		this.modifiedDate = modifiedDate;
+		this.status = status;
+		this.url = url;
+		this.role = role;
+	}
+
+	public UserEntity() {
+		// TODO Auto-generated constructor stub
+	}
 
 	@ManyToOne
 	@JoinColumn(name = "roleId")
@@ -112,6 +143,10 @@ public class UserEntity{
 
 public Long getId() {
 	return id;
+}
+
+public void setId(Long id) {
+	this.id = id;
 }
 
 public String getUsername() {
