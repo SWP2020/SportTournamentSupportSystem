@@ -3,6 +3,7 @@ package doan2020.SportTournamentSupportSystem.api;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -17,8 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import doan2020.SportTournamentSupportSystem.converter.SportConverter;
 import doan2020.SportTournamentSupportSystem.dto.SportDTO;
+import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
 import doan2020.SportTournamentSupportSystem.entity.SportEntity;
 import doan2020.SportTournamentSupportSystem.response.Response;
+import doan2020.SportTournamentSupportSystem.service.ICompetitionService;
 import doan2020.SportTournamentSupportSystem.service.ISportService;
 
 @RestController
@@ -31,6 +34,9 @@ public class SportsAPI {
 	
 	@Autowired
 	private ISportService service;
+	
+	@Autowired
+	private ICompetitionService competitionService;
 	
 	@GetMapping("/getByScoringUnitId")
 	public ResponseEntity<Response> getByScoringUnitId(@RequestParam(value = "scoringUnitId") Long scoringUnitId) {
@@ -132,6 +138,63 @@ public class SportsAPI {
 		response.setResult(result);
 		response.setError(error);
 		System.out.println("SportsAPI: getAllSport: finish");
+		return new ResponseEntity<Response>(response, httpStatus);
+	}
+	
+	@GetMapping("/getByTournamentId")
+	public ResponseEntity<Response> getByTournamentId(
+			@RequestParam(value = "tournamentId", required = false) Long tournamentId) {
+
+		System.out.println("SportsAPI: getByTournamentId: no exception");
+		HttpStatus httpStatus = HttpStatus.OK;
+		Response response = new Response();
+		Map<String, Object> config = new HashMap<String, Object>();
+		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> error = new HashMap<String, Object>();
+		
+		Collection<SportDTO> dtos = new HashSet<SportDTO>();
+
+		try {
+			if (tournamentId == null) { // tournamentId null
+				result.put("Sports", dtos);
+				config.put("Global", 0);
+				error.put("MessageCode", 1);
+				error.put("Message", "Required param tournamentId");
+			} else { // tournamentId not null
+
+				Collection<CompetitionEntity> competitions = competitionService.findByTournamentId(tournamentId);
+				
+				HashSet<Long> sportsId = new HashSet<>();
+
+				for (CompetitionEntity comp : competitions) {
+
+					sportsId.add(comp.getSport().getId());
+				}
+				
+				for (Long sportId : sportsId) {
+					SportDTO dto = converter.toDTO(service.findOneById(sportId));
+					dtos.add(dto);
+				}
+
+				result.put("Sports", dtos);
+				config.put("Global", 0);
+				error.put("MessageCode", 0);
+				error.put("Message", "Found");
+			}
+
+			System.out.println("SportsAPI: getByTournamentId: no exception");
+		} catch (Exception e) {
+			System.out.println("SportsAPI: getgetByTournamentIdSport: has exception");
+			result.put("Sports", dtos);
+			config.put("Global", 0);
+			error.put("MessageCode", 1);
+			error.put("Message", "Server error");
+		}
+
+		response.setConfig(config);
+		response.setResult(result);
+		response.setError(error);
+		System.out.println("SportsAPI: getByTournamentId: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
 
