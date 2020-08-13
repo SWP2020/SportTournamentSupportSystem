@@ -83,8 +83,29 @@ public class MatchService implements IMatchService {
 	
 	@Override
 	public Collection<MatchEntity> schedule(Long competitionId, Long competitionFormatId) {
-		
 		return null;
+	}
+
+	@Override
+	public Collection<MatchEntity> findAll() {
+		Collection<MatchEntity> foundEntitys = null;
+		try {
+			foundEntitys = matchRepository.findAll();
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntitys;
+	}
+
+	@Override
+	public Collection<MatchEntity> findByCompetitionId(Long competitionId) {
+		Collection<MatchEntity> foundEntitys = null;
+		try {
+			foundEntitys = matchRepository.findByCompetitionId(competitionId);
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntitys;
 	}
 
 }

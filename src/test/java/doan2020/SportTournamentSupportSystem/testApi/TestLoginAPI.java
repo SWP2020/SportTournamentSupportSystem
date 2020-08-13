@@ -13,6 +13,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import doan2020.SportTournamentSupportSystem.api.LoginAPI;
 import doan2020.SportTournamentSupportSystem.converter.UserConverter;
 import doan2020.SportTournamentSupportSystem.dtIn.LoginDtIn;
+import doan2020.SportTournamentSupportSystem.dto.UserDTO;
 import doan2020.SportTournamentSupportSystem.response.Response;
 import doan2020.SportTournamentSupportSystem.service.IVerificationTokenService;
 import doan2020.SportTournamentSupportSystem.service.impl.JwtService;
@@ -48,7 +49,9 @@ public class TestLoginAPI {
 		//phần data test (thay đổi theo các test case tương ứng)
 		String username = "Cong";
 		String password = "123456";
-		LoginDtIn user = new LoginDtIn(username, password);
+		UserDTO user = new UserDTO();
+		user.setUsername(username);
+		user.setPassword(password);
 		
 		//phần expected result
 		HttpStatus expectedHttpStatus = HttpStatus.OK;

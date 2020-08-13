@@ -2,7 +2,7 @@
 package doan2020.SportTournamentSupportSystem.service;
 
 import java.util.Collection;
-import org.springframework.data.domain.Pageable;
+
 import doan2020.SportTournamentSupportSystem.entity.SportEntity;
 
 public interface ISportService {
@@ -15,7 +15,9 @@ public interface ISportService {
 	
 	public SportEntity update(Long id, SportEntity newEntity);
 	
-//	public Collection<SportEntity> findAll();
+	public Collection<SportEntity> findAll();
 	
 	public SportEntity delete(Long id);
+	
+	Collection<SportEntity> findByScoringUnitId(Long scoringUnitId);
 }
