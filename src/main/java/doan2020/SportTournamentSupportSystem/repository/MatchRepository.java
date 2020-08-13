@@ -10,7 +10,5 @@ import doan2020.SportTournamentSupportSystem.entity.MatchEntity;
 public interface MatchRepository extends JpaRepository<MatchEntity, Long>{
     MatchEntity findOneById(Long id);
     
-    Collection<MatchEntity> findByCompetitionId(Long competitionId);
-    
-    
+    Collection<MatchEntity> findByCompetitionId(Long competitionId); 
 }

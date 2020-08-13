@@ -76,4 +76,26 @@ public class SportService implements ISportService {
 		return foundEntity;
 	}
 
+	@Override
+	public Collection<SportEntity> findAll() {
+		Collection<SportEntity> foundEntitys = null;
+		try {
+			foundEntitys = sportRepository.findAll();
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntitys;
+	}
+
+	@Override
+	public Collection<SportEntity> findByScoringUnitId(Long scoringUnitId) {
+		Collection<SportEntity> foundEntitys = null;
+		try {
+			foundEntitys = sportRepository.findByScoringUnitId(scoringUnitId);
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntitys;
+	}
+
 }

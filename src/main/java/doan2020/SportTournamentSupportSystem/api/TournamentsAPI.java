@@ -9,23 +9,17 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import doan2020.SportTournamentSupportSystem.converter.TournamentConverter;
-import doan2020.SportTournamentSupportSystem.dtOut.TournamentDtOut;
 import doan2020.SportTournamentSupportSystem.dto.TournamentDTO;
-import doan2020.SportTournamentSupportSystem.dto.TournamentDTO;
-import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
+import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
 import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
 import doan2020.SportTournamentSupportSystem.entity.UserEntity;
 import doan2020.SportTournamentSupportSystem.response.Response;
@@ -158,6 +152,13 @@ public class TournamentsAPI {
 			findPage = service.findAll(pageable);
 
 			for (TournamentEntity entity : findPage) {
+				Collection<String> sportNames = new ArrayList<>();
+				Collection<CompetitionEntity> competitions = entity.getCompetitions();
+				for (CompetitionEntity entity2 : competitions) {
+					String sportName = entity2.getSport().getFullName();
+					sportNames.add(sportName);
+				}
+				result.put("Sports in "  + entity.getFullName(), sportNames);
 				TournamentDTO dto = converter.toDTO(entity);
 				findPageDTO.add(dto);
 			}
@@ -220,6 +221,13 @@ public class TournamentsAPI {
 					totalPage++;
 				
 				for (TournamentEntity entity: tournamentEntities) {
+					Collection<String> sportNames = new ArrayList<>();
+					Collection<CompetitionEntity> competitions = entity.getCompetitions();
+					for (CompetitionEntity entity2 : competitions) {
+						String sportName = entity2.getSport().getFullName();
+						sportNames.add(sportName);
+					}
+					result.put("Sports in "  + entity.getFullName(), sportNames);
 					TournamentDTO dto = converter.toDTO(entity);
 					tournamentDTOs.add(dto);
 				}
