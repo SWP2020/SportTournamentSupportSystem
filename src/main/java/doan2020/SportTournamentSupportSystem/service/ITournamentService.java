@@ -20,4 +20,6 @@ public interface ITournamentService {
 	public TournamentEntity delete(Long id);
 	
 	public Collection<TournamentEntity> findByCreatorId(Pageable pageable, Long creatorId);
+	
+	public Collection<TournamentEntity> findBySearchString(Pageable pageable, String searchString);
 }
