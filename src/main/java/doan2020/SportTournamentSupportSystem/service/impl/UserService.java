@@ -19,12 +19,15 @@ public class UserService implements IUserService {
 
 	@Override
 	public UserEntity create(UserEntity userEntity) {
+		System.out.println("UserService: create: start");
 		UserEntity newEntity = null;
 		try {
 			newEntity = userRepository.save(userEntity);
+			System.out.println("UserService: create: no exception");
 		} catch (Exception e) {
-			return null;
+			System.out.println("UserService: create: has exception");
 		}
+		System.out.println("UserService: create: finish");
 		return newEntity;
 	}
 

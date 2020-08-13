@@ -18,4 +18,6 @@ public interface IMatchService {
 //	public Collection<MatchEntity> findAll();
 	
 	public MatchEntity delete(Long id);
+	
+	public Collection<MatchEntity> schedule(Long competitionId, Long competitionFormatId);
 }
