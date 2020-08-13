@@ -115,5 +115,16 @@ public class CompetitionService implements ICompetitionService {
 		}
 		return foundEntitys;
 	}
+	
+	@Override
+	public Collection<CompetitionEntity> findByTournamentId(Long tournamentId) {
+		Collection<CompetitionEntity> foundEntitys = null;
+		try {
+			foundEntitys = competitionRepository.findByTournamentId(tournamentId);
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntitys;
+	}
 
 }
