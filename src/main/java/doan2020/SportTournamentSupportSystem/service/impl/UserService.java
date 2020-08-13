@@ -38,14 +38,14 @@ public class UserService implements IUserService {
 			updatedEntity = userRepository.findOneById(id);
 
 			updatedEntity.setUsername(newEntity.getUsername());
-			updatedEntity.setPassword(newEntity.getPassword());
+//			updatedEntity.setPassword(newEntity.getPassword());
 			updatedEntity.setFirstName(newEntity.getFirstName());
 			updatedEntity.setLastName(newEntity.getLastName());
 			updatedEntity.setAddress(newEntity.getAddress());
 			updatedEntity.setPhoneNumber(newEntity.getPhoneNumber());
 			updatedEntity.setGender(newEntity.getGender());
 			updatedEntity.setDob(newEntity.getDob());
-			updatedEntity.setEmail(newEntity.getEmail());
+//			updatedEntity.setEmail(newEntity.getEmail());
 			updatedEntity.setAvatar(newEntity.getAvatar());
 			updatedEntity.setBackground(newEntity.getBackground());
 			updatedEntity.setRole(newEntity.getRole());
