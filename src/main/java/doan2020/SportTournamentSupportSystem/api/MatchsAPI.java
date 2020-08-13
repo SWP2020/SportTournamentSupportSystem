@@ -47,7 +47,7 @@ public class MatchsAPI {
 				result.put("Matchs", matchDTOs);
 				config.put("Global", 0);
 				error.put("MessageCode", 1);
-				error.put("Message", "Required param userId");
+				error.put("Message", "Required param competitionId");
 			} else {// userId not null
 
 				matchEntites = service.findByCompetitionId(competitionId);

@@ -75,4 +75,26 @@ public class NotificationService implements INotificationService {
 		return foundEntity;
 	}
 
+	@Override
+	public Collection<NotificationEntity> findAll(Pageable pageable) {
+		Collection<NotificationEntity> foundEntitys = null;
+		try {
+			foundEntitys = notificationRepository.findAll(pageable).getContent();
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntitys;
+	}
+
+	@Override
+	public Collection<NotificationEntity> findByPostId(Pageable pageable, Long postId) {
+		Collection<NotificationEntity> foundEntitys = null;
+		try {
+			foundEntitys = notificationRepository.findByPostId(pageable, postId).getContent();
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntitys;
+	}
+
 }

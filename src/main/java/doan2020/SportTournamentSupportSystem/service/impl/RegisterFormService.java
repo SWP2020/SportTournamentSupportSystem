@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
 import doan2020.SportTournamentSupportSystem.entity.RegisterFormEntity;
 import doan2020.SportTournamentSupportSystem.repository.RegisterFormRepository;
 import doan2020.SportTournamentSupportSystem.service.IRegisterFormService;
@@ -74,6 +75,50 @@ public class RegisterFormService implements IRegisterFormService {
 			return null;
 		}
 		return foundEntity;
+	}
+
+	@Override
+	public Collection<RegisterFormEntity> findAll(Pageable pageable) {
+		Collection<RegisterFormEntity> foundEntitys = null;
+		try {
+			foundEntitys = registerFormRepository.findAll(pageable).getContent();
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntitys;
+	}
+
+	@Override
+	public Collection<RegisterFormEntity> findByCompetitionId(Pageable pageable, Long competitionId) {
+		Collection<RegisterFormEntity> foundEntitys = null;
+		try {
+			foundEntitys = registerFormRepository.findByCompetitionId(pageable, competitionId).getContent();
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntitys;
+	}
+
+	@Override
+	public Collection<RegisterFormEntity> findByTeamId(Long teamId) {
+		Collection<RegisterFormEntity> foundEntitys = null;
+		try {
+			foundEntitys = registerFormRepository.findByTeamId(teamId);
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntitys;
+	}
+
+	@Override
+	public Collection<RegisterFormEntity> findByCompetitionSettingId(Long competitionSettingId) {
+		Collection<RegisterFormEntity> foundEntitys = null;
+		try {
+			foundEntitys = registerFormRepository.findByCompetitionSettingId(competitionSettingId);
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntitys;
 	}
 
 }

@@ -9,7 +9,7 @@ public interface IResultService {
 	
 	public ResultEntity findOneById(Long id);
 	
-//	public Collection<ResultEntity> findAll(Pageable pageable);
+	public Collection<ResultEntity> findAll(Pageable pageable);
 	
 	public ResultEntity create(ResultEntity resultEntity);
 	
@@ -18,4 +18,10 @@ public interface IResultService {
 //	public Collection<ResultEntity> findAll();
 	
 	public ResultEntity delete(Long id);
+	
+	Collection<ResultEntity> findByMatchId(Long matchId);
+
+	Collection<ResultEntity> findByTeamId(Long teamId);
+	
+	
 }

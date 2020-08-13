@@ -77,4 +77,37 @@ public class ResultService implements IResultService {
 		return foundEntity;
 	}
 
+	@Override
+	public Collection<ResultEntity> findAll(Pageable pageable) {
+		Collection<ResultEntity> foundEntitys = null;
+		try {
+			foundEntitys = resultRepository.findAll(pageable).getContent();
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntitys;
+	}
+
+	@Override
+	public Collection<ResultEntity> findByMatchId(Long matchId) {
+		Collection<ResultEntity> foundEntitys = null;
+		try {
+			foundEntitys = resultRepository.findByMatchId(matchId);
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntitys;
+	}
+
+	@Override
+	public Collection<ResultEntity> findByTeamId(Long teamId) {
+		Collection<ResultEntity> foundEntitys = null;
+		try {
+			foundEntitys = resultRepository.findByTeamId(teamId);
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntitys;
+	}
+
 }
