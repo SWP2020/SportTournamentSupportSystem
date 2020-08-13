@@ -84,36 +84,47 @@ public class CompetitionService implements ICompetitionService {
 
 	@Override
 	public Collection<CompetitionEntity> findAll(Pageable pageable) {
-		Collection<CompetitionEntity> foundEntitys = null;
+		Collection<CompetitionEntity> foundEntities = null;
 		try {
-			foundEntitys = (Collection<CompetitionEntity>) competitionRepository.findAll(pageable).getContent();
+			foundEntities = (Collection<CompetitionEntity>) competitionRepository.findAll(pageable).getContent();
 		} catch (Exception e) {
 			return null;
 		}
-		return foundEntitys;
+		return foundEntities;
 	}
 
 	@Override
 	public Collection<CompetitionEntity> findByTournamentId(Pageable pageable, Long tournamentId) {
-		Collection<CompetitionEntity> foundEntitys = null;
+		Collection<CompetitionEntity> foundEntities = null;
 		try {
-			foundEntitys = (Collection<CompetitionEntity>) competitionRepository.findByTournamentId(pageable, tournamentId).getContent();
+			foundEntities = (Collection<CompetitionEntity>) competitionRepository.findByTournamentId(pageable, tournamentId).getContent();
 		} catch (Exception e) {
 			return null;
 		}
-		return foundEntitys;
+		return foundEntities;
 	}
 
 	@Override
 	public Collection<CompetitionEntity> findByTournamentIdAndSportId(Pageable pageable, Long tournamentId,
 			Long sportId) {
-		Collection<CompetitionEntity> foundEntitys = null;
+		Collection<CompetitionEntity> foundEntities = null;
 		try {
-			foundEntitys = (Collection<CompetitionEntity>) competitionRepository.findByTournamentIdAndSportId(pageable, tournamentId, sportId).getContent();
+			foundEntities = (Collection<CompetitionEntity>) competitionRepository.findByTournamentIdAndSportId(pageable, tournamentId, sportId).getContent();
 		} catch (Exception e) {
 			return null;
 		}
-		return foundEntitys;
+		return foundEntities;
+	}
+	
+@Override
+	public Collection<CompetitionEntity> findByTournamentId(Long tournamentId) {
+		Collection<CompetitionEntity> foundEntities = null;
+		try {
+			foundEntities = competitionRepository.findByTournamentId(tournamentId);
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntities;
 	}
 
 }

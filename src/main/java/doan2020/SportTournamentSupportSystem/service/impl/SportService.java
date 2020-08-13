@@ -17,6 +17,7 @@ public class SportService implements ISportService {
 	@Autowired
 	private SportRepository sportRepository;
 
+	
 	@Override
 	public SportEntity create(SportEntity sportEntity) {
 		SportEntity newEntity = null;

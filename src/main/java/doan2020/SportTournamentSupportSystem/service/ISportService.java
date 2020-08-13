@@ -18,4 +18,5 @@ public interface ISportService {
 //	public Collection<SportEntity> findAll();
 	
 	public SportEntity delete(Long id);
+
 }
