@@ -208,9 +208,16 @@ public class UserAPI {
 				RoleEntity roleEntity = roleService.findOneByName("ROLE_USER");
 				if (roleEntity != null)
 					newUser.setRole(roleEntity);
+				else {
+					roleEntity = roleService.findOneById((long) 1);
+					newUser.setRole(roleEntity);
+				}
+					
 				newUser.setStatus("deactive");
 
 				newUser = userService.create(newUser);
+				
+				System.out.println("UserAPI: createUser: newUser: " + newUser);
 
 				userDTO = userConverter.toDTO(newUser);
 

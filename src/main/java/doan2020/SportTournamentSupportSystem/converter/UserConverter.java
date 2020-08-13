@@ -83,6 +83,7 @@ public class UserConverter {
 	public UserDTO toDTO(UserEntity entity) {
 		System.out.println("UserConverter: toDTO: start");
 		UserDTO dto = new UserDTO();
+		System.out.println(entity);
 		try {
 			dto.setId(entity.getId());
 			dto.setUsername(entity.getUsername());
@@ -92,21 +93,21 @@ public class UserConverter {
 			dto.setAddress(entity.getAddress());
 			dto.setPhoneNumber(entity.getPhoneNumber());
 			dto.setGender(entity.getGender());
-			System.out.println("UserConverter: toEntity: CP1");
+			System.out.println("UserConverter: toDTO: CP1");
 			
 			String dob = validator.formatDateToString(entity.getDob());
 			dto.setDob(dob);
-			System.out.println("UserConverter: toEntity: CP2");
+			System.out.println("UserConverter: toDTO: CP2");
 			dto.setEmail(entity.getEmail());
 			dto.setAvatar(entity.getAvatar());
 			dto.setBackground(entity.getBackground());
 			
-			System.out.println("UserConverter: toEntity: CP3");
+			System.out.println("UserConverter: toDTO: CP3");
 			RoleEntity userRole = entity.getRole();
 			Long userRoleId = userRole.getId();
 			dto.setRoleId(userRoleId);
 			
-			System.out.println("UserConverter: toEntity: CP4");
+			System.out.println("UserConverter: toDTO: CP4");
 			dto.setStatus(entity.getStatus());
 			dto.setUrl(entity.getUrl());
 			System.out.println("UserConverter: toDTO: no exception");

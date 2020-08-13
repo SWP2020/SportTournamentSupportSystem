@@ -80,5 +80,11 @@ public class MatchService implements IMatchService {
 		}
 		return foundEntity;
 	}
+	
+	@Override
+	public Collection<MatchEntity> schedule(Long competitionId, Long competitionFormatId) {
+		
+		return null;
+	}
 
 }
