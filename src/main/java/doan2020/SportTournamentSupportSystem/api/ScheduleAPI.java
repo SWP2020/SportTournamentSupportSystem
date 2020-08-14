@@ -41,11 +41,12 @@ public class ScheduleAPI {
 		Collection<MatchEntity> matches = new ArrayList<>();
 		
 		try {
-			CompetitionEntity thisCompetition = 
+			CompetitionEntity thisCompetition = competitionService.findOneById(competitionId);
+//			Collection<TeamEntity> teams =
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-		Collection<TeamEntity> teams = 
+		 
 		
 		
 		
