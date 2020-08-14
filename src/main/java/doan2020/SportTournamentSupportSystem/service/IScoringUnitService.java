@@ -15,7 +15,7 @@ public interface IScoringUnitService {
 	
 	public ScoringUnitEntity update(Long id, ScoringUnitEntity newEntity);
 	
-//	public Collection<ScoringUnitEntity> findAll();
+	public Collection<ScoringUnitEntity> findAll();
 	
 	public ScoringUnitEntity delete(Long id);
 }

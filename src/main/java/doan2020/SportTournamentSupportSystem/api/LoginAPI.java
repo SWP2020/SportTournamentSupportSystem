@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import doan2020.SportTournamentSupportSystem.converter.UserConverter;
-import doan2020.SportTournamentSupportSystem.dtIn.LoginDtIn;
 import doan2020.SportTournamentSupportSystem.dtIn.VerifyAuthenticationDtIn;
 import doan2020.SportTournamentSupportSystem.dto.UserDTO;
 import doan2020.SportTournamentSupportSystem.entity.UserEntity;
@@ -55,7 +53,8 @@ public class LoginAPI {
 	private IVerificationTokenService verificationTokenService;
 
 	@PostMapping
-	public ResponseEntity<Response> login(@RequestBody Map<String, String> user) {
+
+	public ResponseEntity<Response> login(@RequestBody UserDTO user) {
 		System.out.println("LoginAPI: login: start");
 		HttpStatus httpStatus = null;
 		httpStatus = HttpStatus.OK;

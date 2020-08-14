@@ -1,14 +1,11 @@
 package doan2020.SportTournamentSupportSystem.api;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -21,8 +18,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import doan2020.SportTournamentSupportSystem.converter.TournamentConverter;
-import doan2020.SportTournamentSupportSystem.dtOut.TournamentDtOut;
 import doan2020.SportTournamentSupportSystem.dto.TournamentDTO;
+import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
 import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
 import doan2020.SportTournamentSupportSystem.response.Response;
 import doan2020.SportTournamentSupportSystem.service.ITournamentService;
@@ -63,7 +60,13 @@ public class TournamentAPI {
 					error.put("MessageCode", 1);
 					error.put("Message", "Not found");
 				} else { // found
-					
+					Collection<String> sportNames = new ArrayList<>();
+					Collection<CompetitionEntity> competitions = tournamentEntity.getCompetitions();
+					for (CompetitionEntity entity2 : competitions) {
+						String sportName = entity2.getSport().getFullName();
+						sportNames.add(sportName);
+					}
+					result.put("Sports in "  + tournamentEntity.getFullName(), sportNames);
 					tournamentDTO = converter.toDTO(tournamentEntity);
 					
 					result.put("Tournament", tournamentDTO);

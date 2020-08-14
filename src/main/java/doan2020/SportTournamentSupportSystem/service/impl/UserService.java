@@ -2,11 +2,15 @@
 package doan2020.SportTournamentSupportSystem.service.impl;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
 import doan2020.SportTournamentSupportSystem.entity.UserEntity;
 import doan2020.SportTournamentSupportSystem.repository.UserRepository;
 import doan2020.SportTournamentSupportSystem.service.IUserService;
@@ -129,6 +133,24 @@ public class UserService implements IUserService {
 			return null;
 		}
 		return foundEntity;
+	}
+	
+	@Override
+	public Collection<UserEntity> findBySearchString(Pageable pageable, String searchString) {
+		List<UserEntity> findUsers = null;
+		try {
+			
+			findUsers = (List) userRepository.findBySearchString(searchString);
+			
+			int start = (int) pageable.getOffset();
+			int end = (start + pageable.getPageSize()) > findUsers.size() ? findUsers.size() : (start + pageable.getPageSize());
+			Page<UserEntity> pages = new PageImpl<UserEntity>(findUsers.subList(start, end), pageable, findUsers.size());
+			findUsers = pages.getContent();
+			
+		} catch (Exception e) {
+			return null;
+		}
+		return findUsers;
 	}
 
 }
