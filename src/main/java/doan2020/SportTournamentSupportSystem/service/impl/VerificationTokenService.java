@@ -10,6 +10,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import doan2020.SportTournamentSupportSystem.config.Const;
 import doan2020.SportTournamentSupportSystem.entity.UserEntity;
 import doan2020.SportTournamentSupportSystem.entity.VerificationTokenEntity;
 import doan2020.SportTournamentSupportSystem.repository.UserRepository;
@@ -98,8 +99,8 @@ public class VerificationTokenService implements IVerificationTokenService {
 		this.sendingMailService = sendingMailService;
 	}
 
-	public boolean createVerification(String email, String UserName) {
-		UserEntity user = userRepository.findByEmailAndUsername(email, UserName);
+	public boolean createVerification(String email, String username) {
+		UserEntity user = userRepository.findByEmailAndUsername(email, username);
 		if (user == null) {
 			return false;
 		}
@@ -125,7 +126,7 @@ public class VerificationTokenService implements IVerificationTokenService {
 			verificationToken = verificationTokens.get(0);
 		}
 
-		sendingMailService.sendVerificationMail(email, verificationToken.getToken());
+		sendingMailService.sendVerificationMail(email, verificationToken.getToken(), username, Const.DOMAIN);
 		return true;
 	}
 

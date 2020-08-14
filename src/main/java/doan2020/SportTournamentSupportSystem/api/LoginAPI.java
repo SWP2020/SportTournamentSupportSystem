@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import doan2020.SportTournamentSupportSystem.converter.UserConverter;
@@ -52,6 +53,7 @@ public class LoginAPI {
 	private IVerificationTokenService verificationTokenService;
 
 	@PostMapping
+
 	public ResponseEntity<Response> login(@RequestBody UserDTO user) {
 		System.out.println("LoginAPI: login: start");
 		HttpStatus httpStatus = null;
@@ -60,8 +62,17 @@ public class LoginAPI {
 		Map<String, Object> config = new HashMap<String, Object>();
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
+		
+		String username = user.get("username");
+		String password = user.get("password");
+		
+		System.out.println(username);
+		System.out.println(password);
+		
 		try {
-			UserEntity findUser = userService.findByUsername(user.getUsername());
+			
+			UserEntity findUser = userService.findByUsername(username);
+
 			if (findUser == null) { // User is not Exist
 				System.out.println("LoginAPI: login: User is not Exist");
 				result.put("User", null);
@@ -70,6 +81,8 @@ public class LoginAPI {
 				error.put("MessageCode", 1);
 				error.put("Message", "User is not Exist");
 			} else { // User exist
+				System.out.println("LoginAPI: login: User is Exist");
+				System.out.println("LoginAPI: login: found: " + findUser.getId().toString());
 				if (!findUser.getStatus().equals("active")) { // User is not active
 					System.out.println("LoginAPI: login: User is not active");
 					result.put("User", null);
@@ -78,11 +91,12 @@ public class LoginAPI {
 					error.put("MessageCode", 1);
 					error.put("Message", "User is not active");
 				} else { // User is active
+					System.out.println("LoginAPI: login: User is active");
 //					boolean checkPW = passwordEncoder.matches(user.getPassword(), findUser.getPassword());
-					int checkPW = user.getPassword().compareTo(findUser.getPassword());
-					System.out.println(user.getPassword());
-					System.out.println(findUser.getPassword());
-					System.out.println(checkPW);
+					
+					System.out.println("LoginAPI: login: Password: " + findUser.getPassword());
+					int checkPW = password.compareTo(findUser.getPassword());
+					
 //					if (!checkPW) {// password wrong
 					if (checkPW != 0) {
 						System.out.println("LoginAPI: login: Password wrong");
@@ -92,8 +106,11 @@ public class LoginAPI {
 						error.put("MessageCode", 1);
 						error.put("Message", "Password wrong");
 					} else {// password right
+						System.out.println("LoginAPI: login: Password right");
+						
 						UserDTO userDTO = converter.toDTO(findUser);
-						String token = jwtService.generateTokenLogin(user.getUsername());
+						
+						String token = jwtService.generateTokenLogin(username);
 
 						result.put("User", userDTO);
 						result.put("Authentication", token);
@@ -122,9 +139,10 @@ public class LoginAPI {
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
 
-	@GetMapping("/verify-authentication")
-	public ResponseEntity<Response> verifyEmail(@RequestBody VerifyAuthenticationDtIn verifyAuthenticationDtIn) {
+	@PostMapping("/verify-authentication")
+	public ResponseEntity<Response> verifyEmail(@RequestBody Map<String, String> data) {
 		System.out.println("LoginAPI - verifyEmail");
+
 		HttpStatus httpStatus = null;
 		httpStatus = HttpStatus.OK;
 		Response response = new Response();
@@ -133,7 +151,7 @@ public class LoginAPI {
 		Map<String, Object> error = new HashMap<String, Object>();
 
 		try {
-			String token = verifyAuthenticationDtIn.getCode();
+			String token = data.get("code");
 			VerificationTokenEntity verificationToken = verificationTokenService.findOneByToken(token);
 			if (verificationToken == null) {
 				error.put("MessageCode", 1);

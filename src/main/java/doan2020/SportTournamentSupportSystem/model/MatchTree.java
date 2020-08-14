@@ -39,7 +39,22 @@ public class MatchTree {
 			String name = "match-" + Integer.toString(left);
 			match.setName(name);
 			match.setNumOfSet(numOfSet);
+
+			
+//			match.setExpectedDate(Const);
+//			match.setExpectedPlace(newEntity.getExpectedPlace());
+//			match.setRealDate(newEntity.getRealDate());
+//			match.setRealPlace(newEntity.getRealPlace());
+//			match.setCompetition(newEntity.getCompetition());
+//			match.setNextMatch(newEntity.getNextMatch());
+//			match.setRoundNo(newEntity.getRoundNo());
+//			
+//			match.setStatus(newEntity.getStatus());
+//			match.setUrl(newEntity.getUrl());
 		}
+		
+		return null;
 	}
+	
 
 }
