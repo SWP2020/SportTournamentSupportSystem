@@ -74,4 +74,15 @@ public class CompetitionFormatService implements ICompetitionFormatService {
 		return foundEntity;
 	}
 
+	@Override
+	public Collection<CompetitionFormatEntity> findAll() {
+		Collection<CompetitionFormatEntity> foundEntitys = null;
+		try {
+			foundEntitys = competitionFormatRepository.findAll();
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntitys;
+	}
+
 }

@@ -1,15 +1,12 @@
 package doan2020.SportTournamentSupportSystem.api;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -19,8 +16,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import doan2020.SportTournamentSupportSystem.converter.CommentConverter;
-import doan2020.SportTournamentSupportSystem.dtIn.CommentDtIn;
-import doan2020.SportTournamentSupportSystem.dtOut.CommentDtOut;
 import doan2020.SportTournamentSupportSystem.dto.CommentDTO;
 import doan2020.SportTournamentSupportSystem.entity.CommentEntity;
 import doan2020.SportTournamentSupportSystem.response.Response;

@@ -1,14 +1,9 @@
 package doan2020.SportTournamentSupportSystem.api;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -21,14 +16,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import doan2020.SportTournamentSupportSystem.converter.ReportConverter;
-import doan2020.SportTournamentSupportSystem.converter.ReportConverter;
-import doan2020.SportTournamentSupportSystem.dtIn.ReportDtIn;
-import doan2020.SportTournamentSupportSystem.dtOut.ReportDtOut;
 import doan2020.SportTournamentSupportSystem.dto.ReportDTO;
 import doan2020.SportTournamentSupportSystem.entity.ReportEntity;
-import doan2020.SportTournamentSupportSystem.entity.ReportEntity;
 import doan2020.SportTournamentSupportSystem.response.Response;
-import doan2020.SportTournamentSupportSystem.service.IReportService;
 import doan2020.SportTournamentSupportSystem.service.IReportService;
 
 @RestController
