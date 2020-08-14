@@ -40,12 +40,14 @@ public class SendingMailService {
 		this.templates = templates;
 	}
 
-	public boolean sendVerificationMail(String toEmail, String verificationCode) {
+	public boolean sendVerificationMail(String toEmail, String verificationCode, String username, String domain) {
 		String subject = "Please verify your email";
 		String body = "";
 		try {
 			Template t = templates.getTemplate("email-verification.ftl");
 			Map<String, String> map = new HashMap<>();
+			map.put("USERNAME",username);
+			map.put("DOMAIN",domain);
 			map.put("VERIFICATION_URL",verificationCode);
 			body = FreeMarkerTemplateUtils.processTemplateIntoString(t, map);
 		} catch (Exception ex) {
