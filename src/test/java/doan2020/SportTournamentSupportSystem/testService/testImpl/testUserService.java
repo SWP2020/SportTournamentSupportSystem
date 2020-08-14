@@ -70,9 +70,9 @@ public class testUserService {
 //		System.out.println(entities.size());
 		Long id = (long) 1;
 		Mockito.when(userRepository.findOneById(id)).thenReturn(userEntity);
-		 
+
 //		List<UserEntity> entities = new ArrayList<UserEntity>();
-		
+
 		MockitoAnnotations.initMocks(this);
 
 	}

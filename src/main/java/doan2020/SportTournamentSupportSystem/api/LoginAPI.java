@@ -63,8 +63,8 @@ public class LoginAPI {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
 		
-		String username = user.get("username");
-		String password = user.get("password");
+		String username = user.getUsername();
+		String password = user.getPassword();
 		
 		System.out.println(username);
 		System.out.println(password);

@@ -39,6 +39,7 @@ public class MatchTree {
 			String name = "match-" + Integer.toString(left);
 			match.setName(name);
 			match.setNumOfSet(numOfSet);
+
 			
 //			match.setExpectedDate(Const);
 //			match.setExpectedPlace(newEntity.getExpectedPlace());
@@ -54,7 +55,6 @@ public class MatchTree {
 		
 		return null;
 	}
-	
 	
 
 }
