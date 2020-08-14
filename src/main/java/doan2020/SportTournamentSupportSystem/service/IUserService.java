@@ -24,4 +24,6 @@ public interface IUserService {
 	public UserEntity findByUsername(String username);
 	
 	public UserEntity findByEmail(String email);
+	
+	public Collection<UserEntity> findBySearchString(Pageable pageable, String searchString);
 }

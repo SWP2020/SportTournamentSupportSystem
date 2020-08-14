@@ -6,6 +6,8 @@ import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +22,7 @@ public class TournamentService implements ITournamentService {
 
 	@Autowired
 	private TournamentRepository tournamentRepository;
-	
+
 	@Autowired
 	private UserRepository UserRepository;
 
@@ -60,7 +62,7 @@ public class TournamentService implements ITournamentService {
 		} catch (Exception e) {
 			return null;
 		}
-        
+
 		return updatedEntity;
 	}
 
@@ -87,7 +89,7 @@ public class TournamentService implements ITournamentService {
 		}
 		return foundEntity;
 	}
-	
+
 	@Override
 	public Collection<TournamentEntity> findByCreatorId(Pageable pageable, Long creatorId) {
 		Collection<TournamentEntity> findTournaments = null;
@@ -98,12 +100,30 @@ public class TournamentService implements ITournamentService {
 		}
 		return findTournaments;
 	}
-	
+
 	@Override
 	public Collection<TournamentEntity> findAll(Pageable pageable) {
 		Collection<TournamentEntity> findTournaments = null;
 		try {
 			findTournaments = tournamentRepository.findAll(pageable).getContent();
+		} catch (Exception e) {
+			return null;
+		}
+		return findTournaments;
+	}
+
+	@Override
+	public Collection<TournamentEntity> findBySearchString(Pageable pageable, String searchString) {
+		List<TournamentEntity> findTournaments = null;
+		try {
+			
+			findTournaments = (List) tournamentRepository.findBySearchString(searchString);
+			
+			int start = (int) pageable.getOffset();
+			int end = (start + pageable.getPageSize()) > findTournaments.size() ? findTournaments.size() : (start + pageable.getPageSize());
+			Page<TournamentEntity> pages = new PageImpl<TournamentEntity>(findTournaments.subList(start, end), pageable, findTournaments.size());
+			findTournaments = pages.getContent();
+			
 		} catch (Exception e) {
 			return null;
 		}
