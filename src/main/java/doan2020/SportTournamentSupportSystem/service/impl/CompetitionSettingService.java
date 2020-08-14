@@ -78,4 +78,26 @@ public class CompetitionSettingService implements ICompetitionSettingService {
 		return foundEntity;
 	}
 
+	@Override
+	public Collection<CompetitionSettingEntity> findAll(Pageable pageable) {
+		Collection<CompetitionSettingEntity> foundEntitys = null;
+		try {
+			foundEntitys = competitionSettingRepository.findAll(pageable).getContent();
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntitys;
+	}
+
+	@Override
+	public Collection<CompetitionSettingEntity> findByCompetitionId(Long CompetitionId) {
+		Collection<CompetitionSettingEntity> foundEntitys = null;
+		try {
+			foundEntitys = competitionSettingRepository.findByCompetitionId(CompetitionId);
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntitys;
+	}
+
 }

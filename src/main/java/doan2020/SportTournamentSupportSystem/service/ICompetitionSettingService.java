@@ -9,7 +9,7 @@ public interface ICompetitionSettingService {
 	
 	public CompetitionSettingEntity findOneById(Long id);
 	
-//	public Collection<CompetitionSettingEntity> findAll(Pageable pageable);
+	public Collection<CompetitionSettingEntity> findAll(Pageable pageable);
 	
 	public CompetitionSettingEntity create(CompetitionSettingEntity competitionSettingEntity);
 	
@@ -18,4 +18,6 @@ public interface ICompetitionSettingService {
 //	public Collection<CompetitionSettingEntity> findAll();
 	
 	public CompetitionSettingEntity delete(Long id);
+	
+	public Collection<CompetitionSettingEntity> findByCompetitionId(Long CompetitionId);
 }

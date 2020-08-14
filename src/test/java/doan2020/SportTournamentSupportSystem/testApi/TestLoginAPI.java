@@ -12,7 +12,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import doan2020.SportTournamentSupportSystem.api.LoginAPI;
 import doan2020.SportTournamentSupportSystem.converter.UserConverter;
-import doan2020.SportTournamentSupportSystem.dtIn.LoginDtIn;
 import doan2020.SportTournamentSupportSystem.dto.UserDTO;
 import doan2020.SportTournamentSupportSystem.response.Response;
 import doan2020.SportTournamentSupportSystem.service.IVerificationTokenService;

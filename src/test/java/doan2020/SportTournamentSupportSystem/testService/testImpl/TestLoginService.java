@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import doan2020.SportTournamentSupportSystem.dtIn.LoginDtIn;
+import doan2020.SportTournamentSupportSystem.dto.UserDTO;
 import doan2020.SportTournamentSupportSystem.response.Response;
 import doan2020.SportTournamentSupportSystem.service.impl.LoginService;
 
@@ -22,7 +22,9 @@ public class TestLoginService {
 		//phần data test (thay đổi theo các test case tương ứng)
 		String username = "test";
 		String password = "123456";
-		LoginDtIn user = new LoginDtIn(username, password);
+		UserDTO user = new UserDTO();
+		user.setUsername(username);
+		user.setPassword(password);
 		
 		//phần expected result
 		String expectedMessage = "login Successfull";
