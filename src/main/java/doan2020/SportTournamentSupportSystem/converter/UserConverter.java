@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import doan2020.SportTournamentSupportSystem.config.FileStorageProperties;
 import doan2020.SportTournamentSupportSystem.dto.UserDTO;
 import doan2020.SportTournamentSupportSystem.entity.RoleEntity;
 import doan2020.SportTournamentSupportSystem.entity.UserEntity;
@@ -23,6 +24,9 @@ public class UserConverter {
 	
 	@Autowired
 	private IRoleService roleService;
+	
+	@Autowired
+	private FileStorageProperties fileStorageProperties;
 	
 	
 
@@ -53,6 +57,7 @@ public class UserConverter {
 			System.out.println("UserConverter: toEntity: CP2");
 			if (dto.getEmail() != null)
 				entity.setEmail(dto.getEmail());
+			
 			if (dto.getAvatar() != null)
 				entity.setAvatar(dto.getAvatar());
 			if (dto.getBackground() != null)
@@ -94,9 +99,12 @@ public class UserConverter {
 			String dob = validator.formatDateToString(entity.getDob());
 			dto.setDob(dob);
 			System.out.println("UserConverter: toDTO: CP2");
+			String path = fileStorageProperties.getUploadDir();
 			dto.setEmail(entity.getEmail());
-			dto.setAvatar(entity.getAvatar());
-			dto.setBackground(entity.getBackground());
+			if(entity.getAvatar()!=null)
+			dto.setAvatar(path+"/"+entity.getAvatar());
+			if(entity.getBackground()!=null)
+			dto.setBackground(path+"/"+entity.getBackground());
 			
 			System.out.println("UserConverter: toDTO: CP3");
 			RoleEntity userRole = entity.getRole();

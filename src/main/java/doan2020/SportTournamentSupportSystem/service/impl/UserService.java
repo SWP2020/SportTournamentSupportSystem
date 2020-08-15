@@ -10,7 +10,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
 import doan2020.SportTournamentSupportSystem.entity.UserEntity;
 import doan2020.SportTournamentSupportSystem.repository.UserRepository;
 import doan2020.SportTournamentSupportSystem.service.IUserService;
@@ -59,6 +58,34 @@ public class UserService implements IUserService {
 			updatedEntity.setModifiedDate(newEntity.getModifiedDate());
 			updatedEntity.setStatus(newEntity.getStatus());
 			updatedEntity.setUrl(newEntity.getUrl());
+			updatedEntity = userRepository.save(updatedEntity);
+		} catch (Exception e) {
+			return null;
+		}
+        
+		return updatedEntity;
+	}
+	
+	@Override
+	public UserEntity updateBackGround(Long id, UserEntity newEntity) {
+		UserEntity updatedEntity = null;
+		try {
+			updatedEntity = userRepository.findOneById(id);
+			updatedEntity.setBackground(newEntity.getBackground());
+			updatedEntity = userRepository.save(updatedEntity);
+		} catch (Exception e) {
+			return null;
+		}
+        
+		return updatedEntity;
+	}
+	
+	@Override
+	public UserEntity updateAvatar(Long id, UserEntity newEntity) {
+		UserEntity updatedEntity = null;
+		try {
+			updatedEntity = userRepository.findOneById(id);
+			updatedEntity.setAvatar(newEntity.getAvatar());
 			updatedEntity = userRepository.save(updatedEntity);
 		} catch (Exception e) {
 			return null;
@@ -152,5 +179,7 @@ public class UserService implements IUserService {
 		}
 		return findUsers;
 	}
+
+	
 
 }
