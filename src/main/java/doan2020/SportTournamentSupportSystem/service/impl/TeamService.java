@@ -100,10 +100,10 @@ public class TeamService implements ITeamService {
 	}
 
 	@Override
-	public Collection<TeamEntity> findByCreatorId(Pageable pageable, Long creatorId) {
+	public Collection<TeamEntity> findByCreatorId(Long creatorId) {
 		Collection<TeamEntity> foundEntitys = null;
 		try {
-			foundEntitys = teamRepository.findByCreatorId(pageable, creatorId).getContent();
+			foundEntitys = teamRepository.findByCreatorId(creatorId);
 		} catch (Exception e) {
 			return null;
 		}
@@ -111,10 +111,10 @@ public class TeamService implements ITeamService {
 	}
 	
 	@Override
-	public Collection<TeamEntity> findByCompetitionId(Pageable pageable, Long competitionId) {
+	public Collection<TeamEntity> findByCompetitionId(Long competitionId) {
 		Collection<TeamEntity> foundEntities = null;
 		try {
-			foundEntities = teamRepository.findByCompetitionId(pageable, competitionId).getContent();
+			foundEntities = teamRepository.findByCompetitionId(competitionId);
 		} catch (Exception e) {
 			return null;
 		}

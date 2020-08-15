@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
 import doan2020.SportTournamentSupportSystem.entity.MatchEntity;
 import doan2020.SportTournamentSupportSystem.entity.TeamEntity;
+import doan2020.SportTournamentSupportSystem.model.MatchTree;
 import doan2020.SportTournamentSupportSystem.response.Response;
 import doan2020.SportTournamentSupportSystem.service.ICompetitionService;
 
@@ -43,8 +44,57 @@ public class ScheduleAPI {
 		try {
 			CompetitionEntity thisCompetition = competitionService.findOneById(competitionId);
 //			Collection<TeamEntity> teams =
+			MatchTree tree = new MatchTree(thisCompetition);
+			
+			result.put("Schedule", tree.getMatchesStruct());
+			config.put("Global", 0);
+			error.put("MessageCode", 1);
+			error.put("Message", "Successful");
+			System.out.println("ScheduleAPI: singleEliminationSchedule: no exception");
 		} catch (Exception e) {
-			// TODO: handle exception
+			System.out.println("ScheduleAPI: singleEliminationSchedule: has exception");
+			result.put("Schedule", null);
+			config.put("Global", 0);
+			error.put("MessageCode", 1);
+			error.put("Message", "Server error");
+		}
+		 
+
+		response.setConfig(config);
+		response.setResult(result);
+		response.setError(error);
+		System.out.println("ScheduleAPI: singleEliminationSchedule: finish");
+		return new ResponseEntity<Response>(response, httpStatus);
+	}
+	
+	
+	@GetMapping("/test")
+	public ResponseEntity<Response> singleEliminationScheduleTest(
+			@RequestParam(value ="numOfTeam", required = false) int numOfTeam) {
+		
+		System.out.println("ScheduleAPI: singleEliminationScheduleTest: start");
+		Response response = new Response();
+		HttpStatus httpStatus = HttpStatus.OK;
+		Map<String, Object> config = new HashMap<String, Object>();
+		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> error = new HashMap<String, Object>();
+		
+		Collection<MatchEntity> matches = new ArrayList<>();
+		
+		try {
+			MatchTree tree = new MatchTree(numOfTeam);
+			
+			result.put("Schedule", tree.getMatchesStruct());
+			config.put("Global", 0);
+			error.put("MessageCode", 1);
+			error.put("Message", "Successful");
+			System.out.println("ScheduleAPI: singleEliminationScheduleTest: no exception");
+		} catch (Exception e) {
+			System.out.println("ScheduleAPI: singleEliminationScheduleTest: has exception");
+			result.put("Schedule", null);
+			config.put("Global", 0);
+			error.put("MessageCode", 1);
+			error.put("Message", "Server error");
 		}
 		 
 		
@@ -54,7 +104,7 @@ public class ScheduleAPI {
 		response.setConfig(config);
 		response.setResult(result);
 		response.setError(error);
-		System.out.println("ScheduleAPI: singleEliminationSchedule: finish");
+		System.out.println("ScheduleAPI: singleEliminationScheduleTest: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
 	
