@@ -17,6 +17,10 @@ public interface IUserService {
 	
 	public UserEntity update(Long id, UserEntity newEntity);
 	
+	public UserEntity updateAvatar(Long id, UserEntity newEntity);
+	
+	public UserEntity updateBackGround(Long id, UserEntity newEntity);
+	
 	public Collection<UserEntity> findAll();
 	
 	public UserEntity delete(Long id);
