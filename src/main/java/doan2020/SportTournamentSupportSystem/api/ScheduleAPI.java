@@ -44,9 +44,9 @@ public class ScheduleAPI {
 		try {
 			CompetitionEntity thisCompetition = competitionService.findOneById(competitionId);
 //			Collection<TeamEntity> teams =
-			MatchTree tree = new MatchTree(thisCompetition);
+//			MatchTree tree = new MatchTree(thisCompetition);
 
-			result.put("Schedule", tree.getMatchesStruct());
+//			result.put("Schedule", tree.getMatchesStruct());
 			config.put("Global", 0);
 			error.put("MessageCode", 1);
 			error.put("Message", "Successful");

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -371,6 +372,8 @@ public class UserAPI {
 		Map<String, Object> config = new HashMap<String, Object>();
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
+		
+		System.out.println("UserAPI: uploadAvatar: CP1");
 		try {
 			if (id == null) {// id null
 				result.put("User", null);
@@ -378,9 +381,10 @@ public class UserAPI {
 				error.put("MessageCode", 1);
 				error.put("Message", "Required param id");
 			} else {// id not null
-
+				System.out.println("UserAPI: uploadAvatar: CP2");
 				String fileName = fileStorageService.storeFile(file);
-				System.out.println(fileName);
+				System.out.println("UserAPI: uploadAvatar: CP3");
+				System.out.println("UserAPI: uploadAvatar: fileName: " + fileName);
 				if (fileName == null) {// fileName invalid
 					result.put("User", null);
 					config.put("Global", 0);
@@ -410,7 +414,7 @@ public class UserAPI {
 	
 	@PutMapping("/uploadBackground")
 	public ResponseEntity<Response> uploadBackground(
-			@RequestParam("file") MultipartFile file,
+			@RequestBody MultipartFile file,
 			@RequestParam(value = "id") Long id) {
 		
 		System.out.println("UserAPI: uploadBackground: start");
@@ -419,6 +423,7 @@ public class UserAPI {
 		Map<String, Object> config = new HashMap<String, Object>();
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
+		System.out.println("UserAPI: uploadAvatar: CP1");
 		try {
 			if (id == null) {// id null
 				result.put("User", null);
@@ -426,9 +431,10 @@ public class UserAPI {
 				error.put("MessageCode", 1);
 				error.put("Message", "Required param id");
 			} else {// id not null
-
+				System.out.println("UserAPI: uploadAvatar: CP2");
+				System.out.println(file);
 				String fileName = fileStorageService.storeFile(file);
-
+				System.out.println("UserAPI: uploadAvatar: CP3");
 				if (fileName == null) {// fileName invalid
 					result.put("User", null);
 					config.put("Global", 0);
