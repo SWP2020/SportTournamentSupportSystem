@@ -75,4 +75,15 @@ public class ScoringUnitService implements IScoringUnitService {
 		return foundEntity;
 	}
 
+	@Override
+	public Collection<ScoringUnitEntity> findAll() {
+		Collection<ScoringUnitEntity> foundEntitya = null;
+		try {
+			foundEntitya = scoringUnitRepository.findAll();
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntitya;
+	}
+
 }

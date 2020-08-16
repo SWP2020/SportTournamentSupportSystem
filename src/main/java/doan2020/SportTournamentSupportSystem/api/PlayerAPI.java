@@ -1,8 +1,6 @@
 package doan2020.SportTournamentSupportSystem.api;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,14 +16,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import doan2020.SportTournamentSupportSystem.converter.PlayerConverter;
-import doan2020.SportTournamentSupportSystem.converter.PlayerConverter;
-import doan2020.SportTournamentSupportSystem.dtIn.PlayerDtIn;
-import doan2020.SportTournamentSupportSystem.dtOut.PlayerDtOut;
 import doan2020.SportTournamentSupportSystem.dto.PlayerDTO;
 import doan2020.SportTournamentSupportSystem.entity.PlayerEntity;
-import doan2020.SportTournamentSupportSystem.entity.PlayerEntity;
 import doan2020.SportTournamentSupportSystem.response.Response;
-import doan2020.SportTournamentSupportSystem.service.IPlayerService;
 import doan2020.SportTournamentSupportSystem.service.IPlayerService;
 
 @RestController

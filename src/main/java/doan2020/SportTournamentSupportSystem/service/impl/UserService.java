@@ -2,8 +2,11 @@
 package doan2020.SportTournamentSupportSystem.service.impl;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -19,12 +22,15 @@ public class UserService implements IUserService {
 
 	@Override
 	public UserEntity create(UserEntity userEntity) {
+		System.out.println("UserService: create: start");
 		UserEntity newEntity = null;
 		try {
 			newEntity = userRepository.save(userEntity);
+			System.out.println("UserService: create: no exception");
 		} catch (Exception e) {
-			return null;
+			System.out.println("UserService: create: has exception");
 		}
+		System.out.println("UserService: create: finish");
 		return newEntity;
 	}
 
@@ -35,14 +41,14 @@ public class UserService implements IUserService {
 			updatedEntity = userRepository.findOneById(id);
 
 			updatedEntity.setUsername(newEntity.getUsername());
-			updatedEntity.setPassword(newEntity.getPassword());
+//			updatedEntity.setPassword(newEntity.getPassword());
 			updatedEntity.setFirstName(newEntity.getFirstName());
 			updatedEntity.setLastName(newEntity.getLastName());
 			updatedEntity.setAddress(newEntity.getAddress());
 			updatedEntity.setPhoneNumber(newEntity.getPhoneNumber());
 			updatedEntity.setGender(newEntity.getGender());
 			updatedEntity.setDob(newEntity.getDob());
-			updatedEntity.setEmail(newEntity.getEmail());
+//			updatedEntity.setEmail(newEntity.getEmail());
 			updatedEntity.setAvatar(newEntity.getAvatar());
 			updatedEntity.setBackground(newEntity.getBackground());
 			updatedEntity.setRole(newEntity.getRole());
@@ -52,6 +58,34 @@ public class UserService implements IUserService {
 			updatedEntity.setModifiedDate(newEntity.getModifiedDate());
 			updatedEntity.setStatus(newEntity.getStatus());
 			updatedEntity.setUrl(newEntity.getUrl());
+			updatedEntity = userRepository.save(updatedEntity);
+		} catch (Exception e) {
+			return null;
+		}
+        
+		return updatedEntity;
+	}
+	
+	@Override
+	public UserEntity updateBackGround(Long id, UserEntity newEntity) {
+		UserEntity updatedEntity = null;
+		try {
+			updatedEntity = userRepository.findOneById(id);
+			updatedEntity.setBackground(newEntity.getBackground());
+			updatedEntity = userRepository.save(updatedEntity);
+		} catch (Exception e) {
+			return null;
+		}
+        
+		return updatedEntity;
+	}
+	
+	@Override
+	public UserEntity updateAvatar(Long id, UserEntity newEntity) {
+		UserEntity updatedEntity = null;
+		try {
+			updatedEntity = userRepository.findOneById(id);
+			updatedEntity.setAvatar(newEntity.getAvatar());
 			updatedEntity = userRepository.save(updatedEntity);
 		} catch (Exception e) {
 			return null;
@@ -127,5 +161,25 @@ public class UserService implements IUserService {
 		}
 		return foundEntity;
 	}
+	
+	@Override
+	public Collection<UserEntity> findBySearchString(Pageable pageable, String searchString) {
+		List<UserEntity> findUsers = null;
+		try {
+			
+			findUsers = (List) userRepository.findBySearchString(searchString);
+			
+			int start = (int) pageable.getOffset();
+			int end = (start + pageable.getPageSize()) > findUsers.size() ? findUsers.size() : (start + pageable.getPageSize());
+			Page<UserEntity> pages = new PageImpl<UserEntity>(findUsers.subList(start, end), pageable, findUsers.size());
+			findUsers = pages.getContent();
+			
+		} catch (Exception e) {
+			return null;
+		}
+		return findUsers;
+	}
+
+	
 
 }

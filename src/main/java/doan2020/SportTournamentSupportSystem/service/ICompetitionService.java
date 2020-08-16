@@ -13,6 +13,8 @@ public interface ICompetitionService {
 	
 	public Collection<CompetitionEntity> findAll(Pageable pageable);
 	
+	public Collection<CompetitionEntity> findByTournamentId(Long tournamentId);
+	
 	public Collection<CompetitionEntity> findByTournamentId(Pageable pageable, Long tournamentId);
 	
 	public Collection<CompetitionEntity> findByTournamentIdAndSportId(Pageable pageable, Long tournamentId, Long sportId);

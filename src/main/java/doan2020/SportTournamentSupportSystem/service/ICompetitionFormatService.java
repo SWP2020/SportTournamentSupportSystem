@@ -2,7 +2,7 @@
 package doan2020.SportTournamentSupportSystem.service;
 
 import java.util.Collection;
-import org.springframework.data.domain.Pageable;
+
 import doan2020.SportTournamentSupportSystem.entity.CompetitionFormatEntity;
 
 public interface ICompetitionFormatService {
@@ -15,7 +15,7 @@ public interface ICompetitionFormatService {
 	
 	public CompetitionFormatEntity update(Long id, CompetitionFormatEntity newEntity);
 	
-//	public Collection<CompetitionFormatEntity> findAll();
+	public Collection<CompetitionFormatEntity> findAll();
 	
 	public CompetitionFormatEntity delete(Long id);
 }

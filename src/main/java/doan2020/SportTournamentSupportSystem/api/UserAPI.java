@@ -1,10 +1,8 @@
 package doan2020.SportTournamentSupportSystem.api;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,16 +14,18 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import doan2020.SportTournamentSupportSystem.converter.UserConverter;
-import doan2020.SportTournamentSupportSystem.dtIn.RegisterDtIn;
 import doan2020.SportTournamentSupportSystem.dto.UserDTO;
 import doan2020.SportTournamentSupportSystem.entity.RoleEntity;
 import doan2020.SportTournamentSupportSystem.entity.UserEntity;
 import doan2020.SportTournamentSupportSystem.response.Response;
 import doan2020.SportTournamentSupportSystem.service.IRoleService;
 import doan2020.SportTournamentSupportSystem.service.IUserService;
+import doan2020.SportTournamentSupportSystem.service.impl.FileStorageService;
 import doan2020.SportTournamentSupportSystem.service.impl.VerificationTokenService;
 
 @RestController
@@ -43,6 +43,9 @@ public class UserAPI {
 
 	@Autowired
 	private UserConverter userConverter;
+
+	@Autowired
+	private FileStorageService fileStorageService;
 
 	/* get One User */
 
@@ -196,7 +199,7 @@ public class UserAPI {
 		Map<String, Object> error = new HashMap<String, Object>();
 		try {
 			UserEntity newUser = userConverter.toEntity(userDTO);
-			
+
 			UserEntity userCheckUsername = userService.findByUsername(newUser.getUsername());
 			UserEntity userCheckEmail = userService.findByEmail(newUser.getEmail());
 
@@ -208,9 +211,16 @@ public class UserAPI {
 				RoleEntity roleEntity = roleService.findOneByName("ROLE_USER");
 				if (roleEntity != null)
 					newUser.setRole(roleEntity);
+				else {
+					roleEntity = roleService.findOneById((long) 1);
+					newUser.setRole(roleEntity);
+				}
+
 				newUser.setStatus("deactive");
 
 				newUser = userService.create(newUser);
+
+				System.out.println("UserAPI: createUser: newUser: " + newUser);
 
 				userDTO = userConverter.toDTO(newUser);
 
@@ -249,7 +259,7 @@ public class UserAPI {
 			if (id != null) {
 				userEntity = userConverter.toEntity(dto);
 				userEntity = userService.update(id, userEntity);
-				
+
 				result.put("User", userConverter.toDTO(userEntity));
 				error.put("MessageCode", 0);
 				error.put("Message", "Edit Profile User Successfull");
@@ -351,6 +361,104 @@ public class UserAPI {
 		response.setResult(result);
 		response.setConfig(config);
 
+		return new ResponseEntity<Response>(response, httpStatus);
+	}
+
+	@PutMapping("/uploadAvatar")
+	public ResponseEntity<Response> uploadAvatar(@RequestParam("file") MultipartFile file,
+			@RequestParam(value = "id") Long id) {
+		Response response = new Response();
+		HttpStatus httpStatus = HttpStatus.OK;
+		Map<String, Object> config = new HashMap<String, Object>();
+		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> error = new HashMap<String, Object>();
+		
+		System.out.println("UserAPI: uploadAvatar: CP1");
+		try {
+			if (id == null) {// id null
+				result.put("User", null);
+				config.put("Global", 0);
+				error.put("MessageCode", 1);
+				error.put("Message", "Required param id");
+			} else {// id not null
+				System.out.println("UserAPI: uploadAvatar: CP2");
+				String fileName = fileStorageService.storeFile(file);
+				System.out.println("UserAPI: uploadAvatar: CP3");
+				System.out.println("UserAPI: uploadAvatar: fileName: " + fileName);
+				if (fileName == null) {// fileName invalid
+					result.put("User", null);
+					config.put("Global", 0);
+					error.put("MessageCode", 1);
+					error.put("Message", "Could not store file");
+				} else {// fileName valid
+					System.out.println(fileName);
+					UserDTO dto = new UserDTO();
+					dto.setAvatar(fileName);
+					UserEntity userEntity = userConverter.toEntity(dto);
+					userEntity = userService.updateAvatar(id, userEntity);
+					System.out.println(userEntity.getAvatar());
+
+					result.put("User", userConverter.toDTO(userEntity));
+					error.put("MessageCode", 0);
+					error.put("Message", "Upload Avatar and Edit User Successfull");
+				}
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		response.setError(error);
+		response.setResult(result);
+		response.setConfig(config);
+		return new ResponseEntity<Response>(response, httpStatus);
+	}
+	
+	@PutMapping("/uploadBackground")
+	public ResponseEntity<Response> uploadBackground(
+			@RequestBody MultipartFile file,
+			@RequestParam(value = "id") Long id) {
+		
+		System.out.println("UserAPI: uploadBackground: start");
+		Response response = new Response();
+		HttpStatus httpStatus = HttpStatus.OK;
+		Map<String, Object> config = new HashMap<String, Object>();
+		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> error = new HashMap<String, Object>();
+		System.out.println("UserAPI: uploadAvatar: CP1");
+		try {
+			if (id == null) {// id null
+				result.put("User", null);
+				config.put("Global", 0);
+				error.put("MessageCode", 1);
+				error.put("Message", "Required param id");
+			} else {// id not null
+				System.out.println("UserAPI: uploadAvatar: CP2");
+				System.out.println(file);
+				String fileName = fileStorageService.storeFile(file);
+				System.out.println("UserAPI: uploadAvatar: CP3");
+				if (fileName == null) {// fileName invalid
+					result.put("User", null);
+					config.put("Global", 0);
+					error.put("MessageCode", 1);
+					error.put("Message", "Could not store file");
+				} else {// fileName valid
+					UserDTO dto = new UserDTO();
+					dto.setBackground(fileName);
+					UserEntity userEntity = userConverter.toEntity(dto);
+					userEntity = userService.updateBackGround(id, userEntity);
+
+					result.put("User", userConverter.toDTO(userEntity));
+					error.put("MessageCode", 0);
+					error.put("Message", "Upload background and Edit User Successfull");
+				}
+			}
+			System.out.println("UserAPI: uploadBackground: no exception");
+		} catch (Exception e) {
+			System.out.println("UserAPI: uploadBackground: has exception");
+		}
+		response.setError(error);
+		response.setResult(result);
+		response.setConfig(config);
+		System.out.println("UserAPI: uploadBackground: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
 

@@ -24,4 +24,5 @@ public interface ICommentService {
 	public Collection<CommentEntity> findByPostId(Long postId);
     
 	public Collection<CommentEntity> findByUserId(Long userId);
+	
 } 

@@ -17,6 +17,10 @@ public interface IUserService {
 	
 	public UserEntity update(Long id, UserEntity newEntity);
 	
+	public UserEntity updateAvatar(Long id, UserEntity newEntity);
+	
+	public UserEntity updateBackGround(Long id, UserEntity newEntity);
+	
 	public Collection<UserEntity> findAll();
 	
 	public UserEntity delete(Long id);
@@ -24,4 +28,6 @@ public interface IUserService {
 	public UserEntity findByUsername(String username);
 	
 	public UserEntity findByEmail(String email);
+	
+	public Collection<UserEntity> findBySearchString(Pageable pageable, String searchString);
 }

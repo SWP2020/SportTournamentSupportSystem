@@ -146,10 +146,7 @@ public class TeamsAPI {
 				error.put("Message", "required Userid");
 			} else {
 
-				Sort sortable = Sort.by("id").ascending();
-				Pageable pageable = PageRequest.of(page - 1, limit, sortable);
-
-				list = (List<TeamEntity>) service.findByCreatorId(pageable, userId);
+				list = (List<TeamEntity>) service.findByCreatorId(userId);
 
 				if (list.isEmpty()) {// list is not exist
 					result.put("Total page", null);
@@ -229,10 +226,7 @@ public class TeamsAPI {
 				error.put("Message", "required competitionId");
 			} else {
 
-				Sort sortable = Sort.by("id").ascending();
-				Pageable pageable = PageRequest.of(page - 1, limit, sortable);
-
-				list = (List<TeamEntity>) service.findByCompetitionId(pageable, competitionId);
+				list = (List<TeamEntity>) service.findByCompetitionId(competitionId);
 
 				if (list.isEmpty()) {// list is not exist
 					result.put("Total page", null);

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import doan2020.SportTournamentSupportSystem.config.FileStorageProperties;
 import doan2020.SportTournamentSupportSystem.dto.UserDTO;
 import doan2020.SportTournamentSupportSystem.entity.RoleEntity;
 import doan2020.SportTournamentSupportSystem.entity.UserEntity;
@@ -24,6 +25,9 @@ public class UserConverter {
 	@Autowired
 	private IRoleService roleService;
 	
+	@Autowired
+	private FileStorageProperties fileStorageProperties;
+	
 	
 
 	public UserEntity toEntity(UserDTO dto) {
@@ -32,14 +36,10 @@ public class UserConverter {
 		try {
 			if (dto.getUsername() != null)
 				entity.setUsername(dto.getUsername());
-			
-			System.out.println(dto.getPassword());
-			
-			String userPassword = null;
-			
+				
 			if(dto.getPassword() != null) {
 //				userPassword = passwordEncoder.encode(dto.getPassword());
-				userPassword = dto.getPassword();
+				String userPassword = dto.getPassword();
 				entity.setPassword(userPassword);
 			}
 			System.out.println("UserConverter: toEntity: CP");
@@ -57,6 +57,7 @@ public class UserConverter {
 			System.out.println("UserConverter: toEntity: CP2");
 			if (dto.getEmail() != null)
 				entity.setEmail(dto.getEmail());
+			
 			if (dto.getAvatar() != null)
 				entity.setAvatar(dto.getAvatar());
 			if (dto.getBackground() != null)
@@ -83,6 +84,7 @@ public class UserConverter {
 	public UserDTO toDTO(UserEntity entity) {
 		System.out.println("UserConverter: toDTO: start");
 		UserDTO dto = new UserDTO();
+		System.out.println(entity);
 		try {
 			dto.setId(entity.getId());
 			dto.setUsername(entity.getUsername());
@@ -92,21 +94,24 @@ public class UserConverter {
 			dto.setAddress(entity.getAddress());
 			dto.setPhoneNumber(entity.getPhoneNumber());
 			dto.setGender(entity.getGender());
-			System.out.println("UserConverter: toEntity: CP1");
+			System.out.println("UserConverter: toDTO: CP1");
 			
 			String dob = validator.formatDateToString(entity.getDob());
 			dto.setDob(dob);
-			System.out.println("UserConverter: toEntity: CP2");
+			System.out.println("UserConverter: toDTO: CP2");
+			String path = fileStorageProperties.getUploadDir();
 			dto.setEmail(entity.getEmail());
-			dto.setAvatar(entity.getAvatar());
-			dto.setBackground(entity.getBackground());
+			if(entity.getAvatar()!=null)
+			dto.setAvatar(path+"/"+entity.getAvatar());
+			if(entity.getBackground()!=null)
+			dto.setBackground(path+"/"+entity.getBackground());
 			
-			System.out.println("UserConverter: toEntity: CP3");
+			System.out.println("UserConverter: toDTO: CP3");
 			RoleEntity userRole = entity.getRole();
 			Long userRoleId = userRole.getId();
 			dto.setRoleId(userRoleId);
 			
-			System.out.println("UserConverter: toEntity: CP4");
+			System.out.println("UserConverter: toDTO: CP4");
 			dto.setStatus(entity.getStatus());
 			dto.setUrl(entity.getUrl());
 			System.out.println("UserConverter: toDTO: no exception");
