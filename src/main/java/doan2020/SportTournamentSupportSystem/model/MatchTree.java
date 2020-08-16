@@ -2,6 +2,8 @@ package doan2020.SportTournamentSupportSystem.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.Queue;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -17,14 +19,14 @@ import doan2020.SportTournamentSupportSystem.service.ITeamService;
 public class MatchTree {
 
 	private CompetitionEntity competition;
-	
+
 	@Autowired
 	private ICompetitionService competitionService;
 
-	private Collection<MatchEntity> matches;
+	private Collection<MatchEntity> matches = new ArrayList<>();
 	@Autowired
 	private IMatchService matchService;
-	
+
 	private Collection<TeamEntity> seeds;
 	@Autowired
 	private ITeamService teamService;
@@ -34,63 +36,54 @@ public class MatchTree {
 	private int totalRound;
 	private int totalMatch = 0;
 	private int teamPerMatch = 2;
-	
+
 	private Match matchesStruct;
 
-	
 	public MatchTree(Collection<TeamEntity> seeds) {
 		this.seeds = seeds;
 		this.totalTeams = this.seeds.size();
-		this.matchesStruct = this.createBinaryTree(null, 1, this.totalTeams);
-		this.matches = this.createEntityByDownTree(this.matchesStruct);
+		this.matchesStruct = this.createSingleEliminationTree(null, 1, this.totalTeams, 1l);
 	}
 
 	public MatchTree(Long competitionId) {
 		this.competition = competitionService.findOneById(competitionId);
 		this.seeds = this.competition.getTeams();
 		this.totalTeams = this.seeds.size();
-		this.matchesStruct = this.createBinaryTree(null, 1, this.totalTeams);
-		this.matches = this.createEntityByDownTree(this.matchesStruct);
+		this.matchesStruct = this.createSingleEliminationTree(null, 1, this.totalTeams, 1l);
 	}
 
 	public MatchTree(CompetitionEntity competition) {
 		this.competition = competition;
 		this.seeds = this.competition.getTeams();
 		this.totalTeams = this.seeds.size();
-		this.matchesStruct = this.createBinaryTree(null, 1, this.totalTeams);
-		this.matches = this.createEntityByDownTree(this.matchesStruct);
+		this.matchesStruct = this.createSingleEliminationTree(null, 1, this.totalTeams, 1l);
 	}
-	
-	public MatchTree(int totalTeams) { // for Test
+
+	public MatchTree(int totalTeams, Long formatId) { // for Test
 		System.out.println("MatchTree: Constructor for Test: start");
 		this.totalTeams = totalTeams;
-		System.out.println("MatchTree: Constructor for Test: start createBinaryTree");
-		this.matchesStruct = this.createBinaryTree(null, 1, this.totalTeams);
-		System.out.println("MatchTree: Constructor for Test: start createEntityByDownTree");
-		this.matches = this.createEntityByDownTree(this.matchesStruct);
+		if (formatId == 1)
+			this.matchesStruct = this.createSingleEliminationTree(null, 1, this.totalTeams, 1l);
+		else 
+			this.matchesStruct = this.createDoubleEliminationTree(this.totalTeams);
 		System.out.println("MatchTree: Constructor for Test: finish");
 	}
-	
+
 	public Collection<MatchEntity> getMatches() {
 		return this.matches;
 	}
-	
-	private Collection<MatchEntity> createEntityByDownTree(Match node){
-		Collection<MatchEntity> matches = new ArrayList<>();
-		
-		if (node == null)
-			return matches;
-		
+
+	private MatchEntity createMatch(Match node) {
 		MatchEntity match = new MatchEntity();
 
 		match.setCompetition(this.competition);
-		
-		Match next = node.getNext();
+
+//		Match next = node.getNext();
 		MatchEntity nextMatch = null;
-		
-		if (next != null)
-			nextMatch = next.getEntity();
-		
+
+//		if (next != null)
+//			nextMatch = next.getEntity();
+
 		match.setNextMatch(nextMatch);
 
 		String name = "match-" + node.getId().toString();
@@ -108,71 +101,139 @@ public class MatchTree {
 		match.setStatus("scheduling");
 		match.setUrl("url");
 
-		
-		matches.addAll(createEntityByDownTree(node.getLeft()));
-		matches.addAll(createEntityByDownTree(node.getRight()));
-		
-		return matches;
+		return match;
 	}
 
 	// Logic match tree
 	// -----------------------------------------------------------------------------
 
-	private Match createBinaryTree(Match parent, int left, int right) {
-
+	private Match createSingleEliminationTree(Match parent, int left, int right, Long index) {
+		System.out.println("MatchTree: createSingleEliminationTree: start");
 		Match root = new Match();
 
 		if (right - left < 0) { // it hon 1 team
 			return root;
 		}
 
+		System.out.println("MatchTree: createSingleEliminationTree: CP0");
+		
+		root.setId(index);
+		root.setRoundNo(1);
+		root.setAfterWin(parent);
+		
+		root.setNextAfterWinId(null);
+		root.setNextAfterLoseId(null);
+		if (parent != null) {
+			root.setNextAfterWinId(parent.getId());
+			root.setNextAfterLoseId(parent.getId());
+		}
+		
+		root.setAfterLose(null);
+		System.out.println("MatchTree: createSingleEliminationTree: CP0-1");
+		root.setNextAfterLoseId(null);
+		System.out.println("MatchTree: createSingleEliminationTree: CP0-2");
+		root.setLeft(null);
+		root.setRight(null);
+
+		root.setTeam1(left);
+		root.setTeam2(right);
+		root.setWinner(null);
+
+		System.out.println("MatchTree: createSingleEliminationTree: CP1");
+
 		if (right - left == 0) { // 1 teams
-			root = createMatch(parent, 1);
-			root.setTeam1(left);
-			root.setTeam2(0);
+			root.setTeam2(null);
 			root.setWinner(left);
+
 		}
 
-		if (right - left == 1) { // 2 teams
-			root = createMatch(parent, 1);
-			root.setTeam1(left);
-			root.setTeam2(right);
-			root.setWinner(0);
-		}
+		System.out.println("MatchTree: createSingleEliminationTree: CP2");
 
-		if (right - left >= 2) { // tu 3 teams tro len
+		if (right - left >= 1) { // tu 2 teams tro len
 
 			int mid = (left + right) / 2;
-			root.setLeft(createBinaryTree(root, left, mid));
-			root.setRight(createBinaryTree(root, mid + 1, right));
+			root.setLeft(createSingleEliminationTree(root, left, mid, index * 2));
+			root.setRight(createSingleEliminationTree(root, mid + 1, right, index * 2 + 1));
+			
+			System.out.println("MatchTree: createSingleEliminationTree: CP3-1");
+			System.out.println("MatchTree: createSingleEliminationTree: CP3-2");
 
-			int roundNo = root.getLeft().getRoundNo() + 1;
-			root.setRoundNo(roundNo);
+			Integer childrenRoundNo = root.getLeft().getRoundNo();
+			root.setRoundNo(childrenRoundNo + 1);
 
-			this.totalMatch++;
-			root.setId((long) this.totalMatch);
-			root.setNext(parent);
-
-			root.setTeam1(0);
-			root.setTeam2(0);
-			root.setWinner(0);
+			root.setTeam1(null);
+			root.setTeam2(null);
+			root.setWinner(null);
 		}
 
+		System.out.println("MatchTree: createSingleEliminationTree: finish: roundNo:" + root.getRoundNo());
 		return root;
 	}
 
-	private Match createMatch(Match parent, int roundNo) {
-		Match match = new Match();
+	private Match createDoubleEliminationTree(int numOfTeam) {
+		System.out.println("MatchTree: createDoubleEliminationTree: start");
+		Match root = new Match();
+		if (!isTwoExp(numOfTeam)) {
+			System.out.println("MatchTree: createDoubleEliminationTree: not isTwoExp");
+			return null;
+		}
+		
+		System.out.println("MatchTree: createDoubleEliminationTree: isTwoExp");
 
-		this.totalMatch++;
-		match.setId((long) this.totalMatch);
+		Match winBranch = createSingleEliminationTree(root, 1, numOfTeam, 2l);
+		
+		System.out.println("MatchTree: createDoubleEliminationTree: createSingleEliminationTree done");
+		Match loseBranch = createLoseBranch(root, numOfTeam);
+		
+		root.setLeft(winBranch);
+		root.setRight(loseBranch);
+		System.out.println("MatchTree: createDoubleEliminationTree: finish");
+		return root;
+	}
+
+	private boolean isTwoExp(Integer x) {
+		while (x % 2 == 0)
+			x = x / 2;
+		return (x == 1);
+	}
+	
+	private Match createLoseBranch(Match root, int numOfTeam) {
+		Match match = new Match();
+		if (numOfTeam < 4) {
+			return null;
+		}
+		
 		match.setLeft(null);
-		match.setRight(null);
-		match.setNext(parent);
-		match.setRoundNo(roundNo);
+		match.setRight(createLoseRightBranch(match, numOfTeam));
+		
 		return match;
 	}
 	
+	private Match createLoseRightBranch(Match root, int numOfTeam) {
+		Match match = new Match();
+		if (numOfTeam < 4) {
+			return null;
+		}
+		
+		if (numOfTeam == 4) {
+			match.setLeft(null);
+			match.setRight(null);
+		} else {
+			match.setLeft(createLoseBranch(match, numOfTeam / 2));
+			match.setRight(createLoseBranch(match, numOfTeam / 2));
+		}
+		
+		return root;
+	}
+	
+	
+	private Match Indexing(Match root) {
+		Queue<Match> q = new LinkedList<Match>();
+		
+		
+		return root;
+	}
+
 	// -----------------------------------------------------------------------------------------------
 
 	public CompetitionEntity getCompetition() {
@@ -266,9 +327,5 @@ public class MatchTree {
 	public void setMatches(Collection<MatchEntity> matches) {
 		this.matches = matches;
 	}
-
-	
-	
-	
 
 }
