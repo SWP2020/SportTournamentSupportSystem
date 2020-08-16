@@ -39,33 +39,33 @@ public class MatchTree {
 
 	private Match matchesStruct;
 
-	public MatchTree(Collection<TeamEntity> seeds) {
-		this.seeds = seeds;
-		this.totalTeam = this.seeds.size();
-		this.totalRound = calTotalRound(this.totalTeam);
-		this.matchesStruct = this.createSingleEliminationTree(null, 1, this.totalTeam, 1l);
-	}
-
-	public MatchTree(Long competitionId) {
-		this.competition = competitionService.findOneById(competitionId);
-		this.seeds = this.competition.getTeams();
-		this.totalTeam = this.seeds.size();
-		this.totalRound = calTotalRound(this.totalTeam);
-		this.matchesStruct = this.createSingleEliminationTree(null, 1, this.totalTeam, 1l);
-	}
-
-	public MatchTree(CompetitionEntity competition) {
-		this.competition = competition;
-		this.seeds = this.competition.getTeams();
-		this.totalTeam = this.seeds.size();
-		this.totalRound = calTotalRound(this.totalTeam);
-		this.matchesStruct = this.createSingleEliminationTree(null, 1, this.totalTeam, 1l);
-	}
+//	public MatchTree(Collection<TeamEntity> seeds) {
+//		this.seeds = seeds;
+//		this.totalTeam = this.seeds.size();
+//		this.totalRound = calTotalRound(this.totalTeam, 1l);
+//		this.matchesStruct = this.createSingleEliminationTree(null, 1, this.totalTeam, 1l);
+//	}
+//
+//	public MatchTree(Long competitionId) {
+//		this.competition = competitionService.findOneById(competitionId);
+//		this.seeds = this.competition.getTeams();
+//		this.totalTeam = this.seeds.size();
+//		this.totalRound = calTotalRound(this.totalTeam, 1l);
+//		this.matchesStruct = this.createSingleEliminationTree(null, 1, this.totalTeam, 1l);
+//	}
+//
+//	public MatchTree(CompetitionEntity competition) {
+//		this.competition = competition;
+//		this.seeds = this.competition.getTeams();
+//		this.totalTeam = this.seeds.size();
+//		this.totalRound = calTotalRound(this.totalTeam, 1l);
+//		this.matchesStruct = this.createSingleEliminationTree(null, 1, this.totalTeam, 1l);
+//	}
 
 	public MatchTree(int totalTeam, Long formatId) { // for Test
 		System.out.println("MatchTree: Constructor for Test: start");
 		this.totalTeam = totalTeam;
-		this.totalRound = calTotalRound(this.totalTeam);
+		this.totalRound = calTotalRound(this.totalTeam, formatId);
 		if (formatId == 1)
 			this.matchesStruct = this.createSingleEliminationTree(null, 1, this.totalTeam, 1l);
 		else 
@@ -151,6 +151,8 @@ public class MatchTree {
 		System.out.println("MatchTree: createSingleEliminationTree: CP1");
 
 		if (right - left == 1) { // 2 teams
+			root.setTeam1(left);
+			root.setTeam2(right);
 		}
 		
 		if (right - left == 2) { // 3 teams
@@ -173,17 +175,19 @@ public class MatchTree {
 	private Match createDoubleEliminationTree(int numOfTeam) {
 		System.out.println("MatchTree: createDoubleEliminationTree: start");
 		Match root = new Match();
+		
+		root.setId(1l);
+		root.setMatchNo(null);
+		
+		root.setRoundNo(this.totalRound);
+		
 		if (!isTwoExp(numOfTeam)) {
-			System.out.println("MatchTree: createDoubleEliminationTree: not isTwoExp");
 			return null;
 		}
-		
-		System.out.println("MatchTree: createDoubleEliminationTree: isTwoExp");
 
 		Match winBranch = createSingleEliminationTree(root, 1, numOfTeam, 2l);
 		
-		System.out.println("MatchTree: createDoubleEliminationTree: createSingleEliminationTree done");
-		Match loseBranch = createLoseBranch(root, numOfTeam);
+		Match loseBranch = createLoseBranch(root, numOfTeam, 3l);
 		
 		root.setLeft(winBranch);
 		root.setRight(loseBranch);
@@ -197,7 +201,7 @@ public class MatchTree {
 		return (x == 1);
 	}
 	
-	private Integer calTotalRound(Integer totalTeam) {
+	private Integer calTotalRound(Integer totalTeam, Long formatId) {
 		
 		int x = 1;
 		int k = 0;
@@ -206,33 +210,89 @@ public class MatchTree {
 			x *= 2;
 			k ++;
 		}
+		if (formatId == 2) {
+			k *= 2;
+		}
 		return k;
 	}
 	
-	private Match createLoseBranch(Match root, int numOfTeam) {
-		Match match = new Match();
+	private Match createLoseBranch(Match parent, int numOfTeam, Long index) {
+		Match root = new Match();
+		
 		if (numOfTeam < 4) {
 			return null;
 		}
 		
-		match.setLeft(null);
-		match.setRight(createLoseRightBranch(match, numOfTeam));
+		root.setId(index);
+		root.setMatchNo(null);
 		
-		return match;
+		if (parent == null) { // day la node goc
+			root.setRoundNo(this.totalRound);
+		} else {
+			root.setRoundNo(parent.getRoundNo() - 1);
+		}
+		
+		root.setNextAfterWin(parent);
+		root.setNextAfterLose(null);
+		
+		root.setNextAfterWinId(null);
+		root.setNextAfterLoseId(null);
+		
+		if (parent != null) {
+			root.setNextAfterWinId(parent.getId());
+		}
+		
+		root.setTeam1(null);
+		root.setTeam2(null);
+		
+		root.setWinner(null);
+		
+		root.setLeft(null);
+		root.setRight(createLoseRightBranch(root, numOfTeam, index * 2 + 1));
+		
+		return root;
 	}
 	
-	private Match createLoseRightBranch(Match root, int numOfTeam) {
-		Match match = new Match();
+	private Match createLoseRightBranch(Match parent, int numOfTeam, Long index) {
+		Match root = new Match();
+		
 		if (numOfTeam < 4) {
 			return null;
 		}
 		
-		if (numOfTeam == 4) {
-			match.setLeft(null);
-			match.setRight(null);
+		root.setId(index);
+		root.setMatchNo(null);
+		
+		if (parent == null) { // day la node goc
+			root.setRoundNo(this.totalRound);
 		} else {
-			match.setLeft(createLoseBranch(match, numOfTeam / 2));
-			match.setRight(createLoseBranch(match, numOfTeam / 2));
+			root.setRoundNo(parent.getRoundNo() - 1);
+		}
+		
+		root.setNextAfterWin(parent);
+		root.setNextAfterLose(null);
+		
+		root.setNextAfterWinId(null);
+		root.setNextAfterLoseId(null);
+		
+		if (parent != null) {
+			root.setNextAfterWinId(parent.getId());
+		}
+		
+		root.setTeam1(null);
+		root.setTeam2(null);
+
+		root.setLeft(null);
+		root.setRight(null);
+
+		root.setWinner(null);
+		
+		if (numOfTeam == 4) {
+			root.setLeft(null);
+			root.setRight(null);
+		} else {
+			root.setLeft(createLoseBranch(root, numOfTeam / 2, index * 2));
+			root.setRight(createLoseBranch(root, numOfTeam / 2, index * 2 + 1));
 		}
 		
 		return root;
