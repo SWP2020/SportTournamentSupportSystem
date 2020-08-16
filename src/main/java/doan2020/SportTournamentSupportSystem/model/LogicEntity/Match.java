@@ -1,81 +1,126 @@
 package doan2020.SportTournamentSupportSystem.model.LogicEntity;
 
-import java.util.ArrayList;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
-
-import doan2020.SportTournamentSupportSystem.entity.MatchEntity;
 
 public class Match {
 	
 	private Long id;
+	
+	private Integer matchNo;
 	private int roundNo;
 	
 	@JsonBackReference
-	private Match next;
-	private int team1;
-	private int team2;
-//	private ArrayList<Match> children;
+	private Match nextAfterWin;
+	
+	@JsonBackReference
+	private Match nextAfterLose;
+	
+	private Long nextAfterWinId;
+	private Long nextAfterLoseId;
+	
+	private Integer team1;
+	private Integer team2;
 	private Match left;
 	private Match right;
-	private int winner;
-	private MatchEntity entity;
+	private Integer winner;
 	
 	public Long getId() {
 		return id;
 	}
+
 	public void setId(Long id) {
 		this.id = id;
 	}
+
 	public int getRoundNo() {
 		return roundNo;
 	}
-	public void setRoundNo(int roundNo) {
+
+	public void setRoundNo(Integer roundNo) {
 		this.roundNo = roundNo;
 	}
-	public Match getNext() {
-		return next;
+
+	public Match getNextAfterWin() {
+		return nextAfterWin;
 	}
-	public void setNext(Match next) {
-		this.next = next;
+
+	public void setNextAfterWin(Match afterWin) {
+		this.nextAfterWin = afterWin;
 	}
-	
+
+	public Match getNextAfterLose() {
+		return nextAfterLose;
+	}
+
+	public void setNextAfterLose(Match afterLose) {
+		this.nextAfterLose = afterLose;
+	}
+
+	public Long getNextAfterWinId() {
+		return nextAfterWinId;
+	}
+
+	public void setNextAfterWinId(Long nextAfterWinId) {
+		this.nextAfterWinId = nextAfterWinId;
+	}
+
+	public Long getNextAfterLoseId() {
+		return nextAfterLoseId;
+	}
+
+	public void setNextAfterLoseId(Long nextAfterLoseId) {
+		this.nextAfterLoseId = nextAfterLoseId;
+	}
+
+	public Integer getTeam1() {
+		return team1;
+	}
+
+	public void setTeam1(Integer team1) {
+		this.team1 = team1;
+	}
+
+	public Integer getTeam2() {
+		return team2;
+	}
+
+	public void setTeam2(Integer team2) {
+		this.team2 = team2;
+	}
+
 	public Match getLeft() {
 		return left;
 	}
+
 	public void setLeft(Match left) {
 		this.left = left;
 	}
+
 	public Match getRight() {
 		return right;
 	}
+
 	public void setRight(Match right) {
 		this.right = right;
 	}
-	public int getTeam1() {
-		return team1;
-	}
-	public void setTeam1(int team1) {
-		this.team1 = team1;
-	}
-	public int getTeam2() {
-		return team2;
-	}
-	public void setTeam2(int team2) {
-		this.team2 = team2;
-	}
-	public int getWinner() {
+
+	public Integer getWinner() {
 		return winner;
 	}
-	public void setWinner(int winner) {
+
+	public void setWinner(Integer winner) {
 		this.winner = winner;
 	}
-	public MatchEntity getEntity() {
-		return entity;
+
+	public Integer getMatchNo() {
+		return matchNo;
 	}
-	public void setEntity(MatchEntity entity) {
-		this.entity = entity;
+
+	public void setMatchNo(Integer matchNo) {
+		this.matchNo = matchNo;
 	}
+	
+	
 	
 	
 }
