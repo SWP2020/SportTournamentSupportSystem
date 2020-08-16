@@ -409,8 +409,11 @@ public class UserAPI {
 	}
 	
 	@PutMapping("/uploadBackground")
-	public ResponseEntity<Response> uploadBackground(@RequestParam("file") MultipartFile file,
+	public ResponseEntity<Response> uploadBackground(
+			@RequestParam("file") MultipartFile file,
 			@RequestParam(value = "id") Long id) {
+		
+		System.out.println("UserAPI: uploadBackground: start");
 		Response response = new Response();
 		HttpStatus httpStatus = HttpStatus.OK;
 		Map<String, Object> config = new HashMap<String, Object>();
@@ -442,12 +445,14 @@ public class UserAPI {
 					error.put("Message", "Upload background and Edit User Successfull");
 				}
 			}
+			System.out.println("UserAPI: uploadBackground: no exception");
 		} catch (Exception e) {
-			// TODO: handle exception
+			System.out.println("UserAPI: uploadBackground: has exception");
 		}
 		response.setError(error);
 		response.setResult(result);
 		response.setConfig(config);
+		System.out.println("UserAPI: uploadBackground: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
 
