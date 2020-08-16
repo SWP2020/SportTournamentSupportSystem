@@ -1,10 +1,17 @@
 package doan2020.SportTournamentSupportSystem.testApi;
 
+import java.util.Date;
+
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -13,6 +20,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import doan2020.SportTournamentSupportSystem.api.LoginAPI;
 import doan2020.SportTournamentSupportSystem.converter.UserConverter;
 import doan2020.SportTournamentSupportSystem.dtIn.LoginDtIn;
+import doan2020.SportTournamentSupportSystem.entity.UserEntity;
+import doan2020.SportTournamentSupportSystem.repository.UserRepository;
 import doan2020.SportTournamentSupportSystem.response.Response;
 import doan2020.SportTournamentSupportSystem.service.IVerificationTokenService;
 import doan2020.SportTournamentSupportSystem.service.impl.JwtService;
@@ -22,27 +31,95 @@ import doan2020.SportTournamentSupportSystem.service.impl.UserService;
 @RunWith(SpringRunner.class)
 public class TestLoginAPI {
 	
-	@InjectMocks
-	LoginAPI loginApi;
+	/*
+	Các Bean được tạo bởi @TestConfiguration chỉ tồn tại trong môi trường Test
+	Cần Bean gì thì tự tạo ra trong @TestConfiguration
+	*/
+	@TestConfiguration
+	public static class testloginAPIConfiguration {
+		
+		@Bean
+		LoginService loginService() {
+			return new LoginService();
+		}
+		
+		@Bean
+		BCryptPasswordEncoder passwordEncoder() {
+			return new BCryptPasswordEncoder();
+		}
+
+		@Bean
+		JwtService jwtService() {
+			return new JwtService();
+		}
+		
+		@Bean
+		UserService userService() {
+			return new UserService();
+		}
+
+		@Bean
+		UserConverter converter() {
+			return new UserConverter();
+		}
+		
+		@Bean
+		LoginAPI loginApi() {
+			return new LoginAPI();
+		}
+	}
 	
-	@Mock
+	@MockBean
 	LoginService loginService;
 	
-	@Mock
+	@MockBean
 	BCryptPasswordEncoder passwordEncoder;
 
-	@Mock
+	@MockBean
 	JwtService jwtService;
 
-	@Mock
+	@MockBean
+	UserRepository userRepository;
+	
+	@MockBean
 	UserService userService;
 
-	@Mock
+	@MockBean
 	UserConverter converter;
 
-	@Mock
+	@MockBean
 	IVerificationTokenService verificationTokenService;
 	
+	@Autowired
+	LoginAPI loginApi;
+	
+	/*
+	 setup trước khi thực hiện test
+	 */
+	@Before
+	public void setUp() {
+		Date returnUserDob = new Date(2020 - 1900, 6, 12);
+		Date returnUserCreatedDate = new Date(2020 - 1900, 6, 12);
+		Date returnUserModifiedDate = new Date(2020 - 1900, 6, 12);
+		
+		UserEntity returnUser = new UserEntity((long)1, "Cong", "123456", 
+				"Do Van", "Cong", "Thanh Xuan, Ha Noi", 
+				"12345678", true, returnUserDob, 
+				"cong123@gmail.com", "ava1.jpg", "background1.jpg", 
+				"creator1", returnUserCreatedDate, 
+				"modifier1", returnUserModifiedDate, 
+				"active", "stss.com/user/1bcdef", null);
+		/*
+		Giả lập kết quả trả về của hàm findByUsername trong userService
+		 */
+		Mockito.when(userService.findByUsername("Cong")).thenReturn(returnUser);
+		
+		MockitoAnnotations.initMocks(this);
+	}
+	
+	/*
+	 * Verify kết quả trả về của hàm login trong login API
+	 */
 	@Test
 	public void testLogin() {
 		//phần data test (thay đổi theo các test case tương ứng)
@@ -52,13 +129,19 @@ public class TestLoginAPI {
 		
 		//phần expected result
 		HttpStatus expectedHttpStatus = HttpStatus.OK;
+		String expectedMessage = "Login successfull";
+		int expectedConfigGlobal = 0;
 		
 		//phần execute test
 		ResponseEntity<Response> response = loginApi.login(user);
 		
 		HttpStatus actualHttpStatus = response.getStatusCode();
-		System.out.println(actualHttpStatus);
+		String actualMessage = (String)response.getBody().getError().get("Message");
+		int actualConfigGlobal = (int)response.getBody().getConfig().get("Global");
+		System.out.println("____"+actualMessage);
 		Assert.assertEquals(expectedHttpStatus, actualHttpStatus);
+		Assert.assertEquals(expectedMessage, actualMessage);
+		Assert.assertEquals(expectedConfigGlobal, actualConfigGlobal);
 	}
 	
 }
