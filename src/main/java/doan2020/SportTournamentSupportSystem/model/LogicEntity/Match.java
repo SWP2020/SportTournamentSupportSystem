@@ -10,10 +10,10 @@ public class Match {
 	private int roundNo;
 	
 	@JsonBackReference
-	private Match afterWin;
+	private Match nextAfterWin;
 	
 	@JsonBackReference
-	private Match afterLose;
+	private Match nextAfterLose;
 	
 	private Long nextAfterWinId;
 	private Long nextAfterLoseId;
@@ -40,20 +40,20 @@ public class Match {
 		this.roundNo = roundNo;
 	}
 
-	public Match getAfterWin() {
-		return afterWin;
+	public Match getNextAfterWin() {
+		return nextAfterWin;
 	}
 
-	public void setAfterWin(Match afterWin) {
-		this.afterWin = afterWin;
+	public void setNextAfterWin(Match afterWin) {
+		this.nextAfterWin = afterWin;
 	}
 
-	public Match getAfterLose() {
-		return afterLose;
+	public Match getNextAfterLose() {
+		return nextAfterLose;
 	}
 
-	public void setAfterLose(Match afterLose) {
-		this.afterLose = afterLose;
+	public void setNextAfterLose(Match afterLose) {
+		this.nextAfterLose = afterLose;
 	}
 
 	public Long getNextAfterWinId() {

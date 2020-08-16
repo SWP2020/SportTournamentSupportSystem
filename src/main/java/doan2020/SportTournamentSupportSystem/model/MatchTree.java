@@ -32,7 +32,7 @@ public class MatchTree {
 	private ITeamService teamService;
 
 	private int numOfSet = 3;
-	private int totalTeams;
+	private int totalTeam;
 	private int totalRound;
 	private int totalMatch = 0;
 	private int teamPerMatch = 2;
@@ -41,31 +41,35 @@ public class MatchTree {
 
 	public MatchTree(Collection<TeamEntity> seeds) {
 		this.seeds = seeds;
-		this.totalTeams = this.seeds.size();
-		this.matchesStruct = this.createSingleEliminationTree(null, 1, this.totalTeams, 1l);
+		this.totalTeam = this.seeds.size();
+		this.totalRound = calTotalRound(this.totalTeam);
+		this.matchesStruct = this.createSingleEliminationTree(null, 1, this.totalTeam, 1l);
 	}
 
 	public MatchTree(Long competitionId) {
 		this.competition = competitionService.findOneById(competitionId);
 		this.seeds = this.competition.getTeams();
-		this.totalTeams = this.seeds.size();
-		this.matchesStruct = this.createSingleEliminationTree(null, 1, this.totalTeams, 1l);
+		this.totalTeam = this.seeds.size();
+		this.totalRound = calTotalRound(this.totalTeam);
+		this.matchesStruct = this.createSingleEliminationTree(null, 1, this.totalTeam, 1l);
 	}
 
 	public MatchTree(CompetitionEntity competition) {
 		this.competition = competition;
 		this.seeds = this.competition.getTeams();
-		this.totalTeams = this.seeds.size();
-		this.matchesStruct = this.createSingleEliminationTree(null, 1, this.totalTeams, 1l);
+		this.totalTeam = this.seeds.size();
+		this.totalRound = calTotalRound(this.totalTeam);
+		this.matchesStruct = this.createSingleEliminationTree(null, 1, this.totalTeam, 1l);
 	}
 
-	public MatchTree(int totalTeams, Long formatId) { // for Test
+	public MatchTree(int totalTeam, Long formatId) { // for Test
 		System.out.println("MatchTree: Constructor for Test: start");
-		this.totalTeams = totalTeams;
+		this.totalTeam = totalTeam;
+		this.totalRound = calTotalRound(this.totalTeam);
 		if (formatId == 1)
-			this.matchesStruct = this.createSingleEliminationTree(null, 1, this.totalTeams, 1l);
+			this.matchesStruct = this.createSingleEliminationTree(null, 1, this.totalTeam, 1l);
 		else 
-			this.matchesStruct = this.createDoubleEliminationTree(this.totalTeams);
+			this.matchesStruct = this.createDoubleEliminationTree(this.totalTeam);
 		System.out.println("MatchTree: Constructor for Test: finish");
 	}
 
@@ -111,59 +115,55 @@ public class MatchTree {
 		System.out.println("MatchTree: createSingleEliminationTree: start");
 		Match root = new Match();
 
-		if (right - left < 0) { // it hon 1 team
-			return root;
+		if (right - left < 1) { // it hon 2 team
+			return null;
 		}
 
 		System.out.println("MatchTree: createSingleEliminationTree: CP0");
 		
 		root.setId(index);
-		root.setRoundNo(1);
-		root.setAfterWin(parent);
+		root.setMatchNo(null);
+		
+		if (parent == null) { // day la node goc
+			root.setRoundNo(this.totalRound);
+		} else {
+			root.setRoundNo(parent.getRoundNo() - 1);
+		}
+		
+		root.setNextAfterWin(parent);
+		root.setNextAfterLose(null);
 		
 		root.setNextAfterWinId(null);
 		root.setNextAfterLoseId(null);
+		
 		if (parent != null) {
 			root.setNextAfterWinId(parent.getId());
-			root.setNextAfterLoseId(parent.getId());
 		}
 		
-		root.setAfterLose(null);
-		System.out.println("MatchTree: createSingleEliminationTree: CP0-1");
-		root.setNextAfterLoseId(null);
-		System.out.println("MatchTree: createSingleEliminationTree: CP0-2");
+		root.setTeam1(null);
+		root.setTeam2(null);
+
 		root.setLeft(null);
 		root.setRight(null);
 
-		root.setTeam1(left);
-		root.setTeam2(right);
 		root.setWinner(null);
 
 		System.out.println("MatchTree: createSingleEliminationTree: CP1");
 
-		if (right - left == 0) { // 1 teams
-			root.setTeam2(null);
-			root.setWinner(left);
-
+		if (right - left == 1) { // 2 teams
+		}
+		
+		if (right - left == 2) { // 3 teams
+			root.setRight(createSingleEliminationTree(root, left + 1, right, index * 2 + 1));
+			root.setTeam1(left);
 		}
 
 		System.out.println("MatchTree: createSingleEliminationTree: CP2");
 
-		if (right - left >= 1) { // tu 2 teams tro len
-
+		if (right - left > 2) { // tu 4 teams tro len
 			int mid = (left + right) / 2;
 			root.setLeft(createSingleEliminationTree(root, left, mid, index * 2));
 			root.setRight(createSingleEliminationTree(root, mid + 1, right, index * 2 + 1));
-			
-			System.out.println("MatchTree: createSingleEliminationTree: CP3-1");
-			System.out.println("MatchTree: createSingleEliminationTree: CP3-2");
-
-			Integer childrenRoundNo = root.getLeft().getRoundNo();
-			root.setRoundNo(childrenRoundNo + 1);
-
-			root.setTeam1(null);
-			root.setTeam2(null);
-			root.setWinner(null);
 		}
 
 		System.out.println("MatchTree: createSingleEliminationTree: finish: roundNo:" + root.getRoundNo());
@@ -195,6 +195,18 @@ public class MatchTree {
 		while (x % 2 == 0)
 			x = x / 2;
 		return (x == 1);
+	}
+	
+	private Integer calTotalRound(Integer totalTeam) {
+		
+		int x = 1;
+		int k = 0;
+		
+		while (totalTeam > x) {
+			x *= 2;
+			k ++;
+		}
+		return k;
 	}
 	
 	private Match createLoseBranch(Match root, int numOfTeam) {
@@ -284,12 +296,12 @@ public class MatchTree {
 		this.numOfSet = numOfSet;
 	}
 
-	public int getTotalTeams() {
-		return totalTeams;
+	public int getTotalTeam() {
+		return totalTeam;
 	}
 
-	public void setTotalTeams(int totalTeams) {
-		this.totalTeams = totalTeams;
+	public void setTotalTeam(int totalTeam) {
+		this.totalTeam = totalTeam;
 	}
 
 	public int getTotalRound() {
