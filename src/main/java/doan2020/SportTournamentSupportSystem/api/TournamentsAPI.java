@@ -39,91 +39,6 @@ public class TournamentsAPI {
 
 	@Autowired
 	private TournamentConverter converter;
-
-//	/*
-//	 * Tim kiem tournament theo paging
-//	 */
-//	@GetMapping("/getAll")
-//	public ResponseEntity<Response> getTournamentPaging(@RequestParam(value = "page") Integer page) {
-//		System.out.println("getTournamentPaging");
-//		HttpStatus httpStatus = HttpStatus.OK;
-//		Response response = new Response();
-//		Map<String, Object> config = new HashMap<String, Object>();
-//		Map<String, Object> result = new HashMap<String, Object>();
-//		Map<String, Object> error = new HashMap<String, Object>();
-//		List<TournamentDtOut> tournamentDtOuts = new ArrayList<TournamentDtOut>();
-//		List<TournamentEntity> list = new ArrayList<TournamentEntity>();
-////		System.out.println("2");
-//
-//		if (page == null) {
-//			result.put("tournament", null);
-//			config.put("Global", 0);
-//			error.put("MessageCode", 1);
-//			error.put("Message", "Required tournament's page!");
-//			httpStatus = HttpStatus.OK;
-//			response.setConfig(config);
-//			response.setResult(result);
-//			response.setError(error);
-//			return new ResponseEntity<Response>(response, httpStatus);
-//		}
-//
-//		Sort sortable = Sort.by("id").ascending();
-//		int limit = 3;
-//		Pageable pageable = PageRequest.of(page - 1, limit, sortable);
-//
-//		list = (List<TournamentEntity>) service.findAll(pageable);
-//
-//		if (list.isEmpty()) {
-//			result.put("Tournament", null);
-//			config.put("Global", 0);
-//			error.put("MessageCode", 1);
-//			error.put("Message", "tournament is not exist");
-//			response.setConfig(config);
-//			response.setResult(result);
-//			response.setError(error);
-//			return new ResponseEntity<Response>(response, httpStatus);
-//		}
-//		try {
-//			for (TournamentEntity tournamentEntity : list) {
-//
-//				TournamentDtOut resDTO = converter.toDTO(tournamentEntity);
-//				tournamentDtOuts.add(resDTO);
-//				System.out.println(tournamentDtOuts.get(0).getFullName());
-//
-//			}
-//
-//			
-//			int total = tournamentDtOuts.size();
-//			int totalPage = total / limit;
-//			if (total % limit != 0) {
-//				totalPage++;
-//			}
-//			result.put("total page", totalPage);
-//			result.put("list tournament", tournamentDtOuts);
-//			config.put("Global", 0);
-//			error.put("MessageCode", 0);
-//			error.put("Message", "Found");
-//
-//			System.out.println("true");
-//
-//		} catch (Exception e) {
-//			result.put("tournament", null);
-//			config.put("Global", 0);
-//			error.put("MessageCode", 1);
-//			error.put("Message", "Tournament is not exist");
-//			System.out.println(e.getMessage().toString());
-//		}
-//
-//		response.setConfig(config);
-//		response.setResult(result);
-//		response.setError(error);
-//
-//		return new ResponseEntity<Response>(response, httpStatus);
-//	}
-//
-	/*
-	 * Tim kiem tournament theo paging by UserId
-	 */
 	
 	@GetMapping("")
 	public ResponseEntity<Response> getAllTournament(
@@ -152,13 +67,6 @@ public class TournamentsAPI {
 			findPage = service.findAll(pageable);
 
 			for (TournamentEntity entity : findPage) {
-				Collection<String> sportNames = new ArrayList<>();
-				Collection<CompetitionEntity> competitions = entity.getCompetitions();
-				for (CompetitionEntity entity2 : competitions) {
-					String sportName = entity2.getSport().getFullName();
-					sportNames.add(sportName);
-				}
-				result.put("Sports in "  + entity.getFullName(), sportNames);
 				TournamentDTO dto = converter.toDTO(entity);
 				findPageDTO.add(dto);
 			}
@@ -285,7 +193,7 @@ public class TournamentsAPI {
 				
 				int totalPage = 0;
 				
-				int totalEntity = entities.size();
+				int totalEntity = service.countBySearchString(searchString);
 				totalPage = totalEntity / limit;
 				if (totalEntity % limit != 0)
 					totalPage++;
