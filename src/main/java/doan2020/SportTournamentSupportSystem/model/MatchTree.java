@@ -110,6 +110,8 @@ public class MatchTree {
 
 	// Logic match tree
 	// -----------------------------------------------------------------------------
+	
+	
 
 	private Match createSingleEliminationTree(Match parent, int left, int right, Long index) {
 		System.out.println("MatchTree: createSingleEliminationTree: start");
@@ -179,16 +181,16 @@ public class MatchTree {
 		root.setId(1l);
 		root.setMatchNo(null);
 		
-		root.setRoundNo(this.totalRound);
+		
 		
 		if (!isTwoExp(numOfTeam)) {
 			return null;
 		}
-
-		Match winBranch = createSingleEliminationTree(root, 1, numOfTeam, 2l);
-		
-		Match loseBranch = createLoseBranch(root, numOfTeam, 3l);
-		
+		root.setRoundNo(this.totalRound / 2 + 1);
+		Match winBranch = createSingleEliminationTree(root, 1, numOfTeam, 1l);
+		root.setRoundNo(this.totalRound - 1);
+		Match loseBranch = createLoseBranch(root, numOfTeam, 1l);
+		root.setRoundNo(this.totalRound);
 		root.setLeft(winBranch);
 		root.setRight(loseBranch);
 		System.out.println("MatchTree: createDoubleEliminationTree: finish");
@@ -247,8 +249,11 @@ public class MatchTree {
 		
 		root.setWinner(null);
 		
-		root.setLeft(null);
-		root.setRight(createLoseRightBranch(root, numOfTeam, index * 2 + 1));
+//		root.setLeft(null);
+//		root.setRight(createLoseRightBranch(root, numOfTeam, index * 2 + 1));
+		
+		root.setRight(null);
+		root.setLeft(createLoseRightBranch(root, numOfTeam, index * 2));
 		
 		return root;
 	}
