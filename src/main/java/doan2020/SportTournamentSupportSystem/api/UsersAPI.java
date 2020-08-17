@@ -92,6 +92,75 @@ public class UsersAPI {
 
 	}
 	
+	@GetMapping("/getByRoleId")
+	public ResponseEntity<Response> getByRoleId(
+			@RequestParam(value = "page", required = false) Integer page,
+			@RequestParam(value = "limit", required = false) Integer limit,
+			@RequestParam(value = "roleId") Long roleId) {
+		System.out.println("UsersAPI: getByRoleId: start");
+		
+		HttpStatus httpStatus = HttpStatus.OK;
+		Response response = new Response();
+		Map<String, Object> config = new HashMap<String, Object>();
+		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> error = new HashMap<String, Object>();
+		
+		List<UserDTO> dtos = new ArrayList<UserDTO>();
+		List<UserEntity> entities = new ArrayList<UserEntity>();
+		
+		if (limit == null || limit <= 0)
+			limit = 10;
+		
+		if (page == null || page <= 0)
+			page = 1;
+		
+		if (roleId == null) {// roleId null
+			result.put("Users", dtos);
+			config.put("Global", 0);
+			error.put("MessageCode", 1);
+			error.put("Message", "Required param roleId");
+		} else {//searchString not null
+//			Sort sortable = Sort.by("id").ascending();
+			try {
+				Pageable pageable = PageRequest.of(page - 1, limit);
+				entities = (List<UserEntity>) service.findByRoleId(pageable, roleId);
+				
+				int totalPage = 0;
+				
+				int totalEntity = service.countByRoleId(roleId);
+				totalPage = totalEntity / limit;
+				if (totalEntity % limit != 0)
+					totalPage++;
+				
+				for (UserEntity entity: entities) {
+					UserDTO dto = converter.toDTO(entity);
+					dtos.add(dto);
+				}
+				
+				result.put("TotalPage", totalPage);
+				result.put("Users", dtos);
+				config.put("Global", 0);
+				error.put("MessageCode", 0);
+				error.put("Message", "Found");
+				System.out.println("UsersAPI: getByRoleId: no exception");
+			} catch (Exception e) {
+				System.out.println("UsersAPI: getByRoleId: has exception");
+				result.put("TotalPage", null);
+				result.put("Users", dtos);
+				config.put("Global", 0);
+				error.put("MessageCode", 0);
+				error.put("Message", "Server error");
+			}
+			
+		}
+
+		response.setConfig(config);
+		response.setResult(result);
+		response.setError(error);
+		System.out.println("UsersAPI: getByRoleId: finish");
+		return new ResponseEntity<Response>(response, httpStatus);
+	}
+	
 	@GetMapping("/getBySearchString")
 	public ResponseEntity<Response> getBySearchString(
 			@RequestParam(value = "page", required = false) Integer page,
@@ -127,7 +196,7 @@ public class UsersAPI {
 				
 				int totalPage = 0;
 				
-				int totalEntity = entities.size();
+				int totalEntity = service.countBySearchString(searchString);
 				totalPage = totalEntity / limit;
 				if (totalEntity % limit != 0)
 					totalPage++;

@@ -130,4 +130,18 @@ public class TournamentService implements ITournamentService {
 		return findTournaments;
 	}
 
+	@Override
+	public int countBySearchString(String searchString) {
+		List<TournamentEntity> findTournaments = null;
+		int count = 0;
+		try {
+			findTournaments = (List) tournamentRepository.findBySearchString(searchString);
+			
+			count = findTournaments.size();
+		} catch (Exception e) {
+			return 0;
+		}
+		return count;
+	}
+
 }
