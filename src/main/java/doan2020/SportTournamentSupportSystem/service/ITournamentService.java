@@ -15,6 +15,10 @@ public interface ITournamentService {
 	
 	public TournamentEntity update(Long id, TournamentEntity newEntity);
 	
+	public TournamentEntity updateAvatar(Long id, TournamentEntity newEntity);
+	
+	public TournamentEntity updateBackground(Long id, TournamentEntity newEntity);
+	
 //	public Collection<TournamentEntity> findAll();
 	
 	public TournamentEntity delete(Long id);
