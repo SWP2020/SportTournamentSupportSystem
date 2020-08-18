@@ -1,7 +1,6 @@
 
 package doan2020.SportTournamentSupportSystem.service.impl;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -12,7 +11,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
-import doan2020.SportTournamentSupportSystem.entity.UserEntity;
 import doan2020.SportTournamentSupportSystem.repository.TournamentRepository;
 import doan2020.SportTournamentSupportSystem.repository.UserRepository;
 import doan2020.SportTournamentSupportSystem.service.ITournamentService;
@@ -142,6 +140,36 @@ public class TournamentService implements ITournamentService {
 			return 0;
 		}
 		return count;
+	}
+
+	@Override
+	public TournamentEntity updateAvatar(Long id, TournamentEntity newEntity) {
+		TournamentEntity updatedEntity = null;
+		try {
+			updatedEntity = tournamentRepository.findOneById(id);
+
+//			updatedEntity.setAvartar(newEntity.getAvatar);
+			updatedEntity = tournamentRepository.save(updatedEntity);
+		} catch (Exception e) {
+			return null;
+		}
+
+		return updatedEntity;
+	}
+
+	@Override
+	public TournamentEntity updateBackground(Long id, TournamentEntity newEntity) {
+		TournamentEntity updatedEntity = null;
+		try {
+			updatedEntity = tournamentRepository.findOneById(id);
+
+//			updatedEntity.setBackground(newEntity.getBackground();
+			updatedEntity = tournamentRepository.save(updatedEntity);
+		} catch (Exception e) {
+			return null;
+		}
+
+		return updatedEntity;
 	}
 
 }
