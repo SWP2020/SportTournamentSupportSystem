@@ -35,26 +35,15 @@ public class JwtAuthenticationTokenFilter extends UsernamePasswordAuthentication
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
-
+		try {
 		HttpServletRequest httpRequest = (HttpServletRequest) request;
 		String authToken = httpRequest.getHeader(TOKEN_HEADER);
 
-		if (jwtService.validateTokenLogin(authToken)) {
-			String username = jwtService.getUsernameFromToken(authToken);
-//			String username = "DoVanCong";
+		if (authToken != null && jwtService.validateJwtToken(authToken)) {
+			String username = jwtService.getUserNameFromJwtToken(authToken);
 			UserDetails userDetails = userService.loadUserByUsername(username);
-//			UserEntity user = userService.loadUserByUsername(username);
 			System.out.println(username);
 			if (userDetails != null) {
-//				boolean enabled = true;
-//				boolean accountNonExpired = true;
-//				boolean credentialsNonExpired = true;
-//				boolean accountNonLocked = true;
-//				List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-//				authorities.add(new SimpleGrantedAuthority("Admin"));
-//				authorities.add(new SimpleGrantedAuthority("User"));
-//				UserDetails userDetails = new User(username, user.getPassword(), enabled, accountNonExpired,
-//						credentialsNonExpired, accountNonLocked, user.getAuthorities());
 				System.out.println(userDetails.getAuthorities().toString());
 
 				UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails,
@@ -62,8 +51,11 @@ public class JwtAuthenticationTokenFilter extends UsernamePasswordAuthentication
 				authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpRequest));
 				SecurityContextHolder.getContext().setAuthentication(authentication);
 				System.out.println(userDetails.getAuthorities().toString());
-				System.out.println(username+ "2");
+				System.out.println(username);
 			}
+		}
+		}catch (Exception e) {
+			logger.error("Cannot set user authentication: {}", e);
 		}
 
 		chain.doFilter(request, response);

@@ -23,16 +23,12 @@ import doan2020.SportTournamentSupportSystem.entity.VerificationTokenEntity;
 import doan2020.SportTournamentSupportSystem.response.Response;
 import doan2020.SportTournamentSupportSystem.service.IVerificationTokenService;
 import doan2020.SportTournamentSupportSystem.service.impl.JwtService;
-import doan2020.SportTournamentSupportSystem.service.impl.LoginService;
 import doan2020.SportTournamentSupportSystem.service.impl.UserService;
 
 @RestController
 @CrossOrigin
 @RequestMapping("/login")
 public class LoginAPI {
-
-	@Autowired
-	private LoginService loginService;
 
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
@@ -106,8 +102,9 @@ public class LoginAPI {
 						System.out.println("LoginAPI: login: Password right");
 						
 						UserDTO userDTO = converter.toDTO(findUser);
-						
-						String token = jwtService.generateTokenLogin(username);
+						System.out.println(findUser.getId());
+						System.out.println(findUser.getUsername());
+						String token = jwtService.generateTokenLogin(findUser);
 
 						result.put("User", userDTO);
 						result.put("Authentication", token);

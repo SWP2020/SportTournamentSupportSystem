@@ -1,10 +1,7 @@
 
 package doan2020.SportTournamentSupportSystem.service.impl;
 
-import java.util.Collection;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import doan2020.SportTournamentSupportSystem.entity.PermissionEntity;
@@ -70,6 +67,17 @@ public class PermissionService implements IPermissionService {
 		PermissionEntity foundEntity = null;
 		try {
 			foundEntity = permissionRepository.findOneById(id);
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntity;
+	}
+
+	@Override
+	public PermissionEntity findOneByName(String name) {
+		PermissionEntity foundEntity = null;
+		try {
+			foundEntity = permissionRepository.findOneByName(name);
 		} catch (Exception e) {
 			return null;
 		}

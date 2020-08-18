@@ -7,6 +7,8 @@ public interface IPermissionService {
 	
 	public PermissionEntity findOneById(Long id);
 	
+	public PermissionEntity findOneByName(String name);
+	
 //	public Collection<PermissionEntity> findAll(Pageable pageable);
 	
 	public PermissionEntity create(PermissionEntity permissionEntity);
