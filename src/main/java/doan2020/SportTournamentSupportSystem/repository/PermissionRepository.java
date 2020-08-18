@@ -7,4 +7,6 @@ import doan2020.SportTournamentSupportSystem.entity.PermissionEntity;
 
 public interface PermissionRepository extends JpaRepository<PermissionEntity, Long>{
     PermissionEntity findOneById(Long id);
+    
+    PermissionEntity findOneByName(String name);
 }
