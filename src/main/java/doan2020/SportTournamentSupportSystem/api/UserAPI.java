@@ -66,7 +66,7 @@ public class UserAPI {
 
 	@GetMapping("")
 	public ResponseEntity<Response> getById(
-			@RequestHeader(value = Const.TOKEN_HEADER) String jwt,
+			@RequestHeader(value = Const.TOKEN_HEADER, required = false) String jwt,
 			@RequestParam(value = "id", required = false) Long id) {
 		System.out.println("UserAPI: getById: start");
 		Response response = new Response();
@@ -80,11 +80,12 @@ public class UserAPI {
 		PermissionDTO permissionDTO = new PermissionDTO();
 
 		try {
-			if (id == null) {// id null
+
+			if (id == null||jwt == null) {// id null
 				result.put("User", null);
 				config.put("Global", 0);
 				error.put("MessageCode", 1);
-				error.put("Message", "Required param id");
+				error.put("Message", "Required param id or header Authorization");
 			} else {// id not null
 				user = userService.findOneById(id);
 				if (user == null) {// not found

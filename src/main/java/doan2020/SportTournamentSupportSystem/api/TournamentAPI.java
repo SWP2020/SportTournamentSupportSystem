@@ -72,7 +72,7 @@ public class TournamentAPI {
 
 	@GetMapping("")
 	public ResponseEntity<Response> getTournament(
-			@RequestHeader(value = Const.TOKEN_HEADER) String jwt,
+			@RequestHeader(value = Const.TOKEN_HEADER, required = false) String jwt,
 			@RequestParam(value = "id", required = false) Long id) {
 		System.out.println("TournamentAPI: getTournament: start");
 		HttpStatus httpStatus = HttpStatus.OK;
@@ -89,12 +89,12 @@ public class TournamentAPI {
 		Map<String, Object> otherInformation = new HashMap<String, Object>();
 
 		try {
-			if (id == null) { // id null
+			if (id == null || jwt == null) { // id null
 				result.put("Tournament", tournamentDTO);
 				result.put("OtherInformation", otherInformation);
 				config.put("Global", 0);
 				error.put("MessageCode", 1);
-				error.put("Message", "Required param id");
+				error.put("Message", "Required param id or header Authorization");
 			} else { // id not null
 
 				tournamentEntity = service.findOneById(id);
