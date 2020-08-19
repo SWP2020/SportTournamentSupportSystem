@@ -2,7 +2,10 @@
 package doan2020.SportTournamentSupportSystem.service.impl;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -10,6 +13,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
+import doan2020.SportTournamentSupportSystem.entity.TeamEntity;
 import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
 import doan2020.SportTournamentSupportSystem.repository.TournamentRepository;
 import doan2020.SportTournamentSupportSystem.repository.UserRepository;
@@ -23,6 +28,9 @@ public class TournamentService implements ITournamentService {
 
 	@Autowired
 	private UserRepository UserRepository;
+	
+	@Autowired
+	private CompetitionService competitionService;
 
 	@Override
 	public TournamentEntity create(TournamentEntity tournamentEntity) {
@@ -170,6 +178,29 @@ public class TournamentService implements ITournamentService {
 		}
 
 		return updatedEntity;
+	}
+
+	@Override
+	public Map<String, Object> getOtherInformation(Long id) {
+		Map<String, Object> option = new HashMap<String, Object>();
+		Collection<CompetitionEntity> competitions = competitionService.findByTournamentId(id);
+
+		HashSet<String> sportsName = new HashSet<>();
+
+		int countPlayer = 0;
+
+		for (CompetitionEntity comp : competitions) {
+
+			sportsName.add(comp.getSport().getFullName());
+
+			for (TeamEntity teamEntity : comp.getTeams()) {
+				countPlayer += teamEntity.getPlayers().size();
+			}
+		}
+		option.put("sportsName", sportsName);
+		option.put("countPlayer", countPlayer);
+		option.put("process", 0);
+		return option;
 	}
 
 }

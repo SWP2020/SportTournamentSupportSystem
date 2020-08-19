@@ -2,6 +2,8 @@
 package doan2020.SportTournamentSupportSystem.service;
 
 import java.util.Collection;
+import java.util.Map;
+
 import org.springframework.data.domain.Pageable;
 import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
 
@@ -28,4 +30,6 @@ public interface ITournamentService {
 	public Collection<TournamentEntity> findBySearchString(Pageable pageable, String searchString);
 	
 	public int countBySearchString(String searchString);
+	
+	public Map<String, Object> getOtherInformation(Long Id);
 }

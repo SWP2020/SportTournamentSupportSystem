@@ -1,6 +1,8 @@
 package doan2020.SportTournamentSupportSystem.api;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -20,15 +22,21 @@ import org.springframework.web.multipart.MultipartFile;
 
 import doan2020.SportTournamentSupportSystem.config.Const;
 import doan2020.SportTournamentSupportSystem.converter.PermissionConverter;
+import doan2020.SportTournamentSupportSystem.converter.SportConverter;
 import doan2020.SportTournamentSupportSystem.converter.TournamentConverter;
 import doan2020.SportTournamentSupportSystem.dto.PermissionDTO;
+import doan2020.SportTournamentSupportSystem.dto.SportDTO;
 import doan2020.SportTournamentSupportSystem.dto.TournamentDTO;
 import doan2020.SportTournamentSupportSystem.dto.UserDTO;
+import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
 import doan2020.SportTournamentSupportSystem.entity.PermissionEntity;
+import doan2020.SportTournamentSupportSystem.entity.TeamEntity;
 import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
 import doan2020.SportTournamentSupportSystem.entity.UserEntity;
 import doan2020.SportTournamentSupportSystem.response.Response;
+import doan2020.SportTournamentSupportSystem.service.ICompetitionService;
 import doan2020.SportTournamentSupportSystem.service.IPermissionService;
+import doan2020.SportTournamentSupportSystem.service.ISportService;
 import doan2020.SportTournamentSupportSystem.service.ITournamentService;
 import doan2020.SportTournamentSupportSystem.service.impl.FileStorageService;
 import doan2020.SportTournamentSupportSystem.service.impl.JwtService;
@@ -43,6 +51,15 @@ public class TournamentAPI {
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private SportConverter sportConverter;
+
+	@Autowired
+	private ISportService sportService;
+
+	@Autowired
+	private ICompetitionService competitionService;
 
 	@Autowired
 	private TournamentConverter converter;
@@ -73,6 +90,7 @@ public class TournamentAPI {
 		UserEntity user = new UserEntity();
 		PermissionEntity permissionEntity = new PermissionEntity();
 		PermissionDTO permissionDTO = new PermissionDTO();
+		Collection<SportDTO> dtos = new HashSet<SportDTO>();
 		try {
 			if (id == null) { // id null
 				result.put("Tournament", null);
@@ -90,20 +108,26 @@ public class TournamentAPI {
 					error.put("Message", "Not found");
 				} else { // found
 					tournamentDTO = converter.toDTO(tournamentEntity);
+					
+					Map<String, Object> option = new HashMap<String, Object>();
+					
+					option = service.getOtherInformation(id);
+					
+					tournamentDTO.setOption(option);
 
 					String curentUserName = jwtService.getUserNameFromJwtToken(jwt);
 
 					user = userService.findByUsername(curentUserName);
-					
+
 					List<TournamentEntity> tournaments = (List<TournamentEntity>) user.getTournamentsList();
-					
+
 					for (TournamentEntity entity : tournaments) {
-						
+
 						if (entity.getId() == id) {
 							permissionEntity = permissionService.findOneByName(Const.DELETE_AND_EDIT);
 
 							permissionDTO = permissionConverter.toDTO(permissionEntity);
-							
+
 							break;
 						} else {
 							permissionEntity = permissionService.findOneByName(Const.NONE);
@@ -111,8 +135,6 @@ public class TournamentAPI {
 							permissionDTO = permissionConverter.toDTO(permissionEntity);
 						}
 					}
-
-					
 
 					result.put("Tournament", tournamentDTO);
 					config.put("Global", permissionDTO);

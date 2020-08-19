@@ -17,7 +17,7 @@ public interface ICompetitionService {
 	
 	public Collection<CompetitionEntity> findByTournamentId(Pageable pageable, Long tournamentId);
 	
-	public Collection<CompetitionEntity> findByTournamentIdAndSportId(Pageable pageable, Long tournamentId, Long sportId);
+	public Collection<CompetitionEntity> findByTournamentIdAndSportId(Long tournamentId, Long sportId);
 	
 	public CompetitionEntity create(CompetitionEntity competitionEntity);
 	
