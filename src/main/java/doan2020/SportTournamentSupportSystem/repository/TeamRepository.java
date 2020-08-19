@@ -15,4 +15,6 @@ public interface TeamRepository extends JpaRepository<TeamEntity, Long>{
     Collection<TeamEntity> findByCreatorId(Long creatorId);
     
     Collection<TeamEntity> findByCompetitionId(Long competitionId);
+    
+    Long countByCompetitionId(Long competitionId);
 }

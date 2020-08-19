@@ -11,14 +11,14 @@ public class TeamDTO{
 	private Long competitionId;
 	private String status;
 	private String url;
-	private Integer seedNo;
+	private Long seedNo;
 
 	public TeamDTO(){
 	}
 
 
 	public TeamDTO(Long id, String fullName, String shortName, String description, Long creatorId, Long competitionId,
-			String status, String url, Integer seedNo) {
+			String status, String url, Long seedNo) {
 		super();
 		this.id = id;
 		this.fullName = fullName;
@@ -98,11 +98,11 @@ public class TeamDTO{
 		this.url = url;
 	}
 
-	public Integer getSeedNo() {
+	public Long getSeedNo() {
 		return seedNo;
 	}
 
-	public void setSeedNo(Integer seedNo) {
+	public void setSeedNo(Long seedNo) {
 		this.seedNo = seedNo;
 	}
 	
