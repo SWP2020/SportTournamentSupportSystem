@@ -29,7 +29,10 @@ public interface ITournamentService {
 	
 	public Collection<TournamentEntity> findBySearchString(Pageable pageable, String searchString);
 	
-	public int countBySearchString(String searchString);
+	public Long countBySearchString(String searchString);
+	
+	public Long countAll();
 	
 	public Map<String, Object> getOtherInformation(Long Id);
+
 }

@@ -8,11 +8,14 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.util.Date;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.sun.istack.NotNull;
 import javax.persistence.GeneratedValue;
 import javax.persistence.ManyToOne;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.CascadeType;
 import java.util.Collection;
 
@@ -51,7 +54,8 @@ public class CompetitionSettingEntity{
 	private String url;
 	
 
-	@ManyToOne
+	@OneToOne
+	@JsonBackReference
 	@JoinColumn(name = "competitionId")
 	private CompetitionEntity competition;
 	

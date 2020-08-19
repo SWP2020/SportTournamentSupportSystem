@@ -65,6 +65,10 @@ public class TournamentsAPI {
 			findPage = service.findAll(pageable);
 
 			for (TournamentEntity entity : findPage) {
+
+//				TournamentDTO dto = converter.toDTO(entity);
+//				findPageDTO.add(dto);
+
 				TournamentDTO tournamentDTO = converter.toDTO(entity);
 
 				Map<String, Object> option = new HashMap<String, Object>();
@@ -75,7 +79,13 @@ public class TournamentsAPI {
 
 				findPageDTO.add(tournamentDTO);
 			}
-
+			
+			long total = service.countAll();
+			long totalPage = total / limit;
+			if (total % limit != 0) {
+				totalPage++;
+			}
+			result.put("TotalPage", totalPage);
 			result.put("Tournaments", findPageDTO);
 			error.put("MessageCode", 0);
 			error.put("Message", "Get page successfully");
@@ -201,10 +211,13 @@ public class TournamentsAPI {
 			try {
 				Pageable pageable = PageRequest.of(page - 1, limit);
 				entities = (List<TournamentEntity>) service.findBySearchString(pageable, searchString);
-
-				int totalPage = 0;
-
-				int totalEntity = service.countBySearchString(searchString);
+				
+				Long totalPage = 0l;
+				
+				Long totalEntity = service.countBySearchString(searchString);
+				
+				System.out.println("TournamentsAPI: getBySearchString: totalEntity: " + new Long(totalEntity).toString());
+				
 				totalPage = totalEntity / limit;
 				if (totalEntity % limit != 0)
 					totalPage++;

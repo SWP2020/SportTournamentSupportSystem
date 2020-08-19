@@ -15,9 +15,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
+import doan2020.SportTournamentSupportSystem.entity.CompetitionFormatEntity;
+import doan2020.SportTournamentSupportSystem.entity.CompetitionSettingEntity;
 import doan2020.SportTournamentSupportSystem.entity.MatchEntity;
 import doan2020.SportTournamentSupportSystem.entity.TeamEntity;
-import doan2020.SportTournamentSupportSystem.model.MatchTree;
+import doan2020.SportTournamentSupportSystem.model.LogicEntity.SeedTree;
 import doan2020.SportTournamentSupportSystem.response.Response;
 import doan2020.SportTournamentSupportSystem.service.ICompetitionService;
 
@@ -40,17 +42,48 @@ public class ScheduleAPI {
 		Map<String, Object> error = new HashMap<String, Object>();
 
 		Collection<MatchEntity> matches = new ArrayList<>();
+		Collection<TeamEntity> teams = new ArrayList<>();
 
 		try {
 			CompetitionEntity thisCompetition = competitionService.findOneById(competitionId);
-//			Collection<TeamEntity> teams =
-//			MatchTree tree = new MatchTree(thisCompetition);
-
-//			result.put("Schedule", tree.getMatchesStruct());
-			config.put("Global", 0);
-			error.put("MessageCode", 1);
-			error.put("Message", "Successful");
-			System.out.println("ScheduleAPI: singleEliminationSchedule: no exception");
+			
+			if (thisCompetition == null) {
+				result.put("Schedule", null);
+				config.put("Global", 0);
+				error.put("MessageCode", 1);
+				error.put("Message", "Competition not found");
+			} else {
+				teams = thisCompetition.getTeams();
+				CompetitionFormatEntity format = thisCompetition.getMainFormat();
+				
+				if (teams.size() < 2 || (teams.size() < 3 && format.getId() == 2)) {
+					result.put("Schedule", null);
+					config.put("Global", 0);
+					error.put("MessageCode", 1);
+					error.put("Message", "Not enough teams");
+				} else {
+					System.out.println("===============TEST===================");
+					for (TeamEntity team: teams) {
+						System.out.println(team.getId());
+					}
+					System.out.println("======================================");
+					
+					SeedTree tree = new SeedTree(teams, format.getId());
+					
+					if (format.getId() == 1)
+						result.put("Schedule", tree.getWinBranch());
+					else if (format.getId() == 2) {
+						Map<String, Object> schedule = new HashMap<>();
+						
+						schedule.put("WinBranch", tree.getWinBranch());
+						schedule.put("LoseBranch", tree.getLoseBranch());
+						result.put("Schedule", schedule);
+					}
+					config.put("Global", 0);
+					error.put("MessageCode", 0);
+					error.put("Message", "Successful");
+				}
+			}
 		} catch (Exception e) {
 			System.out.println("ScheduleAPI: singleEliminationSchedule: has exception");
 			result.put("Schedule", null);
@@ -65,9 +98,10 @@ public class ScheduleAPI {
 		System.out.println("ScheduleAPI: singleEliminationSchedule: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
-
-	@GetMapping("/test")
-	public ResponseEntity<Response> singleEliminationScheduleTest(
+	
+	
+	@GetMapping("/testv2")
+	public ResponseEntity<Response> singleEliminationScheduleTestv2(
 			@RequestParam(value = "numOfTeam", required = false) Integer numOfTeam,
 			@RequestParam(value = "formatId", required = true) Long formatId) {
 
@@ -86,12 +120,20 @@ public class ScheduleAPI {
 			config.put("Global", 0);
 			error.put("MessageCode", 1);
 			error.put("Message", "numOfTeam is null");
-		} else
+		} else 
 
 			try {
-				MatchTree tree = new MatchTree(numOfTeam, formatId);
-
-				result.put("Schedule", tree.getMatchesStruct());
+				SeedTree tree = new SeedTree(numOfTeam, formatId.intValue());
+				
+				if (formatId == 1)
+					result.put("Schedule", tree.getWinBranch());
+				else {
+					Map<String, Object> schedule = new HashMap<>();
+					
+					schedule.put("WinBranch", tree.getWinBranch());
+					schedule.put("LoseBranch", tree.getLoseBranch());
+					result.put("Schedule", schedule);
+				}
 				config.put("Global", 0);
 				error.put("MessageCode", 0);
 				error.put("Message", "Successful");

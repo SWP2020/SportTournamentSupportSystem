@@ -31,9 +31,11 @@ public interface IUserService {
 	
 	public Collection<UserEntity> findBySearchString(Pageable pageable, String searchString);
 	
+	public Long countBySearchString(String searchString);
+	
+	public Long countAll();
+
 	public Collection<UserEntity> findByRoleId(Pageable pageable, Long roleId);
 	
 	public int countByRoleId(Long roleId);
-	
-	public int countBySearchString(String searchString);
 }
