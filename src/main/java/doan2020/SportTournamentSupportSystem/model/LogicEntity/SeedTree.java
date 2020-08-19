@@ -55,18 +55,11 @@ public class SeedTree {
 		System.out.println("SeedTree: Contructor test: finish");
 	}
 	
-	public SeedTree(Collection<TeamEntity> teams, Long formatId) {
+	public SeedTree(ArrayList<TeamEntity> teams, Long formatId) {
 		System.out.println("SeedTree: Contructor: start");
 		
 		
-		for (TeamEntity team: teams) {
-			Team t = new Team();
-			t.id = team.getId();
-			t.realTeam = team;
-			t.name = team.getShortName();
-			this.seedList.add(t);
-			
-		}
+		this.seedList = new SeedList(teams);
 		
 		System.out.println("SeedTree: Contructor: this.seedList.size(): " + this.seedList.size());
 		

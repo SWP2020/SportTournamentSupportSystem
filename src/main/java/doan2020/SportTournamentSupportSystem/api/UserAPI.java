@@ -65,8 +65,9 @@ public class UserAPI {
 	/* get One User */
 
 	@GetMapping("")
-	public ResponseEntity<Response> getById(@RequestHeader(value = Const.TOKEN_HEADER) String jwt,
-			@RequestParam(value = "id") Long id) {
+	public ResponseEntity<Response> getById(
+			@RequestHeader(value = Const.TOKEN_HEADER) String jwt,
+			@RequestParam(value = "id", required = false) Long id) {
 		System.out.println("UserAPI: getById: start");
 		Response response = new Response();
 		HttpStatus httpStatus = HttpStatus.OK;
@@ -77,7 +78,7 @@ public class UserAPI {
 		UserDTO dto = new UserDTO();
 		PermissionEntity permissionEntity = new PermissionEntity();
 		PermissionDTO permissionDTO = new PermissionDTO();
-		System.out.println(jwt);
+
 		try {
 			if (id == null) {// id null
 				result.put("User", null);
@@ -94,15 +95,20 @@ public class UserAPI {
 				} else {// found
 
 					dto = userConverter.toDTO(user);
+					System.out.println("UserAPI: getById: CP1");
+					Long curentUserId = -1l;
 
-					String curentUserName = jwtService.getUserNameFromJwtToken(jwt);
-					Long curentId = -1l;
-					if (curentUserName != null) {
-						curentId = userService.findByUsername(curentUserName).getId();
+					try {
+						System.out.println("UserAPI: getById: jwt: "+ jwt);
+						String curentUserName = jwtService.getUserNameFromJwtToken(jwt);
+						user = userService.findByUsername(curentUserName);
+						curentUserId = user.getId();
+					} catch (Exception e) {
+
 					}
 					
 
-					if (curentId == id) {
+					if (curentUserId == id) {
 						permissionEntity = permissionService.findOneByName(Const.OWNER);
 						
 						permissionDTO = permissionConverter.toDTO(permissionEntity);

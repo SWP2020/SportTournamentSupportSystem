@@ -71,20 +71,23 @@ public class TournamentAPI {
 	private JwtService jwtService;
 
 	@GetMapping("")
-	public ResponseEntity<Response> getTournament(@RequestHeader(value = Const.TOKEN_HEADER) String jwt,
+	public ResponseEntity<Response> getTournament(
+			@RequestHeader(value = Const.TOKEN_HEADER) String jwt,
 			@RequestParam(value = "id", required = false) Long id) {
-		System.out.println("TournamentAPI: getTournament: no exception");
+		System.out.println("TournamentAPI: getTournament: start");
 		HttpStatus httpStatus = HttpStatus.OK;
 		Response response = new Response();
 		Map<String, Object> config = new HashMap<String, Object>();
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
+
 		TournamentEntity tournamentEntity = new TournamentEntity();
 		TournamentDTO tournamentDTO = new TournamentDTO();
 		UserEntity user = new UserEntity();
 		PermissionEntity permissionEntity = new PermissionEntity();
 		PermissionDTO permissionDTO = new PermissionDTO();
 		Map<String, Object> otherInformation = new HashMap<String, Object>();
+
 		try {
 			if (id == null) { // id null
 				result.put("Tournament", tournamentDTO);
@@ -103,30 +106,29 @@ public class TournamentAPI {
 					error.put("MessageCode", 1);
 					error.put("Message", "Not found");
 				} else { // found
-					
+
 					tournamentDTO = converter.toDTO(tournamentEntity);
-					
+
 					otherInformation = service.getOtherInformation(id);
-					
-					String curentUserName = jwtService.getUserNameFromJwtToken(jwt);
 
-					user = userService.findByUsername(curentUserName);
+					Long curentUserId = -1l;
 
-					List<TournamentEntity> tournaments = (List<TournamentEntity>) user.getTournamentsList();
+					try {
+						String curentUserName = jwtService.getUserNameFromJwtToken(jwt);
+						user = userService.findByUsername(curentUserName);
+						curentUserId = user.getId();
+					} catch (Exception e) {
 
-					for (TournamentEntity entity : tournaments) {
+					}
 
-						if (entity.getId() == id) {
-							permissionEntity = permissionService.findOneByName(Const.OWNER);
+					if (curentUserId == tournamentEntity.getCreator().getId()) {
+						permissionEntity = permissionService.findOneByName(Const.OWNER);
 
-							permissionDTO = permissionConverter.toDTO(permissionEntity);
+						permissionDTO = permissionConverter.toDTO(permissionEntity);
+					} else {
+						permissionEntity = permissionService.findOneByName(Const.VIEWER);
 
-							break;
-						} else {
-							permissionEntity = permissionService.findOneByName(Const.VIEWER);
-
-							permissionDTO = permissionConverter.toDTO(permissionEntity);
-						}
+						permissionDTO = permissionConverter.toDTO(permissionEntity);
 					}
 
 					result.put("Tournament", tournamentDTO);
