@@ -117,13 +117,13 @@ public class TournamentAPI {
 					for (TournamentEntity entity : tournaments) {
 
 						if (entity.getId() == id) {
-							permissionEntity = permissionService.findOneByName(Const.DELETE_AND_EDIT);
+							permissionEntity = permissionService.findOneByName(Const.OWNER);
 
 							permissionDTO = permissionConverter.toDTO(permissionEntity);
 
 							break;
 						} else {
-							permissionEntity = permissionService.findOneByName(Const.NONE);
+							permissionEntity = permissionService.findOneByName(Const.VIEWER);
 
 							permissionDTO = permissionConverter.toDTO(permissionEntity);
 						}

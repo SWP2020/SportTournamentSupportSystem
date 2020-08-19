@@ -96,15 +96,18 @@ public class UserAPI {
 					dto = userConverter.toDTO(user);
 
 					String curentUserName = jwtService.getUserNameFromJwtToken(jwt);
+					Long curentId = -1l;
+					if (curentUserName != null) {
+						curentId = userService.findByUsername(curentUserName).getId();
+					}
 					
-					Long curentId = userService.findByUsername(curentUserName).getId();
 
 					if (curentId == id) {
-						permissionEntity = permissionService.findOneByName(Const.DELETE_AND_EDIT);
-
+						permissionEntity = permissionService.findOneByName(Const.OWNER);
+						
 						permissionDTO = permissionConverter.toDTO(permissionEntity);
 					} else {
-						permissionEntity = permissionService.findOneByName(Const.NONE);
+						permissionEntity = permissionService.findOneByName(Const.VIEWER);
 
 						permissionDTO = permissionConverter.toDTO(permissionEntity);
 					}

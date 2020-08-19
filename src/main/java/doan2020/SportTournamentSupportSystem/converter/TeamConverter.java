@@ -42,6 +42,8 @@ public class TeamConverter{
 				entity.setCreator(creator);
 			}
 			
+			entity.setSeedNo(dto.getSeedNo());
+			
 			entity.setStatus(dto.getStatus());
 			entity.setUrl(dto.getUrl());
 			System.out.println("TeamConverter: toEntity: no exception");
@@ -69,6 +71,8 @@ public class TeamConverter{
 			CompetitionEntity competition = entity.getCompetition();
 			Long competitionId = competition.getId();
 			dto.setCompetitionId(competitionId);
+			
+			dto.setSeedNo(entity.getSeedNo());
 			
 			dto.setStatus(entity.getStatus());
 			dto.setUrl(entity.getUrl());
