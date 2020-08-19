@@ -13,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.ManyToOne;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.CascadeType;
 import java.util.Collection;
 
@@ -69,8 +70,8 @@ public class CompetitionEntity{
 	@OneToMany(mappedBy = "competition", cascade = CascadeType.ALL)
 	private Collection<TeamEntity> teams;
 
-	@OneToMany(mappedBy = "competition", cascade = CascadeType.ALL)
-	private Collection<CompetitionSettingEntity> competition_settings;
+	@OneToOne(mappedBy = "competition")
+	private CompetitionSettingEntity competition_setting;
 
 	@OneToMany(mappedBy = "competition", cascade = CascadeType.ALL)
 	private Collection<RegisterFormEntity> register_forms;
@@ -200,12 +201,12 @@ public void setTeams(Collection<TeamEntity> teams) {
 	this.teams = teams;
 }
 
-public Collection<CompetitionSettingEntity> getCompetitionSettings() {
-	return competition_settings;
+public CompetitionSettingEntity getCompetitionSetting() {
+	return competition_setting;
 }
 
-public void setCompetitionSettings(Collection<CompetitionSettingEntity> competition_settings) {
-	this.competition_settings = competition_settings;
+public void setCompetitionSetting(CompetitionSettingEntity competition_setting) {
+	this.competition_setting = competition_setting;
 }
 
 public Collection<RegisterFormEntity> getRegisterForms() {

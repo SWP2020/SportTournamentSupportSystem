@@ -73,6 +73,13 @@ public class UsersAPI {
 				findPageDTO.add(dto);
 			}
 			
+			long total = service.countAll();
+			long totalPage = total / limit;
+			if (total % limit != 0) {
+				totalPage++;
+			}
+			result.put("TotalPage", totalPage);
+			
 			result.put("Users", findPageDTO);
 			error.put("MessageCode", 0);
 			error.put("Message", "Get page successfully");
@@ -125,9 +132,9 @@ public class UsersAPI {
 				Pageable pageable = PageRequest.of(page - 1, limit);
 				entities = (List<UserEntity>) service.findBySearchString(pageable, searchString);
 				
-				int totalPage = 0;
+				Long totalPage = 0l;
 				
-				int totalEntity = entities.size();
+				Long totalEntity = service.countBySearchString(searchString);
 				totalPage = totalEntity / limit;
 				if (totalEntity % limit != 0)
 					totalPage++;

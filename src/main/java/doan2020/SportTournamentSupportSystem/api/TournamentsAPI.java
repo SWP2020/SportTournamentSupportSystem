@@ -152,17 +152,16 @@ public class TournamentsAPI {
 			findPage = service.findAll(pageable);
 
 			for (TournamentEntity entity : findPage) {
-				Collection<String> sportNames = new ArrayList<>();
-				Collection<CompetitionEntity> competitions = entity.getCompetitions();
-				for (CompetitionEntity entity2 : competitions) {
-					String sportName = entity2.getSport().getFullName();
-					sportNames.add(sportName);
-				}
-				result.put("Sports in "  + entity.getFullName(), sportNames);
 				TournamentDTO dto = converter.toDTO(entity);
 				findPageDTO.add(dto);
 			}
-
+			
+			long total = service.countAll();
+			long totalPage = total / limit;
+			if (total % limit != 0) {
+				totalPage++;
+			}
+			result.put("TotalPage", totalPage);
 			result.put("Tournaments", findPageDTO);
 			error.put("MessageCode", 0);
 			error.put("Message", "Get page successfully");
@@ -283,9 +282,12 @@ public class TournamentsAPI {
 				Pageable pageable = PageRequest.of(page - 1, limit);
 				entities = (List<TournamentEntity>) service.findBySearchString(pageable, searchString);
 				
-				int totalPage = 0;
+				Long totalPage = 0l;
 				
-				int totalEntity = entities.size();
+				Long totalEntity = service.countBySearchString(searchString);
+				
+				System.out.println("TournamentsAPI: getBySearchString: totalEntity: " + new Long(totalEntity).toString());
+				
 				totalPage = totalEntity / limit;
 				if (totalEntity % limit != 0)
 					totalPage++;

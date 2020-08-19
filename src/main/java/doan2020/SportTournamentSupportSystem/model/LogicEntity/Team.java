@@ -1,17 +1,24 @@
 package doan2020.SportTournamentSupportSystem.model.LogicEntity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
+import doan2020.SportTournamentSupportSystem.entity.TeamEntity;
+
 public class Team {
 	
-	Integer id;
+	Long id;
 	String name;
+	
+	@JsonBackReference
+	TeamEntity realTeam;
 	
 
 	
 	
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	public String getName() {

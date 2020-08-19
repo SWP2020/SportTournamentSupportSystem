@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
 import doan2020.SportTournamentSupportSystem.entity.UserEntity;
 import doan2020.SportTournamentSupportSystem.repository.UserRepository;
 import doan2020.SportTournamentSupportSystem.service.IUserService;
@@ -19,6 +20,11 @@ public class UserService implements IUserService {
 
 	@Autowired
 	private UserRepository userRepository;
+
+	@Override
+	public Long countAll() {
+		return userRepository.count();
+	}
 
 	@Override
 	public UserEntity create(UserEntity userEntity) {
@@ -62,10 +68,10 @@ public class UserService implements IUserService {
 		} catch (Exception e) {
 			return null;
 		}
-        
+
 		return updatedEntity;
 	}
-	
+
 	@Override
 	public UserEntity updateBackGround(Long id, UserEntity newEntity) {
 		UserEntity updatedEntity = null;
@@ -76,10 +82,10 @@ public class UserService implements IUserService {
 		} catch (Exception e) {
 			return null;
 		}
-        
+
 		return updatedEntity;
 	}
-	
+
 	@Override
 	public UserEntity updateAvatar(Long id, UserEntity newEntity) {
 		UserEntity updatedEntity = null;
@@ -90,7 +96,7 @@ public class UserService implements IUserService {
 		} catch (Exception e) {
 			return null;
 		}
-        
+
 		return updatedEntity;
 	}
 
@@ -161,25 +167,36 @@ public class UserService implements IUserService {
 		}
 		return foundEntity;
 	}
-	
+
 	@Override
 	public Collection<UserEntity> findBySearchString(Pageable pageable, String searchString) {
 		List<UserEntity> findUsers = null;
 		try {
-			
+
 			findUsers = (List) userRepository.findBySearchString(searchString);
-			
+
 			int start = (int) pageable.getOffset();
-			int end = (start + pageable.getPageSize()) > findUsers.size() ? findUsers.size() : (start + pageable.getPageSize());
-			Page<UserEntity> pages = new PageImpl<UserEntity>(findUsers.subList(start, end), pageable, findUsers.size());
+			int end = (start + pageable.getPageSize()) > findUsers.size() ? findUsers.size()
+					: (start + pageable.getPageSize());
+			Page<UserEntity> pages = new PageImpl<UserEntity>(findUsers.subList(start, end), pageable,
+					findUsers.size());
 			findUsers = pages.getContent();
-			
+
 		} catch (Exception e) {
 			return null;
 		}
 		return findUsers;
 	}
-
 	
+	@Override
+	public Long countBySearchString(String searchString) {
+		List<UserEntity> findUsers = null;
+		try {
+			findUsers = (List<UserEntity>) userRepository.findBySearchString(searchString);
+		} catch (Exception e) {
+			return 0l;
+		}
+		return new Long(findUsers.size());
+	}
 
 }

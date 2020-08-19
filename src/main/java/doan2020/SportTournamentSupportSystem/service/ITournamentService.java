@@ -22,4 +22,8 @@ public interface ITournamentService {
 	public Collection<TournamentEntity> findByCreatorId(Pageable pageable, Long creatorId);
 	
 	public Collection<TournamentEntity> findBySearchString(Pageable pageable, String searchString);
+	
+	public Long countBySearchString(String searchString);
+	
+	public Long countAll();
 }

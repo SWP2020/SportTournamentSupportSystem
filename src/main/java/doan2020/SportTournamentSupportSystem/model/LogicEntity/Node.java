@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 public class Node<E> {
 	
 	Integer id;
+	Integer degree;
 	E data;
 	
 	Node<E> left;
@@ -58,5 +59,14 @@ public class Node<E> {
 	public void setParent(Node<E> parent) {
 		this.parent = parent;
 	}
+
+	public Integer getDegree() {
+		return degree;
+	}
+
+	public void setDegree(Integer degree) {
+		this.degree = degree;
+	}
+	
 	
 }

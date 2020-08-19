@@ -30,4 +30,8 @@ public interface IUserService {
 	public UserEntity findByEmail(String email);
 	
 	public Collection<UserEntity> findBySearchString(Pageable pageable, String searchString);
+	
+	public Long countBySearchString(String searchString);
+	
+	public Long countAll();
 }

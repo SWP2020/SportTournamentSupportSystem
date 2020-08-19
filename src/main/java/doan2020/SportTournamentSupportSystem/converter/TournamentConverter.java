@@ -72,6 +72,8 @@ public class TournamentConverter{
 			Long tournamentCreatorId = tournamentCreator.getId();
 			dto.setCreatorId(tournamentCreatorId);
 			
+			System.out.println("TournamentConverter: toDTO: CP1");
+			
 			dto.setOpeningLocation(entity.getOpeningLocation());
 			
 			String openingTime = validator.formatDateToString(entity.getOpeningTime());

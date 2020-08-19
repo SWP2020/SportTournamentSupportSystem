@@ -22,9 +22,11 @@ public class TournamentService implements ITournamentService {
 
 	@Autowired
 	private TournamentRepository tournamentRepository;
-
-	@Autowired
-	private UserRepository UserRepository;
+	
+	@Override
+	public Long countAll() {
+		return tournamentRepository.count();
+	}
 
 	@Override
 	public TournamentEntity create(TournamentEntity tournamentEntity) {
@@ -117,7 +119,9 @@ public class TournamentService implements ITournamentService {
 		List<TournamentEntity> findTournaments = null;
 		try {
 			
-			findTournaments = (List) tournamentRepository.findBySearchString(searchString);
+			findTournaments = (List<TournamentEntity>) tournamentRepository.findBySearchString(searchString);
+			
+			System.out.println("TournamentService: findBySearchString: findTournaments: size: " + findTournaments.size());
 			
 			int start = (int) pageable.getOffset();
 			int end = (start + pageable.getPageSize()) > findTournaments.size() ? findTournaments.size() : (start + pageable.getPageSize());
@@ -128,6 +132,17 @@ public class TournamentService implements ITournamentService {
 			return null;
 		}
 		return findTournaments;
+	}
+	
+	@Override
+	public Long countBySearchString(String searchString) {
+		List<TournamentEntity> findTournaments = null;
+		try {
+			findTournaments = (List<TournamentEntity>) tournamentRepository.findBySearchString(searchString);
+		} catch (Exception e) {
+			return 0l;
+		}
+		return new Long(findTournaments.size());
 	}
 
 }

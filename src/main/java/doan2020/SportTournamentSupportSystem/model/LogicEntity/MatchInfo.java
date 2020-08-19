@@ -2,22 +2,31 @@ package doan2020.SportTournamentSupportSystem.model.LogicEntity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
+import doan2020.SportTournamentSupportSystem.entity.MatchEntity;
+
 public class MatchInfo {
 	
+	Long id;
 	Integer matchNo;
 	Integer roundNo;
 	String name;
+	
 	Team team1;
 	String team1Description;
-	String team2Description;
+	
 	Team team2;
+	String team2Description;
+	
 	Team winner;
 	Team loser;
+	
+	@JsonBackReference
+	MatchEntity realMatch;
 	
 	/*
 	 * status:
 	 * 0: có sẵn 2 đội (round 1 win branch)
-	 * 1: 2 đội lấy từ 2 trận thắng của left và right ( round 2+ win branch)
+	 * 1: 2 đội lấy từ 2 trận thắng của left và right ( round 2+ )
 	 * 2: có sẵn đội 1, đội 2 lấy từ trận thắng của right (round 2 win branch)
 	 * 3: 2 đội lấy từ 2 trận thua của left và right (round 1 lose branch)
 	 * 4: đội 1 lấy từ đội thua của trận left, đội 2 lấy từ trận thắng của right (round 2+ lose branch)
