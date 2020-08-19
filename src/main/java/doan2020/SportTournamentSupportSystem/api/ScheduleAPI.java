@@ -46,7 +46,7 @@ public class ScheduleAPI {
 		Map<String, Object> error = new HashMap<String, Object>();
 
 		Collection<MatchEntity> matches = new ArrayList<>();
-		Collection<TeamEntity> teams = new ArrayList<>();
+		ArrayList<TeamEntity> teams = new ArrayList<>();
 
 		try {
 			CompetitionEntity thisCompetition = competitionService.findOneById(competitionId);
@@ -57,10 +57,15 @@ public class ScheduleAPI {
 				error.put("MessageCode", 1);
 				error.put("Message", "Competition not found");
 			} else {
-				teams = thisCompetition.getTeams();
+				System.out.println("ScheduleAPI: singleEliminationSchedule: thisComp: " + thisCompetition.getTeams());
+				for (TeamEntity team: thisCompetition.getTeams()) {
+					teams.add(team);
+				}
+				System.out.println("ScheduleAPI: singleEliminationSchedule: teams: " + teams);
 				CompetitionFormatEntity format = thisCompetition.getMainFormat();
-				
+				System.out.println("ScheduleAPI: singleEliminationSchedule: format: " + format.getName());
 				if (teams.size() < 2 || (teams.size() < 3 && format.getId() == 2)) {
+					System.out.println("ScheduleAPI: singleEliminationSchedule: schedule null: ");
 					result.put("Schedule", null);
 					config.put("Global", 0);
 					error.put("MessageCode", 1);
