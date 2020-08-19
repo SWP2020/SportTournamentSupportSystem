@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
 import doan2020.SportTournamentSupportSystem.entity.TeamEntity;
 import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
+import doan2020.SportTournamentSupportSystem.repository.CompetitionRepository;
 import doan2020.SportTournamentSupportSystem.repository.TournamentRepository;
 import doan2020.SportTournamentSupportSystem.repository.UserRepository;
 import doan2020.SportTournamentSupportSystem.service.ITournamentService;
@@ -25,6 +26,9 @@ public class TournamentService implements ITournamentService {
 
 	@Autowired
 	private TournamentRepository tournamentRepository;
+	
+	@Autowired
+	private CompetitionRepository competitionRepository;
 	
 	@Override
 	public Long countAll() {
@@ -149,20 +153,6 @@ public class TournamentService implements ITournamentService {
 	}
 
 	@Override
-	public int countBySearchString(String searchString) {
-		List<TournamentEntity> findTournaments = null;
-		int count = 0;
-		try {
-			findTournaments = (List) tournamentRepository.findBySearchString(searchString);
-			
-			count = findTournaments.size();
-		} catch (Exception e) {
-			return 0;
-		}
-		return count;
-	}
-
-	@Override
 	public TournamentEntity updateAvatar(Long id, TournamentEntity newEntity) {
 		TournamentEntity updatedEntity = null;
 		try {
@@ -195,7 +185,8 @@ public class TournamentService implements ITournamentService {
 	@Override
 	public Map<String, Object> getOtherInformation(Long id) {
 		Map<String, Object> option = new HashMap<String, Object>();
-		Collection<CompetitionEntity> competitions = competitionService.findByTournamentId(id);
+		TournamentEntity thisTournament = tournamentRepository.findOneById(id);
+		Collection<CompetitionEntity> competitions = thisTournament.getCompetitions();
 
 		HashSet<String> sportsName = new HashSet<>();
 

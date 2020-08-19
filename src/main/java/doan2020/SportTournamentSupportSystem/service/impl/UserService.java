@@ -210,18 +210,6 @@ public class UserService implements IUserService {
 		return count;
 	}
 
-	@Override
-	public int countBySearchString(String searchString) {
-		int count = 0;
-		try {
-			List<UserEntity> findUsers = (List<UserEntity>) userRepository.findBySearchString(searchString);
-			
-			count = findUsers.size();
-		} catch (Exception e) {
-			return 0;
-		}
-		return count;
-	}
 	
 	@Override
 	public Long countBySearchString(String searchString) {
