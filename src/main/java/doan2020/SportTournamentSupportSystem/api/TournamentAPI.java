@@ -1,8 +1,6 @@
 package doan2020.SportTournamentSupportSystem.api;
 
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -25,12 +23,8 @@ import doan2020.SportTournamentSupportSystem.converter.PermissionConverter;
 import doan2020.SportTournamentSupportSystem.converter.SportConverter;
 import doan2020.SportTournamentSupportSystem.converter.TournamentConverter;
 import doan2020.SportTournamentSupportSystem.dto.PermissionDTO;
-import doan2020.SportTournamentSupportSystem.dto.SportDTO;
 import doan2020.SportTournamentSupportSystem.dto.TournamentDTO;
-import doan2020.SportTournamentSupportSystem.dto.UserDTO;
-import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
 import doan2020.SportTournamentSupportSystem.entity.PermissionEntity;
-import doan2020.SportTournamentSupportSystem.entity.TeamEntity;
 import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
 import doan2020.SportTournamentSupportSystem.entity.UserEntity;
 import doan2020.SportTournamentSupportSystem.response.Response;
@@ -90,10 +84,11 @@ public class TournamentAPI {
 		UserEntity user = new UserEntity();
 		PermissionEntity permissionEntity = new PermissionEntity();
 		PermissionDTO permissionDTO = new PermissionDTO();
-		Collection<SportDTO> dtos = new HashSet<SportDTO>();
+		Map<String, Object> otherInformation = new HashMap<String, Object>();
 		try {
 			if (id == null) { // id null
-				result.put("Tournament", null);
+				result.put("Tournament", tournamentDTO);
+				result.put("OtherInformation", otherInformation);
 				config.put("Global", 0);
 				error.put("MessageCode", 1);
 				error.put("Message", "Required param id");
@@ -102,19 +97,17 @@ public class TournamentAPI {
 				tournamentEntity = service.findOneById(id);
 
 				if (tournamentEntity == null) { // not found
-					result.put("Tournament", null);
+					result.put("Tournament", tournamentDTO);
+					result.put("OtherInformation", otherInformation);
 					config.put("Global", 0);
 					error.put("MessageCode", 1);
 					error.put("Message", "Not found");
 				} else { // found
+					
 					tournamentDTO = converter.toDTO(tournamentEntity);
 					
-					Map<String, Object> option = new HashMap<String, Object>();
+					otherInformation = service.getOtherInformation(id);
 					
-					option = service.getOtherInformation(id);
-					
-					tournamentDTO.setOption(option);
-
 					String curentUserName = jwtService.getUserNameFromJwtToken(jwt);
 
 					user = userService.findByUsername(curentUserName);
@@ -137,6 +130,7 @@ public class TournamentAPI {
 					}
 
 					result.put("Tournament", tournamentDTO);
+					result.put("OtherInformation", otherInformation);
 					config.put("Global", permissionDTO);
 					error.put("MessageCode", 0);
 					error.put("Message", "Found");
@@ -146,6 +140,7 @@ public class TournamentAPI {
 		} catch (Exception e) {
 			System.out.println("TournamentAPI: getTournament: has exception");
 			result.put("Tournament", null);
+			result.put("OtherInformation", otherInformation);
 			config.put("Global", 0);
 			error.put("MessageCode", 1);
 			error.put("Message", "Server error");

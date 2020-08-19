@@ -25,17 +25,19 @@ public class UserDetailsServiceImpl implements UserDetailsService{
 		// Kiểm tra xem user có tồn tại trong database không?
 //		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         UserEntity user = userRepository.findByUsername(username);
-		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+        List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+        if(user !=null) {
 		authorities.add(new SimpleGrantedAuthority(user.getRole().getName()));
-        if (user == null) {
-            throw new UsernameNotFoundException(username);
         }
+        if (user != null) {
         boolean enabled = true;
         boolean accountNonExpired = true;
         boolean credentialsNonExpired = true;
         boolean accountNonLocked = true;
         return new User(username, /*passwordEncoder.encode*/(user.getPassword()), enabled, accountNonExpired, credentialsNonExpired,
             accountNonLocked, authorities);
+        }
+		return null;
 	}
 
 }

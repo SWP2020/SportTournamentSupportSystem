@@ -76,7 +76,10 @@ public class LoginAPI {
 			} else { // User exist
 				System.out.println("LoginAPI: login: User is Exist");
 				System.out.println("LoginAPI: login: found: " + findUser.getId().toString());
-				if (!findUser.getStatus().equals("active")) { // User is not active
+				String status = findUser.getStatus();
+				if(status==null)
+					status = "";
+				if (!status.equals("active")) { // User is not active
 					System.out.println("LoginAPI: login: User is not active");
 					result.put("User", null);
 					result.put("Authentication", null);
