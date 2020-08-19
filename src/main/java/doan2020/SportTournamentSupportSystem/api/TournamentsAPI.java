@@ -51,8 +51,7 @@ public class TournamentsAPI {
 		HttpStatus httpStatus = HttpStatus.OK;
 
 		Collection<TournamentEntity> findPage = new ArrayList<>();
-		List<TournamentDTO> findPageDTO = new ArrayList<>();
-
+		List<Map<String, Object>> tournaments = new ArrayList<Map<String,Object>>();
 		try {
 			if (limit == null)
 				limit = 10;
@@ -65,19 +64,17 @@ public class TournamentsAPI {
 			findPage = service.findAll(pageable);
 
 			for (TournamentEntity entity : findPage) {
-
-//				TournamentDTO dto = converter.toDTO(entity);
-//				findPageDTO.add(dto);
-
+				
+				Map<String, Object> tournament = new HashMap<String, Object>();
+				Map<String, Object> otherInformation = new HashMap<String, Object>();
 				TournamentDTO tournamentDTO = converter.toDTO(entity);
 
-				Map<String, Object> option = new HashMap<String, Object>();
-
-				option = service.getOtherInformation(entity.getId());
-
-				tournamentDTO.setOption(option);
-
-				findPageDTO.add(tournamentDTO);
+				otherInformation = service.getOtherInformation(entity.getId());
+				tournament.put("OtherInformation", otherInformation);
+				tournament.put("Tournament", tournamentDTO);
+				
+				tournaments.add(tournament);
+				
 			}
 			
 			long total = service.countAll();
@@ -86,14 +83,14 @@ public class TournamentsAPI {
 				totalPage++;
 			}
 			result.put("TotalPage", totalPage);
-			result.put("Tournaments", findPageDTO);
+			result.put("Tournaments", tournaments);
 			error.put("MessageCode", 0);
 			error.put("Message", "Get page successfully");
 
 			System.out.println("TournamentsAPI: getAllTournament: no exception");
 		} catch (Exception e) {
 			System.out.println("TournamentsAPI: getAllTournament: has exception");
-			result.put("Users", findPageDTO);
+			result.put("Users", tournaments);
 			error.put("MessageCode", 1);
 			error.put("Message", "Server error");
 		}
@@ -118,9 +115,8 @@ public class TournamentsAPI {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
 
-		List<TournamentDTO> dtos = new ArrayList<TournamentDTO>();
 		List<TournamentEntity> entities = new ArrayList<TournamentEntity>();
-
+		List<Map<String, Object>> tournaments = new ArrayList<Map<String,Object>>();
 		if (limit == null || limit <= 0)
 			limit = 3;
 
@@ -128,7 +124,7 @@ public class TournamentsAPI {
 			page = 1;
 
 		if (userId == null) {// userId null
-			result.put("Tournaments", dtos);
+			result.put("Tournaments", tournaments);
 			config.put("Global", 0);
 			error.put("MessageCode", 1);
 			error.put("Message", "Required param userId");
@@ -147,17 +143,18 @@ public class TournamentsAPI {
 				for (TournamentEntity entity : entities) {
 					TournamentDTO tournamentDTO = converter.toDTO(entity);
 
-					Map<String, Object> option = new HashMap<String, Object>();
+					Map<String, Object> tournament = new HashMap<String, Object>();
+					Map<String, Object> otherInformation = new HashMap<String, Object>();
 
-					option = service.getOtherInformation(entity.getId());
-
-					tournamentDTO.setOption(option);
-
-					dtos.add(tournamentDTO);
+					otherInformation = service.getOtherInformation(entity.getId());
+					tournament.put("OtherInformation", otherInformation);
+					tournament.put("Tournament", tournamentDTO);
+					
+					tournaments.add(tournament);
 				}
 
 				result.put("TotalPage", totalPage);
-				result.put("Tournaments", dtos);
+				result.put("Tournaments", tournaments);
 				config.put("Global", 0);
 				error.put("MessageCode", 0);
 				error.put("Message", "Found");
@@ -165,7 +162,7 @@ public class TournamentsAPI {
 			} catch (Exception e) {
 				System.out.println("TournamentsAPI: getTournamentsPagingByUserId: has exception");
 				result.put("TotalPage", null);
-				result.put("Tournaments", dtos);
+				result.put("Tournaments", tournaments);
 				config.put("Global", 0);
 				error.put("MessageCode", 0);
 				error.put("Message", "Server error");
@@ -192,9 +189,9 @@ public class TournamentsAPI {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
 
-		List<TournamentDTO> dtos = new ArrayList<TournamentDTO>();
 		List<TournamentEntity> entities = new ArrayList<TournamentEntity>();
-
+		List<Map<String, Object>> tournaments = new ArrayList<Map<String,Object>>();
+		Long totalPage = 0l;
 		if (limit == null || limit <= 0)
 			limit = 3;
 
@@ -202,7 +199,7 @@ public class TournamentsAPI {
 			page = 1;
 
 		if (searchString == null) {// searchString null
-			result.put("Tournaments", dtos);
+			result.put("Tournaments", tournaments);
 			config.put("Global", 0);
 			error.put("MessageCode", 1);
 			error.put("Message", "Required param searchString");
@@ -212,7 +209,7 @@ public class TournamentsAPI {
 				Pageable pageable = PageRequest.of(page - 1, limit);
 				entities = (List<TournamentEntity>) service.findBySearchString(pageable, searchString);
 				
-				Long totalPage = 0l;
+				
 				
 				Long totalEntity = service.countBySearchString(searchString);
 				
@@ -225,25 +222,26 @@ public class TournamentsAPI {
 				for (TournamentEntity entity : entities) {
 					TournamentDTO tournamentDTO = converter.toDTO(entity);
 
-					Map<String, Object> option = new HashMap<String, Object>();
+					Map<String, Object> tournament = new HashMap<String, Object>();
+					Map<String, Object> otherInformation = new HashMap<String, Object>();
 
-					option = service.getOtherInformation(entity.getId());
-
-					tournamentDTO.setOption(option);
-
-					dtos.add(tournamentDTO);
+					otherInformation = service.getOtherInformation(entity.getId());
+					tournament.put("OtherInformation", otherInformation);
+					tournament.put("Tournament", tournamentDTO);
+					
+					tournaments.add(tournament);
 				}
 
 				result.put("TotalPage", totalPage);
-				result.put("Tournaments", dtos);
+				result.put("Tournaments", tournaments);
 				config.put("Global", 0);
 				error.put("MessageCode", 0);
 				error.put("Message", "Found");
 				System.out.println("TournamentsAPI: getBySearchString: no exception");
 			} catch (Exception e) {
 				System.out.println("TournamentsAPI: getBySearchString: has exception");
-				result.put("TotalPage", null);
-				result.put("Tournaments", dtos);
+				result.put("TotalPage", totalPage);
+				result.put("Tournaments", tournaments);
 				config.put("Global", 0);
 				error.put("MessageCode", 0);
 				error.put("Message", "Server error");

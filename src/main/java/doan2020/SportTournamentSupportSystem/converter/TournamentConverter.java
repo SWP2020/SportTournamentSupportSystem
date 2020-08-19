@@ -87,6 +87,8 @@ public class TournamentConverter{
 			dto.setDonor(entity.getDonor());
 			dto.setStatus(entity.getStatus());
 			dto.setUrl(entity.getUrl());
+			String createdDate = validator.formatDateToString(entity.getCreatedDate());
+			dto.setCreatedDate(createdDate);
 			System.out.println("TournamentConverter: toDTO: no exception");
 		} catch (Exception e) {
 			System.out.println("TournamentConverter: toDTO: has exception");

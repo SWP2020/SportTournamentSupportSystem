@@ -21,7 +21,7 @@ public class JwtService {
 	
 	public static final String USERNAME = "username";
 	public static final String ID = "id";
-	public static final String SECRET_KEY = "JWTSuperSecretKey";
+	public static final String SECRET_KEY = "bezKoderSecretKey";
 	public static final int EXPIRE_TIME = 86400000;
 
 	public String generateTokenLogin(UserEntity user) {
@@ -31,8 +31,8 @@ public class JwtService {
 			return Jwts.builder()
 					.setSubject((user.getUsername()))
 					.setIssuedAt(new Date())
-					.setExpiration(new Date(System.currentTimeMillis() + EXPIRE_TIME))
-					.signWith(SignatureAlgorithm.HS512, SECRET_KEY)
+					.setExpiration(new Date(new Date().getTime() + EXPIRE_TIME))
+					.signWith(SignatureAlgorithm.HS512, SECRET_KEY.getBytes())
 					.compact();
 
 		} catch (Exception e) {
@@ -42,12 +42,12 @@ public class JwtService {
 	}
 
 	public String getUserNameFromJwtToken(String token) {
-		return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody().getSubject();
+		return Jwts.parser().setSigningKey(SECRET_KEY.getBytes()).parseClaimsJws(token).getBody().getSubject();
 	}
 
 	public boolean validateJwtToken(String authToken) {
 		try {
-			Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(authToken);
+			Jwts.parser().setSigningKey(SECRET_KEY.getBytes()).parseClaimsJws(authToken);
 			return true;
 		} catch (SignatureException e) {
 			logger.error("Invalid JWT signature: {}", e.getMessage());
