@@ -29,8 +29,10 @@ public class PermissionConverter {
 	
 	public PermissionDTO toDTO(PermissionEntity entity) {
 		System.out.println("PermissionConverter: toDTO: start");
+		System.out.println("PermissionConverter: toDTO: entity: " + entity);
 		PermissionDTO dto = new PermissionDTO();
 		try {
+			dto.setId(entity.getId());
 			dto.setName(entity.getName());
 			dto.setDescription(entity.getDescription());
 			dto.setCanEdit(entity.getCanEdit());

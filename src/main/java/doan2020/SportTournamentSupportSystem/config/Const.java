@@ -17,9 +17,9 @@ public final class Const {
 	
 	public final static String NONE = "none";
 	
-	public final static String ONLY_DELETE = "only delete";
+	public final static String ONLY_DELETE = "monitor";
 	
-	public final static String ONLY_EDIT = "only edit";
+	public final static String ONLY_EDIT = "manager";
 	
-	public final static String DELETE_AND_EDIT = "edit and delete";
+	public final static String DELETE_AND_EDIT = "owner";
 }
