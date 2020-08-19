@@ -21,6 +21,9 @@ public class TeamService implements ITeamService {
 	public TeamEntity create(TeamEntity teamEntity) {
 		TeamEntity newEntity = null;
 		try {
+			Long competitionId = teamEntity.getCompetition().getId();
+			Long totalTeam = teamRepository.countByCompetitionId(competitionId);
+			teamEntity.setSeedNo(totalTeam + 1);
 			newEntity = teamRepository.save(teamEntity);
 		} catch (Exception e) {
 			return null;

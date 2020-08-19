@@ -39,7 +39,7 @@ public class TeamEntity implements Comparator<TeamEntity> {
 
 	private String description;
 
-	private Integer seedNo;
+	private Long seedNo;
 
 	private String createdBy;
 
@@ -198,17 +198,19 @@ public class TeamEntity implements Comparator<TeamEntity> {
 		this.register_forms = register_forms;
 	}
 
-	public Integer getSeedNo() {
+	public Long getSeedNo() {
+		if (seedNo == null)
+			return -1l;
 		return seedNo;
 	}
 
-	public void setSeedNo(Integer seedNo) {
+	public void setSeedNo(Long seedNo) {
 		this.seedNo = seedNo;
 	}
 	
 	@Override
 	public int compare(TeamEntity o1, TeamEntity o2) {
-		return o1.getSeedNo() - o2.getSeedNo();
+		return new Long(o1.getSeedNo() - o2.getSeedNo()).intValue();
 	}
 
 }
