@@ -15,11 +15,15 @@ public final class Const {
 	
 	public final static String TOKEN_HEADER = "Authorization";
 	
-	public final static String NONE = "none";
+	public final static String VIEWER = "viewer"; // Viewer
 	
-	public final static String ONLY_DELETE = "monitor";
+	public final static String MONITOR = "monitor";
 	
-	public final static String ONLY_EDIT = "manager";
+	public final static String MANAGER = "manager";
 	
-	public final static String DELETE_AND_EDIT = "owner";
+	public final static String OWNER = "owner";
+	
+	public final static String RESOURCE_PATH = "src/main/resource/";
+	
+	public final static String BRANCH_CONFIG_FOLDER = "branch_config/";
 }

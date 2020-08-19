@@ -30,7 +30,11 @@ public class ScheduleAPI {
 
 	@Autowired
 	private ICompetitionService competitionService;
-
+	
+	
+	/*
+	 * Get schedule for a competition
+	 */
 	@GetMapping("")
 	public ResponseEntity<Response> singleEliminationSchedule(
 			@RequestParam(value = "competitionId", required = false) Long competitionId) {
