@@ -29,19 +29,18 @@ import doan2020.SportTournamentSupportSystem.service.IUserService;
 @CrossOrigin
 @RequestMapping("/tournaments")
 public class TournamentsAPI {
-	
+
 	@Autowired
 	private ITournamentService service;
-	
+
 	@Autowired
 	private IUserService userService;
 
 	@Autowired
 	private TournamentConverter converter;
-	
+
 	@GetMapping("")
-	public ResponseEntity<Response> getAllTournament(
-			@RequestParam(value = "page", required = false) Integer page,
+	public ResponseEntity<Response> getAllTournament(@RequestParam(value = "page", required = false) Integer page,
 			@RequestParam(value = "limit", required = false) Integer limit) {
 		System.out.println("TournamentsAPI: getAllTournament: start");
 
@@ -66,8 +65,15 @@ public class TournamentsAPI {
 			findPage = service.findAll(pageable);
 
 			for (TournamentEntity entity : findPage) {
-				TournamentDTO dto = converter.toDTO(entity);
-				findPageDTO.add(dto);
+				TournamentDTO tournamentDTO = converter.toDTO(entity);
+
+				Map<String, Object> option = new HashMap<String, Object>();
+
+				option = service.getOtherInformation(entity.getId());
+
+				tournamentDTO.setOption(option);
+
+				findPageDTO.add(tournamentDTO);
 			}
 
 			result.put("Tournaments", findPageDTO);
@@ -93,30 +99,30 @@ public class TournamentsAPI {
 			@RequestParam(value = "page", required = false) Integer page,
 			@RequestParam(value = "limit", required = false) Integer limit,
 			@RequestParam(value = "userId") Long userId) {
-		
+
 		System.out.println("TournamentsAPI: getTournamentsPagingByUserId: start");
-		
+
 		HttpStatus httpStatus = HttpStatus.OK;
 		Response response = new Response();
 		Map<String, Object> config = new HashMap<String, Object>();
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
-		
+
 		List<TournamentDTO> dtos = new ArrayList<TournamentDTO>();
 		List<TournamentEntity> entities = new ArrayList<TournamentEntity>();
-		
+
 		if (limit == null || limit <= 0)
 			limit = 3;
-		
+
 		if (page == null || page <= 0)
 			page = 1;
-		
+
 		if (userId == null) {// userId null
 			result.put("Tournaments", dtos);
 			config.put("Global", 0);
 			error.put("MessageCode", 1);
 			error.put("Message", "Required param userId");
-		} else {//userId not null
+		} else {// userId not null
 //			Sort sortable = Sort.by("id").ascending();
 			try {
 				Pageable pageable = PageRequest.of(page - 1, limit);
@@ -127,12 +133,19 @@ public class TournamentsAPI {
 				totalPage = totalEntity / limit;
 				if (totalEntity % limit != 0)
 					totalPage++;
-				
-				for (TournamentEntity entity: entities) {
-					TournamentDTO dto = converter.toDTO(entity);
-					dtos.add(dto);
+
+				for (TournamentEntity entity : entities) {
+					TournamentDTO tournamentDTO = converter.toDTO(entity);
+
+					Map<String, Object> option = new HashMap<String, Object>();
+
+					option = service.getOtherInformation(entity.getId());
+
+					tournamentDTO.setOption(option);
+
+					dtos.add(tournamentDTO);
 				}
-				
+
 				result.put("TotalPage", totalPage);
 				result.put("Tournaments", dtos);
 				config.put("Global", 0);
@@ -147,7 +160,7 @@ public class TournamentsAPI {
 				error.put("MessageCode", 0);
 				error.put("Message", "Server error");
 			}
-			
+
 		}
 
 		response.setConfig(config);
@@ -156,52 +169,58 @@ public class TournamentsAPI {
 		System.out.println("TournamentsAPI: getTournamentsPagingByUserId: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
-	
+
 	@GetMapping("/getBySearchString")
-	public ResponseEntity<Response> getBySearchString(
-			@RequestParam(value = "page", required = false) Integer page,
+	public ResponseEntity<Response> getBySearchString(@RequestParam(value = "page", required = false) Integer page,
 			@RequestParam(value = "limit", required = false) Integer limit,
 			@RequestParam(value = "searchString") String searchString) {
 		System.out.println("TournamentsAPI: getBySearchString: start");
-		
+
 		HttpStatus httpStatus = HttpStatus.OK;
 		Response response = new Response();
 		Map<String, Object> config = new HashMap<String, Object>();
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
-		
+
 		List<TournamentDTO> dtos = new ArrayList<TournamentDTO>();
 		List<TournamentEntity> entities = new ArrayList<TournamentEntity>();
-		
+
 		if (limit == null || limit <= 0)
 			limit = 3;
-		
+
 		if (page == null || page <= 0)
 			page = 1;
-		
+
 		if (searchString == null) {// searchString null
 			result.put("Tournaments", dtos);
 			config.put("Global", 0);
 			error.put("MessageCode", 1);
 			error.put("Message", "Required param searchString");
-		} else {//searchString not null
+		} else {// searchString not null
 //			Sort sortable = Sort.by("id").ascending();
 			try {
 				Pageable pageable = PageRequest.of(page - 1, limit);
 				entities = (List<TournamentEntity>) service.findBySearchString(pageable, searchString);
-				
+
 				int totalPage = 0;
-				
+
 				int totalEntity = service.countBySearchString(searchString);
 				totalPage = totalEntity / limit;
 				if (totalEntity % limit != 0)
 					totalPage++;
-				
-				for (TournamentEntity entity: entities) {
-					TournamentDTO dto = converter.toDTO(entity);
-					dtos.add(dto);
+
+				for (TournamentEntity entity : entities) {
+					TournamentDTO tournamentDTO = converter.toDTO(entity);
+
+					Map<String, Object> option = new HashMap<String, Object>();
+
+					option = service.getOtherInformation(entity.getId());
+
+					tournamentDTO.setOption(option);
+
+					dtos.add(tournamentDTO);
 				}
-				
+
 				result.put("TotalPage", totalPage);
 				result.put("Tournaments", dtos);
 				config.put("Global", 0);
@@ -216,7 +235,7 @@ public class TournamentsAPI {
 				error.put("MessageCode", 0);
 				error.put("Message", "Server error");
 			}
-			
+
 		}
 
 		response.setConfig(config);
@@ -225,6 +244,5 @@ public class TournamentsAPI {
 		System.out.println("TournamentsAPI: getBySearchString: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
-
 
 }

@@ -105,11 +105,11 @@ public class CompetitionService implements ICompetitionService {
 	}
 
 	@Override
-	public Collection<CompetitionEntity> findByTournamentIdAndSportId(Pageable pageable, Long tournamentId,
+	public Collection<CompetitionEntity> findByTournamentIdAndSportId(Long tournamentId,
 			Long sportId) {
 		Collection<CompetitionEntity> foundEntitys = null;
 		try {
-			foundEntitys = (Collection<CompetitionEntity>) competitionRepository.findByTournamentIdAndSportId(pageable, tournamentId, sportId).getContent();
+			foundEntitys = (Collection<CompetitionEntity>) competitionRepository.findByTournamentIdAndSportId(tournamentId, sportId);
 		} catch (Exception e) {
 			return null;
 		}

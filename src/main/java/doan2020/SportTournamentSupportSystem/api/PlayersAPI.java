@@ -44,7 +44,7 @@ public class PlayersAPI {
 		List<PlayerDTO> dtos = new ArrayList<PlayerDTO>();
 		try {
 			if (teamId == null) { // id null
-				result.put("Player", dtos);
+				result.put("Players", dtos);
 				config.put("Global", 0);
 				error.put("MessageCode", 1);
 				error.put("Message", "Required param teamId");
@@ -53,7 +53,7 @@ public class PlayersAPI {
 				entities = (List<PlayerEntity>) service.findByTeamId(teamId);
 				
 				if (entities == null) { // not found
-					result.put("Player", dtos);
+					result.put("Players", dtos);
 					config.put("Global", 0);
 					error.put("MessageCode", 1);
 					error.put("Message", "Not found");
@@ -63,7 +63,7 @@ public class PlayersAPI {
 						dtos.add(dto);
 					} 
 					
-					result.put("Player", dtos);
+					result.put("Players", dtos);
 					config.put("Global", 0);
 					error.put("MessageCode", 0);
 					error.put("Message", "Found");
@@ -72,7 +72,7 @@ public class PlayersAPI {
 			System.out.println("PlayersAPI: getByTeamId: no exception");
 		} catch (Exception e) {
 			System.out.println("PlayersAPI: getByTeamId: has exception");
-			result.put("Player", dtos);
+			result.put("Players", dtos);
 			config.put("Global", 0);
 			error.put("MessageCode", 1);
 			error.put("Message", "Server error");
