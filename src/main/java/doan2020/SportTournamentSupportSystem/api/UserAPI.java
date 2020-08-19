@@ -81,11 +81,11 @@ public class UserAPI {
 
 		try {
 
-			if (id == null||jwt == null) {// id null
+			if (id == null) {// id null
 				result.put("User", null);
 				config.put("Global", 0);
 				error.put("MessageCode", 1);
-				error.put("Message", "Required param id or header Authorization");
+				error.put("Message", "Required param id");
 			} else {// id not null
 				user = userService.findOneById(id);
 				if (user == null) {// not found

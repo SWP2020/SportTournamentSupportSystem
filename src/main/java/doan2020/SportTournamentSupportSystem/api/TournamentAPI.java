@@ -89,12 +89,12 @@ public class TournamentAPI {
 		Map<String, Object> otherInformation = new HashMap<String, Object>();
 
 		try {
-			if (id == null || jwt == null) { // id null
+			if (id == null) { // id null
 				result.put("Tournament", tournamentDTO);
 				result.put("OtherInformation", otherInformation);
 				config.put("Global", 0);
 				error.put("MessageCode", 1);
-				error.put("Message", "Required param id or header Authorization");
+				error.put("Message", "Required param id");
 			} else { // id not null
 
 				tournamentEntity = service.findOneById(id);
