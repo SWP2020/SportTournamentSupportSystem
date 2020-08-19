@@ -72,7 +72,7 @@ public class TournamentAPI {
 
 	@GetMapping("")
 	public ResponseEntity<Response> getTournament(
-			@RequestHeader(value = Const.TOKEN_HEADER) String jwt,
+			@RequestHeader(value = Const.TOKEN_HEADER, required = false) String jwt,
 			@RequestParam(value = "id", required = false) Long id) {
 		System.out.println("TournamentAPI: getTournament: start");
 		HttpStatus httpStatus = HttpStatus.OK;
