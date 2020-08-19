@@ -1,9 +1,11 @@
 
 package doan2020.SportTournamentSupportSystem.service.impl;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -11,8 +13,9 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
+import doan2020.SportTournamentSupportSystem.entity.TeamEntity;
 import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
-import doan2020.SportTournamentSupportSystem.entity.UserEntity;
 import doan2020.SportTournamentSupportSystem.repository.TournamentRepository;
 import doan2020.SportTournamentSupportSystem.repository.UserRepository;
 import doan2020.SportTournamentSupportSystem.service.ITournamentService;
@@ -143,6 +146,73 @@ public class TournamentService implements ITournamentService {
 			return 0l;
 		}
 		return new Long(findTournaments.size());
+	}
+
+	@Override
+	public int countBySearchString(String searchString) {
+		List<TournamentEntity> findTournaments = null;
+		int count = 0;
+		try {
+			findTournaments = (List) tournamentRepository.findBySearchString(searchString);
+			
+			count = findTournaments.size();
+		} catch (Exception e) {
+			return 0;
+		}
+		return count;
+	}
+
+	@Override
+	public TournamentEntity updateAvatar(Long id, TournamentEntity newEntity) {
+		TournamentEntity updatedEntity = null;
+		try {
+			updatedEntity = tournamentRepository.findOneById(id);
+
+//			updatedEntity.setAvartar(newEntity.getAvatar);
+			updatedEntity = tournamentRepository.save(updatedEntity);
+		} catch (Exception e) {
+			return null;
+		}
+
+		return updatedEntity;
+	}
+
+	@Override
+	public TournamentEntity updateBackground(Long id, TournamentEntity newEntity) {
+		TournamentEntity updatedEntity = null;
+		try {
+			updatedEntity = tournamentRepository.findOneById(id);
+
+//			updatedEntity.setBackground(newEntity.getBackground();
+			updatedEntity = tournamentRepository.save(updatedEntity);
+		} catch (Exception e) {
+			return null;
+		}
+
+		return updatedEntity;
+	}
+
+	@Override
+	public Map<String, Object> getOtherInformation(Long id) {
+		Map<String, Object> option = new HashMap<String, Object>();
+		Collection<CompetitionEntity> competitions = competitionService.findByTournamentId(id);
+
+		HashSet<String> sportsName = new HashSet<>();
+
+		int countPlayer = 0;
+
+		for (CompetitionEntity comp : competitions) {
+
+			sportsName.add(comp.getSport().getFullName());
+
+			for (TeamEntity teamEntity : comp.getTeams()) {
+				countPlayer += teamEntity.getPlayers().size();
+			}
+		}
+		option.put("sportsName", sportsName);
+		option.put("countPlayer", countPlayer);
+		option.put("process", 0);
+		return option;
 	}
 
 }

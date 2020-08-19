@@ -12,20 +12,26 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import doan2020.SportTournamentSupportSystem.config.Const;
+import doan2020.SportTournamentSupportSystem.converter.PermissionConverter;
 import doan2020.SportTournamentSupportSystem.converter.UserConverter;
+import doan2020.SportTournamentSupportSystem.dto.PermissionDTO;
 import doan2020.SportTournamentSupportSystem.dto.UserDTO;
+import doan2020.SportTournamentSupportSystem.entity.PermissionEntity;
 import doan2020.SportTournamentSupportSystem.entity.RoleEntity;
 import doan2020.SportTournamentSupportSystem.entity.UserEntity;
 import doan2020.SportTournamentSupportSystem.response.Response;
+import doan2020.SportTournamentSupportSystem.service.IPermissionService;
 import doan2020.SportTournamentSupportSystem.service.IRoleService;
 import doan2020.SportTournamentSupportSystem.service.IUserService;
 import doan2020.SportTournamentSupportSystem.service.impl.FileStorageService;
+import doan2020.SportTournamentSupportSystem.service.impl.JwtService;
 import doan2020.SportTournamentSupportSystem.service.impl.VerificationTokenService;
 
 @RestController
@@ -39,18 +45,28 @@ public class UserAPI {
 	private IRoleService roleService;
 
 	@Autowired
+	private IPermissionService permissionService;
+
+	@Autowired
 	private VerificationTokenService verificationTokenService;
 
 	@Autowired
 	private UserConverter userConverter;
 
 	@Autowired
+	private PermissionConverter permissionConverter;
+
+	@Autowired
 	private FileStorageService fileStorageService;
+
+	@Autowired
+	private JwtService jwtService;
 
 	/* get One User */
 
 	@GetMapping("")
-	public ResponseEntity<Response> getById(@RequestParam(value = "id") Long id) {
+	public ResponseEntity<Response> getById(@RequestHeader(value = Const.TOKEN_HEADER) String jwt,
+			@RequestParam(value = "id") Long id) {
 		System.out.println("UserAPI: getById: start");
 		Response response = new Response();
 		HttpStatus httpStatus = HttpStatus.OK;
@@ -59,7 +75,9 @@ public class UserAPI {
 		Map<String, Object> error = new HashMap<String, Object>();
 		UserEntity user = new UserEntity();
 		UserDTO dto = new UserDTO();
-
+		PermissionEntity permissionEntity = new PermissionEntity();
+		PermissionDTO permissionDTO = new PermissionDTO();
+		System.out.println(jwt);
 		try {
 			if (id == null) {// id null
 				result.put("User", null);
@@ -74,9 +92,24 @@ public class UserAPI {
 					error.put("MessageCode", 1);
 					error.put("Message", "Not found");
 				} else {// found
+
 					dto = userConverter.toDTO(user);
+
+					String curentUserName = jwtService.getUserNameFromJwtToken(jwt);
+					
+					Long curentId = userService.findByUsername(curentUserName).getId();
+
+					if (curentId == id) {
+						permissionEntity = permissionService.findOneByName(Const.DELETE_AND_EDIT);
+
+						permissionDTO = permissionConverter.toDTO(permissionEntity);
+					} else {
+						permissionEntity = permissionService.findOneByName(Const.NONE);
+
+						permissionDTO = permissionConverter.toDTO(permissionEntity);
+					}
 					result.put("User", dto);
-					config.put("Global", 0);
+					config.put("Global", permissionDTO);
 					error.put("MessageCode", 0);
 					error.put("Message", "Found");
 				}
@@ -364,15 +397,14 @@ public class UserAPI {
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
 
-	@PutMapping("/uploadAvatar")
-	public ResponseEntity<Response> uploadAvatar(@RequestParam("file") MultipartFile file,
-			@RequestParam(value = "id") Long id) {
+	@PostMapping("/uploadAvatar")
+	public ResponseEntity<Response> uploadAvatar(@RequestBody MultipartFile file, @RequestParam(value = "id") Long id) {
 		Response response = new Response();
 		HttpStatus httpStatus = HttpStatus.OK;
 		Map<String, Object> config = new HashMap<String, Object>();
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
-		
+
 		System.out.println("UserAPI: uploadAvatar: CP1");
 		try {
 			if (id == null) {// id null
@@ -411,12 +443,10 @@ public class UserAPI {
 		response.setConfig(config);
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
-	
-	@PutMapping("/uploadBackground")
-	public ResponseEntity<Response> uploadBackground(
-			@RequestBody MultipartFile file,
-			@RequestParam(value = "id") Long id) {
-		
+
+	@PostMapping("/uploadBackground")
+	public ResponseEntity<Response> uploadBackground(@RequestBody MultipartFile file, @RequestParam Long id) {
+
 		System.out.println("UserAPI: uploadBackground: start");
 		Response response = new Response();
 		HttpStatus httpStatus = HttpStatus.OK;
@@ -424,6 +454,8 @@ public class UserAPI {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
 		System.out.println("UserAPI: uploadAvatar: CP1");
+		System.out.println(id);
+		System.out.println(file.getOriginalFilename());
 		try {
 			if (id == null) {// id null
 				result.put("User", null);
@@ -441,6 +473,7 @@ public class UserAPI {
 					error.put("MessageCode", 1);
 					error.put("Message", "Could not store file");
 				} else {// fileName valid
+					System.out.println("check point");
 					UserDTO dto = new UserDTO();
 					dto.setBackground(fileName);
 					UserEntity userEntity = userConverter.toEntity(dto);

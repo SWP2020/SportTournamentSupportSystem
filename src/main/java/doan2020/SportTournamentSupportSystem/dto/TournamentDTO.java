@@ -1,6 +1,8 @@
 
 package doan2020.SportTournamentSupportSystem.dto;
 
+import java.util.Map;
+
 public class TournamentDTO{
 
 	private Long id;
@@ -15,6 +17,7 @@ public class TournamentDTO{
 	private String donor;
 	private String status;
 	private String url;
+	private Map option;
 
 	public TournamentDTO(){
 	}
@@ -130,6 +133,16 @@ public class TournamentDTO{
 	public void setUrl(String url) {
 		this.url = url;
 	}
+
+	public Map getOption() {
+		return option;
+	}
+
+	public void setOption(Map option) {
+		this.option = option;
+	}
+	
+	
 	
 
 }

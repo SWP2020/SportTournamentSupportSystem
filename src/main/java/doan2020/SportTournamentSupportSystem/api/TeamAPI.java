@@ -53,7 +53,7 @@ public class TeamAPI {
 
 			if (id == null) {// id not exist
 				System.out.println("TeamAPI - getOneTeam - cp1");
-				result.put("Team", null);
+				result.put("Team", dto);
 				config.put("Global", 0);
 				error.put("MessageCode", 1);
 				error.put("Message", "Requried id");
@@ -62,7 +62,7 @@ public class TeamAPI {
 				System.out.println("TeamAPI - getOneTeam - cp1");
 				if (teamEntity == null) {// competition is not exist
 					System.out.println("TeamAPI - getOneTeam - cp2");
-					result.put("Team", null);
+					result.put("Team", dto);
 					config.put("Global", 0);
 					error.put("MessageCode", 1);
 					error.put("Message", "Team is not exist");
@@ -106,21 +106,22 @@ public class TeamAPI {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
 		TeamEntity teamEntity = new TeamEntity();
+		TeamDTO resDTO = new TeamDTO();
 
 		try {
 			teamEntity = converter.toEntity(teamDTO);
 
 			if (teamEntity == null) {// convert false
 				System.out.println("Team API - createTeam - cp1");
-				result.put("Team", null);
+				result.put("Team", resDTO);
 				config.put("Global", 0);
 				error.put("MessageCode", 1);
 				error.put("Message", "create new Team fail");
 			} else {// convert ok
 				System.out.println("Team API - createTeam - cp2");
 				service.create(teamEntity);
-
-				result.put("Team", teamEntity);
+				resDTO = converter.toDTO(teamEntity);
+				result.put("Team", resDTO);
 				config.put("Global", 0);
 				error.put("MessageCode", 0);
 				error.put("Message", "create new Team successfull");
@@ -129,7 +130,7 @@ public class TeamAPI {
 
 		} catch (Exception e) {
 			System.out.println("Team API - createTeam - exception");
-			result.put("Team", teamEntity);
+			result.put("Team", resDTO);
 			config.put("Global", 0);
 			error.put("MessageCode", 1);
 			error.put("Message", "server error");
@@ -156,6 +157,7 @@ public class TeamAPI {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
 		TeamEntity teamEntity = new TeamEntity();
+		TeamDTO resDTO = new TeamDTO();
 
 		try {
 
@@ -171,15 +173,15 @@ public class TeamAPI {
 
 				if (teamEntity == null) {// convert false
 					System.out.println("Team API - editTeam - cp2");
-					result.put("Team", null);
+					result.put("Team", resDTO);
 					config.put("Global", 0);
 					error.put("MessageCode", 1);
 					error.put("Message", "edit new Team fail");
 				} else {// convert ok
 					System.out.println("Team API - editTeam - cp3");
 					service.update(id, teamEntity);
-
-					result.put("Team", teamEntity);
+					resDTO = converter.toDTO(teamEntity);
+					result.put("Team", resDTO);
 					config.put("Global", 0);
 					error.put("MessageCode", 0);
 					error.put("Message", "edit new Team successfull");
@@ -189,7 +191,7 @@ public class TeamAPI {
 			System.out.println("Team API - editTeam - has no exception");
 		} catch (Exception e) {
 			System.out.println("Team API - editTeam - has exception");
-			result.put("Team", teamEntity);
+			result.put("Team", resDTO);
 			config.put("Global", 0);
 			error.put("MessageCode", 1);
 			error.put("Message", "server error");
@@ -212,19 +214,19 @@ public class TeamAPI {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
 		TeamEntity teamEntity = new TeamEntity();
-
+		TeamDTO resDTO = new TeamDTO();
 		try {
 
 			if (id == null) {// id is not exist
 				System.out.println("Team API - deleteTeam - cp1");
-				result.put("Team", null);
+				result.put("Team", resDTO);
 				config.put("Global", 0);
 				error.put("MessageCode", 1);
 				error.put("Message", "Required Id");
 			} else {// id is exist
 				service.delete(id);
-
-				result.put("Team", teamEntity);
+				resDTO = converter.toDTO(teamEntity);
+				result.put("Team", resDTO);
 				config.put("Global", 0);
 				error.put("MessageCode", 0);
 				error.put("Message", "Delete Team successfull");
@@ -234,7 +236,7 @@ public class TeamAPI {
 			System.out.println("Team API - deleteTeam - has no exception");
 		} catch (Exception e) {
 			System.out.println("Team API - deleteTeam - has exception");
-			result.put("Team", teamEntity);
+			result.put("Team", resDTO);
 			config.put("Global", 0);
 			error.put("MessageCode", 1);
 			error.put("Message", "server error");

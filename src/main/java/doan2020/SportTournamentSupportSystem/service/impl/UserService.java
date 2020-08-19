@@ -187,6 +187,41 @@ public class UserService implements IUserService {
 		}
 		return findUsers;
 	}
+
+	@Override
+	public Collection<UserEntity> findByRoleId(Pageable pageable, Long roleId) {
+		List<UserEntity> findUsers = null;
+		try {
+			findUsers = userRepository.findByRoleId(pageable, roleId).getContent();
+		} catch (Exception e) {
+			return null;
+		}
+		return findUsers;
+	}
+
+	@Override
+	public int countByRoleId(Long roleId) {
+		int count = 0;
+		try {
+			count = userRepository.countByRoleId(roleId);
+		} catch (Exception e) {
+			return 0;
+		}
+		return count;
+	}
+
+	@Override
+	public int countBySearchString(String searchString) {
+		int count = 0;
+		try {
+			List<UserEntity> findUsers = (List<UserEntity>) userRepository.findBySearchString(searchString);
+			
+			count = findUsers.size();
+		} catch (Exception e) {
+			return 0;
+		}
+		return count;
+	}
 	
 	@Override
 	public Long countBySearchString(String searchString) {

@@ -5,7 +5,6 @@ import java.util.Collection;
 
 import org.springframework.data.domain.Pageable;
 
-import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
 import doan2020.SportTournamentSupportSystem.entity.RegisterFormEntity;
 
 public interface IRegisterFormService {

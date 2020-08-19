@@ -34,4 +34,8 @@ public interface IUserService {
 	public Long countBySearchString(String searchString);
 	
 	public Long countAll();
+
+	public Collection<UserEntity> findByRoleId(Pageable pageable, Long roleId);
+	
+	public int countByRoleId(Long roleId);
 }

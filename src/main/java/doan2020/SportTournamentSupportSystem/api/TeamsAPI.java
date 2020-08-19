@@ -71,8 +71,8 @@ public class TeamsAPI {
 			list = (List<TeamEntity>) service.findAll(pageable);
 
 			if (list.isEmpty()) {// list is not exist
-				result.put("Total page", null);
-				result.put("Teams", null);
+				result.put("Total page", 0);
+				result.put("Teams", teamDTOs);
 				config.put("Global", 0);
 				error.put("MessageCode", 0);
 				error.put("Message", "Page Teams is not exist");
@@ -102,7 +102,7 @@ public class TeamsAPI {
 			}
 		} catch (Exception e) {
 			System.out.println("TeamsAPI: getTeams: has exception");
-			result.put("Teams", null);
+			result.put("Teams", teamDTOs);
 			config.put("Global", 0);
 			error.put("MessageCode", 1);
 			error.put("Message", "Server error");
@@ -139,8 +139,8 @@ public class TeamsAPI {
 				page = 1;
 
 			if (userId == null) {
-				result.put("Total page", null);
-				result.put("Teams", null);
+				result.put("Total page", 0);
+				result.put("Teams", teamDTOs);
 				config.put("Global", 0);
 				error.put("MessageCode", 0);
 				error.put("Message", "required Userid");
@@ -149,8 +149,8 @@ public class TeamsAPI {
 				list = (List<TeamEntity>) service.findByCreatorId(userId);
 
 				if (list.isEmpty()) {// list is not exist
-					result.put("Total page", null);
-					result.put("Teams", null);
+					result.put("Total page", 0);
+					result.put("Teams", teamDTOs);
 					config.put("Global", 0);
 					error.put("MessageCode", 0);
 					error.put("Message", "Page Teams is not exist");
@@ -181,7 +181,7 @@ public class TeamsAPI {
 			}
 		} catch (Exception e) {
 			System.out.println("TeamsAPI: getTeamByUserId: has exception");
-			result.put("Teams", null);
+			result.put("Teams", teamDTOs);
 			config.put("Global", 0);
 			error.put("MessageCode", 1);
 			error.put("Message", "Server error");
@@ -219,8 +219,8 @@ public class TeamsAPI {
 				page = 1;
 
 			if (competitionId == null) {
-				result.put("Total page", null);
-				result.put("Teams", null);
+				result.put("Total page", 0);
+				result.put("Teams", teamDTOs);
 				config.put("Global", 0);
 				error.put("MessageCode", 0);
 				error.put("Message", "required competitionId");
@@ -229,8 +229,8 @@ public class TeamsAPI {
 				list = (List<TeamEntity>) service.findByCompetitionId(competitionId);
 
 				if (list.isEmpty()) {// list is not exist
-					result.put("Total page", null);
-					result.put("Teams", null);
+					result.put("Total page", 0);
+					result.put("Teams", teamDTOs);
 					config.put("Global", 0);
 					error.put("MessageCode", 0);
 					error.put("Message", "Page Teams is not exist");
@@ -261,7 +261,7 @@ public class TeamsAPI {
 			}
 		} catch (Exception e) {
 			System.out.println("TeamsAPI: getTeams: has exception");
-			result.put("Teams", null);
+			result.put("Teams", teamDTOs);
 			config.put("Global", 0);
 			error.put("MessageCode", 1);
 			error.put("Message", "Server error");
