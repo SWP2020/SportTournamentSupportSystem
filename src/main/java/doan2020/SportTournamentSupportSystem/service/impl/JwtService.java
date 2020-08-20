@@ -25,9 +25,9 @@ public class JwtService {
 	public static final int EXPIRE_TIME = 86400000;
 
 	public String generateTokenLogin(UserEntity user) {
+		System.out.println("JwtService: generateTokenLogin: user: "+ user);
 		String token = null;
 		try {
-			
 			return Jwts.builder()
 					.setSubject((user.getUsername()))
 					.setIssuedAt(new Date())
@@ -38,10 +38,13 @@ public class JwtService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		System.out.println("JwtService: generateTokenLogin: finish");
 		return token;
 	}
 
 	public String getUserNameFromJwtToken(String token) {
+		System.out.println("JwtService: getUserNameFromJwtToken: start");
 		return Jwts.parser().setSigningKey(SECRET_KEY.getBytes()).parseClaimsJws(token).getBody().getSubject();
 	}
 	
@@ -55,7 +58,9 @@ public class JwtService {
 	}
 
 	public boolean validateJwtToken(String authToken) {
+		System.out.println("JwtService: validateJwtToken: start");
 		try {
+
 			if (authToken == null || authToken.trim().length() == 0) {
 				return false;
 			}
@@ -69,6 +74,7 @@ public class JwtService {
 			}
 			
 			Jwts.parser().setSigningKey(SECRET_KEY.getBytes()).parseClaimsJws(authToken);
+			
 			return true;
 		} catch (SignatureException e) {
 			logger.error("Invalid JWT signature: {}", e.getMessage());

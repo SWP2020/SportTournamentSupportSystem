@@ -1,6 +1,7 @@
 package doan2020.SportTournamentSupportSystem.api;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -236,6 +237,7 @@ public class TeamsAPI {
 					error.put("Message", "Page Teams is not exist");
 
 				} else {// list is exist
+					Collections.sort(list, new TeamEntity());
 
 					for (TeamEntity teamEntity : list) {
 

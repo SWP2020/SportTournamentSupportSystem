@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
 import doan2020.SportTournamentSupportSystem.entity.TeamEntity;
 import doan2020.SportTournamentSupportSystem.repository.TeamRepository;
 import doan2020.SportTournamentSupportSystem.service.ITeamService;
@@ -22,8 +23,10 @@ public class TeamService implements ITeamService {
 		TeamEntity newEntity = null;
 		try {
 			Long competitionId = teamEntity.getCompetition().getId();
-			Long totalTeam = teamRepository.countByCompetitionId(competitionId);
-			teamEntity.setSeedNo(totalTeam + 1);
+			Long maxSeedNo = teamRepository.getMaxSeedNoByCompetitionId(competitionId);
+			if (maxSeedNo == null)
+				maxSeedNo = 0l;
+			teamEntity.setSeedNo(maxSeedNo + 1);
 			newEntity = teamRepository.save(teamEntity);
 		} catch (Exception e) {
 			return null;
@@ -52,7 +55,7 @@ public class TeamService implements ITeamService {
 		} catch (Exception e) {
 			return null;
 		}
-        
+
 		return updatedEntity;
 	}
 
@@ -112,7 +115,7 @@ public class TeamService implements ITeamService {
 		}
 		return foundEntitys;
 	}
-	
+
 	@Override
 	public Collection<TeamEntity> findByCompetitionId(Long competitionId) {
 		Collection<TeamEntity> foundEntities = null;
@@ -122,6 +125,30 @@ public class TeamService implements ITeamService {
 			return null;
 		}
 		return foundEntities;
+	}
+
+	@Override
+	public Collection<TeamEntity> swap(Long team1Id, Long team2Id) {
+		Collection<TeamEntity> teams = null;
+		try {
+			TeamEntity team1 = teamRepository.findOneById(team1Id);
+			TeamEntity team2 = teamRepository.findOneById(team2Id);
+			CompetitionEntity thisComp = team1.getCompetition();
+			Long compId = thisComp.getId();
+			
+			Long tmp = team1.getSeedNo();
+			team1.setSeedNo(team2.getSeedNo());
+			team2.setSeedNo(tmp);
+			teamRepository.save(team1);
+			teamRepository.save(team2);
+			
+			teams = teamRepository.findByCompetitionId(compId);
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+		return teams;
 	}
 
 }

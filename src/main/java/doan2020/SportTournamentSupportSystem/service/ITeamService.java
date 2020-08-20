@@ -24,4 +24,6 @@ public interface ITeamService {
 	public Collection<TeamEntity> findByCreatorId(Long creatorId);
 	
 	public Collection<TeamEntity> findByCompetitionId(Long creatorId);
+	
+	public Collection<TeamEntity> swap(Long team1Id, Long team2Id);
 }
