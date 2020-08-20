@@ -118,7 +118,7 @@ public class TeamAPI {
 				error.put("MessageCode", 1);
 				error.put("Message", "create new Team fail");
 			} else {// convert ok
-				System.out.println("Team API - createTeam - cp2");
+				System.out.println("Team API - createTeam - cp2: creator: "+ teamDTO.getCreatorId());
 				service.create(teamEntity);
 				resDTO = converter.toDTO(teamEntity);
 				result.put("Team", resDTO);
