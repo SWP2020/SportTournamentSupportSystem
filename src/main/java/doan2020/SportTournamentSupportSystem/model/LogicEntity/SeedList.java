@@ -22,6 +22,7 @@ public class SeedList extends ArrayList<Team> implements Serializable{
 		for (TeamEntity team: teams) {
 			Team t = new Team();
 			t.id = team.getId();
+			t.name = team.getShortName();
 			t.realTeam = team;
 			this.add(t);
 		}
