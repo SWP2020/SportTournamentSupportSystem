@@ -1,7 +1,9 @@
 package doan2020.SportTournamentSupportSystem.service.impl;
 
 
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -119,8 +121,23 @@ public class FileStorageService implements IFileStorageService {
 	
 	@Override
 	public Object getObjectFromFile(String filePath) {
-		// TODO Auto-generated method stub
-		return null;
+		ObjectInputStream ois = null;
+		Object o = null;
+		try {
+			ois = new ObjectInputStream(new FileInputStream(filePath));
+			CanSaveToFileObject obj = (CanSaveToFileObject) ois.readObject();
+			o = obj.getObject();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			try {
+				ois.close();
+			} catch (Exception e2) {
+				return null;
+			}
+		}
+		return o;
 	}
 
 }
