@@ -66,7 +66,7 @@ public class UserAPI {
 
 	@GetMapping("")
 	public ResponseEntity<Response> getById(
-			@RequestHeader(value = Const.TOKEN_HEADER) String jwt,
+			@RequestHeader(value = Const.TOKEN_HEADER, required = false) String jwt,
 			@RequestParam(value = "id", required = false) Long id) {
 		System.out.println("UserAPI: getById: start");
 		Response response = new Response();
@@ -80,6 +80,7 @@ public class UserAPI {
 		PermissionDTO permissionDTO = new PermissionDTO();
 
 		try {
+
 			if (id == null) {// id null
 				result.put("User", null);
 				config.put("Global", 0);

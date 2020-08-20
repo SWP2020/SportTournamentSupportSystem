@@ -47,11 +47,32 @@ public class JwtService {
 		System.out.println("JwtService: getUserNameFromJwtToken: start");
 		return Jwts.parser().setSigningKey(SECRET_KEY.getBytes()).parseClaimsJws(token).getBody().getSubject();
 	}
+	
+	private Date getExpirationDateFromToken(String token) {
+		return Jwts.parser().setSigningKey(SECRET_KEY.getBytes()).parseClaimsJws(token).getBody().getExpiration();
+	}
+	
+	private Boolean isTokenExpired(String token) {
+		Date expiration = getExpirationDateFromToken(token);
+		return expiration.before(new Date());
+	}
 
 	public boolean validateJwtToken(String authToken) {
 		System.out.println("JwtService: validateJwtToken: start");
 		try {
-			System.out.println("JwtService: validateJwtToken: authToken: " + authToken);
+
+			if (authToken == null || authToken.trim().length() == 0) {
+				return false;
+			}
+			String username = getUserNameFromJwtToken(authToken);
+
+			if (username == null || username.isEmpty()) {
+				return false;
+			}
+			if (isTokenExpired(authToken)) {
+				return false;
+			}
+			
 			Jwts.parser().setSigningKey(SECRET_KEY.getBytes()).parseClaimsJws(authToken);
 			
 			return true;
