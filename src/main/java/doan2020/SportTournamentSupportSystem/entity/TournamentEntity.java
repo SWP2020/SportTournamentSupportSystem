@@ -56,6 +56,10 @@ public class TournamentEntity {
 
 	private String url;
 
+	private String avatar;
+
+	private String background;
+
 	@ManyToOne
 	@JoinColumn(name = "creatorId")
 	private UserEntity creator;
@@ -227,5 +231,23 @@ public class TournamentEntity {
 	public void setPosts(Collection<PostEntity> posts) {
 		this.posts = posts;
 	}
+
+	public String getAvatar() {
+		return avatar;
+	}
+
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
+	}
+
+	public String getBackground() {
+		return background;
+	}
+
+	public void setBackground(String background) {
+		this.background = background;
+	}
+	
+	
 
 }
