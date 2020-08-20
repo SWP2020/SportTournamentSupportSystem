@@ -1,5 +1,6 @@
 package doan2020.SportTournamentSupportSystem.api;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,8 +26,8 @@ import doan2020.SportTournamentSupportSystem.converter.TournamentConverter;
 import doan2020.SportTournamentSupportSystem.dto.PermissionDTO;
 import doan2020.SportTournamentSupportSystem.dto.TournamentDTO;
 import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
+import doan2020.SportTournamentSupportSystem.entity.MatchEntity;
 import doan2020.SportTournamentSupportSystem.entity.PermissionEntity;
-import doan2020.SportTournamentSupportSystem.entity.TeamEntity;
 import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
 import doan2020.SportTournamentSupportSystem.entity.UserEntity;
 import doan2020.SportTournamentSupportSystem.response.Response;
@@ -375,17 +376,21 @@ public class TournamentAPI {
 					error.put("Message", "Tournament is not exist");
 				} else {
 					Collection<CompetitionEntity> comps = thisTournament.getCompetitions();
-					
+					ArrayList<HashMap<String, Object>> tests = new ArrayList<>();
 					for (CompetitionEntity comp: comps) {
 						migratePlayersFromFileSystemToDatabase(comp);
-						migrateMatchesFromFileSystemToDatabase(comp);
-						
+						HashMap<String, Object> test = migrateMatchesFromFileSystemToDatabase(comp);
+						test.put("CompetitionId", comp.getId());
+						test.put("CompetitionName", comp.getName());
+						tests.add(test);
 					}
+					
+					result.put("Schedule", tests);
 					
 					result.put("Tournament", thisTournamentDTO);
 					config.put("Global", 0);
-					error.put("MessageCode", 1);
-					error.put("Message", "Server error");
+					error.put("MessageCode", 0);
+					error.put("Message", "Success");
 				}
 				
 			}
@@ -410,8 +415,23 @@ public class TournamentAPI {
 		
 	}
 
-	private void migrateMatchesFromFileSystemToDatabase(CompetitionEntity competitionEntity) {
-//		Collection<TeamEntity> teams = 
+	private HashMap<String, Object> migrateMatchesFromFileSystemToDatabase(CompetitionEntity competitionEntity) {
+		Collection<MatchEntity> matches = new ArrayList<>();
+		String fileName = "comp_" + competitionEntity.getId() + ".conf";
+		
+		String absFolderPath;
+		try {
+			absFolderPath = fileStorageService.getFileStorageLocation(Const.BRANCH_CONFIG_FOLDER).toString();
+			HashMap<String, Object> schedule = (HashMap<String, Object>) fileStorageService.getObjectFromFile(absFolderPath + "\\" + fileName);
+			
+			return schedule;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return null;
+		
 	}
 	
 	

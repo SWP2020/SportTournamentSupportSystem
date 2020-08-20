@@ -72,7 +72,9 @@ public class ScheduleAPI {
 				Long formatId = format.getId();
 
 				EliminationTree tree = new EliminationTree();
+				
 				Map<String, Object> schedule = new HashMap<>();
+				
 				boolean err = false;
 
 				switch (formatId.intValue()) {
