@@ -1,10 +1,14 @@
 package doan2020.SportTournamentSupportSystem.model.LogicEntity;
 
+import java.io.Serializable;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import doan2020.SportTournamentSupportSystem.entity.MatchEntity;
 
-public class MatchInfo {
+public class MatchInfo implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
 	
 	Long id;
 	Integer matchNo;

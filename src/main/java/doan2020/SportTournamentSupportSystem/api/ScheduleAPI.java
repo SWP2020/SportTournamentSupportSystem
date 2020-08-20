@@ -122,8 +122,15 @@ public class ScheduleAPI {
 					error.put("Message", "Successful");
 					
 					System.out.println("ScheduleAPI: scheduleByCompetition: write to file: start");
+					
 					String fileName = "comp_" + thisCompetition.getId() + ".conf";
-					String absFilePath = fileService.saveObjectToFile(schedule, Const.BRANCH_CONFIG_FOLDER + fileName);
+					
+					String absFolderPath = fileService.getFileStorageLocation(Const.BRANCH_CONFIG_FOLDER).toString();
+					
+					System.out.println("ScheduleAPI: scheduleByCompetition: write to file: absFolderPath: " + absFolderPath);
+					
+					String absFilePath = fileService.saveObjectToFile(schedule, absFolderPath + "\\" + fileName);
+					
 					System.out.println("ScheduleAPI: scheduleByCompetition: write to file: absFileName: " + absFilePath);
 				}
 

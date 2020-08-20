@@ -1,8 +1,12 @@
 package doan2020.SportTournamentSupportSystem.model.LogicEntity;
 
+import java.io.Serializable;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
-public class Node<E> {
+public class Node<E> implements Serializable{
+	
+	private static final long serialVersionUID = 1L;
 	
 	Integer id;
 	Integer degree;

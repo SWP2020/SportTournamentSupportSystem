@@ -1,5 +1,6 @@
 package doan2020.SportTournamentSupportSystem.api;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,7 +24,9 @@ import doan2020.SportTournamentSupportSystem.converter.SportConverter;
 import doan2020.SportTournamentSupportSystem.converter.TournamentConverter;
 import doan2020.SportTournamentSupportSystem.dto.PermissionDTO;
 import doan2020.SportTournamentSupportSystem.dto.TournamentDTO;
+import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
 import doan2020.SportTournamentSupportSystem.entity.PermissionEntity;
+import doan2020.SportTournamentSupportSystem.entity.TeamEntity;
 import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
 import doan2020.SportTournamentSupportSystem.entity.UserEntity;
 import doan2020.SportTournamentSupportSystem.response.Response;
@@ -342,5 +345,74 @@ public class TournamentAPI {
 		System.out.println("TournamentAPI: uploadBackground: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
+	
+	
+	@PostMapping("/start")
+	public ResponseEntity<Response> startTournament(@RequestParam Long id) {
+		System.out.println("TournamentAPI: startTournament: start");
+		Response response = new Response();
+		HttpStatus httpStatus = HttpStatus.OK;
+		Map<String, Object> config = new HashMap<String, Object>();
+		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> error = new HashMap<String, Object>();
+		
+		TournamentEntity thisTournament = new TournamentEntity();
+		TournamentDTO thisTournamentDTO = new TournamentDTO();
+		
+		try {
+			if (id == null) {// id null
+				result.put("Tournament", null);
+				config.put("Global", 0);
+				error.put("MessageCode", 1);
+				error.put("Message", "Required param id");
+			} else {// id not null
+				
+				thisTournament = service.findOneById(id);
+				if (thisTournament == null) {
+					result.put("Tournament", null);
+					config.put("Global", 0);
+					error.put("MessageCode", 1);
+					error.put("Message", "Tournament is not exist");
+				} else {
+					Collection<CompetitionEntity> comps = thisTournament.getCompetitions();
+					
+					for (CompetitionEntity comp: comps) {
+						migratePlayersFromFileSystemToDatabase(comp);
+						migrateMatchesFromFileSystemToDatabase(comp);
+						
+					}
+					
+					result.put("Tournament", thisTournamentDTO);
+					config.put("Global", 0);
+					error.put("MessageCode", 1);
+					error.put("Message", "Server error");
+				}
+				
+			}
+			System.out.println("TournamentAPI: startTournament: no exception");
+		} catch (Exception e) {
+			System.out.println("TournamentAPI: startTournament: has exception");
+			result.put("Tournament", null);
+			config.put("Global", 0);
+			error.put("MessageCode", 1);
+			error.put("Message", "Server error");
+		}
+		
+		response.setError(error);
+		response.setResult(result);
+		response.setConfig(config);
+		System.out.println("TournamentAPI: startTournament: finish");
+		return new ResponseEntity<Response>(response, httpStatus);
+	}
 
+	private void migratePlayersFromFileSystemToDatabase(CompetitionEntity competitionEntity) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void migrateMatchesFromFileSystemToDatabase(CompetitionEntity competitionEntity) {
+//		Collection<TeamEntity> teams = 
+	}
+	
+	
 }
