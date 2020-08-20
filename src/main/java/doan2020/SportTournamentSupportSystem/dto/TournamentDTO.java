@@ -16,6 +16,8 @@ public class TournamentDTO{
 	private String status;
 	private String url;
 	private String createdDate;
+	private String avatar;
+	private String background;
 
 	public String getCreatedDate() {
 		return createdDate;
@@ -138,6 +140,22 @@ public class TournamentDTO{
 	
 	public void setUrl(String url) {
 		this.url = url;
+	}
+
+	public String getAvatar() {
+		return avatar;
+	}
+
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
+	}
+
+	public String getBackground() {
+		return background;
+	}
+
+	public void setBackground(String background) {
+		this.background = background;
 	}
 
 }

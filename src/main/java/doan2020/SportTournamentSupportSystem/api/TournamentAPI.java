@@ -274,7 +274,7 @@ public class TournamentAPI {
 				} else {// fileName valid
 					System.out.println("check point");
 					TournamentDTO dto = new TournamentDTO();
-//					dto.setAvatar(dto.getAvatar);
+					dto.setAvatar(fileName);
 					TournamentEntity tournamentEntity = converter.toEntity(dto);
 					tournamentEntity = service.updateAvatar(id, tournamentEntity);
 
@@ -326,7 +326,7 @@ public class TournamentAPI {
 				} else {// fileName valid
 					System.out.println("check point");
 					TournamentDTO dto = new TournamentDTO();
-//					dto.setBackground(fileName);
+					dto.setBackground(fileName);
 					TournamentEntity tournamentEntity = converter.toEntity(dto);
 					tournamentEntity = service.updateBackground(id, tournamentEntity);
 

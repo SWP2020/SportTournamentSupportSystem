@@ -158,7 +158,7 @@ public class TournamentService implements ITournamentService {
 		try {
 			updatedEntity = tournamentRepository.findOneById(id);
 
-//			updatedEntity.setAvartar(newEntity.getAvatar);
+			updatedEntity.setAvatar(newEntity.getAvatar());
 			updatedEntity = tournamentRepository.save(updatedEntity);
 		} catch (Exception e) {
 			return null;
@@ -173,7 +173,7 @@ public class TournamentService implements ITournamentService {
 		try {
 			updatedEntity = tournamentRepository.findOneById(id);
 
-//			updatedEntity.setBackground(newEntity.getBackground();
+			updatedEntity.setBackground(newEntity.getBackground());
 			updatedEntity = tournamentRepository.save(updatedEntity);
 		} catch (Exception e) {
 			return null;
