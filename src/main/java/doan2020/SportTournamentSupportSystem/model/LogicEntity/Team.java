@@ -1,18 +1,13 @@
 package doan2020.SportTournamentSupportSystem.model.LogicEntity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import java.io.Serializable;
 
-import doan2020.SportTournamentSupportSystem.entity.TeamEntity;
-
-public class Team {
+public class Team implements Serializable{
+	
+	private static final long serialVersionUID = 1L;
 	
 	Long id;
 	String name;
-	
-	@JsonBackReference
-	TeamEntity realTeam;
-	
-
 	
 	
 	public Long getId() {
@@ -27,6 +22,7 @@ public class Team {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
 	
 	
 }

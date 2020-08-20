@@ -1,8 +1,11 @@
 package doan2020.SportTournamentSupportSystem.model.LogicEntity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class BTree<E>{
+public class BTree<E> implements Serializable{
+	
+	private static final long serialVersionUID = 1L;
 	
 	protected String name;
 	protected Integer totalNode;

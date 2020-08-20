@@ -7,9 +7,6 @@ import doan2020.SportTournamentSupportSystem.entity.TeamEntity;
 
 public class SeedList extends ArrayList<Team> implements Serializable{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 3368100502342752403L;
 	
 	
@@ -23,7 +20,6 @@ public class SeedList extends ArrayList<Team> implements Serializable{
 			Team t = new Team();
 			t.id = team.getId();
 			t.name = team.getShortName();
-			t.realTeam = team;
 			this.add(t);
 		}
 	}
