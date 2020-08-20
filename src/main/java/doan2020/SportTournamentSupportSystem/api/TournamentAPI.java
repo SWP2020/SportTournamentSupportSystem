@@ -1,7 +1,6 @@
 package doan2020.SportTournamentSupportSystem.api;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -261,7 +260,8 @@ public class TournamentAPI {
 			} else {// id not null
 				System.out.println("TournamentAPI: uploadAvatar: CP2");
 				System.out.println(file);
-				String fileName = fileStorageService.storeFile(file);
+				String name = service.findOneById(id).getShortName();
+				String fileName = fileStorageService.storeFileImage(file, name, Const.AVATAR);
 				System.out.println("TournamentAPI: uploadAvatar: CP3");
 				if (fileName == null) {// fileName invalid
 					result.put("Tournament", null);
@@ -312,7 +312,8 @@ public class TournamentAPI {
 			} else {// id not null
 				System.out.println("TournamentAPI: uploadAvatar: CP2");
 				System.out.println(file);
-				String fileName = fileStorageService.storeFile(file);
+				String name = service.findOneById(id).getShortName();
+				String fileName = fileStorageService.storeFileImage(file, name, Const.BACKGROUND);
 				System.out.println("TournamentAPI: uploadAvatar: CP3");
 				if (fileName == null) {// fileName invalid
 					result.put("Tournament", null);

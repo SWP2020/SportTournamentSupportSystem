@@ -23,14 +23,21 @@ public final class Const {
 	
 	public final static String OWNER = "owner";
 	
-	public final static String RESOURCE_PATH = "SportTournamentSupportSystem\\src\\main\\resource\\";
+
+	public final static String BRANCH_CONFIG_FOLDER = "\\branch_config";
 	
-	public final static String BRANCH_CONFIG_FOLDER = "branch_config\\";
+	public final static String IMAGE_FOLDER = "\\images";
 	
+	public final static String PATH_RESOURCE = "src\\main\\resources";
 	
+	public final static String AVATAR = "avatar";
+	
+	public final static String BACKGROUND = "background";
+
 //	Constant for format
 	
 	public final static int SINGLE_ELIMINATION_FORMAT = 1;
 	public final static int DOUBLE_ELIMINATION_FORMAT = 2;
 	public final static int ROUND_ROBIN_FORMAT = 3;
+
 }
