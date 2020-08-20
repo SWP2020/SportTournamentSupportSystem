@@ -69,7 +69,6 @@ public class JwtAuthenticationTokenFilter extends UsernamePasswordAuthentication
 			logger.error("Cannot set user authentication: {}", e);
 		}
 
-		System.out.println("================================== " + response);
 		chain.doFilter(request, response);
 	}
 }

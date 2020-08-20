@@ -1,11 +1,10 @@
 package doan2020.SportTournamentSupportSystem.model.LogicEntity;
 
 import java.util.ArrayList;
-import java.util.Collection;
 
 import doan2020.SportTournamentSupportSystem.entity.TeamEntity;
 
-public class SeedTree {
+public class EliminationTree {
 
 	private SeedList seedList = new SeedList();
 	
@@ -22,11 +21,11 @@ public class SeedTree {
 	
 	//------------Constructor
 	
-	public SeedTree() {
+	public EliminationTree() {
 	}
 	
 	
-	public SeedTree(int totalTeam, int formatId) { // test
+	public EliminationTree(int totalTeam, int formatId) { // test
 		System.out.println("SeedTree: Contructor test: start");
 		
 		for (int i=1; i<=totalTeam; i++) {
@@ -40,22 +39,18 @@ public class SeedTree {
 		this.winBranchMatchNoIndexing();
 		
 		if (formatId == 1l) {
-			this.winBranch.setName("Branch");
+			this.winBranch.setName("Bracket");
 		} else if (formatId == 2l) {
-			this.winBranch.setName("Win Branch");
+			this.winBranch.setName("WinBranch");
 			this.totalLoseBranchRound = calTotalLoseBranchRound(this.seedList.size());
 			this.loseBranch = new BTree<>(this.buildLoseBranch(null, 1, this.seedList.size() - 1, 1));
 			this.loseBranchMatchNoIndexing();
-			this.loseBranch.setName("Lose Branch");
+			this.loseBranch.setName("LoseBranch");
 		}
-		
-		
-		
-		
-		System.out.println("SeedTree: Contructor test: finish");
+
 	}
 	
-	public SeedTree(ArrayList<TeamEntity> teams, Long formatId) {
+	public EliminationTree(ArrayList<TeamEntity> teams, Long formatId) {
 		System.out.println("SeedTree: Contructor: start");
 		
 		
@@ -473,16 +468,6 @@ public class SeedTree {
 			
 		
 	}
-	
-	public static void main(String[] args) {
-		
-		SeedTree y = new SeedTree();
-		for (Integer k = 2; k< 33; k++) {
-		
-			System.out.println(k.toString() + ": " + y.calTotalLoseBranchRound(k).toString());
-		}
-	}
-
 	
 
 }
