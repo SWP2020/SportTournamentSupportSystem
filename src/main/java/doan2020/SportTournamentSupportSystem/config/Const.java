@@ -23,7 +23,13 @@ public final class Const {
 	
 	public final static String OWNER = "owner";
 	
-	public final static String RESOURCE_PATH = "src/main/resource/";
+	public final static String BRANCH_CONFIG_FOLDER = "\\branch_config";
 	
-	public final static String BRANCH_CONFIG_FOLDER = "branch_config/";
+	public final static String IMAGE_FOLDER = "\\images";
+	
+	public final static String PATH_RESOURCE = "src\\main\\resources";
+	
+	public final static String AVATAR = "avatar";
+	
+	public final static String BACKGROUND = "background";
 }

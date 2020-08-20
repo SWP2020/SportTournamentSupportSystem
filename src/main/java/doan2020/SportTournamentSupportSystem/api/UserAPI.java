@@ -424,7 +424,8 @@ public class UserAPI {
 				error.put("Message", "Required param id");
 			} else {// id not null
 				System.out.println("UserAPI: uploadAvatar: CP2");
-				String fileName = fileStorageService.storeFile(file);
+				String name = userService.findOneById(id).getUsername();
+				String fileName = fileStorageService.storeFileImage(file, name, Const.AVATAR);
 				System.out.println("UserAPI: uploadAvatar: CP3");
 				System.out.println("UserAPI: uploadAvatar: fileName: " + fileName);
 				if (fileName == null) {// fileName invalid
@@ -475,7 +476,9 @@ public class UserAPI {
 			} else {// id not null
 				System.out.println("UserAPI: uploadAvatar: CP2");
 				System.out.println(file);
-				String fileName = fileStorageService.storeFile(file);
+				
+				String name = userService.findOneById(id).getUsername();
+				String fileName = fileStorageService.storeFileImage(file, name, Const.BACKGROUND);
 				System.out.println("UserAPI: uploadAvatar: CP3");
 				if (fileName == null) {// fileName invalid
 					result.put("User", null);
