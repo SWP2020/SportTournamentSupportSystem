@@ -2,10 +2,7 @@ package doan2020.SportTournamentSupportSystem.service.impl;
 
 
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.net.MalformedURLException;
-
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -17,8 +14,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import doan2020.SportTournamentSupportSystem.config.Const;
-
-import doan2020.SportTournamentSupportSystem.config.FileStorageProperties;
 import doan2020.SportTournamentSupportSystem.model.CanSaveToFileObject;
 import doan2020.SportTournamentSupportSystem.service.IFileStorageService;
 
@@ -103,10 +98,9 @@ public class FileStorageService implements IFileStorageService {
 	@Override
 	public String saveObjectToFile(Object o, String filePath) {
 		
-		String finalFilePath = Const.RESOURCE_PATH + filePath;
 		ObjectOutputStream oos = null;
 		try {
-			oos = new ObjectOutputStream(new FileOutputStream(finalFilePath));
+			oos = new ObjectOutputStream(new FileOutputStream(filePath));
 			CanSaveToFileObject obj = new CanSaveToFileObject(o);
 			oos.writeObject(obj);
 		} catch (Exception e) {
@@ -120,7 +114,7 @@ public class FileStorageService implements IFileStorageService {
 			}
 		}
 		
-		return finalFilePath;
+		return filePath;
 	}
 	
 	@Override
