@@ -41,9 +41,23 @@ public final class Const {
 	public final static int DOUBLE_ELIMINATION_FORMAT = 2;
 	public final static int ROUND_ROBIN_FORMAT = 3;
 	
-	//status 
+//  status 
+  
 	public final static String UNSTARTED_STATUS = "unStarted";
 	public final static String STARTED_STATUS = "started";
 	public final static String FINISHED = "finished";
+  
+//	Constant for naming match
+	
+	public final static String MATCH = "trận ";
+	public final static String TABLE = "bảng ";
+	public final static String TABLE_TOP = "Hạng ";
+	public final static String WIN_MATCH = "Thắng ";
+	public final static String LOSE_MATCH = "Thua ";
+	public final static String SEED_NO = "Hạt giống số ";
+	
+	public final static String TABLE_NAMING = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	public final static String WIN_BRANCH_NAMING = "A-";
+	public final static String LOSE_BRANCH_NAMING = "B-";
 
 }

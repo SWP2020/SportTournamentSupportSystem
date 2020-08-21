@@ -22,10 +22,10 @@ import doan2020.SportTournamentSupportSystem.service.IFileStorageService;
 @Service
 public class FileStorageService implements IFileStorageService {
 
-	public Path getFileStorageLocation(String endFolderName) throws Exception {
-		Path fileStorageLocation = Paths.get(Const.PATH_RESOURCE + endFolderName).toAbsolutePath().normalize();
-
+	public Path getFileStorageLocation(String endFolderName) {
+		Path fileStorageLocation = null;
 		try {
+			fileStorageLocation = Paths.get(Const.PATH_RESOURCE + endFolderName).toAbsolutePath().normalize();
 			Files.createDirectories(fileStorageLocation);
 		} catch (Exception ex) {
 			return null;

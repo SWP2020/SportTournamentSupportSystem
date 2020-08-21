@@ -16,13 +16,16 @@ public class MatchInfo implements Serializable {
 	String name;
 	
 	Team team1;
-	String team1Description;
-	
 	Team team2;
-	String team2Description;
+	
+	TeamDescription team1Description;
+	TeamDescription team2Description;
 	
 	Team winner;
 	Team loser;
+	
+	String location;
+	String time;
 	
 	@JsonBackReference
 	MatchEntity realMatch;
@@ -88,21 +91,36 @@ public class MatchInfo implements Serializable {
 	public void setRoundNo(Integer roundNo) {
 		this.roundNo = roundNo;
 	}
-	public String getTeam1Description() {
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
+	public TeamDescription getTeam1Description() {
 		return team1Description;
 	}
-	public void setTeam1Description(String team1Description) {
+	public void setTeam1Description(TeamDescription team1Description) {
 		this.team1Description = team1Description;
 	}
-	public String getTeam2Description() {
+	public TeamDescription getTeam2Description() {
 		return team2Description;
 	}
-	public void setTeam2Description(String team2Description) {
+	public void setTeam2Description(TeamDescription team2Description) {
 		this.team2Description = team2Description;
 	}
-	
-	
-	
+	public String getLocation() {
+		return location;
+	}
+	public void setLocation(String location) {
+		this.location = location;
+	}
+	public String getTime() {
+		return time;
+	}
+	public void setTime(String time) {
+		this.time = time;
+	}
 	
 	
 }
