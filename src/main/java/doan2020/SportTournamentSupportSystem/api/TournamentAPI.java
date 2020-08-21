@@ -419,9 +419,8 @@ public class TournamentAPI {
 		Collection<MatchEntity> matches = new ArrayList<>();
 		String fileName = "comp_" + competitionEntity.getId() + ".conf";
 		
-		String absFolderPath;
+		String absFolderPath = fileStorageService.getFileStorageLocation(Const.BRANCH_CONFIG_FOLDER).toString();
 		try {
-			absFolderPath = fileStorageService.getFileStorageLocation(Const.BRANCH_CONFIG_FOLDER).toString();
 			HashMap<String, Object> schedule = (HashMap<String, Object>) fileStorageService.getObjectFromFile(absFolderPath + "\\" + fileName);
 			
 			return schedule;
