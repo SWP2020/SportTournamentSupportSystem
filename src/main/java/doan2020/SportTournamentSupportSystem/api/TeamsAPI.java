@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,10 +35,10 @@ import doan2020.SportTournamentSupportSystem.service.IUserService;
 public class TeamsAPI {
 	@Autowired
 	private ITeamService service;
-	
+
 	@Autowired
 	private IUserService userService;
-	
+
 	@Autowired
 	private ICompetitionService competitionService;
 
@@ -273,6 +274,61 @@ public class TeamsAPI {
 		response.setResult(result);
 		response.setError(error);
 		System.out.println("TeamsAPI: getTeams: pass");
+		return new ResponseEntity<Response>(response, httpStatus);
+	}
+
+	@PutMapping("/swap")
+	public ResponseEntity<Response> swapTowTeams(@RequestParam(value = "team1Id", required = true) Long team1Id,
+			@RequestParam(value = "team2Id", required = true) Long team2Id) {
+
+		System.out.println("TeamsAPI: swapTowTeams: start");
+		HttpStatus httpStatus = HttpStatus.OK;
+		Response response = new Response();
+		Map<String, Object> config = new HashMap<String, Object>();
+		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> error = new HashMap<String, Object>();
+		List<TeamDTO> teamDTOs = new ArrayList<TeamDTO>();
+		List<TeamEntity> teams = new ArrayList<TeamEntity>();
+		try {
+
+			TeamEntity team1 = service.findOneById(team1Id);
+			TeamEntity team2 = service.findOneById(team2Id);
+
+			if (team1.getId() != team2.getId()) {
+				result.put("Teams", null);
+				config.put("Global", 0);
+				error.put("MessageCode", 1);
+				error.put("Message", "Two team must join same competition");
+			} else {
+
+			}
+
+			teams = (List<TeamEntity>) service.swap(team1Id, team2Id);
+
+			for (TeamEntity teamEntity : teams) {
+
+				TeamDTO resDTO = converter.toDTO(teamEntity);
+				teamDTOs.add(resDTO);
+			}
+			result.put("Teams", teamDTOs);
+			config.put("Global", 0);
+			error.put("MessageCode", 0);
+			error.put("Message", "Successful");
+
+			System.out.println("TeamsAPI: swapTowTeams: no exception");
+
+		} catch (Exception e) {
+			System.out.println("TeamsAPI: swapTowTeams: has exception");
+			result.put("Teams", null);
+			config.put("Global", 0);
+			error.put("MessageCode", 1);
+			error.put("Message", "Server error");
+		}
+
+		response.setConfig(config);
+		response.setResult(result);
+		response.setError(error);
+		System.out.println("TeamsAPI: swapTowTeams: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
 

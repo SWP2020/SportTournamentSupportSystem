@@ -12,9 +12,9 @@ public interface IFileStorageService {
 	
 	public String storeFileBranch(MultipartFile file);
 	
-	public String saveObjectToFile(Object o, String filePath);
+	public String saveObjectToFile(Object o, String filePath) throws Exception;
 	
-	public Object getObjectFromFile(String filePath);
+	public Object getObjectFromFile(String filePath) throws Exception;
 	
 //	public Resource loadFileAsResource(String fileName) throws Exception;
 }

@@ -3,6 +3,7 @@ package doan2020.SportTournamentSupportSystem.service.impl;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.nio.file.Files;
@@ -98,29 +99,31 @@ public class FileStorageService implements IFileStorageService {
 	
 	
 	@Override
-	public String saveObjectToFile(Object o, String filePath) {
+	public String saveObjectToFile(Object o, String filePath) throws Exception{
 		
+		String finalFilePath = null;
 		ObjectOutputStream oos = null;
 		try {
 			oos = new ObjectOutputStream(new FileOutputStream(filePath));
 			CanSaveToFileObject obj = new CanSaveToFileObject(o);
 			oos.writeObject(obj);
+			finalFilePath = filePath;
 		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
+			throw e;
 		} finally {
 			try {
 				oos.close();
 			} catch (Exception e2) {
-				return null;
+				throw e2;
 			}
 		}
 		
-		return filePath;
+		return finalFilePath;
 	}
 	
 	@Override
-	public Object getObjectFromFile(String filePath) {
+	public Object getObjectFromFile(String filePath) throws Exception{
+		System.out.println("FileStorageService: getObjectFromFile: start");
 		ObjectInputStream ois = null;
 		Object o = null;
 		try {
@@ -128,15 +131,16 @@ public class FileStorageService implements IFileStorageService {
 			CanSaveToFileObject obj = (CanSaveToFileObject) ois.readObject();
 			o = obj.getObject();
 		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
+			System.out.println("FileStorageService: getObjectFromFile: finish");
+			throw e;
 		} finally {
 			try {
 				ois.close();
 			} catch (Exception e2) {
-				return null;
+				throw e2;
 			}
 		}
+		System.out.println("FileStorageService: getObjectFromFile: finish");
 		return o;
 	}
 

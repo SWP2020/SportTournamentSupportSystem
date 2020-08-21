@@ -39,13 +39,13 @@ public class TeamDescription implements Serializable{
 	Long unitRank;
 	
 	String unitType;
-	String unitIndex;
+	int unitIndex;
 	
 	// unitName = unitType + unitIndex
-	private String unitName;
+	String unitName;
 	
 	// description = unitResult + unitRank + unitName
-	private String description;
+	String description;
 	
 	
 	public TeamDescription() {
@@ -54,7 +54,7 @@ public class TeamDescription implements Serializable{
 		this.unitResult = "";
 		this.unitRank = 0l;
 		this.unitType = "";
-		this.unitIndex = "";
+		this.unitIndex = -1;
 		this.unitName = unitType + unitIndex;
 		this.description = unitResult + getUnitRankString() + unitName;
 	}
@@ -65,55 +65,55 @@ public class TeamDescription implements Serializable{
 		this.unitResult = "";
 		this.unitRank = 0l;
 		this.unitType = Const.SEED_NO;
-		this.unitIndex = seed_no.toString();
+		this.unitIndex = seed_no.intValue();
 		this.unitName = unitType + unitIndex;
 		this.description = unitResult + getUnitRankString() + unitName;
 	}
 	
-	public TeamDescription(String tableName, Long rankNo) { // for table
+	public TeamDescription(int tableNo, Long rankNo) { // for table
 		super();
 		this.descType = 1l;
 		this.unitResult = Const.TABLE_TOP;
 		this.unitRank = rankNo;
 		this.unitType = Const.TABLE;
-		this.unitIndex = tableName;
-		this.unitName = unitType + unitIndex;
+		this.unitIndex = tableNo;
+		this.unitName = unitType + Const.TABLE_NAMING.charAt(this.unitIndex);
 		this.description = unitResult + getUnitRankString() + unitName;
 	}
 	
-	public TeamDescription(Long descType, Long matchNo) { // for match
+	public TeamDescription(Long descType, int matchNo) { // for match
 		super();
 		this.descType = descType;
-		this.unitIndex = matchNo.toString();
+		this.unitIndex = matchNo;
 		this.unitRank = 0l;
 		
 		switch (descType.intValue()) {
-		case 2: // seed
+		case 2: 
 			this.unitResult = Const.WIN_MATCH;
 			this.unitType = Const.WIN_BRANCH_NAMING;
 			break;
-		case 3: // top x from a table
+		case 3: 
 			this.unitResult = Const.WIN_MATCH;
-			this.unitType = Const.WIN_BRANCH_NAMING;
+			this.unitType = Const.LOSE_BRANCH_NAMING;
 			break;
 		case 4:
 			this.unitResult = Const.LOSE_MATCH;
-			this.unitType = Const.LOSE_BRANCH_NAMING;
+			this.unitType = Const.WIN_BRANCH_NAMING;
 			break;
 		default: // unknown
 			this.descType = -1l;
 			this.unitResult = "";
 			this.unitRank = 0l;
 			this.unitType = "";
-			this.unitIndex = "";
+			this.unitIndex = -1;
 			break;
 		}
 		
 		this.unitName = unitType + unitIndex;
-		this.description = unitResult + " " + getUnitRankString() + " " + unitName;
+		this.description = unitResult + getUnitRankString() + unitName;
 	}
 	
-	public TeamDescription(Long descType, String unitResult, Long unitRank, String unitType, String unitIndex) {
+	public TeamDescription(Long descType, String unitResult, Long unitRank, String unitType, int unitIndex) {
 		super();
 		this.descType = descType;
 		this.unitResult = unitResult;
@@ -125,8 +125,6 @@ public class TeamDescription implements Serializable{
 	}
 
 	public String getDescription() {
-		if (this.description == null)
-			this.description = this.unitResult + getUnitRankString() + this.unitName;
 		return this.description;
 	}
 	
@@ -136,6 +134,58 @@ public class TeamDescription implements Serializable{
 		if (this.unitRank == 0l)
 			return "";
 		return this.unitRank.toString();
+	}
+
+	public Long getDescType() {
+		return descType;
+	}
+
+	public void setDescType(Long descType) {
+		this.descType = descType;
+	}
+
+	public String getUnitResult() {
+		return unitResult;
+	}
+
+	public void setUnitResult(String unitResult) {
+		this.unitResult = unitResult;
+	}
+
+	public Long getUnitRank() {
+		return unitRank;
+	}
+
+	public void setUnitRank(Long unitRank) {
+		this.unitRank = unitRank;
+	}
+
+	public String getUnitType() {
+		return unitType;
+	}
+
+	public void setUnitType(String unitType) {
+		this.unitType = unitType;
+	}
+
+	public int getUnitIndex() {
+		return unitIndex;
+	}
+
+	public void setUnitIndex(int unitIndex) {
+		this.unitIndex = unitIndex;
+	}
+
+	public String getUnitName() {
+		return unitName;
+	}
+
+	public void setUnitName(String unitName) {
+		this.unitName = unitName;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 		
 	

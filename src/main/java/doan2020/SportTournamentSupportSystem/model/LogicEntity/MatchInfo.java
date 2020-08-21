@@ -32,7 +32,7 @@ public class MatchInfo implements Serializable {
 	
 	/*
 	 * status:
-	 * 0: có sẵn 2 đội (round 1 win branch)
+	 * 0: có sẵn 2 đội (round 1 win branch hoặc vòng bảng)
 	 * 1: 2 đội lấy từ 2 trận thắng của left và right ( round 2+ )
 	 * 2: có sẵn đội 1, đội 2 lấy từ trận thắng của right (round 2 win branch)
 	 * 3: 2 đội lấy từ 2 trận thua của left và right (round 1 lose branch)
