@@ -20,7 +20,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import doan2020.SportTournamentSupportSystem.api.LoginAPI;
 import doan2020.SportTournamentSupportSystem.converter.UserConverter;
 import doan2020.SportTournamentSupportSystem.dto.UserDTO;
-import doan2020.SportTournamentSupportSystem.entity.RoleEntity;
 import doan2020.SportTournamentSupportSystem.entity.UserEntity;
 import doan2020.SportTournamentSupportSystem.repository.UserRepository;
 import doan2020.SportTournamentSupportSystem.response.Response;
@@ -122,7 +121,7 @@ public class TestLoginAPI {
 		Giả lập kết quả trả về của hàm findByUsername trong userService
 		 */
 		Mockito.when(userService.findByUsername("Cong")).thenReturn(userEntity);
-		Mockito.when(jwtService.generateTokenLogin("Cong")).thenReturn("tempToken");
+		Mockito.when(jwtService.generateTokenLogin(userEntity)).thenReturn("tempToken");
 		Mockito.when(converter.toDTO(userEntity)).thenReturn(userDto);
 		Mockito.when(userService.findByUsername("Thanh")).thenReturn(null);
 		
