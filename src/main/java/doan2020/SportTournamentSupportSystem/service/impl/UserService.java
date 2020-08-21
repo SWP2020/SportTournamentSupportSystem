@@ -55,8 +55,8 @@ public class UserService implements IUserService {
 			updatedEntity.setGender(newEntity.getGender());
 			updatedEntity.setDob(newEntity.getDob());
 //			updatedEntity.setEmail(newEntity.getEmail());
-			updatedEntity.setAvatar(newEntity.getAvatar());
-			updatedEntity.setBackground(newEntity.getBackground());
+//			updatedEntity.setAvatar(newEntity.getAvatar());
+//			updatedEntity.setBackground(newEntity.getBackground());
 			updatedEntity.setRole(newEntity.getRole());
 			updatedEntity.setCreatedBy(newEntity.getCreatedBy());
 			updatedEntity.setCreatedDate(newEntity.getCreatedDate());

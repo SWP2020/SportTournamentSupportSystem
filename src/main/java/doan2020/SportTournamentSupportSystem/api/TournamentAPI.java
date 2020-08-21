@@ -375,9 +375,15 @@ public class TournamentAPI {
 					error.put("MessageCode", 1);
 					error.put("Message", "Tournament is not exist");
 				} else {
+
+					thisTournament = service.updateStatus(thisTournament, Const.STARTED_STATUS);
+
+					thisTournamentDTO = converter.toDTO(thisTournament);
+					
 					Collection<CompetitionEntity> comps = thisTournament.getCompetitions();
 					ArrayList<HashMap<String, Object>> tests = new ArrayList<>();
 					for (CompetitionEntity comp: comps) {
+						CompetitionEntity competitionEntity = competitionService.updateStatus(comp, Const.STARTED_STATUS);
 						migratePlayersFromFileSystemToDatabase(comp);
 						HashMap<String, Object> test = migrateMatchesFromFileSystemToDatabase(comp);
 						test.put("CompetitionId", comp.getId());
@@ -427,11 +433,77 @@ public class TournamentAPI {
 			return schedule;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return null;
 		}
 		
-		return null;
+	}
+	
+	@PostMapping("/finish")
+	public ResponseEntity<Response> finishTournament(@RequestParam Long id) {
+		System.out.println("TournamentAPI: finishTournament: start");
+		Response response = new Response();
+		HttpStatus httpStatus = HttpStatus.OK;
+		Map<String, Object> config = new HashMap<String, Object>();
+		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> error = new HashMap<String, Object>();
 		
+		TournamentEntity thisTournament = new TournamentEntity();
+		TournamentDTO thisTournamentDTO = new TournamentDTO();
+		
+		try {
+			if (id == null) {// id null
+				result.put("Tournament", null);
+				config.put("Global", 0);
+				error.put("MessageCode", 1);
+				error.put("Message", "Required param id");
+			} else {// id not null
+				
+				thisTournament = service.findOneById(id);
+				if (thisTournament == null) {
+					result.put("Tournament", null);
+					config.put("Global", 0);
+					error.put("MessageCode", 1);
+					error.put("Message", "Tournament is not exist");
+				} else {
+
+					thisTournament = service.updateStatus(thisTournament, Const.FINISHED);
+
+					thisTournamentDTO = converter.toDTO(thisTournament);
+					
+//					Collection<CompetitionEntity> comps = thisTournament.getCompetitions();
+//					ArrayList<HashMap<String, Object>> tests = new ArrayList<>();
+//					for (CompetitionEntity comp: comps) {
+//						CompetitionEntity competitionEntity = competitionService.updateStatus(comp, Const.STARTED_STATUS);
+//						migratePlayersFromFileSystemToDatabase(comp);
+//						HashMap<String, Object> test = migrateMatchesFromFileSystemToDatabase(comp);
+//						test.put("CompetitionId", comp.getId());
+//						test.put("CompetitionName", comp.getName());
+//						tests.add(test);
+//					}
+//					
+//					result.put("Schedule", tests);
+					
+					result.put("Tournament", thisTournamentDTO);
+					config.put("Global", 0);
+					error.put("MessageCode", 0);
+					error.put("Message", "Success");
+				}
+				
+			}
+			System.out.println("TournamentAPI: finishTournament: no exception");
+		} catch (Exception e) {
+			System.out.println("TournamentAPI: finishTournament: has exception");
+			result.put("Tournament", null);
+			config.put("Global", 0);
+			error.put("MessageCode", 1);
+			error.put("Message", "Server error");
+		}
+		
+		response.setError(error);
+		response.setResult(result);
+		response.setConfig(config);
+		System.out.println("TournamentAPI: finishTournament: finish");
+		return new ResponseEntity<Response>(response, httpStatus);
 	}
 	
 	

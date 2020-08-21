@@ -13,12 +13,12 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import doan2020.SportTournamentSupportSystem.config.Const;
 import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
 import doan2020.SportTournamentSupportSystem.entity.TeamEntity;
 import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
 import doan2020.SportTournamentSupportSystem.repository.CompetitionRepository;
 import doan2020.SportTournamentSupportSystem.repository.TournamentRepository;
-import doan2020.SportTournamentSupportSystem.repository.UserRepository;
 import doan2020.SportTournamentSupportSystem.service.ITournamentService;
 
 @Service
@@ -26,10 +26,10 @@ public class TournamentService implements ITournamentService {
 
 	@Autowired
 	private TournamentRepository tournamentRepository;
-	
+
 	@Autowired
 	private CompetitionRepository competitionRepository;
-	
+
 	@Override
 	public Long countAll() {
 		return tournamentRepository.count();
@@ -39,6 +39,9 @@ public class TournamentService implements ITournamentService {
 	public TournamentEntity create(TournamentEntity tournamentEntity) {
 		TournamentEntity newEntity = null;
 		try {
+
+			tournamentEntity.setStatus(Const.UNSTARTED_STATUS);
+
 			newEntity = tournamentRepository.save(tournamentEntity);
 		} catch (Exception e) {
 			return null;
@@ -125,22 +128,25 @@ public class TournamentService implements ITournamentService {
 	public Collection<TournamentEntity> findBySearchString(Pageable pageable, String searchString) {
 		List<TournamentEntity> findTournaments = null;
 		try {
-			
+
 			findTournaments = (List<TournamentEntity>) tournamentRepository.findBySearchString(searchString);
-			
-			System.out.println("TournamentService: findBySearchString: findTournaments: size: " + findTournaments.size());
-			
+
+			System.out
+					.println("TournamentService: findBySearchString: findTournaments: size: " + findTournaments.size());
+
 			int start = (int) pageable.getOffset();
-			int end = (start + pageable.getPageSize()) > findTournaments.size() ? findTournaments.size() : (start + pageable.getPageSize());
-			Page<TournamentEntity> pages = new PageImpl<TournamentEntity>(findTournaments.subList(start, end), pageable, findTournaments.size());
+			int end = (start + pageable.getPageSize()) > findTournaments.size() ? findTournaments.size()
+					: (start + pageable.getPageSize());
+			Page<TournamentEntity> pages = new PageImpl<TournamentEntity>(findTournaments.subList(start, end), pageable,
+					findTournaments.size());
 			findTournaments = pages.getContent();
-			
+
 		} catch (Exception e) {
 			return null;
 		}
 		return findTournaments;
 	}
-	
+
 	@Override
 	public Long countBySearchString(String searchString) {
 		List<TournamentEntity> findTournaments = null;
@@ -204,6 +210,19 @@ public class TournamentService implements ITournamentService {
 		option.put("countPlayer", countPlayer);
 		option.put("process", 0);
 		return option;
+	}
+
+	@Override
+	public TournamentEntity updateStatus(TournamentEntity entity, String status) {
+		try {
+
+			entity.setStatus(status);
+			entity = tournamentRepository.save(entity);
+		} catch (Exception e) {
+			return null;
+		}
+
+		return entity;
 	}
 
 }
