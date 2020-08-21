@@ -45,7 +45,11 @@ public final class Const {
   
 	public final static String UNSTARTED_STATUS = "unStarted";
 	public final static String STARTED_STATUS = "started";
-	public final static String FINISHED = "finished";
+	public final static String FINISHED_STATUS = "finished";
+	
+	public final static String PENDING_STATUS = "pending";
+	public final static String UNACCEPTED_STATUS = "unAccepted";
+	public final static String ACCEPTED_STATUS = "Accepted";
   
 //	Constant for naming match
 	

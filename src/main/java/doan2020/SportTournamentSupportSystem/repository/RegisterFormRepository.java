@@ -17,4 +17,6 @@ public interface RegisterFormRepository extends JpaRepository<RegisterFormEntity
     Collection<RegisterFormEntity> findByTeamId(Long teamId);
     
     Collection<RegisterFormEntity> findByCompetitionSettingId(Long competitionSettingId);
+    
+    Collection<RegisterFormEntity> findByCompetitionIdAndStatus(Long competitionId, String status);
 }

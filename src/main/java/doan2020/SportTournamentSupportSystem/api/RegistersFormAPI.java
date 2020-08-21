@@ -104,7 +104,7 @@ public class RegistersFormAPI {
 				limit = 10;
 			if (page == null)
 				page = 1;
-			
+
 			if (competitionId == null) {// matchId null
 				result.put("RegisterForms", null);
 				config.put("Global", 0);
@@ -191,8 +191,66 @@ public class RegistersFormAPI {
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
 
+	@GetMapping("/getByCompetitionIdAndStatus")
+	public ResponseEntity<Response> getByCompetitionSettingIdAndStatus(
+			@RequestParam(value = "competitionId") Long competitionId,
+			@RequestParam(value = "status") String status) {
+		System.out.println("RegistersFormAPI: getByCompetitionSettingIdAndStatus: no exception");
+		HttpStatus httpStatus = HttpStatus.OK;
+		Response response = new Response();
+		Map<String, Object> config = new HashMap<String, Object>();
+		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> error = new HashMap<String, Object>();
+		Collection<RegisterFormEntity> registerFormEnties = new ArrayList<RegisterFormEntity>();
+		List<RegisterFormDTO> registerDTOs = new ArrayList<RegisterFormDTO>();
+		try {
+
+			if (competitionId == null || status == null) {// competitionSettingId or status null
+				result.put("RegisterForms", registerDTOs);
+				config.put("Global", 0);
+				error.put("MessageCode", 1);
+				error.put("Message", "Required param competitionSettingId or status");
+			} else {// competitionSettingId and status not null
+
+				registerFormEnties = service.findByCompetitionIdAndStatus(competitionId, status);
+
+				if (registerFormEnties.isEmpty()) { // not found
+					result.put("RegisterForms", null);
+					config.put("Global", 0);
+					error.put("MessageCode", 1);
+					error.put("Message", "Not found");
+				} else { // found
+
+					for (RegisterFormEntity entity : registerFormEnties) {
+						RegisterFormDTO dto = converter.toDTO(entity);
+						registerDTOs.add(dto);
+					}
+
+					result.put("RegisterForms", registerDTOs);
+					config.put("Global", 0);
+					error.put("MessageCode", 0);
+					error.put("Message", "Found");
+				}
+			}
+			System.out.println("RegistersFormAPI: getByCompetitionSettingIdAndStatus: no exception");
+		} catch (Exception e) {
+			System.out.println("RegistersFormAPI: getByCompetitionSettingIdAndStatus: has exception");
+			result.put("RegisterForm", null);
+			config.put("Global", 0);
+			error.put("MessageCode", 1);
+			error.put("Message", "Server error");
+		}
+
+		response.setConfig(config);
+		response.setResult(result);
+		response.setError(error);
+		System.out.println("RegistersFormAPI: getByCompetitionSettingIdAndStatus: finish");
+		return new ResponseEntity<Response>(response, httpStatus);
+	}
+
 	@GetMapping("/getByCompetitionSettingId")
-	public ResponseEntity<Response> getByCompetitionSettingId(@RequestParam(value = "competitionSettingId") Long competitionSettingId) {
+	public ResponseEntity<Response> getByCompetitionSettingId(
+			@RequestParam(value = "competitionSettingId") Long competitionSettingId) {
 		System.out.println("RegistersFormAPI: getByCompetitionSettingId: no exception");
 		HttpStatus httpStatus = HttpStatus.OK;
 		Response response = new Response();
