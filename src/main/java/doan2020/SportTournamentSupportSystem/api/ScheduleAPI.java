@@ -41,7 +41,7 @@ public class ScheduleAPI {
 	 */
 	
 	@SuppressWarnings("unchecked")
-	@GetMapping("")
+	@GetMapping()
 	public ResponseEntity<Response> getScheduleByCompetition(
 			@RequestParam(value = "competitionId", required = false) Long competitionId) {
 		System.out.println("ScheduleAPI: getScheduleByCompetition: start");
@@ -55,8 +55,10 @@ public class ScheduleAPI {
 		ArrayList<TeamEntity> teams = new ArrayList<>();
 
 		try {
+			
+			System.out.println("ScheduleAPI: getScheduleByCompetition: competitionId: " + competitionId);
 			CompetitionEntity thisCompetition = competitionService.findOneById(competitionId);
-
+			System.out.println("ScheduleAPI: getScheduleByCompetition: thisCompetition: " + thisCompetition);
 			if (thisCompetition == null) {
 				result.put("Schedule", null);
 				config.put("Global", 0);
@@ -64,12 +66,18 @@ public class ScheduleAPI {
 				error.put("Message", "Competition not found");
 			} else {
 				
-				String fileName = "comp_" + thisCompetition.getId() + ".conf";
+				String fileName = "comp_" + competitionId + ".conf";
 				String absFolderPath = fileService.getFileStorageLocation(Const.BRANCH_CONFIG_FOLDER).toString();
 				HashMap<String, Object> schedule;
 				try {
 					System.out.println("ScheduleAPI: getScheduleByCompetition: try to get schedule");
-					schedule = (HashMap<String, Object>) fileService.getObjectFromFile(absFolderPath + "\\" + fileName);	
+					schedule = (HashMap<String, Object>) fileService.getObjectFromFile(absFolderPath + "\\" + fileName);
+					// Check for changes in team numbers
+					int dbTeamNumber = thisCompetition.getTeams().size();
+					int cfTeamNumber = (int) schedule.get("TotalTeam");
+					
+					if (dbTeamNumber != cfTeamNumber)
+						return scheduleByCompetitionId(competitionId);
 				} catch (Exception e) {
 					System.out.println("ScheduleAPI: getScheduleByCompetition: schedule not yet created");
 					return scheduleByCompetitionId(competitionId);
@@ -129,8 +137,11 @@ public class ScheduleAPI {
 					teams.add(team);
 				}
 				
+				schedule.put("TotalTeam", teams.size());
+				
 				CompetitionFormatEntity format;
 				Long formatId;
+				
 				try {
 					format = thisCompetition.getMainFormat();
 					formatId = format.getId();
@@ -173,8 +184,10 @@ public class ScheduleAPI {
 						err = true;
 					} else {
 						tree = new EliminationTree(teams, format.getId());
+						System.out.println("ScheduleAPI: scheduleByCompetitionId: build tree complete");
 						schedule.put("WinBranch", tree.getWinBranch());
 						schedule.put("LoseBranch", tree.getLoseBranch());
+						System.out.println("ScheduleAPI: scheduleByCompetitionId: set schedule complete");
 					}
 					break;
 

@@ -12,8 +12,8 @@ public class EliminationTree {
 	private Integer totalWinBranchRound;
 	private Integer totalLoseBranchRound;
 
-	private ArrayList<MatchNode> winBranchMatchList = new ArrayList<>();
-	private ArrayList<MatchNode> loseBranchMatchList = new ArrayList<>();
+	private ArrayList<Node<MatchInfo>> winBranchMatchList = new ArrayList<>();
+	private ArrayList<Node<MatchInfo>> loseBranchMatchList = new ArrayList<>();
 
 	private BTree<MatchInfo> winBranch;
 	private BTree<MatchInfo> loseBranch;
@@ -23,40 +23,16 @@ public class EliminationTree {
 	public EliminationTree() {
 	}
 
-	public EliminationTree(int totalTeam, int formatId) { // test
-		System.out.println("SeedTree: Contructor test: start");
-
-		for (int i = 1; i <= totalTeam; i++) {
-			Team t = new Team();
-			t.setId((long) i);
-			this.seedList.add(t);
-		}
-
-		this.totalWinBranchRound = calTotalWinBranchRound(this.seedList.size());
-		this.winBranch = new BTree<>(this.buildWinBranch(null, 1, this.seedList.size(), 1));
-		this.winBranchMatchNoIndexing();
-
-		if (formatId == 1l) {
-			this.winBranch.setName("Bracket");
-		} else if (formatId == 2l) {
-			this.winBranch.setName("WinBranch");
-			this.totalLoseBranchRound = calTotalLoseBranchRound(this.seedList.size());
-			this.loseBranch = new BTree<>(this.buildLoseBranch(null, 1, this.seedList.size() - 1, 1));
-			this.loseBranchMatchNoIndexing();
-			this.loseBranch.setName("LoseBranch");
-		}
-
-	}
-
 	public EliminationTree(ArrayList<TeamEntity> teams, Long formatId) {
-		System.out.println("SeedTree: Contructor: start");
+		System.out.println("EliminationTree: Contructor: start");
 
 		this.seedList = new SeedList(teams);
 
-		System.out.println("SeedTree: Contructor: this.seedList.size(): " + this.seedList.size());
+		System.out.println("EliminationTree: Contructor: this.seedList.size(): " + this.seedList.size());
 
 		this.totalWinBranchRound = calTotalWinBranchRound(this.seedList.size());
 		this.winBranch = new BTree<>(this.buildWinBranch(null, 1, this.seedList.size(), 1));
+		System.out.println("EliminationTree: Contructor: create Win Branch: done");
 		this.winBranchMatchNoIndexing();
 
 		if (formatId == 1l) {
@@ -66,14 +42,48 @@ public class EliminationTree {
 			
 			this.totalLoseBranchRound = calTotalLoseBranchRound(this.seedList.size());
 			this.loseBranch = new BTree<>(this.buildLoseBranch(null, 1, this.seedList.size() - 1, 1));
+			System.out.println("EliminationTree: Contructor: create Lose Branch: done");
 			this.loseBranchMatchNoIndexing();
 			this.loseBranch.setName("LoseBranch");
 		}
-		
+		System.out.println("EliminationTree: Contructor: completeTeamDescription: start");
 		this.completeTeamDescription();
+		System.out.println("EliminationTree: Contructor: completeTeamDescription: done");
 
-		System.out.println("SeedTree: Contructor: finish");
+		System.out.println("EliminationTree: Contructor: finish");
 	}
+	
+	
+	
+	public EliminationTree(BTree<MatchInfo> winBranch, ArrayList<TeamEntity> teams) {
+		this.winBranch = winBranch;
+		this.loseBranch = null;
+		this.seedList = new SeedList(teams);
+		this.totalWinBranchRound = calTotalWinBranchRound(this.seedList.size());
+		this.totalLoseBranchRound = 0;
+		this.winBranchMatchList = this.winBranch.toArrayList();
+	}
+	
+	
+	public EliminationTree(BTree<MatchInfo> winBranch, BTree<MatchInfo> loseBranch, ArrayList<TeamEntity> teams) {
+		this.winBranch = winBranch;
+		this.loseBranch = loseBranch;
+		this.seedList = new SeedList(teams);
+		this.totalWinBranchRound = calTotalWinBranchRound(this.seedList.size());
+		this.totalLoseBranchRound = calTotalLoseBranchRound(this.seedList.size());
+		this.winBranchMatchList = this.winBranch.toArrayList();
+		this.loseBranchMatchList = this.loseBranch.toArrayList();
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	// ------------Getter setter
 
@@ -104,23 +114,23 @@ public class EliminationTree {
 	// ------------Logic code
 
 	// -------------Win branch
-	public MatchNode buildWinBranch(MatchNode parent, Integer index, Integer totalSeed, Integer leftSeedIndex) {
+	private Node<MatchInfo> buildWinBranch(Node<MatchInfo> parent, Integer index, Integer totalSeed, Integer leftSeedIndex) {
 
-		System.out.println("SeedTree: buildWinBranch: start");
+		System.out.println("EliminationTree: buildWinBranch: start");
 		System.out.println(index);
 		System.out.println(totalSeed);
 
 		if (totalSeed < 2) // less than 2 seeds
 			return null; // can't schedule
 
-		MatchNode node = new MatchNode();
+		Node<MatchInfo> node = new Node<MatchInfo>();
 
 		node.setId(index);
 		node.setParent(parent);
 
 		MatchInfo info = new MatchInfo();
 
-		System.out.println("SeedTree: buildWinBranch: CP1");
+		System.out.println("EliminationTree: buildWinBranch: CP1");
 
 		if (index == 1) { // this is root
 			info.setRoundNo(this.totalWinBranchRound);
@@ -132,9 +142,9 @@ public class EliminationTree {
 
 		Integer rightSeedIndex = (int) Math.pow(2, node.getDegree() + 1) + 1 - leftSeedIndex;
 
-		System.out.println("SeedTree: buildWinBranch: CP2");
+		System.out.println("EliminationTree: buildWinBranch: CP2");
 
-		System.out.println("SeedTree: buildWinBranch: CP3");
+		System.out.println("EliminationTree: buildWinBranch: CP3");
 		info.setName("");
 		info.setTeam1(null);
 		info.setTeam2(null);
@@ -147,7 +157,7 @@ public class EliminationTree {
 
 		node.setData(info);
 
-		System.out.println("SeedTree: buildWinBranch: CP4");
+		System.out.println("EliminationTree: buildWinBranch: CP4");
 
 		Integer leftRightIndex = (int) Math.pow(2, node.getDegree() + 2) + 1 - leftSeedIndex;
 		Integer rightRightIndex = (int) Math.pow(2, node.getDegree() + 2) + 1 - rightSeedIndex;
@@ -179,34 +189,34 @@ public class EliminationTree {
 			}
 		}
 
-		System.out.println("SeedTree: buildWinBranch: CP5");
+		System.out.println("EliminationTree: buildWinBranch: CP5");
 
 		node.setData(info);
 
 		this.winBranchMatchList.add(node);
 
-		System.out.println("SeedTree: buildWinBranch: finish");
+		System.out.println("EliminationTree: buildWinBranch: finish");
 
 		return node;
 	}
 
 	// -----------------Lose branch
-	public MatchNode buildLoseBranch(MatchNode parent, Integer index, Integer totalLoseTeam, Integer leftIndex) {
-		System.out.println("SeedTree: buildLoseBranch: start");
+	private Node<MatchInfo> buildLoseBranch(Node<MatchInfo> parent, Integer index, Integer totalLoseTeam, Integer leftIndex) {
+		System.out.println("EliminationTree: buildLoseBranch: start");
 
-		MatchNode node = new MatchNode();
+		Node<MatchInfo> node = new Node<MatchInfo>();
 		MatchInfo info = new MatchInfo();
 
 		if (totalLoseTeam < 2) {
 			return null;
 		}
 
-		System.out.println("SeedTree: buildLoseBranch: CP1: totalLoseTeam: " + totalLoseTeam.toString());
+		System.out.println("EliminationTree: buildLoseBranch: CP1: totalLoseTeam: " + totalLoseTeam.toString());
 
 		node.setId(index);
 		node.setParent(parent);
 
-		System.out.println("SeedTree: buildLoseBranch: CP2: parent: " + parent);
+		System.out.println("EliminationTree: buildLoseBranch: CP2: parent: " + parent);
 
 		if (index == 1) { // this is root
 			info.setRoundNo(this.totalLoseBranchRound);
@@ -218,20 +228,17 @@ public class EliminationTree {
 
 		Integer rightIndex = reverseIndex(leftIndex) * 2 + 1;
 
-//		int leftChild = rightIndex - 1;
-
 		node.setData(info);
 
-		System.out.println("SeedTree: buildLoseBranch: CP3: leftIndex: " + leftIndex);
+		System.out.println("EliminationTree: buildLoseBranch: CP3: leftIndex: " + leftIndex);
 
 		Integer rightLeftIndex = rightIndex - 1;
 
 		node.left = this.winBranch.getById(leftIndex);
 		info.team1 = this.winBranch.getById(leftIndex).data.loser;
-//		info.setTeam1Description("Lose " + this.winBranch.getById(leftIndex).data.name);
 
 		if (this.winBranch.getById(rightLeftIndex) == null) {
-			System.out.println("SeedTree: buildLoseBranch: CP3-1-1: ");
+			System.out.println("EliminationTree: buildLoseBranch: CP3-1-1: ");
 
 			node.right = this.winBranch.getById(rightIndex);
 
@@ -239,11 +246,8 @@ public class EliminationTree {
 
 			info.setStatus(3);
 
-//			info.setTeam2Description("Lose " + this.winBranch.getById(rightIndex).data.name);
-
-			node.setData(info);
 		} else {
-			System.out.println("SeedTree: buildLoseBranch: CP3-1-2: ");
+			System.out.println("EliminationTree: buildLoseBranch: CP3-1-2: ");
 
 			node.right = buildRightLoseBranch(node, index * 2 + 1, totalLoseTeam, rightLeftIndex);
 
@@ -255,32 +259,32 @@ public class EliminationTree {
 
 		node.setData(info);
 
-		System.out.println("SeedTree: buildLoseBranch: CP4");
+		System.out.println("EliminationTree: buildLoseBranch: CP4");
 
 		this.loseBranchMatchList.add(node);
 
-		System.out.println("SeedTree: buildLoseBranch: finish");
+		System.out.println("EliminationTree: buildLoseBranch: finish");
 
 		return node;
 	}
 
-	public MatchNode buildRightLoseBranch(MatchNode parent, Integer index, Integer totalLoseTeam, Integer leftIndex) {
+	private Node<MatchInfo> buildRightLoseBranch(Node<MatchInfo> parent, Integer index, Integer totalLoseTeam, Integer leftIndex) {
 
-		System.out.println("SeedTree: buildRightLoseBranch: start");
+		System.out.println("EliminationTree: buildRightLoseBranch: start");
 
-		MatchNode node = new MatchNode();
+		Node<MatchInfo> node = new Node<MatchInfo>();
 		MatchInfo info = new MatchInfo();
 
 		if (totalLoseTeam < 2) {
 			return null;
 		}
 
-		System.out.println("SeedTree: buildRightLoseBranch: CP1: totalLoseTeam: " + totalLoseTeam.toString());
+		System.out.println("EliminationTree: buildRightLoseBranch: CP1: totalLoseTeam: " + totalLoseTeam.toString());
 
 		node.setId(index);
 		node.setParent(parent);
 
-		System.out.println("SeedTree: buildRightLoseBranch: CP2: parent: " + parent.data.roundNo);
+		System.out.println("EliminationTree: buildRightLoseBranch: CP2: parent: " + parent.data.roundNo);
 
 		info.setRoundNo(parent.data.roundNo - 1);
 
@@ -292,28 +296,24 @@ public class EliminationTree {
 
 		node.setData(info);
 
-		System.out.println("SeedTree: buildRightLoseBranch: CP3: rightRightIndex: " + rightRightIndex);
+		System.out.println("EliminationTree: buildRightLoseBranch: CP3: rightRightIndex: " + rightRightIndex);
 
 		if (this.winBranch.getById(rightRightIndex) == null && this.winBranch.getById(leftRightIndex) == null) {
-			System.out.println("SeedTree: buildRightLoseBranch: CP3-1: leftIndex: " + leftIndex);
-			System.out.println("SeedTree: buildRightLoseBranch: CP3-1: rightIndex: " + rightIndex);
+			System.out.println("EliminationTree: buildRightLoseBranch: CP3-1: leftIndex: " + leftIndex);
+			System.out.println("EliminationTree: buildRightLoseBranch: CP3-1: rightIndex: " + rightIndex);
 
 			node.left = this.winBranch.getById(leftIndex);
 			node.right = this.winBranch.getById(rightIndex);
 
 			System.out.println(
-					"SeedTree: buildRightLoseBranch: CP3-2: getById(leftIndex): " + this.winBranch.getById(leftIndex));
+					"EliminationTree: buildRightLoseBranch: CP3-2: getById(leftIndex): " + this.winBranch.getById(leftIndex));
 			info.team1 = this.winBranch.getById(leftIndex).data.loser;
 			info.team2 = this.winBranch.getById(rightIndex).data.loser;
 
-			System.out.println("SeedTree: buildRightLoseBranch: CP3-3: getById(rightIndex).data: "
+			System.out.println("EliminationTree: buildRightLoseBranch: CP3-3: getById(rightIndex).data: "
 					+ this.winBranch.getById(rightIndex).data);
 			info.setStatus(3);
-
-//			info.setTeam1Description("Lose " + this.winBranch.getById(leftIndex).data.name);
-//			info.setTeam2Description("Lose " + this.winBranch.getById(rightIndex).data.name);
-
-			node.setData(info);
+			
 		} else {
 			if (this.winBranch.getById(leftRightIndex) == null) {
 				node.left = this.winBranch.getById(leftIndex);
@@ -322,10 +322,6 @@ public class EliminationTree {
 				info.team1 = this.winBranch.getById(leftIndex).data.loser;
 				info.team2 = node.right.data.winner;
 				info.setStatus(4);
-
-//				info.setTeam1Description("Lose " + this.winBranch.getById(leftIndex).data.name);
-
-				node.setData(info);
 			}
 
 			if (this.winBranch.getById(rightRightIndex) == null) {
@@ -335,10 +331,6 @@ public class EliminationTree {
 				info.team1 = node.left.data.winner;
 				info.team2 = this.winBranch.getById(rightIndex).data.loser;
 				info.setStatus(4);
-
-//				info.setTeam2Description("Lose " + this.winBranch.getById(rightIndex).data.name);
-
-				node.setData(info);
 			}
 
 			if (this.winBranch.getById(rightRightIndex) != null && this.winBranch.getById(leftRightIndex) != null) {
@@ -350,22 +342,24 @@ public class EliminationTree {
 				info.setStatus(1);
 			}
 		}
+		node.setData(info);
 
-		System.out.println("SeedTree: buildRightLoseBranch: CP5");
+		System.out.println("EliminationTree: buildRightLoseBranch: CP5");
 
 		this.loseBranchMatchList.add(node);
 
-		System.out.println("SeedTree: buildRightLoseBranch: finish");
+		System.out.println("EliminationTree: buildRightLoseBranch: finish");
 		return node;
 	}
 
-	// ------------------ Down tree
+	// ------------------ browse the tree
+	
 
-	public void winBranchMatchNoIndexing() {
+	private void winBranchMatchNoIndexing() {
 
 		int matchNo = 0;
 		for (int round = 1; round <= this.totalWinBranchRound; round++) {
-			for (MatchNode match : this.winBranchMatchList) {
+			for (Node<MatchInfo> match : this.winBranchMatchList) {
 				if (match.getData().getRoundNo() == round) {
 					matchNo++;
 					match.data.setMatchNo(matchNo);
@@ -377,11 +371,11 @@ public class EliminationTree {
 
 	}
 
-	public void loseBranchMatchNoIndexing() {
+	private void loseBranchMatchNoIndexing() {
 
 		int matchNo = 0;
 		for (int round = 1; round <= this.totalLoseBranchRound; round++) {
-			for (MatchNode match : this.loseBranchMatchList) {
+			for (Node<MatchInfo> match : this.loseBranchMatchList) {
 				if (match.getData().getRoundNo() == round) {
 					matchNo++;
 					match.data.setMatchNo(matchNo);
@@ -393,18 +387,18 @@ public class EliminationTree {
 
 	}
 
-	public void completeTeamDescription() {
+	private void completeTeamDescription() {
 
-		for (MatchNode match : this.winBranchMatchList) {
+		for (Node<MatchInfo> match : this.winBranchMatchList) {
 			if (match.left != null) {
 				int matchNo = match.left.data.getMatchNo();
-				TeamDescription description = new TeamDescription(2l, new Long(matchNo));
+				TeamDescription description = new TeamDescription(2l, matchNo);
 				match.data.setTeam1Description(description);
 			}
 			
 			if (match.right != null) {
 				int matchNo = match.right.data.getMatchNo();
-				TeamDescription description = new TeamDescription(2l, new Long(matchNo));
+				TeamDescription description = new TeamDescription(2l, matchNo);
 				match.data.setTeam2Description(description);
 			}
 			
@@ -412,49 +406,55 @@ public class EliminationTree {
 
 		}
 		
-		for (MatchNode match : this.loseBranchMatchList) {
+		for (Node<MatchInfo> match : this.loseBranchMatchList) {
 			if (match.left != null) {
+				
 				int matchNo = match.left.data.getMatchNo();
 				String name = match.left.data.getName();
 				
 				TeamDescription description = new TeamDescription();
 				
-				if (name.contains(Const.WIN_BRANCH_NAMING))
-					description = new TeamDescription(5l, new Long(matchNo));
-				if (name.contains(Const.LOSE_BRANCH_NAMING))
-					description = new TeamDescription(4l, new Long(matchNo));
-				
+				if (name.contains(Const.WIN_BRANCH_NAMING)) {
+					description = new TeamDescription(4l, matchNo);
+				}
+				if (name.contains(Const.LOSE_BRANCH_NAMING)) {
+					description = new TeamDescription(3l, matchNo);
+				}
 				match.data.setTeam1Description(description);
 			}
 			
 			if (match.right != null) {
 				int matchNo = match.right.data.getMatchNo();
-				String name = match.left.data.getName();
+				String name = match.right.data.getName();
+				
 				TeamDescription description = new TeamDescription();
 				
-				if (name.contains(Const.WIN_BRANCH_NAMING))
-					description = new TeamDescription(5l, new Long(matchNo));
-				if (name.contains(Const.LOSE_BRANCH_NAMING))
-					description = new TeamDescription(4l, new Long(matchNo));
-					
+				if (name.contains(Const.WIN_BRANCH_NAMING)) {
+					description = new TeamDescription(4l, matchNo);
+				}
+				if (name.contains(Const.LOSE_BRANCH_NAMING)) {
+					description = new TeamDescription(3l, matchNo);
+				}
+				
 				match.data.setTeam2Description(description);
 			}
 			
-			this.winBranch.setById(match.getId(), match.getData());
+			this.loseBranch.setById(match.getId(), match.getData());
 
 		}
+		System.out.println("EliminationTree: completeTeamDescription: lose tree done");
 
 	}
 
 	// ----------- support logic code
 
-	public Integer reverseIndex(Integer index) {
+	private Integer reverseIndex(Integer index) {
 		Integer k = floorLog2(index + 1);
 		Integer _2powk = (int) Math.pow(2, k);
 		return _2powk + _2powk / 2 - 1 - index;
 	}
 
-	public int floorLog2(int x) {
+	private int floorLog2(int x) {
 		int k = 0;
 		int y = 1;
 		while (y < x) {
@@ -466,7 +466,7 @@ public class EliminationTree {
 
 	}
 
-	public Integer calTotalWinBranchRound(Integer size) {
+	private Integer calTotalWinBranchRound(Integer size) {
 		int totalRound = 0;
 		int x = 1;
 		while (x < size) {
@@ -476,7 +476,7 @@ public class EliminationTree {
 		return totalRound;
 	}
 
-	public Integer calTotalLoseBranchRound(Integer size) {
+	private Integer calTotalLoseBranchRound(Integer size) {
 		int totalRound = 0;
 		int x = 1;
 		while (x < size) {
