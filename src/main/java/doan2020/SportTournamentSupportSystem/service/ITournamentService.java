@@ -34,5 +34,7 @@ public interface ITournamentService {
 	public Long countAll();
 	
 	public Map<String, Object> getOtherInformation(Long Id);
+	
+	public TournamentEntity updateStatus(TournamentEntity newEntity, String status); 
 
 }

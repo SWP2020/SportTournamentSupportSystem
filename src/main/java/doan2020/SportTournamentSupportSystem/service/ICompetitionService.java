@@ -26,4 +26,6 @@ public interface ICompetitionService {
 //	public Collection<CompetitionEntity> findAll();
 	
 	public CompetitionEntity delete(Long id);
+	
+	public CompetitionEntity updateStatus(CompetitionEntity entity, String status);
 }

@@ -12,15 +12,24 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import doan2020.SportTournamentSupportSystem.config.Const;
 import doan2020.SportTournamentSupportSystem.converter.CompetitionConverter;
+import doan2020.SportTournamentSupportSystem.converter.PermissionConverter;
 import doan2020.SportTournamentSupportSystem.dto.CompetitionDTO;
+import doan2020.SportTournamentSupportSystem.dto.PermissionDTO;
 import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
+import doan2020.SportTournamentSupportSystem.entity.PermissionEntity;
+import doan2020.SportTournamentSupportSystem.entity.UserEntity;
 import doan2020.SportTournamentSupportSystem.response.Response;
 import doan2020.SportTournamentSupportSystem.service.ICompetitionService;
+import doan2020.SportTournamentSupportSystem.service.IPermissionService;
+import doan2020.SportTournamentSupportSystem.service.IUserService;
+import doan2020.SportTournamentSupportSystem.service.impl.JwtService;
 
 @RestController
 @CrossOrigin
@@ -29,13 +38,26 @@ public class CompetitionAPI {
 
 	@Autowired
 	private ICompetitionService competitionService;
-
+	
 	@Autowired
 	private CompetitionConverter competitionConverter;
+	
+	@Autowired
+	private IUserService userService;
+	
+	@Autowired
+	private IPermissionService permissionService;
+	
+	@Autowired
+	private PermissionConverter permissionConverter;
+
+	@Autowired
+	private JwtService jwtService;
 
 	/* ----------------Get One Competititon ------------------------ */
 	@GetMapping("")
-	public ResponseEntity<Response> GetCompetiton(@RequestParam("id") Long id) {
+	public ResponseEntity<Response> GetCompetiton(
+			@RequestHeader(value = Const.TOKEN_HEADER, required = false) String jwt, @RequestParam("id") Long id) {
 		System.out.println("Competition API - GetCompetiton - start");
 		System.out.println(id);
 		HttpStatus httpStatus = null;
@@ -45,6 +67,9 @@ public class CompetitionAPI {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
 		CompetitionEntity competitionEntity = new CompetitionEntity();
+		UserEntity user = new UserEntity();
+		PermissionEntity permissionEntity = new PermissionEntity();
+		PermissionDTO permissionDTO = new PermissionDTO();
 		CompetitionDTO dto = new CompetitionDTO();
 		try {
 			if (id == null) {// id not exist
@@ -64,11 +89,32 @@ public class CompetitionAPI {
 					error.put("MessageCode", 1);
 					error.put("Message", "Not found");
 				} else {// competition is exist
+
+					Long curentUserId = -1l;
+
+					try {
+						String curentUserName = jwtService.getUserNameFromJwtToken(jwt);
+						user = userService.findByUsername(curentUserName);
+						curentUserId = user.getId();
+					} catch (Exception e) {
+
+					}
+
+					if (curentUserId == competitionEntity.getTournament().getCreator().getId()) {
+						permissionEntity = permissionService.findOneByName(Const.OWNER);
+
+						permissionDTO = permissionConverter.toDTO(permissionEntity);
+					} else {
+						permissionEntity = permissionService.findOneByName(Const.VIEWER);
+
+						permissionDTO = permissionConverter.toDTO(permissionEntity);
+					}
+
 					System.out.println("Competition API - GetCompetiton - competitionEntity not null");
 					dto = competitionConverter.toDTO(competitionEntity);
 					System.out.println("Competition API - GetCompetiton - convert to DTO ok");
 					result.put("competition", dto);
-					config.put("Global", 0);
+					config.put("Global", permissionDTO);
 					error.put("MessageCode", 0);
 					error.put("Message", "Found");
 				}
@@ -87,7 +133,6 @@ public class CompetitionAPI {
 		System.out.println("Competition API - GetCompetiton - finish");
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
-
 
 	/* ---------------- add new Competition ------------------------ */
 	@PostMapping
@@ -214,7 +259,7 @@ public class CompetitionAPI {
 				error.put("Message", "Required Id");
 			} else {// id is exist
 				competitionEntity = competitionService.delete(id);
-				
+
 				CompetitionDTO deleteCompetition = competitionConverter.toDTO(competitionEntity);
 				result.put("Competition", deleteCompetition);
 				config.put("Global", 0);

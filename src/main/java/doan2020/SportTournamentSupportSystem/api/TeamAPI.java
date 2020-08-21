@@ -12,16 +12,24 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import doan2020.SportTournamentSupportSystem.config.Const;
+import doan2020.SportTournamentSupportSystem.converter.PermissionConverter;
 import doan2020.SportTournamentSupportSystem.converter.TeamConverter;
+import doan2020.SportTournamentSupportSystem.dto.PermissionDTO;
 import doan2020.SportTournamentSupportSystem.dto.TeamDTO;
+import doan2020.SportTournamentSupportSystem.entity.PermissionEntity;
 import doan2020.SportTournamentSupportSystem.entity.TeamEntity;
+import doan2020.SportTournamentSupportSystem.entity.UserEntity;
 import doan2020.SportTournamentSupportSystem.response.Response;
+import doan2020.SportTournamentSupportSystem.service.IPermissionService;
 import doan2020.SportTournamentSupportSystem.service.ITeamService;
-
+import doan2020.SportTournamentSupportSystem.service.IUserService;
+import doan2020.SportTournamentSupportSystem.service.impl.JwtService;
 
 @RestController
 @CrossOrigin
@@ -32,13 +40,24 @@ public class TeamAPI {
 
 	@Autowired
 	private TeamConverter converter;
-     
-	
+
+	@Autowired
+	private IUserService userService;
+
+	@Autowired
+	private IPermissionService permissionService;
+
+	@Autowired
+	private PermissionConverter permissionConverter;
+
+	@Autowired
+	private JwtService jwtService;
+
 	/*
 	 * Get team theo id
 	 */
 	@GetMapping("")
-	public ResponseEntity<Response> getOneTeam(@RequestParam(value = "id", required = true) Long id) {
+	public ResponseEntity<Response> getOneTeam(@RequestHeader(value = Const.TOKEN_HEADER, required = false) String jwt, @RequestParam(value = "id", required = true) Long id) {
 		System.out.println("TeamAPI - getOneTeam - start");
 		System.out.println(id);
 		HttpStatus httpStatus = null;
@@ -49,6 +68,9 @@ public class TeamAPI {
 		Map<String, Object> error = new HashMap<String, Object>();
 		TeamEntity teamEntity = new TeamEntity();
 		TeamDTO dto = new TeamDTO();
+		UserEntity user = new UserEntity();
+		PermissionEntity permissionEntity = new PermissionEntity();
+		PermissionDTO permissionDTO = new PermissionDTO();
 		try {
 
 			if (id == null) {// id not exist
@@ -70,11 +92,32 @@ public class TeamAPI {
 					System.out.println("TeamAPI - getOneTeam - cp3");
 					dto = converter.toDTO(teamEntity);
 					System.out.println("TeamAPI - getOneTeam - cp4");
+					
+					Long curentUserId = -1l;
+					
+					try {
+						String curentUserName = jwtService.getUserNameFromJwtToken(jwt);
+						user = userService.findByUsername(curentUserName);
+						curentUserId = user.getId();
+					} catch (Exception e) {
+
+					}
+
+					if (curentUserId == teamEntity.getCompetition().getTournament().getCreator().getId()) {
+						permissionEntity = permissionService.findOneByName(Const.OWNER);
+
+						permissionDTO = permissionConverter.toDTO(permissionEntity);
+					} else {
+						permissionEntity = permissionService.findOneByName(Const.VIEWER);
+
+						permissionDTO = permissionConverter.toDTO(permissionEntity);
+					}
 					result.put("Team", dto);
-					config.put("Global", 0);
+					config.put("Global", permissionDTO);
 					error.put("MessageCode", 0);
 					error.put("Message", "get Team Successfully");
 				}
+					
 			}
 
 		} catch (Exception e) {
@@ -118,7 +161,7 @@ public class TeamAPI {
 				error.put("MessageCode", 1);
 				error.put("Message", "create new Team fail");
 			} else {// convert ok
-				System.out.println("Team API - createTeam - cp2: creator: "+ teamDTO.getCreatorId());
+				System.out.println("Team API - createTeam - cp2: creator: " + teamDTO.getCreatorId());
 				service.create(teamEntity);
 				resDTO = converter.toDTO(teamEntity);
 				result.put("Team", resDTO);
@@ -202,7 +245,7 @@ public class TeamAPI {
 		System.out.println("Team API - editTeam - pass");
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
-	
+
 	/* delete one Team */
 	@DeleteMapping("")
 	public ResponseEntity<Response> deleteTeam(@RequestParam("id") Long id) {

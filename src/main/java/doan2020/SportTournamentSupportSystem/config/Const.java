@@ -41,6 +41,12 @@ public final class Const {
 	public final static int DOUBLE_ELIMINATION_FORMAT = 2;
 	public final static int ROUND_ROBIN_FORMAT = 3;
 	
+//  status 
+  
+	public final static String UNSTARTED_STATUS = "unStarted";
+	public final static String STARTED_STATUS = "started";
+	public final static String FINISHED = "finished";
+  
 //	Constant for naming match
 	
 	public final static String MATCH = "trận ";
