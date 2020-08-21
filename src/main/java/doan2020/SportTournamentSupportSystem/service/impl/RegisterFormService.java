@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
+import doan2020.SportTournamentSupportSystem.config.Const;
 import doan2020.SportTournamentSupportSystem.entity.RegisterFormEntity;
 import doan2020.SportTournamentSupportSystem.repository.RegisterFormRepository;
 import doan2020.SportTournamentSupportSystem.service.IRegisterFormService;
@@ -22,6 +22,7 @@ public class RegisterFormService implements IRegisterFormService {
 	public RegisterFormEntity create(RegisterFormEntity registerFormEntity) {
 		RegisterFormEntity newEntity = null;
 		try {
+			registerFormEntity.setStatus(Const.PENDING_STATUS);
 			newEntity = registerFormRepository.save(registerFormEntity);
 		} catch (Exception e) {
 			return null;
@@ -115,6 +116,29 @@ public class RegisterFormService implements IRegisterFormService {
 		Collection<RegisterFormEntity> foundEntitys = null;
 		try {
 			foundEntitys = registerFormRepository.findByCompetitionSettingId(competitionSettingId);
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntitys;
+	}
+	
+	@Override
+	public RegisterFormEntity updateStatus(RegisterFormEntity entity, String status) {
+		try {
+			entity.setStatus(status);
+			entity = registerFormRepository.save(entity);
+		} catch (Exception e) {
+			return null;
+		}
+        
+		return entity;
+	}
+
+	@Override
+	public Collection<RegisterFormEntity> findByCompetitionIdAndStatus(Long competitionId, String status) {
+		Collection<RegisterFormEntity> foundEntitys = null;
+		try {
+			foundEntitys = registerFormRepository.findByCompetitionIdAndStatus(competitionId, status);
 		} catch (Exception e) {
 			return null;
 		}

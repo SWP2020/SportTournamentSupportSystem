@@ -1,6 +1,8 @@
 package doan2020.SportTournamentSupportSystem.api;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,7 @@ import doan2020.SportTournamentSupportSystem.dto.PermissionDTO;
 import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
 import doan2020.SportTournamentSupportSystem.entity.PermissionEntity;
 import doan2020.SportTournamentSupportSystem.entity.UserEntity;
+import doan2020.SportTournamentSupportSystem.model.Ranks;
 import doan2020.SportTournamentSupportSystem.response.Response;
 import doan2020.SportTournamentSupportSystem.service.ICompetitionService;
 import doan2020.SportTournamentSupportSystem.service.IPermissionService;
@@ -280,6 +283,57 @@ public class CompetitionAPI {
 		response.setResult(result);
 		response.setConfig(config);
 		System.out.println("Competition API - deleteCompetition - pass");
+		return new ResponseEntity<Response>(response, httpStatus);
+	}
+	
+	@GetMapping("/rank")
+	public ResponseEntity<Response> getRanks(
+			@RequestHeader(value = Const.TOKEN_HEADER, required = false) String jwt, @RequestParam("id") Long id) {
+		System.out.println("Competition API - GetCompetiton - start");
+		System.out.println(id);
+		HttpStatus httpStatus = null;
+		httpStatus = HttpStatus.OK;
+		Response response = new Response();
+		Map<String, Object> config = new HashMap<String, Object>();
+		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> error = new HashMap<String, Object>();
+		CompetitionEntity competitionEntity = new CompetitionEntity();
+		List<Ranks> ranks = new ArrayList<Ranks>();
+		try {
+			if (id == null) {// id not exist
+				System.out.println("Competition API - GetCompetiton - id null");
+				result.put("Competition", null);
+				config.put("Global", 0);
+				error.put("MessageCode", 1);
+				error.put("Message", "Requried id");
+			} else {// id exist
+				System.out.println("Competition API - GetCompetiton - id not null: " + id.toString());
+				competitionEntity = competitionService.findOneById(id);
+				System.out.println("Competition API - GetCompetiton - find OK");
+				if (competitionEntity == null) {// competition is not exist
+					System.out.println("Competition API - GetCompetiton - competitionEntity null");
+					result.put("Competition", null);
+					config.put("Global", 0);
+					error.put("MessageCode", 1);
+					error.put("Message", "Not found");
+				} else {// competition is exist
+
+
+					error.put("MessageCode", 0);
+					error.put("Message", "Found");
+				}
+			}
+			System.out.println("Competition API - GetCompetiton - no exception");
+		} catch (Exception e) {
+			System.out.println("Competition API - GetCompetiton - has exception");
+			config.put("Global", 0);
+			error.put("MessageCode", 0);
+			error.put("Message", "exception");
+		}
+		response.setError(error);
+		response.setResult(result);
+		response.setConfig(config);
+		System.out.println("Competition API - GetCompetiton - finish");
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
 }

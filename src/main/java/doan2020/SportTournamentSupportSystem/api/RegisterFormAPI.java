@@ -226,4 +226,114 @@ public class RegisterFormAPI {
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
 
+	@PutMapping("/acceptRegisterForm")
+	@CrossOrigin
+	public ResponseEntity<Response> acceptRegisterForm(@RequestParam Long id) {
+		System.out.println("RegisterFormAPI: acceptRegisterForm: start");
+
+		HttpStatus httpStatus = HttpStatus.OK;
+		Response response = new Response();
+		Map<String, Object> config = new HashMap<String, Object>();
+		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> error = new HashMap<String, Object>();
+		RegisterFormEntity registerFormEntity = new RegisterFormEntity();
+
+		try {
+
+			if (id == null) {// id not exist
+				System.out.println("Competition API - GetCompetiton - id null");
+				result.put("Competition", null);
+				config.put("Global", 0);
+				error.put("MessageCode", 1);
+				error.put("Message", "Requried id");
+			} else {// id exist
+				registerFormEntity = service.findOneById(id);
+
+				if (registerFormEntity == null) { // not found
+					result.put("RegisterForm", null);
+					config.put("Global", 0);
+					error.put("MessageCode", 1);
+					error.put("Message", "Not found");
+				} else { // found
+				registerFormEntity = service.updateStatus(registerFormEntity, Const.ACCEPTED_STATUS);
+
+				RegisterFormDTO dto = converter.toDTO(registerFormEntity);
+
+				result.put("RegisterForm", dto);
+				config.put("Global", 0);
+				error.put("MessageCode", 0);
+				error.put("Message", "acceptRegisterForm successfuly");
+			}
+			}
+			System.out.println("RegisterFormAPI: acceptRegisterForm: no exception");
+		} catch (Exception e) {
+			System.out.println("RegisterFormAPI: acceptRegisterForm: has exception");
+			result.put("RegisterForm", null);
+			config.put("Global", 0);
+			error.put("MessageCode", 1);
+			error.put("Message", "Server error");
+		}
+
+		response.setConfig(config);
+		response.setResult(result);
+		response.setError(error);
+		System.out.println("RegisterFormAPI: acceptRegisterForm: finish");
+		return new ResponseEntity<Response>(response, httpStatus);
+	}
+	
+	@PutMapping("/unAcceptRegisterForm")
+	@CrossOrigin
+	public ResponseEntity<Response> unAcceptRegisterForm(@RequestParam Long id) {
+		System.out.println("RegisterFormAPI: acceptRegisterForm: start");
+
+		HttpStatus httpStatus = HttpStatus.OK;
+		Response response = new Response();
+		Map<String, Object> config = new HashMap<String, Object>();
+		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> error = new HashMap<String, Object>();
+		RegisterFormEntity registerFormEntity = new RegisterFormEntity();
+
+		try {
+
+			if (id == null) {// id not exist
+				System.out.println("Competition API - GetCompetiton - id null");
+				result.put("Competition", null);
+				config.put("Global", 0);
+				error.put("MessageCode", 1);
+				error.put("Message", "Requried id");
+			} else {// id exist
+				registerFormEntity = service.findOneById(id);
+
+				if (registerFormEntity == null) { // not found
+					result.put("RegisterForm", null);
+					config.put("Global", 0);
+					error.put("MessageCode", 1);
+					error.put("Message", "Not found");
+				} else { // found
+				registerFormEntity = service.updateStatus(registerFormEntity, Const.UNACCEPTED_STATUS);
+
+				RegisterFormDTO dto = converter.toDTO(registerFormEntity);
+
+				result.put("RegisterForm", dto);
+				config.put("Global", 0);
+				error.put("MessageCode", 0);
+				error.put("Message", "acceptRegisterForm successfuly");
+			}
+			}
+			System.out.println("RegisterFormAPI: acceptRegisterForm: no exception");
+		} catch (Exception e) {
+			System.out.println("RegisterFormAPI: acceptRegisterForm: has exception");
+			result.put("RegisterForm", null);
+			config.put("Global", 0);
+			error.put("MessageCode", 1);
+			error.put("Message", "Server error");
+		}
+
+		response.setConfig(config);
+		response.setResult(result);
+		response.setError(error);
+		System.out.println("RegisterFormAPI: acceptRegisterForm: finish");
+		return new ResponseEntity<Response>(response, httpStatus);
+	}
+
 }

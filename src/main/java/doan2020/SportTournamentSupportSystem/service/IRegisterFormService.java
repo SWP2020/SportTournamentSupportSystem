@@ -26,4 +26,8 @@ public interface IRegisterFormService {
 	Collection<RegisterFormEntity> findByTeamId(Long teamId);
 
 	Collection<RegisterFormEntity> findByCompetitionSettingId(Long competitionSettingId);
+	
+	public RegisterFormEntity updateStatus(RegisterFormEntity entity, String status);
+	
+	Collection<RegisterFormEntity> findByCompetitionIdAndStatus(Long competitionId, String status);
 }
