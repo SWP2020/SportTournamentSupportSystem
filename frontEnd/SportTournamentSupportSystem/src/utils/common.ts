@@ -1,6 +1,6 @@
 export function formatGender(value: boolean | null) {
   if (value == null) {
-    return 'null';
+    return '';
   }
   if (value === true) {
     return 'Nam';

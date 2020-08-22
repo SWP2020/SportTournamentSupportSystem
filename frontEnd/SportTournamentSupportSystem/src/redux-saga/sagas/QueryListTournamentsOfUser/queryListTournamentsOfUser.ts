@@ -5,7 +5,7 @@ import { COMMON_SHOW_NOTIFICATION, QUERY_LIST_TOURNAMENT_OF_USER } from 'redux-s
 
 
 const queryListTournamentsOfUser = (data: IParams, path: string | number, param: IParams) => {
-  const uri = 'tournaments/getAllByUserId';
+  const uri = 'tournaments/getByUserId';
   const datas = { ...data };
   const paths = path;
   const params = { ...param };
@@ -16,13 +16,13 @@ function* doQueryListTournamentsOfUser(request: IRequest<IBigRequest>) {
   try {
     const response = yield call(queryListTournamentsOfUser, request.data.data, request.data.path, request.data.param);
     const data = response.data.result;
-    if (response.data.error.messageCode === 0) {
+    if (response.data.error.MessageCode === 0) {
       yield put({
         type: request.response.success,
-        payload: data,
+        payload: { Tournaments: data.Tournaments, TotalPage: data.TotalPage },
       });
     } else {
-      throw new Error(response.data.error.message);
+      throw new Error(response.data.error.Message);
     }
   } catch (error) {
     yield put({

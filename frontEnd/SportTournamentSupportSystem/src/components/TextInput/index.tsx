@@ -7,10 +7,13 @@ interface ITextInputProps extends React.ClassAttributes<TextInput> {
   type?: string;
   errorContent: string;
   error: boolean;
+  value?: string;
   defaultValue?: string;
+  style?: React.CSSProperties;
 
   onChangeText(value: string): void;
   onHandleSubmit?(): void;
+  onBlur?(): void;
 }
 
 interface ITextInputState {
@@ -33,12 +36,18 @@ class TextInput extends React.Component<ITextInputProps, ITextInputState> {
     }
   }
 
+  private handleOnBlur = () => {
+    if (this.props.onBlur) {
+      this.props.onBlur();
+    }
+  }
+
   render() {
     return (
       <div className="omrs-input-group">
-        {this.props.error === true && <div className="TextInput-error-text-container"><p className="TextInput-error-text">{this.props.errorContent}</p></div>}
+        <div className="TextInput-error-text-container"><p className={`${this.props.error === true ? 'TextInput-error-text' : 'TextInput-non-error-text'}`}>{this.props.errorContent}</p></div>
         <label className="omrs-input-underlined">
-          <input required {...this.props.defaultValue && { defaultValue: this.props.defaultValue }} type={this.props.type} onChange={this.onChangeValue} onKeyPress={this.keyPressed} />
+          <input style={this.props.style} required {...this.props.defaultValue && { defaultValue: this.props.defaultValue }} type={this.props.type} onChange={this.onChangeValue} onKeyPress={this.keyPressed} value={this.props.value} onBlur={this.handleOnBlur} />
           <span className="omrs-input-label">{this.props.label}</span>
         </label>
       </div>

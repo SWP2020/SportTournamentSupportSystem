@@ -24,10 +24,16 @@
 .TournamentInfo-content-info-basic-info-container {
   color: white;
   display: flex;
+  flex-direction: row;
+}
+
+.TournamentInfo-content-info-basic-info-container-container {
+  color: white;
+  display: flex;
   flex-direction: column;
   justify-content: center;
   padding-left: 50px;
-  padding-right: 350px;
+  width: 80%;
 }
 
 .TournamentInfo-content-info-basic-info-container-singleRow {
@@ -67,4 +73,94 @@
 
 .Select-disabled {
   opacity: 0.8;
+}
+
+.TournamentInfo-background-image-container {
+  height: 250px;
+  background-color: #272a33;
+  display: flex;
+  justify-content: center;
+}
+
+.TournamentInfo-background-image {
+  height: 250px;
+  width: 60%;
+  background-color: #272a33;
+}
+
+.TournamentInfo-change-avatar-icon {
+  font-size: 30px;
+  position: absolute;
+  top: 575px;
+  right: 200px;
+  color: white;
+}
+
+.TournamentInfo-avatar-image {
+  height: 200px;
+  width: 200px;
+  border-radius: 100px;
+  border: 2px solid white;
+  position: absolute;
+  margin-top: 100px;
+  right: 50px;
+}
+
+.TournamentInfo-change-image-icon {
+  font-size: 30px;
+  position: absolute;
+  top: 250px;
+  left: 250px;
+  color: white;
+}
+
+.TournamentInfo-Overlay2 {
+  position: absolute;
+  top: 575px;
+  right: 200px;
+  opacity: 0;
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  /* z-index: 10; */
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.TournamentInfo-Overlay {
+  position: absolute;
+  top: 250px;
+  left: 250px;
+  opacity: 0;
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  /* z-index: 10; */
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.TournamentInfo-login-container {
+  margin-top: 25px;
+  margin-bottom: 25px;
+  margin-left: 50px;
+}
+
+.TournamentInfo-login-container :hover {
+  cursor: pointer;
+}
+
+.TournamentInfo-login {
+  border-radius: 10px;
+  background-color: #ff7324;
+  width: 200px;
+  height: 50px;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
+.TournamentInfo-login-text {
+  color: white;
+  font-weight: bold;
 }

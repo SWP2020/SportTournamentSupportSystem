@@ -6,6 +6,7 @@
   position: fixed;
   width: 100%;
   z-index: 100000;
+  align-items: center;
 }
 
 .Logo-container {
@@ -13,6 +14,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 50px;
 }
 
 .Option-container {
@@ -25,12 +27,19 @@
 .SearchBar-container {
   flex: 4;
   display: flex;
-  justify-content: center;
   align-items: center;
+  padding-right: 10px;
+}
+
+.UserOption-avatar-image {
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+  border: 2px solid white;
 }
 
 .Right-container {
-  flex: 2;
+  flex: 3;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -45,7 +54,7 @@
 .Option-container :hover {
   background-color: black;
   cursor: pointer;
-  font-weight: bold;
+  color: #ff7324;
 }
 
 .Link-text {
@@ -56,7 +65,6 @@
 
 .Link-text-no-hover {
   color: white;
-  text-decoration: underline;
   margin-right: 15px;
 }
 
@@ -65,7 +73,7 @@
   font-weight: bold;
 }
 
-.Button-container {
+.SignUp-Button-container {
   background-color: orange;
   border-radius: 15px;
   height: 30px;
@@ -76,16 +84,14 @@
   align-items: center;
 }
 
-.Button-container :hover {
+.SignUp-Button-container :hover {
   cursor: pointer;
 }
 
 .UserOption-container {
   display: flex;
-  justify-content: center;
   align-items: center;
   flex-direction: row;
-  padding-right: 20px;
 }
 
 .UserOption-name-text {
@@ -95,6 +101,9 @@
 
 .UserOption-avatar-container {
   width: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .UserOption-dropdown-container {
@@ -124,4 +133,29 @@
 .Right-container-hover :hover {
   cursor: pointer;
   background-color: black;
+}
+
+.Select1 {
+  width: 175px;
+}
+
+.Header-text-input {
+  height: 30px;
+  margin-left: 10px;
+  flex: 1;
+}
+
+.Header-icon {
+  color: white;
+  width: 30px;
+}
+
+.Header-icon-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.Header-icon-container :hover {
+  cursor: pointer;
 }

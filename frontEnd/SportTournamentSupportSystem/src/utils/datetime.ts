@@ -30,7 +30,7 @@ export function formatTimeToDisplay(
 export function formatDateToDisplay(stringInput?: string, formatOutput = 'dd/MM/yyyy', formatInput = 'yyyyMMdd') {
   try {
     if (!stringInput) {
-      return null;
+      return '';
     }
     let time = dateFns.parse(stringInput, formatInput, new Date());
     // time = dateFns.addHours(time, 7);

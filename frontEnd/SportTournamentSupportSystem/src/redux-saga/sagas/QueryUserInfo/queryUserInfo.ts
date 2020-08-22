@@ -5,7 +5,7 @@ import { COMMON_SHOW_NOTIFICATION, QUERY_USER_INFO } from 'redux-saga/actions';
 
 
 const queryUserInfo = (data: IParams, path: string | number, param: IParams) => {
-  const uri = 'users';
+  const uri = 'user';
   const datas = { ...data };
   const paths = path;
   const params = { ...param };
@@ -16,13 +16,13 @@ function* doQueryUserInfo(request: IRequest<IBigRequest>) {
   try {
     const response = yield call(queryUserInfo, request.data.data, request.data.path, request.data.param);
     const data = response.data.result;
-    if (response.data.error.messageCode === 0) {
+    if (response.data.error.MessageCode === 0) {
       yield put({
         type: request.response.success,
-        payload: data.User,
+        payload: { User: data.User, Config: response.data.config.Global },
       });
     } else {
-      throw new Error(response.data.error.message);
+      throw new Error(response.data.error.Message);
     }
   } catch (error) {
     yield put({

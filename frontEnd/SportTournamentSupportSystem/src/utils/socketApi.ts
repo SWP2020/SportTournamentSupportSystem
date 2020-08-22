@@ -1,5 +1,8 @@
 import axios from 'axios';
 import { IParams, IResponse } from "interfaces/common";
+import { cookies } from './cookies';
+import config from 'config';
+import { COOKIES_TYPE } from 'global';
 
 export enum METHOD {
   GET = 'get',
@@ -15,13 +18,16 @@ export async function query<T>(
   params: IParams = {},
   path: string | number,
 ) {
-  const baseUrl = 'http://192.168.43.170:8090/';
+  const baseUrl = config.apiUrl.baseURI;
   const realUrl = `${baseUrl}${uri}`;
 
   return new Promise<IResponse<T>>((resolve: Function, reject: Function) => {
     switch (method) {
       case METHOD.POST: {
-        axios.post(`${realUrl}${path !== '' ? `/${path}` : ''}`, null, { params, data })
+        axios.post(`${realUrl}${path !== '' ? `/${path}` : ''}`, null, {
+          params, data, headers: {
+            "Authorization": cookies.get(COOKIES_TYPE.AUTH_TOKEN) != null ? cookies.get(COOKIES_TYPE.AUTH_TOKEN).Authentication : null,
+          } })
           .then((response) => {
             console.log('response1', response);
             resolve(response);
@@ -32,12 +38,26 @@ export async function query<T>(
         break;
       }
       case METHOD.PUT: {
-
+        axios.put(`${realUrl}${path !== '' ? `/${path}` : ''}`, null, {
+          params, data, headers: {
+            "Authorization": cookies.get(COOKIES_TYPE.AUTH_TOKEN) != null ? cookies.get(COOKIES_TYPE.AUTH_TOKEN).Authentication : null,
+          }
+        })
+          .then((response) => {
+            console.log('response1', response);
+            resolve(response);
+          }).catch((error) => {
+            console.log('error1', error);
+            reject(error);
+          });
         break;
       }
       case METHOD.GET: {
-        axios.get(`${realUrl}${path !== '' ? `/${path}` : ''}`, { params, data })
-          // axios.get(`${realUrl}/${params.id}`)
+        axios.get(`${realUrl}${path !== '' ? `/${path}` : ''}`, {
+          params, data, headers: {
+            "Authorization": cookies.get(COOKIES_TYPE.AUTH_TOKEN) != null ? cookies.get(COOKIES_TYPE.AUTH_TOKEN).Authentication : null,
+          }
+        })
           .then((response) => {
             console.log('response1', response);
             resolve(response);

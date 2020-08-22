@@ -64,3 +64,25 @@
   margin-top: 15px;
   margin-bottom: 15px;
 }
+
+.CreateNewTournament-button-container {
+  background-color: #ff7324;
+  margin-top: 25px;
+  border-radius: 10px;
+}
+
+.CreateNewTournament-button-container :hover {
+  cursor: pointer;
+}
+
+.CreateNewTournament-button {
+  height: 50px;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
+.CreateNewTournament-button-text {
+  color: white;
+  font-weight: bold;
+}

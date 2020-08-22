@@ -1,6 +1,6 @@
 .BracketSchedule-container {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   color: white;
   justify-content: center;
   align-items: center;
@@ -8,6 +8,8 @@
 
 .BracketSchedule-round-container {
   width: 1000px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 .BracketSchedule-roundName-container {
@@ -22,6 +24,8 @@
   height: 100px;
   display: flex;
   flex-direction: row;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 .BracketSchedule-roundMatch-time-container {

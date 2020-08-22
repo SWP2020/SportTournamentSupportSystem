@@ -41,7 +41,7 @@ export interface IConfig {
 
 let config: IConfig = {
   apiUrl: {
-    baseURI: '/api/v1/',
+    baseURI: 'http://192.168.1.119:8090/',
     tradeX: {},
     domain: {},
   },

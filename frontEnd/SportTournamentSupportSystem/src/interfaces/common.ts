@@ -8,10 +8,13 @@ export type TypeAny =
   | null
   | string
   | number
+  | FormData
   | boolean
   | string[]
   | number[]
+  | FileList
   | Date
+  | FormData
   | INotification
   | INotification[]
   | IBracketMatchInfo[]

@@ -1,9 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import TournamentListTeamItems from 'components/TournamentListTeamItems';
+import Teams from 'components/Teams';
 import './styles.css';
 
 interface ITournamentListTeamProps extends React.ClassAttributes<TournamentListTeam> {
+  id: number;
 }
 
 interface ITournamentListTeamState {
@@ -19,16 +20,7 @@ class TournamentListTeam extends React.Component<ITournamentListTeamProps, ITour
   render() {
     return (
       <div className="TournamentListTeam-container">
-        <TournamentListTeamItems />
-        <TournamentListTeamItems />
-        <TournamentListTeamItems />
-        <TournamentListTeamItems />
-        <TournamentListTeamItems />
-        <TournamentListTeamItems />
-        <TournamentListTeamItems />
-        <TournamentListTeamItems />
-        <TournamentListTeamItems />
-        <TournamentListTeamItems />
+        {/* <Teams id={this.props.id} type={'competition'} /> */}
       </div>
     );
   }

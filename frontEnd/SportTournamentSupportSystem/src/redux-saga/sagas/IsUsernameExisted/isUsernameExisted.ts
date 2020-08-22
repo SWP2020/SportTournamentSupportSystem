@@ -5,7 +5,7 @@ import { CHECK_USERNAME_EXISTED } from 'redux-saga/actions';
 
 
 const isUsernameExisted = (data: IParams, path: string | number, param: IParams) => {
-  const uri = 'users';
+  const uri = 'user/getByUsername';
   const datas = { ...data };
   const paths = path;
   const params = { ...param };

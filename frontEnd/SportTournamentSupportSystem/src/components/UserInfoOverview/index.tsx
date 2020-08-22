@@ -35,7 +35,7 @@ class UserInfoOverview extends React.Component<IUserInfoOverviewProps, IUserInfo
           </div>
           <div className="UserInfoOverview-overview-info-item">
             <p className="UserInfoOverview-number-text">2</p>
-            <p>Số trận đã thi đấu</p>
+            <p>Số lượt comment</p>
           </div>
         </div>
         <p className="UserInfoOverview-header-text">Tổng quan thứ hạng</p>

@@ -1,13 +1,17 @@
 import React, { ReactNode } from 'react';
 import { connect } from 'react-redux';
-import 'react-tabs/style/react-tabs.css';
-import './styles.css';
 import { Tabs, TabList, Tab, TabPanel } from 'react-tabs';
+import 'react-tabs/style/react-tabs.css';
+import { onEditBracketMode, deleteListSelectingTeam } from 'components/BracketTeam/actions';
+import './styles.css';
 
 interface ICustomTabProps extends React.ClassAttributes<CustomTab> {
   tabList: string[];
   componentList: ReactNode[];
   selectedIndex: number;
+
+  onEditBracketMode(status: boolean): void;
+  deleteListSelectingTeam(): void;
 }
 
 interface IModalState {
@@ -22,7 +26,10 @@ class CustomTab extends React.Component<ICustomTabProps, IModalState> {
 
   render() {
     return (
-      <Tabs defaultIndex={this.props.selectedIndex}>
+      <Tabs defaultIndex={this.props.selectedIndex} onSelect={() => {
+        this.props.onEditBracketMode(false);
+        this.props.deleteListSelectingTeam();
+      }}>
         <TabList>
           {this.props.tabList.map((item, index) => {
             return (<Tab key={index}>{item}</Tab>);
@@ -38,5 +45,5 @@ class CustomTab extends React.Component<ICustomTabProps, IModalState> {
 
 export default connect(
   null,
-  null
+  { onEditBracketMode, deleteListSelectingTeam }
 )(CustomTab);

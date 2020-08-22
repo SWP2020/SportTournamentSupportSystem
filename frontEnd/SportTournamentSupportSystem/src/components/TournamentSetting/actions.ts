@@ -1,20 +1,16 @@
 import { IBigRequest } from "interfaces/common";
-import { CHECK_USERNAME_EXISTED } from "redux-saga/actions";
-import { CHECK_USERNAME_EXISTED_SUCCESS, CHECK_USERNAME_EXISTED_FAILED, CHECK_USERNAME_EXISTED_DEFAULT } from "./reducers";
+import { EDIT_TOURNAMENT_INFO } from "redux-saga/actions";
+import { EDIT_TOURNAMENT_INFO_SUCCESS, EDIT_TOURNAMENT_INFO_FAILED } from "./reducers";
 
-export const checkUsernameExisted = (data: IBigRequest) => ({
-  type: CHECK_USERNAME_EXISTED,
+export const editTournamentInfo = (data: IBigRequest) => ({
+  type: EDIT_TOURNAMENT_INFO,
   response: {
-    success: CHECK_USERNAME_EXISTED_SUCCESS,
-    failed: CHECK_USERNAME_EXISTED_FAILED,
+    success: EDIT_TOURNAMENT_INFO_SUCCESS,
+    failed: EDIT_TOURNAMENT_INFO_FAILED,
   },
   data: {
     path: data.path,
     param: data.param,
     data: data.data,
   },
-});
-
-export const setUsernameExistedDefault = () => ({
-  type: CHECK_USERNAME_EXISTED_DEFAULT,
 });

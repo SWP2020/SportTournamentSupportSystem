@@ -5,7 +5,7 @@ import { COMMON_SHOW_NOTIFICATION, QUERY_TOURNAMENT_INFO } from 'redux-saga/acti
 
 
 const queryTournamentInfo = (data: IParams, path: string | number, param: IParams) => {
-  const uri = 'tournaments/getOne';
+  const uri = 'tournament';
   const datas = { ...data };
   const paths = path;
   const params = { ...param };
@@ -16,13 +16,13 @@ function* doQueryTournamentInfo(request: IRequest<IBigRequest>) {
   try {
     const response = yield call(queryTournamentInfo, request.data.data, request.data.path, request.data.param);
     const data = response.data.result;
-    if (response.data.error.messageCode === 0) {
+    if (response.data.error.MessageCode === 0) {
       yield put({
         type: request.response.success,
-        payload: data.tournament,
+        payload: { Tournament: data.Tournament, Config: response.data.config.Global },
       });
     } else {
-      throw new Error(response.data.error.message);
+      throw new Error(response.data.error.Message);
     }
   } catch (error) {
     yield put({

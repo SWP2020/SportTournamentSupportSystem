@@ -8,6 +8,7 @@ interface ICustomModalProps extends React.ClassAttributes<CustomModal> {
   children?: ReactNode;
   showModal: boolean;
   customStyles: Styles;
+  confirmButtonVisible?: boolean;
 
   handleCloseModal(): void;
   handleConfirmModal(): void;
@@ -43,11 +44,11 @@ class CustomModal extends React.Component<ICustomModalProps, IModalState> {
         <div className="Modal-content-container">
         {this.props.children}
         </div>
-        <div className="Modal-button-container">
+        {this.props.confirmButtonVisible !== false && <div className="Modal-button-container">
           <div className="Modal-button" onClick={this.handleConfirmModal}>
             <p>Confirm</p>
           </div>
-        </div>
+        </div>}
       </Modal>
     );
   }

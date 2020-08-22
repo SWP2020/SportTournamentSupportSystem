@@ -1,6 +1,7 @@
 .TournamentSetting-container {
   color: white;
   display: flex;
+  flex-direction: column;
 }
 
 .TournamentSetting-tournament-container {
@@ -16,6 +17,10 @@
 .TournamentSetting-listManager-container {
   display: flex;
   flex-direction: row;
+}
+
+.TournamentSetting-listManager-container1 {
+  align-items: center;
 }
 
 .TournamentSetting-checkBox-container {
@@ -55,4 +60,29 @@
   width: 100%;
   position: absolute;
   height: 600px;
+}
+
+.TournamentSetting-button-container {
+  margin-top: 25px;
+  justify-content: center;
+  display: flex;
+}
+
+.TournamentSetting-button-container :hover {
+  cursor: pointer;
+}
+
+.TournamentSetting-button {
+  border-radius: 10px;
+  background-color: #ff7324;
+  width: 10rem;
+  height: 50px;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
+.TournamentSetting-button-text {
+  color: white;
+  font-weight: bold;
 }

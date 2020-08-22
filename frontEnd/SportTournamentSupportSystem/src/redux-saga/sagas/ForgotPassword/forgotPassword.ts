@@ -15,13 +15,13 @@ function* doForgotPassword(request: IRequest<IBigRequest>) {
   try {
     const response = yield call(forgotPassword, request.data.data, request.data.path, request.data.param);
     const data = response.data.result;
-    if (response.data.error.messageCode === 0) {
+    if (response.data.error.MessageCode === 0) {
       yield put({
         type: request.response.success,
         payload: data,
       });
     } else {
-      throw new Error(response.data.error.message);
+      throw new Error(response.data.error.Message);
     }
   } catch (error) {
     yield put({

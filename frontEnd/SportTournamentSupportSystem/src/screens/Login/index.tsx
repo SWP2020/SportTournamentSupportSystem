@@ -6,8 +6,8 @@ import TextInput from 'components/TextInput';
 import { IBigRequest } from 'interfaces/common';
 import { IState } from 'redux-saga/reducers';
 import { LOGIN } from 'redux-saga/actions';
+import { LOGIN_SUCCESS, LOGIN_FAILED } from 'screens/Login/reducers';
 import { login } from './actions';
-import { LOGIN_SUCCESS, LOGIN_FAILED } from './reducers';
 import './styles.css';
 
 interface ILoginProps extends React.ClassAttributes<Login> {
@@ -16,6 +16,7 @@ interface ILoginProps extends React.ClassAttributes<Login> {
 
 interface ILoginState {
   username: string;
+  rememberMe: boolean;
   password: string;
   usernameError: boolean;
   passwordError: boolean;
@@ -32,6 +33,7 @@ class Login extends React.Component<ILoginProps, ILoginState> {
       usernameError: false,
       usernameErrorContent: '',
       passwordError: false,
+      rememberMe: false,
       passwordErrorContent: '',
     };
   }
@@ -42,6 +44,10 @@ class Login extends React.Component<ILoginProps, ILoginState> {
 
   private onChangePassword = (value: string) => {
     this.setState({ password: value, });
+  }
+
+  private onChangeRememberMe = (value: string) => {
+    this.setState({ rememberMe: !this.state.rememberMe, });
   }
 
   private validate = () => {
@@ -78,6 +84,7 @@ class Login extends React.Component<ILoginProps, ILoginState> {
       data: {
         username: this.state.username,
         password: this.state.password,
+        rememberMe: this.state.rememberMe,
       },
     };
 
@@ -86,12 +93,12 @@ class Login extends React.Component<ILoginProps, ILoginState> {
 
   render() {
     return (
-      <div className="Container-login">
-        <ReduxBlockUi
-          tag="div"
-          block={LOGIN}
-          unblock={[LOGIN_SUCCESS, LOGIN_FAILED]}
-        >
+      <ReduxBlockUi
+        tag="div"
+        block={LOGIN}
+        unblock={[LOGIN_SUCCESS, LOGIN_FAILED]}
+      >
+        <div className="Container-login">
           <div className="Container-login-middle">
             <h2>Đăng nhập</h2>
             <p className="Long-introduction">Chào mừng! Vui lòng nhập thông tin đăng nhập của bạn hoặc đăng nhập bằng tài khoản mạng xã hội</p>
@@ -107,7 +114,11 @@ class Login extends React.Component<ILoginProps, ILoginState> {
             <div className="Login-option-container">
               <div className="Login-option-container-item">
                 <label className="Checkbox-label">
-                  <input type="checkbox" />
+                  <input
+                    type="checkbox"
+                    checked={this.state.rememberMe}
+                    onChange={() => this.onChangeRememberMe}
+                  />
             Nhớ tài khoản trên thiết bị này
           </label>
               </div>
@@ -124,8 +135,8 @@ class Login extends React.Component<ILoginProps, ILoginState> {
             </div>
 
           </div>
-        </ReduxBlockUi>
-      </div>
+        </div>
+      </ReduxBlockUi>
     );
   }
 }

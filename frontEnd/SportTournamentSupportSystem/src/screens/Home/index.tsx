@@ -21,17 +21,7 @@ class Home extends React.Component<IHomeProps, IHomeState> {
       <div className="Container-login">
         <div className="Container-login-middle">
           <h1>Quản lý giải đấu đơn giản</h1>
-          <BracketBoard />
-          {/* <MultiGrid
-            width={400}
-            height={250}
-            rowCount={5}
-            colCount={5}
-            rowHeight={50}
-            columnCount={5}
-            columnWidth={80}
-            cellRenderer={() => { return <div><p>A</p></div>; }}
-          /> */}
+          {/* <BracketBoard /> */}
         </div>
       </div>
     );
