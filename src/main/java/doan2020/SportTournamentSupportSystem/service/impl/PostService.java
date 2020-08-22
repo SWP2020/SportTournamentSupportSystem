@@ -1,3 +1,4 @@
+
 package doan2020.SportTournamentSupportSystem.service.impl;
 
 import java.util.Collection;
@@ -10,7 +11,6 @@ import doan2020.SportTournamentSupportSystem.entity.PostEntity;
 import doan2020.SportTournamentSupportSystem.repository.PostRepository;
 import doan2020.SportTournamentSupportSystem.service.IPostService;
 
-
 @Service
 public class PostService implements IPostService {
 
@@ -18,53 +18,107 @@ public class PostService implements IPostService {
 	private PostRepository postRepository;
 
 	@Override
-	public void addOne(PostEntity entity) {
-		
-		postRepository.save(entity);
-
-	}
-
-	@Override
-	public void addMany(Collection<PostEntity> list) {
-		for (PostEntity entity : list)
-			postRepository.save(entity);
-
-	}
-
-	@Override
-	public PostEntity findById(Long id) {
-		PostEntity res = null;
+	public PostEntity create(PostEntity postEntity) {
+		PostEntity newEntity = null;
 		try {
-			res = postRepository.findOneById(id);
+			newEntity = postRepository.save(postEntity);
 		} catch (Exception e) {
 			return null;
 		}
-		
-		return res;
+		return newEntity;
+	}
+
+	@Override
+	public PostEntity update(Long id, PostEntity newEntity) {
+		PostEntity updatedEntity = null;
+		try {
+			updatedEntity = postRepository.findOneById(id);
+
+			updatedEntity.setTitle(newEntity.getTitle());
+			updatedEntity.setCreator(newEntity.getCreator());
+			updatedEntity.setTournament(newEntity.getTournament());
+			updatedEntity.setSystemPost(newEntity.getSystemPost());
+			updatedEntity.setContent(newEntity.getContent());
+			updatedEntity.setCreatedBy(newEntity.getCreatedBy());
+			updatedEntity.setCreatedDate(newEntity.getCreatedDate());
+			updatedEntity.setModifiedBy(newEntity.getModifiedBy());
+			updatedEntity.setModifiedDate(newEntity.getModifiedDate());
+			updatedEntity.setStatus(newEntity.getStatus());
+			updatedEntity.setUrl(newEntity.getUrl());
+			updatedEntity = postRepository.save(updatedEntity);
+		} catch (Exception e) {
+			return null;
+		}
+        
+		return updatedEntity;
+	}
+
+	@Override
+	public PostEntity delete(Long id) {
+		PostEntity deletedEntity = null;
+		try {
+			deletedEntity = postRepository.findOneById(id);
+			deletedEntity.setStatus("deleted");
+			deletedEntity = postRepository.save(deletedEntity);
+		} catch (Exception e) {
+			return null;
+		}
+		return deletedEntity;
+	}
+
+	@Override
+	public PostEntity findOneById(Long id) {
+		PostEntity foundEntity = null;
+		try {
+			foundEntity = postRepository.findOneById(id);
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntity;
 	}
 
 	@Override
 	public Collection<PostEntity> findAll(Pageable pageable) {
-		
-		return postRepository.findAll(pageable).getContent();
+		Collection<PostEntity> foundEntitys = null;
+		try {
+			foundEntitys = postRepository.findAll(pageable).getContent();
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntitys;
 	}
 
 	@Override
-	public PostEntity update(Long id, PostEntity entity) {
-		
-		PostEntity old = postRepository.findOneById(id);
-
-		old.setTitle(entity.getTitle());
-		old.setContent(entity.getContent());
-		old.setTournament(entity.getTournament());
-		old.setAuthor(entity.getAuthor());
-		old = postRepository.save(old);
-		return old;
+	public Collection<PostEntity> findAll() {
+		Collection<PostEntity> foundEntitys = null;
+		try {
+			foundEntitys = postRepository.findAll();
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntitys;
 	}
 
 	@Override
-	public Collection<PostEntity> findByTournamentId(Long tournamentId, Pageable pageable) {
-		// TODO Auto-generated method stub
-		return (Collection<PostEntity>) postRepository.findByTournamentId(tournamentId, pageable).getContent();
+	public Collection<PostEntity> findByTournamentId(Pageable pageable, Long tournamentId) {
+		Collection<PostEntity> foundEntitys = null;
+		try {
+			foundEntitys = postRepository.findByTournamentId(pageable, tournamentId).getContent();
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntitys;
 	}
+
+	@Override
+	public Collection<PostEntity> findByUserId(Pageable pageable, Long UserId) {
+		Collection<PostEntity> foundEntitys = null;
+		try {
+			foundEntitys = postRepository.findByCreatorId(pageable, UserId).getContent();
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntitys;
+	}
+
 }

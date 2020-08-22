@@ -1,6 +1,7 @@
+
 package doan2020.SportTournamentSupportSystem.service;
 
-import java.util.List;
+import java.util.Collection;
 
 import org.springframework.data.domain.Pageable;
 
@@ -10,13 +11,31 @@ public interface IUserService {
 	
 	public UserEntity findOneById(Long id);
 	
-	public List<UserEntity> findAll(Pageable pageable);
+	public Collection<UserEntity> findAll(Pageable pageable);
 	
-	public void addNewUsers(UserEntity userEntity);
+	public UserEntity create(UserEntity userEntity);
 	
-	public void editUser(UserEntity userEntity);
+	public UserEntity update(Long id, UserEntity newEntity);
 	
-	public List<UserEntity> findAll();
+	public UserEntity updateAvatar(Long id, UserEntity newEntity);
 	
-	public void deleteUser(UserEntity userEntity);
+	public UserEntity updateBackGround(Long id, UserEntity newEntity);
+	
+	public Collection<UserEntity> findAll();
+	
+	public UserEntity delete(Long id);
+	
+	public UserEntity findByUsername(String username);
+	
+	public UserEntity findByEmail(String email);
+	
+	public Collection<UserEntity> findBySearchString(Pageable pageable, String searchString);
+	
+	public Long countBySearchString(String searchString);
+	
+	public Long countAll();
+
+	public Collection<UserEntity> findByRoleId(Pageable pageable, Long roleId);
+	
+	public int countByRoleId(Long roleId);
 }

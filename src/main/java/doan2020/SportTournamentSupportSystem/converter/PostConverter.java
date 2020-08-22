@@ -1,11 +1,9 @@
 package doan2020.SportTournamentSupportSystem.converter;
 
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import doan2020.SportTournamentSupportSystem.dtOut.PostDtOut;
+import doan2020.SportTournamentSupportSystem.dto.PostDTO;
 import doan2020.SportTournamentSupportSystem.entity.PostEntity;
 import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
 import doan2020.SportTournamentSupportSystem.entity.UserEntity;
@@ -13,51 +11,67 @@ import doan2020.SportTournamentSupportSystem.service.ITournamentService;
 import doan2020.SportTournamentSupportSystem.service.IUserService;
 
 @Component
-public class PostConverter{
-	
-	@Autowired
-	ITournamentService tournamentService;
-	
+public class PostConverter {
+
 	@Autowired
 	IUserService userService;
-	
-	public PostEntity toEntity(Map<String, Object> map) throws Exception{
+
+	@Autowired
+	ITournamentService tournamentService;
+
+	public PostEntity toEntity(PostDTO dto) {
+		System.out.println("PostConverter: toDTO: finish");
 		PostEntity entity = new PostEntity();
-		System.out.println("In toEntity:");
 		try {
-			entity.setTitle((String) map.get("title"));
-			
-			entity.setContent((String) map.get("content"));
-			
-			Long tournament_id = Long.parseLong(String.valueOf(map.get("tournamentId")));
-			TournamentEntity tournament = tournamentService.findOneById(tournament_id);
-			entity.setTournament(tournament);
-			
-			Long author_id = Long.parseLong(String.valueOf(map.get("authorId")));
-			UserEntity author = userService.findOneById(author_id);
-			entity.setAuthor(author);
-		}catch (Exception e) {
-			System.out.println("Has Exception");
-			throw e;
-		}
-		System.out.println("Out toEntity with no Exception");
-		return entity;
-	}
+			if(dto.getCreatorId() != null) {
+			UserEntity userEntity = userService.findOneById(dto.getCreatorId());
+			entity.setCreator(userEntity);
 
-	public PostDtOut toDTO(PostEntity entity) throws Exception {
-		
-		PostDtOut dto = new PostDtOut();
-		try {
-			dto.setId(entity.getId());
-			dto.setTitle(entity.getTitle());
-			dto.setContent(entity.getContent());
-			dto.setTournamentId(entity.getTournament().getId());
-			dto.setAuthorId(entity.getAuthor().getId());
+			}
+			entity.setContent(dto.getContent());
+			entity.setStatus(dto.getStatus());
+			entity.setSystemPost(dto.getSystemPost());
+			entity.setTitle(dto.getTitle());
+			if (dto.getTournamentId() != null) {
+				TournamentEntity tournamentEntity = tournamentService.findOneById(dto.getTournamentId());
+				entity.setTournament(tournamentEntity);
+			}
+			entity.setUrl(dto.getUrl());
+
+			System.out.println("PostConverter: toDTO: no exception");
 		} catch (Exception e) {
-			throw e;
+			System.out.println("PostConverter: toDTO: has exception");
+			return null;
 		}
-		
-		return dto;
+
+		System.out.println("PostConverter: toDTO: finish");
+		return entity;
+
 	}
 
+	public PostDTO toDTO(PostEntity entity) {
+		System.out.println("PostConverter: toDTO: finish");
+		PostDTO dto = new PostDTO();
+		try {
+
+			dto.setCreatorId(entity.getCreator().getId());
+
+			dto.setContent(entity.getContent());
+			dto.setId(entity.getId());
+			dto.setStatus(entity.getStatus());
+			dto.setSystemPost(entity.getSystemPost());
+			dto.setTitle(entity.getTitle());
+			dto.setTournamentId(entity.getTournament().getId());
+			dto.setUrl(entity.getUrl());
+
+			System.out.println("PostConverter: toDTO: no exception");
+		} catch (Exception e) {
+			System.out.println("PostConverter: toDTO: has exception");
+			return null;
+		}
+
+		System.out.println("PostConverter: toDTO: finish");
+		return dto;
+
+	}
 }

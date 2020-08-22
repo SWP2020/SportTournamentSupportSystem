@@ -35,75 +35,95 @@ public class CommentEntity{
 	
 	private Date modifiedDate;
 	
+	private String status;
+	
+	private String url;
+	
 
 	@ManyToOne
-	@JoinColumn(name = "authorId")
-	private UserEntity author;
+	@JoinColumn(name = "creatorId")
+	private UserEntity creator;
 	
 	@ManyToOne
 	@JoinColumn(name = "postId")
 	private PostEntity post;
 	
 
-	public Long getId() {
-		return id;
-	}
-	
-	public String getContent() {
-		return content;
-	}
-	
-	public void setContent(String content) {
-		this.content = content;
-	}
-	
-	public String getCreatedby() {
-		return createdBy;
-	}
-	
-	public void setCreatedby(String createdBy) {
-		this.createdBy = createdBy;
-	}
-	
-	public Date getCreateddate() {
-		return createdDate;
-	}
-	
-	public void setCreateddate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
-	
-	public String getModifiedby() {
-		return modifiedBy;
-	}
-	
-	public void setModifiedby(String modifiedBy) {
-		this.modifiedBy = modifiedBy;
-	}
-	
-	public Date getModifieddate() {
-		return modifiedDate;
-	}
-	
-	public void setModifieddate(Date modifiedDate) {
-		this.modifiedDate = modifiedDate;
-	}
-	
-	public UserEntity getAuthor() {
-		return author;
-	}
-	
-	public void setAuthor(UserEntity author) {
-		this.author = author;
-	}
-	
-	public PostEntity getPost() {
-		return post;
-	}
-	
-	public void setPost(PostEntity post) {
-		this.post = post;
-	}
-	
+public Long getId() {
+	return id;
+}
+
+public String getContent() {
+	return content;
+}
+
+public void setContent(String content) {
+	this.content = content;
+}
+
+public String getCreatedBy() {
+	return createdBy;
+}
+
+public void setCreatedBy(String createdBy) {
+	this.createdBy = createdBy;
+}
+
+public Date getCreatedDate() {
+	return createdDate;
+}
+
+public void setCreatedDate(Date createdDate) {
+	this.createdDate = createdDate;
+}
+
+public String getModifiedBy() {
+	return modifiedBy;
+}
+
+public void setModifiedBy(String modifiedBy) {
+	this.modifiedBy = modifiedBy;
+}
+
+public Date getModifiedDate() {
+	return modifiedDate;
+}
+
+public void setModifiedDate(Date modifiedDate) {
+	this.modifiedDate = modifiedDate;
+}
+
+public String getStatus() {
+	return status;
+}
+
+public void setStatus(String status) {
+	this.status = status;
+}
+
+public String getUrl() {
+	return url;
+}
+
+public void setUrl(String url) {
+	this.url = url;
+}
+
+public UserEntity getCreator() {
+	return creator;
+}
+
+public void setCreator(UserEntity creator) {
+	this.creator = creator;
+}
+
+public PostEntity getPost() {
+	return post;
+}
+
+public void setPost(PostEntity post) {
+	this.post = post;
+}
+
 
 }

@@ -25,9 +25,9 @@ public class ReportEntity{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	private String content;
+	private String subject;
 	
-	private String link;
+	private String content;
 	
 	private String createdBy;
 	
@@ -37,83 +37,103 @@ public class ReportEntity{
 	
 	private Date modifiedDate;
 	
+	private String status;
+	
+	private String url;
+	
 
 	@ManyToOne
 	@JoinColumn(name = "senderId")
 	private UserEntity sender;
 	
 	@ManyToOne
-	@JoinColumn(name = "receiverId")
-	private UserEntity receiver;
+	@JoinColumn(name = "tournamentId")
+	private TournamentEntity tournament;
 	
 
-	public Long getId() {
-		return id;
-	}
-	
-	public String getContent() {
-		return content;
-	}
-	
-	public void setContent(String content) {
-		this.content = content;
-	}
-	
-	public String getLink() {
-		return link;
-	}
-	
-	public void setLink(String link) {
-		this.link = link;
-	}
-	
-	public String getCreatedby() {
-		return createdBy;
-	}
-	
-	public void setCreatedby(String createdBy) {
-		this.createdBy = createdBy;
-	}
-	
-	public Date getCreateddate() {
-		return createdDate;
-	}
-	
-	public void setCreateddate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
-	
-	public String getModifiedby() {
-		return modifiedBy;
-	}
-	
-	public void setModifiedby(String modifiedBy) {
-		this.modifiedBy = modifiedBy;
-	}
-	
-	public Date getModifieddate() {
-		return modifiedDate;
-	}
-	
-	public void setModifieddate(Date modifiedDate) {
-		this.modifiedDate = modifiedDate;
-	}
-	
-	public UserEntity getSender() {
-		return sender;
-	}
-	
-	public void setSender(UserEntity sender) {
-		this.sender = sender;
-	}
-	
-	public UserEntity getReceiver() {
-		return receiver;
-	}
-	
-	public void setReceiver(UserEntity receiver) {
-		this.receiver = receiver;
-	}
-	
+public Long getId() {
+	return id;
+}
+
+public String getSubject() {
+	return subject;
+}
+
+public void setSubject(String subject) {
+	this.subject = subject;
+}
+
+public String getContent() {
+	return content;
+}
+
+public void setContent(String content) {
+	this.content = content;
+}
+
+public String getCreatedBy() {
+	return createdBy;
+}
+
+public void setCreatedBy(String createdBy) {
+	this.createdBy = createdBy;
+}
+
+public Date getCreatedDate() {
+	return createdDate;
+}
+
+public void setCreatedDate(Date createdDate) {
+	this.createdDate = createdDate;
+}
+
+public String getModifiedBy() {
+	return modifiedBy;
+}
+
+public void setModifiedBy(String modifiedBy) {
+	this.modifiedBy = modifiedBy;
+}
+
+public Date getModifiedDate() {
+	return modifiedDate;
+}
+
+public void setModifiedDate(Date modifiedDate) {
+	this.modifiedDate = modifiedDate;
+}
+
+public String getStatus() {
+	return status;
+}
+
+public void setStatus(String status) {
+	this.status = status;
+}
+
+public String getUrl() {
+	return url;
+}
+
+public void setUrl(String url) {
+	this.url = url;
+}
+
+public UserEntity getSender() {
+	return sender;
+}
+
+public void setSender(UserEntity sender) {
+	this.sender = sender;
+}
+
+public TournamentEntity getTournament() {
+	return tournament;
+}
+
+public void setTournament(TournamentEntity tournament) {
+	this.tournament = tournament;
+}
+
 
 }

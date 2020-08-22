@@ -43,6 +43,10 @@ public class RoleEntity{
 	
 	private Date modifiedDate;
 	
+	private String status;
+	
+	private String url;
+	
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(
@@ -56,73 +60,89 @@ public class RoleEntity{
 	private Collection<UserEntity> users;
 
 
-	public Long getId() {
-		return id;
-	}
-	
-	public String getName() {
-		return name;
-	}
-	
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-	public String getDescription() {
-		return description;
-	}
-	
-	public void setDescription(String description) {
-		this.description = description;
-	}
-	
-	public String getCreatedby() {
-		return createdBy;
-	}
-	
-	public void setCreatedby(String createdBy) {
-		this.createdBy = createdBy;
-	}
-	
-	public Date getCreateddate() {
-		return createdDate;
-	}
-	
-	public void setCreateddate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
-	
-	public String getModifiedby() {
-		return modifiedBy;
-	}
-	
-	public void setModifiedby(String modifiedBy) {
-		this.modifiedBy = modifiedBy;
-	}
-	
-	public Date getModifieddate() {
-		return modifiedDate;
-	}
-	
-	public void setModifieddate(Date modifiedDate) {
-		this.modifiedDate = modifiedDate;
-	}
-	
-	public Collection<ApiEntity> getApislist() {
-		return apisList;
-	}
-	
-	public void setApislist(Collection<ApiEntity> apisList) {
-		this.apisList = apisList;
-	}
-	
-	public Collection<UserEntity> getUsers() {
-		return users;
-	}
-	
-	public void setUsers(Collection<UserEntity> users) {
-		this.users = users;
-	}
-	
+public Long getId() {
+	return id;
+}
+
+public String getName() {
+	return name;
+}
+
+public void setName(String name) {
+	this.name = name;
+}
+
+public String getDescription() {
+	return description;
+}
+
+public void setDescription(String description) {
+	this.description = description;
+}
+
+public String getCreatedBy() {
+	return createdBy;
+}
+
+public void setCreatedBy(String createdBy) {
+	this.createdBy = createdBy;
+}
+
+public Date getCreatedDate() {
+	return createdDate;
+}
+
+public void setCreatedDate(Date createdDate) {
+	this.createdDate = createdDate;
+}
+
+public String getModifiedBy() {
+	return modifiedBy;
+}
+
+public void setModifiedBy(String modifiedBy) {
+	this.modifiedBy = modifiedBy;
+}
+
+public Date getModifiedDate() {
+	return modifiedDate;
+}
+
+public void setModifiedDate(Date modifiedDate) {
+	this.modifiedDate = modifiedDate;
+}
+
+public String getStatus() {
+	return status;
+}
+
+public void setStatus(String status) {
+	this.status = status;
+}
+
+public String getUrl() {
+	return url;
+}
+
+public void setUrl(String url) {
+	this.url = url;
+}
+
+public Collection<ApiEntity> getApisList() {
+	return apisList;
+}
+
+public void setApisList(Collection<ApiEntity> apisList) {
+	this.apisList = apisList;
+}
+
+public Collection<UserEntity> getUsers() {
+	return users;
+}
+
+public void setUsers(Collection<UserEntity> users) {
+	this.users = users;
+}
+
 
 }

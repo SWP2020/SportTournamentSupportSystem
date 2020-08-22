@@ -1,14 +1,9 @@
 package doan2020.SportTournamentSupportSystem.api;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -21,219 +16,70 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import doan2020.SportTournamentSupportSystem.converter.MatchConverter;
-import doan2020.SportTournamentSupportSystem.dtOut.MatchDtOut;
+import doan2020.SportTournamentSupportSystem.dto.MatchDTO;
 import doan2020.SportTournamentSupportSystem.entity.MatchEntity;
 import doan2020.SportTournamentSupportSystem.response.Response;
 import doan2020.SportTournamentSupportSystem.service.IMatchService;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/matches")
+@RequestMapping("/match")
 public class MatchAPI {
 	@Autowired
-	private IMatchService service;
-
-	@Autowired
 	private MatchConverter converter;
-
 	
-	/*
-	 * Tim kiem match theo paging by CompetitionId for schedule
-	 */
-	@GetMapping("/getAllPagingByCompetitionId")
-	public ResponseEntity<Response> getAllPagingByCompetitionId(@RequestParam(value = "page") Integer page, @RequestParam(value = "id") Long id) {
-		System.out.println("getPost");
+	@Autowired
+	private IMatchService service;
+	
+	
+	@GetMapping("")
+	public ResponseEntity<Response> getMatch(@RequestParam(value = "id", required = false) Long id) {
+		System.out.println("MatchAPI: getMatch: no exception");
 		HttpStatus httpStatus = HttpStatus.OK;
 		Response response = new Response();
 		Map<String, Object> config = new HashMap<String, Object>();
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
-		List<MatchDtOut> matchDtOuts = new ArrayList<MatchDtOut>();
-		List<MatchEntity> list = new ArrayList<MatchEntity>();
-//		System.out.println("2");
-
-		if (page == null || id == null) {
-			result.put("Match", null);
-			config.put("global", 0);
-			error.put("messageCode", 1);
-			error.put("message", "Required Match's page!");
-			httpStatus = HttpStatus.OK;
-			response.setConfig(config);
-			response.setResult(result);
-			response.setError(error);
-			return new ResponseEntity<Response>(response, httpStatus);
-		}
-
-		Sort sortable = Sort.by("id").ascending();
-		int limit = 3;
-		Pageable pageable = PageRequest.of(page - 1, limit, sortable);
-
-		list = (List<MatchEntity>) service.findAllByCompetitionId(id, pageable);
-
-		if (list.isEmpty()) {
-			result.put("Match", null);
-			config.put("global", 0);
-			error.put("messageCode", 1);
-			error.put("message", "Match is not exist");
-			response.setConfig(config);
-			response.setResult(result);
-			response.setError(error);
-			return new ResponseEntity<Response>(response, httpStatus);
-		}
-
+		MatchEntity matchEntity = new MatchEntity();
+		MatchDTO matchDTO = new MatchDTO();
 		try {
-			for (MatchEntity matchEntity : list) {
-
-				MatchDtOut resDTO = converter.toDTO(matchEntity);
-				matchDtOuts.add(resDTO);
+			if (id == null) { // id null
+				result.put("Match", null);
+				config.put("Global", 0);
+				error.put("MessageCode", 1);
+				error.put("Message", "Required param id");
+			} else { // id not null
 				
-			}
-
-			result.put("list Match", matchDtOuts);
-			config.put("global", 0);
-			error.put("messageCode", 0);
-			error.put("message", "Found");
-
-			System.out.println("true");
-
-		} catch (Exception e) {
-			result.put("Match", null);
-			config.put("global", 0);
-			error.put("messageCode", 1);
-			error.put("message", "Error to get list Match");
-			System.out.println(e.getMessage().toString());
-		}
-
-		response.setConfig(config);
-		response.setResult(result);
-		response.setError(error);
-
-		return new ResponseEntity<Response>(response, httpStatus);
-	}
-	
-	/*
-	 * Tim kiem match theo paging by CompetitionId for schedule
-	 */
-	@GetMapping("/getAllByCompetitionId")
-	public ResponseEntity<Response> getAllByCompetitionId(@RequestParam(value = "id") Long id) {
-		System.out.println("getPost");
-		HttpStatus httpStatus = HttpStatus.OK;
-		Response response = new Response();
-		Map<String, Object> config = new HashMap<String, Object>();
-		Map<String, Object> result = new HashMap<String, Object>();
-		Map<String, Object> error = new HashMap<String, Object>();
-		List<MatchDtOut> matchDtOuts = new ArrayList<MatchDtOut>();
-		List<MatchEntity> list = new ArrayList<MatchEntity>();
-//		System.out.println("2");
-
-		if (id == null) {
-			result.put("Match", null);
-			config.put("global", 0);
-			error.put("messageCode", 1);
-			error.put("message", "Required Match's page!");
-			httpStatus = HttpStatus.OK;
-			response.setConfig(config);
-			response.setResult(result);
-			response.setError(error);
-			return new ResponseEntity<Response>(response, httpStatus);
-		}
-
-//		Sort sortable = Sort.by("id").ascending();
-//		int limit = 3;
-//		Pageable pageable = PageRequest.of(page - 1, limit, sortable);
-
-		list = (List<MatchEntity>) service.findAllByCompetitionId(id);
-
-		if (list.isEmpty()) {
-			result.put("Match", null);
-			config.put("global", 0);
-			error.put("messageCode", 1);
-			error.put("message", "Match is not exist");
-			response.setConfig(config);
-			response.setResult(result);
-			response.setError(error);
-			return new ResponseEntity<Response>(response, httpStatus);
-		}
-
-		try {
-			for (MatchEntity matchEntity : list) {
-
-				MatchDtOut resDTO = converter.toDTO(matchEntity);
-				matchDtOuts.add(resDTO);
+				matchEntity = service.findOneById(id);
 				
+				if (matchEntity == null) { // not found
+					result.put("Match", null);
+					config.put("Global", 0);
+					error.put("MessageCode", 1);
+					error.put("Message", "Not found");
+				} else { // found
+					
+					matchDTO = converter.toDTO(matchEntity);
+					
+					result.put("Match", matchDTO);
+					config.put("Global", 0);
+					error.put("MessageCode", 0);
+					error.put("Message", "Found");
+				}
 			}
-
-			result.put("list Match", matchDtOuts);
-			config.put("global", 0);
-			error.put("messageCode", 0);
-			error.put("message", "Found");
-
-			System.out.println("true");
-
+			System.out.println("MatchAPI: getMatch: no exception");
 		} catch (Exception e) {
+			System.out.println("MatchAPI: getMatch: has exception");
 			result.put("Match", null);
-			config.put("global", 0);
-			error.put("messageCode", 1);
-			error.put("message", "Error to get list Match");
-			System.out.println(e.getMessage().toString());
+			config.put("Global", 0);
+			error.put("MessageCode", 1);
+			error.put("Message", "Server error");
 		}
 
 		response.setConfig(config);
 		response.setResult(result);
 		response.setError(error);
-
-		return new ResponseEntity<Response>(response, httpStatus);
-	}
-	
-	/*
-	 * Get match theo id
-	 */
-	@GetMapping("/getOne")
-	public ResponseEntity<Response> getMatch(@RequestParam(value = "id", required = true) Long id) {
-		System.out.println("getMatch");
-		HttpStatus httpStatus = HttpStatus.OK;
-		Response response = new Response();
-		Map<String, Object> config = new HashMap<String, Object>();
-		Map<String, Object> result = new HashMap<String, Object>();
-		Map<String, Object> error = new HashMap<String, Object>();
-//		System.out.println("2");
-
-		if (id == null) {
-			result.put("match", null);
-			config.put("global", 0);
-			error.put("messageCode", 1);
-			error.put("message", "Required Match id");
-			httpStatus = HttpStatus.OK;
-			response.setConfig(config);
-			response.setResult(result);
-			response.setError(error);
-			return new ResponseEntity<Response>(response, httpStatus);
-		}
-
-		MatchEntity res;
-
-
-		res = service.findById(id);
-
-		try {
-			MatchDtOut resDTO = converter.toDTO(res);
-
-			result.put("Match", resDTO);
-			config.put("global", 0);
-			error.put("messageCode", 0);
-			error.put("message", "Found");
-
-		} catch (Exception e) {
-			result.put("Match", null);
-			config.put("global", 0);
-			error.put("messageCode", 1);
-			error.put("message", "Tournament is not exist");
-		}
-
-		response.setConfig(config);
-		response.setResult(result);
-		response.setError(error);
-
+		System.out.println("MatchAPI: getMatch: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
 
@@ -243,34 +89,39 @@ public class MatchAPI {
 	 */
 	@PostMapping
 	@CrossOrigin
-	public ResponseEntity<Response> createMatch(@RequestBody Map<String, Object> newMatch) {
-		System.out.println("createMatch");
+	public ResponseEntity<Response> createMatch(@RequestBody MatchDTO newMatch) {
+		System.out.println("MatchAPI: createMatch: start");
 		HttpStatus httpStatus = HttpStatus.OK;
 		Response response = new Response();
 		Map<String, Object> config = new HashMap<String, Object>();
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
+		MatchEntity matchEntity = new MatchEntity();
+		
 		try {
-			MatchEntity matchEntity = converter.toEntity(newMatch);
-			System.out.println("convert OK");
-			service.addOne(matchEntity);
-			System.out.println("add OK");
-			MatchDtOut dto = converter.toDTO(matchEntity);
-			System.out.println("convert OK");
-			result.put("match", dto);
-			config.put("global", 0);
-			error.put("messageCode", 0);
-			error.put("message", "Match create successfuly");
+			matchEntity = converter.toEntity(newMatch);
+			
+			matchEntity = service.create(matchEntity);
+			
+			MatchDTO dto = converter.toDTO(matchEntity);
+
+			result.put("Match", dto);
+			config.put("Global", 0);
+			error.put("MessageCode", 0);
+			error.put("Message", "Match create successfuly");
+			System.out.println("MatchAPI: createMatch: no exception");
 		} catch (Exception e) {
+			System.out.println("MatchAPI: createMatch: has exception");
 			result.put("Match", null);
-			config.put("global", 0);
-			error.put("messageCode", 1);
-			error.put("message", "Match create fail");
+			config.put("Global", 0);
+			error.put("MessageCode", 1);
+			error.put("Message", "Server error");
 		}
 
 		response.setConfig(config);
 		response.setResult(result);
 		response.setError(error);
+		System.out.println("MatchAPI: createMatch: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
 
@@ -280,34 +131,42 @@ public class MatchAPI {
 	 */
 	@PutMapping
 	@CrossOrigin
-	public ResponseEntity<Response> editMatch(@RequestBody Map<String, Object> Match, @RequestParam Long id) {
-		System.out.println("editMatch");
+	public ResponseEntity<Response> editMatch(
+			@RequestBody MatchDTO match,
+			@RequestParam Long id) {
+		System.out.println("MatchAPI: editMatch: start");
+		
 		HttpStatus httpStatus = HttpStatus.OK;
 		Response response = new Response();
 		Map<String, Object> config = new HashMap<String, Object>();
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
+		MatchEntity matchEntity = new MatchEntity();
+		
 		try {
-			MatchEntity MatchEntity = converter.toEntity(Match);
-			System.out.println("convert OK");
-			MatchEntity newMatch = service.update(id, MatchEntity);
-			System.out.println("add OK");
-			MatchDtOut dto = converter.toDTO(newMatch);
-			System.out.println("convert OK");
-			result.put("match", dto);
-			config.put("global", 0);
-			error.put("messageCode", 0);
-			error.put("message", "Match update successfuly");
+			matchEntity = converter.toEntity(match);
+			
+			matchEntity = service.update(id, matchEntity);
+			
+			MatchDTO dto = converter.toDTO(matchEntity);
+
+			result.put("Match", dto);
+			config.put("Global", 0);
+			error.put("MessageCode", 0);
+			error.put("Message", "Match update successfuly");
+			System.out.println("MatchAPI: editMatch: no exception");
 		} catch (Exception e) {
-			result.put("match", null);
-			config.put("global", 0);
-			error.put("messageCode", 1);
-			error.put("message", "Match update fail");
+			System.out.println("MatchAPI: editMatch: has exception");
+			result.put("Match", null);
+			config.put("Global", 0);
+			error.put("MessageCode", 1);
+			error.put("Message", "Server error");
 		}
 
 		response.setConfig(config);
 		response.setResult(result);
 		response.setError(error);
+		System.out.println("MatchAPI: editMatch: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
 }

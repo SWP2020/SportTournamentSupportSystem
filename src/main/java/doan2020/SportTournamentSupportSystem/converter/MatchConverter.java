@@ -1,80 +1,101 @@
 package doan2020.SportTournamentSupportSystem.converter;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import doan2020.SportTournamentSupportSystem.dtIn.EditProfileDtIn;
-import doan2020.SportTournamentSupportSystem.dtIn.RegisterDtIn;
-import doan2020.SportTournamentSupportSystem.dtOut.MatchDtOut;
-import doan2020.SportTournamentSupportSystem.dtOut.TournamentDtOut;
-import doan2020.SportTournamentSupportSystem.dtOut.UserDtOut;
-import doan2020.SportTournamentSupportSystem.entity.MatchEntity;
+import doan2020.SportTournamentSupportSystem.dto.MatchDTO;
 import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
-import doan2020.SportTournamentSupportSystem.entity.UserEntity;
+import doan2020.SportTournamentSupportSystem.entity.MatchEntity;
 import doan2020.SportTournamentSupportSystem.service.ICompetitionService;
-import doan2020.SportTournamentSupportSystem.service.IUserService;
-import doan2020.SportTournamentSupportSystem.service.impl.UserService;
-import net.bytebuddy.implementation.bytecode.Throw;
+import doan2020.SportTournamentSupportSystem.service.IMatchService;
+import doan2020.SportTournamentSupportSystem.validator.Validator;
 
 @Component
 public class MatchConverter{
 	
 	@Autowired
-	ICompetitionService competitionService;
+	private ICompetitionService competitionService;
 	
-	public MatchEntity toEntity(Map<String, Object> map) throws Exception{
+	@Autowired
+	private IMatchService matchService;
+	
+	@Autowired
+	private Validator validator;
+	
+	public MatchEntity toEntity(MatchDTO dto){
+		System.out.println("MatchConverter: toEntity: start");
 		MatchEntity entity = new MatchEntity();
-		System.out.println("In toEntity:");
 		try {
-			entity.setName((String) map.get("name"));
-			entity.setNumOfSet((int) map.get("numOfSet"));
+			entity.setName(dto.getName());
+			entity.setNumOfSet(dto.getNumOfSet());
 			
-			String expected = String.valueOf(map.get("expectedDate"));
-			Date expectedDate = new SimpleDateFormat("yyyy-mm-dd").parse(expected);
-			entity.setExpectedDate((Date) map.get("expectedDate"));
+			Date expectedDate = validator.formatStringToDate(dto.getExpectedDate());
+			entity.setExpectedDate(expectedDate);
 			
-			entity.setExpectedPlace((String) map.get("expectedPlace"));
+			entity.setExpectedPlace(dto.getExpectedPlace());
 			
-			String real = String.valueOf(map.get("realDate"));
-			Date realDate = new SimpleDateFormat("yyyy-mm-dd").parse(real);
-			entity.setRealDate((Date) map.get("realDate"));
+			Date realDate = validator.formatStringToDate(dto.getRealDate());
+			entity.setRealDate(realDate);
 			
-			entity.setRealPlace((String) map.get("realPlace"));
-			entity.setStatus((String) map.get("status"));
+			entity.setRealPlace(dto.getRealPlace());
 			
-			Long id = Long.parseLong(String.valueOf(map.get("competitionId")));
-			CompetitionEntity competition = competitionService.findOneById(id);
-			entity.setCompetition(competition);
+			if (dto.getCompetitionId() != null) {
+				Long competitionId = dto.getCompetitionId();
+				CompetitionEntity competition = competitionService.findOneById(competitionId);
+				entity.setCompetition(competition);
+			}
+			
+			if (dto.getNextMatchId() != null) {
+				Long nextMatchId = dto.getNextMatchId();
+				MatchEntity nextMatch = matchService.findOneById(nextMatchId);
+				entity.setNextMatch(nextMatch);			
+			}
+			
+			entity.setRoundNo(dto.getRoundNo());
+			
+			entity.setStatus(dto.getStatus());
+			entity.setUrl(dto.getUrl());
+			System.out.println("MatchConverter: toEntity: no exception");
 		}catch (Exception e) {
-			System.out.println("Has Exception");
-			throw e;
+			System.out.println("MatchConverter: toEntity: has exception");
+			return null;
 		}
-		System.out.println("Out toEntity with no Exception");
+		System.out.println("MatchConverter: toEntity: finish");
 		return entity;
 	}
 
-	public MatchDtOut toDTO(MatchEntity entity) throws Exception {
-		
-		MatchDtOut dto = new MatchDtOut();
+	public MatchDTO toDTO(MatchEntity entity){
+		System.out.println("MatchConverter: toDTO: finish");
+		MatchDTO dto = new MatchDTO();
 		try {
-			dto.setId(entity.getId());
-			dto.setName(entity.getName());
 			dto.setNumOfSet(entity.getNumOfSet());
-			dto.setExpectedDate(entity.getExpectedDate());
+			
+			String expectedDate = validator.formatDateToString(entity.getExpectedDate());
+			dto.setExpectedDate(expectedDate);
+			
 			dto.setExpectedPlace(entity.getExpectedPlace());
-			dto.setRealDate(entity.getRealDate());
+			
+			String realDate = validator.formatDateToString(entity.getRealDate());
+			dto.setRealDate(realDate);
+			
 			dto.setRealPlace(entity.getRealPlace());
-			dto.setStatus(entity.getStatus());
+			
 			dto.setCompetitionId(entity.getCompetition().getId());
+			dto.setNextMatchId(entity.getNextMatch().getId());
+			
+			dto.setRoundNo(entity.getRoundNo());
+			
+			dto.setStatus(entity.getStatus());
+			dto.setUrl(entity.getUrl());
+			System.out.println("MatchConverter: toDTO: no exception");
 		} catch (Exception e) {
-			throw e;
+			System.out.println("MatchConverter: toDTO: has exception");
+			return null;
 		}
 		
+		System.out.println("MatchConverter: toDTO: finish");
 		return dto;
 	}
 

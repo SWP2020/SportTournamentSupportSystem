@@ -1,92 +1,163 @@
+
 package doan2020.SportTournamentSupportSystem.service.impl;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import doan2020.SportTournamentSupportSystem.dtIn.VerifyAuthenticationDtIn;
+import doan2020.SportTournamentSupportSystem.config.Const;
 import doan2020.SportTournamentSupportSystem.entity.UserEntity;
-import doan2020.SportTournamentSupportSystem.entity.VerificationToken;
+import doan2020.SportTournamentSupportSystem.entity.VerificationTokenEntity;
 import doan2020.SportTournamentSupportSystem.repository.UserRepository;
 import doan2020.SportTournamentSupportSystem.repository.VerificationTokenRepository;
-import doan2020.SportTournamentSupportSystem.response.Response;
 import doan2020.SportTournamentSupportSystem.service.IVerificationTokenService;
 
 @Service
-public class VerificationTokenService implements IVerificationTokenService{
-    
+public class VerificationTokenService implements IVerificationTokenService {
+	
 	@Autowired
 	private UserRepository userRepository;
+
 	@Autowired
-    private VerificationTokenRepository verificationTokenRepository;
+	private SendingMailService sendingMailService;
+
 	@Autowired
-    private SendingMailService sendingMailService;
+	private VerificationTokenRepository verificationTokenRepository;
+
+	@Override
+	public VerificationTokenEntity create(VerificationTokenEntity verificationTokenEntity) {
+		VerificationTokenEntity newEntity = null;
+		try {
+			newEntity = verificationTokenRepository.save(verificationTokenEntity);
+		} catch (Exception e) {
+			return null;
+		}
+		return newEntity;
+	}
+
+	@Override
+	public VerificationTokenEntity update(Long id, VerificationTokenEntity newEntity) {
+		VerificationTokenEntity updatedEntity = null;
+		try {
+			updatedEntity = verificationTokenRepository.findOneById(id);
+
+			updatedEntity.setToken(newEntity.getToken());
+			updatedEntity.setExpiredDateTime(newEntity.getExpiredDateTime());
+			updatedEntity.setIssuedDateTime(newEntity.getIssuedDateTime());
+			updatedEntity.setConfirmedDateTime(newEntity.getConfirmedDateTime());
+			updatedEntity.setUser(newEntity.getUser());
+			updatedEntity.setCreatedBy(newEntity.getCreatedBy());
+			updatedEntity.setCreatedDate(newEntity.getCreatedDate());
+			updatedEntity.setModifiedBy(newEntity.getModifiedBy());
+			updatedEntity.setModifiedDate(newEntity.getModifiedDate());
+			updatedEntity.setStatus(newEntity.getStatus());
+			updatedEntity.setUrl(newEntity.getUrl());
+			updatedEntity = verificationTokenRepository.save(updatedEntity);
+		} catch (Exception e) {
+			return null;
+		}
+        
+		return updatedEntity;
+	}
+
+	@Override
+	public VerificationTokenEntity delete(Long id) {
+		VerificationTokenEntity deletedEntity = null;
+		try {
+			deletedEntity = verificationTokenRepository.findOneById(id);
+			deletedEntity.setStatus("deleted");
+			deletedEntity = verificationTokenRepository.save(deletedEntity);
+		} catch (Exception e) {
+			return null;
+		}
+		return deletedEntity;
+	}
+
+	@Override
+	public VerificationTokenEntity findOneById(Long id) {
+		VerificationTokenEntity foundEntity = null;
+		try {
+			foundEntity = verificationTokenRepository.findOneById(id);
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntity;
+	}
+
+	
+
 	@Autowired
-    public VerificationTokenService(UserRepository userRepository, VerificationTokenRepository verificationTokenRepository, SendingMailService sendingMailService){
-        this.userRepository = userRepository;
-        this.verificationTokenRepository = verificationTokenRepository;
-        this.sendingMailService = sendingMailService;
-    }
+	public VerificationTokenService(UserRepository userRepository,
+			VerificationTokenRepository verificationTokenRepository, SendingMailService sendingMailService) {
+		this.userRepository = userRepository;
+		this.verificationTokenRepository = verificationTokenRepository;
+		this.sendingMailService = sendingMailService;
+	}
 
-    public boolean createVerification(String email, String UserName){
-        List<UserEntity> users = userRepository.findByEmailAndUsername(email, UserName);
-        UserEntity user;
-        if (users.isEmpty()) {
-            return false;
-        } else {
-            user = users.get(0);
-        }
+	public boolean createVerification(String email, String username) {
+		UserEntity user = userRepository.findByEmailAndUsername(email, username);
+		if (user == null) {
+			return false;
+		}
 
-        List<VerificationToken> verificationTokens = verificationTokenRepository.findByUserEntityEmailAndUserEntity(email, user);
-        VerificationToken verificationToken;
-        if (verificationTokens.isEmpty()) {
-            verificationToken = new VerificationToken();
-            verificationToken.setUser(user);
-            verificationTokenRepository.save(verificationToken);
-        } else {
-            verificationToken = verificationTokens.get(0);
-        }
+		List<VerificationTokenEntity> verificationTokens = verificationTokenRepository
+				.findByUserEmailAndUser(email, user);
+		VerificationTokenEntity verificationToken;
+		if (verificationTokens.isEmpty()) {
+			verificationToken = new VerificationTokenEntity();
+			String token = UUID.randomUUID().toString();
+			verificationToken.setToken(token);
+			LocalDateTime issuedDateTimeTemp = LocalDateTime.now();
+			Date issuedDateTime = Date.from(issuedDateTimeTemp.atZone(ZoneId.systemDefault()).toInstant());
+			verificationToken.setIssuedDateTime(issuedDateTime);
+			LocalDateTime expiredDateTimetemp = issuedDateTimeTemp.plusDays(7);
+			Date expiredDateTime = Date.from(expiredDateTimetemp.atZone(ZoneId.systemDefault()).toInstant());
+			verificationToken.setExpiredDateTime(expiredDateTime);
+	        String status = "STATUS_PENDING";
+	        verificationToken.setStatus(status);
+			verificationToken.setUser(user);
+			verificationTokenRepository.save(verificationToken);
+		} else {
+			verificationToken = verificationTokens.get(0);
+		}
 
-        sendingMailService.sendVerificationMail(email, verificationToken.getToken());
-        return true;
-    }
+		sendingMailService.sendVerificationMail(email, verificationToken.getToken(), username, Const.DOMAIN);
+		return true;
+	}
 
-    public Response verifyEmail(VerifyAuthenticationDtIn verifyAuthenticationDtIn){
-    	Response results = new Response();
-		Map<String, Object> result = new HashMap<String, Object>();
-		Map<String, Object> error = new HashMap<String, Object>();
-		String token = verifyAuthenticationDtIn.getCode();
-        List<VerificationToken> verificationTokens = verificationTokenRepository.findByToken(token);
-        if (verificationTokens.isEmpty()) {
-        	error.put("messageCode", "002");
-			error.put("message", "Invalid token.");
-			results.setError(error);
-			
-	        return results;
-        }
+	public VerificationTokenEntity verifyEmail(VerificationTokenEntity verificationToken) {
+		VerificationTokenEntity token = new VerificationTokenEntity();
+		try {
+			token = verificationTokenRepository.save(verificationToken);
+		} catch (Exception e) {
+			return null;
+		}
+		return token;
+	}
 
-        VerificationToken verificationToken = verificationTokens.get(0);
-        if (verificationToken.getExpiredDateTime().isBefore(LocalDateTime.now())) {
-        	error.put("messageCode", "002");
-			error.put("message", "Expired token.");
-			results.setError(error);
-			
-	        return results;
-        }
+	public List<VerificationTokenEntity> findByUserEntityEmailAndUserEntity(String email, UserEntity userEntity) {
+		List<VerificationTokenEntity> verificationTokens = null;
+		try {
+			verificationTokens = verificationTokenRepository.findByUserEmailAndUser(email, userEntity);
+		} catch (Exception e) {
+			return null;
+		}
+		return verificationTokens;
+	}
 
-        verificationToken.setConfirmedDateTime(LocalDateTime.now());
-        verificationToken.setStatus(VerificationToken.STATUS_VERIFIED);
-        verificationToken.getUser().setActive(true);
-        verificationTokenRepository.save(verificationToken);
-        error.put("messageCode", "001");
-		error.put("message", "You have successfully verified your email address.");
-		results.setError(error);
-		
-        return results;
-    }
-
+	public VerificationTokenEntity findOneByToken(String token) {
+		VerificationTokenEntity verificationToken = null;
+		try {
+			verificationToken = verificationTokenRepository.findOneByToken(token);
+		} catch (Exception e) {
+			return null;
+		}
+		return verificationToken;
+	}
+	
 }

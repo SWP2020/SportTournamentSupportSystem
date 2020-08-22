@@ -1,20 +1,31 @@
+
 package doan2020.SportTournamentSupportSystem.service;
 
-import java.util.List;
+import java.util.Collection;
+
+import org.springframework.data.domain.Pageable;
 
 import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
-import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
 
 public interface ICompetitionService {
+	
 	public CompetitionEntity findOneById(Long id);
 	
-	public TournamentEntity findOneByTournamentID(Long id);
+	public Collection<CompetitionEntity> findAll(Pageable pageable);
 	
-	public void addCompetition(CompetitionEntity competitionEntity);
+	public Collection<CompetitionEntity> findByTournamentId(Long tournamentId);
 	
-	public void editCompetition(CompetitionEntity competitionEntity);
+	public Collection<CompetitionEntity> findByTournamentId(Pageable pageable, Long tournamentId);
 	
-	public List<CompetitionEntity> findAllCompetition();
+	public Collection<CompetitionEntity> findByTournamentIdAndSportId(Long tournamentId, Long sportId);
 	
-	public void deleteCompetition(CompetitionEntity competitionEntity);
+	public CompetitionEntity create(CompetitionEntity competitionEntity);
+	
+	public CompetitionEntity update(Long id, CompetitionEntity newEntity);
+	
+//	public Collection<CompetitionEntity> findAll();
+	
+	public CompetitionEntity delete(Long id);
+	
+	public CompetitionEntity updateStatus(CompetitionEntity entity, String status);
 }

@@ -3,15 +3,14 @@ package doan2020.SportTournamentSupportSystem.converter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import doan2020.SportTournamentSupportSystem.dtIn.CreateCompetitionDtIn;
-import doan2020.SportTournamentSupportSystem.dtIn.EditCompetitionDtIn;
-import doan2020.SportTournamentSupportSystem.dtOut.CompetitionDtOut;
+import doan2020.SportTournamentSupportSystem.dto.CompetitionDTO;
 import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
+import doan2020.SportTournamentSupportSystem.entity.CompetitionFormatEntity;
 import doan2020.SportTournamentSupportSystem.entity.SportEntity;
 import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
+import doan2020.SportTournamentSupportSystem.service.ICompetitionFormatService;
 import doan2020.SportTournamentSupportSystem.service.ISportService;
 import doan2020.SportTournamentSupportSystem.service.ITournamentService;
-import doan2020.SportTournamentSupportSystem.service.IUserService;
 
 @Component
 public class CompetitionConverter {
@@ -20,90 +19,99 @@ public class CompetitionConverter {
 	private ITournamentService tournamentService;
 	
 	@Autowired
+	private ICompetitionFormatService competitionFormatService;
+	
+	@Autowired
 	private ISportService sportService;
 	
-	public CompetitionEntity toEntity(CreateCompetitionDtIn competitionDtIn) {
-		CompetitionEntity competitionEntity = new CompetitionEntity();
-		TournamentEntity tournamentEntity = new TournamentEntity();
-		SportEntity sportEntity = new SportEntity();
-		
-		if(competitionDtIn.getName() != null) {
-			competitionEntity.setName(competitionDtIn.getName());
-		}
-		if(competitionDtIn.getStatus() != null) {
-			competitionEntity.setStatus(competitionDtIn.getName());
-		}
-//		if(competitionDtIn.getDescription() != null) {
-//			competitionEntity.setDescription(competitionDtIn.getDescription());
-//		}
-		
-		if(competitionDtIn.getTournamentID() != null) {
-			tournamentEntity = tournamentService.findOneById(competitionDtIn.getTournamentID());
-			
-			if(tournamentEntity !=null) {
-				competitionEntity.setTournament(tournamentEntity);
-			}
-		}
-		
-		if(competitionDtIn.getSportID() != null) {
-			sportEntity = sportService.getSportbyId(competitionDtIn.getSportID());
-			
-			if(sportEntity !=null) {
-				competitionEntity.setSport(sportEntity);
-			}
-		}
-		return competitionEntity;
-	}
-	
-	
-	public CompetitionEntity toEntityUpdate(EditCompetitionDtIn competitionDtIn, CompetitionEntity competitionEntity) {
-		TournamentEntity tournamentEntity = new TournamentEntity();
-		SportEntity sportEntity = new SportEntity();
-		
-		if(competitionDtIn.getName() != null) {
-			competitionEntity.setName(competitionDtIn.getName());
-		}
-		if(competitionDtIn.getStatus() != null) {
-			competitionEntity.setStatus(competitionDtIn.getName());
-		}
-//		if(competitionDtIn.getDescription() != null) {
-//			competitionEntity.setDescription(competitionDtIn.getDescription());
-//		}
-		
-		if(competitionDtIn.getTournamentID() != null) {
-			tournamentEntity = tournamentService.findOneById(competitionDtIn.getTournamentID());
-			
-			if(tournamentEntity !=null) {
-				competitionEntity.setTournament(tournamentEntity);
-			}
-		}
-		
-		if(competitionDtIn.getSportID() != null) {
-			sportEntity = sportService.getSportbyId(competitionDtIn.getSportID());
-			
-			if(sportEntity !=null) {
-				competitionEntity.setSport(sportEntity);
-			}
-		}
-		return competitionEntity;
-	}
-	
-	
-	public CompetitionDtOut toDTO(CompetitionEntity competitionEntity) {
-		CompetitionDtOut competitionDtOut = new CompetitionDtOut();
+	public CompetitionEntity toEntity(CompetitionDTO dto){
+		System.out.println("CompetitionConverter: toEntity: start");
+		CompetitionEntity entity = new CompetitionEntity();
 		try {
-		competitionDtOut.setCreatedby(competitionEntity.getCreatedby());
-		competitionDtOut.setCreateddate(competitionEntity.getCreateddate());
-		competitionDtOut.setModifiedby(competitionEntity.getModifiedby());
-		competitionDtOut.setModifieddate(competitionEntity.getModifieddate());
-		competitionDtOut.setName(competitionEntity.getName());
-		competitionDtOut.setStatus(competitionEntity.getStatus());
-		competitionDtOut.setId(competitionEntity.getId());
+			if (dto.getName() != null)
+				entity.setName(dto.getName());
+			
+			entity.setDescription(dto.getDescription());
+			
+			if (dto.getTournamentId() != null) {
+				Long tournamentId = dto.getTournamentId();
+				TournamentEntity tournament = tournamentService.findOneById(tournamentId);
+				entity.setTournament(tournament);
+			}
+			
+			if (dto.getSportId() != null) {
+	            Long sportId = dto.getSportId();
+				SportEntity sport = sportService.findOneById(sportId);
+				entity.setSport(sport);
+			}
+			
+			if (dto.getMainFormatId() != null) {
+				Long mainFormatId = dto.getMainFormatId();
+				CompetitionFormatEntity mainFormat = competitionFormatService.findOneById(mainFormatId);
+				entity.setMainFormat(mainFormat);
+			}
+			
+			System.out.println("CompetitionConverter: toEntity: CP 1");
+			entity.setGroupStage(dto.getGroupStage());
+			System.out.println("CompetitionConverter: toEntity: CP 2");
+			
+			if (entity.getGroupStage() && dto.getGroupStageFormatId() != null) {
+				Long groupStageFormatId = dto.getGroupStageFormatId();
+				CompetitionFormatEntity groupStageFormat = competitionFormatService.findOneById(groupStageFormatId);
+				entity.setGroupStageFormat(groupStageFormat);
+			}
+			
+			System.out.println("CompetitionConverter: toEntity: CP 3");
+			
+			entity.setStatus(dto.getStatus());
+			entity.setUrl(dto.getUrl());
+			System.out.println("CompetitionConverter: toEntity: no exception");
 		}catch (Exception e) {
-			// TODO: handle exception
+			System.out.println("CompetitionConverter: toEntity: has exception");
+			return null;
+		}
+		System.out.println("CompetitionConverter: toEntity: finish");
+		return entity;
+	}
+
+	public CompetitionDTO toDTO(CompetitionEntity entity){
+		System.out.println("CompetitionConverter: toDTO: finish");
+		CompetitionDTO dto = new CompetitionDTO();
+		try {
+			
+			dto.setId(entity.getId());
+			dto.setName(entity.getName());
+			dto.setDescription(entity.getDescription());
+			
+			TournamentEntity tournament = entity.getTournament();
+			Long tournamentId = tournament.getId();
+			dto.setTournamentId(tournamentId);
+			
+			SportEntity sport = entity.getSport();
+			Long sportId = sport.getId();
+			dto.setSportId(sportId);
+			
+			CompetitionFormatEntity mainFormat = entity.getMainFormat();
+			Long mainFormatId = mainFormat.getId();
+			dto.setMainFormatId(mainFormatId);
+			
+			dto.setGroupStage(entity.getGroupStage());
+			
+			CompetitionFormatEntity groupStageFormat = entity.getGroupStageFormat();
+			if (groupStageFormat != null) {
+				Long groupStageFormatId = groupStageFormat.getId();
+				dto.setGroupStageFormatId(groupStageFormatId);
+			}
+			
+			dto.setStatus(entity.getStatus());
+			dto.setUrl(entity.getUrl());
+			System.out.println("CompetitionConverter: toDTO: no exception");
+		} catch (Exception e) {
+			System.out.println("CompetitionConverter: toDTO: has exception");
+			return null;
 		}
 		
-		return competitionDtOut;
-		
+		System.out.println("CompetitionConverter: toDTO: finish");
+		return dto;
 	}
 }

@@ -10,8 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import com.sun.istack.NotNull;
 import javax.persistence.GeneratedValue;
-import javax.persistence.ManyToMany;
-import java.util.Collection;
+import javax.persistence.ManyToOne;
+import javax.persistence.JoinColumn;
 
 
 
@@ -25,7 +25,9 @@ public class PlayerEntity{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	private String name;
+	private String firstName;
+	
+	private String lastName;
 	
 	private boolean gender;
 	
@@ -41,86 +43,115 @@ public class PlayerEntity{
 	
 	private Date modifiedDate;
 	
-
-	@ManyToMany(mappedBy = "playersList")
-	private Collection<TeamEntity> teamsList;
+	private String status;
+	
+	private String url;
 	
 
-	public Long getId() {
-		return id;
-	}
+	@ManyToOne
+	@JoinColumn(name = "teamId")
+	private TeamEntity team;
 	
-	public String getName() {
-		return name;
-	}
-	
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-	public boolean getGender() {
-		return gender;
-	}
-	
-	public void setGender(boolean gender) {
-		this.gender = gender;
-	}
-	
-	public Date getDob() {
-		return dob;
-	}
-	
-	public void setDob(Date dob) {
-		this.dob = dob;
-	}
-	
-	public String getEmail() {
-		return email;
-	}
-	
-	public void setEmail(String email) {
-		this.email = email;
-	}
-	
-	public String getCreatedby() {
-		return createdBy;
-	}
-	
-	public void setCreatedby(String createdBy) {
-		this.createdBy = createdBy;
-	}
-	
-	public Date getCreateddate() {
-		return createdDate;
-	}
-	
-	public void setCreateddate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
-	
-	public String getModifiedby() {
-		return modifiedBy;
-	}
-	
-	public void setModifiedby(String modifiedBy) {
-		this.modifiedBy = modifiedBy;
-	}
-	
-	public Date getModifieddate() {
-		return modifiedDate;
-	}
-	
-	public void setModifieddate(Date modifiedDate) {
-		this.modifiedDate = modifiedDate;
-	}
-	
-	public Collection<TeamEntity> getTeamslist() {
-		return teamsList;
-	}
-	
-	public void setTeamslist(Collection<TeamEntity> teamsList) {
-		this.teamsList = teamsList;
-	}
-	
+
+public Long getId() {
+	return id;
+}
+
+public String getFirstName() {
+	return firstName;
+}
+
+public void setFirstName(String firstName) {
+	this.firstName = firstName;
+}
+
+public String getLastName() {
+	return lastName;
+}
+
+public void setLastName(String lastName) {
+	this.lastName = lastName;
+}
+
+public boolean getGender() {
+	return gender;
+}
+
+public void setGender(boolean gender) {
+	this.gender = gender;
+}
+
+public Date getDob() {
+	return dob;
+}
+
+public void setDob(Date dob) {
+	this.dob = dob;
+}
+
+public String getEmail() {
+	return email;
+}
+
+public void setEmail(String email) {
+	this.email = email;
+}
+
+public String getCreatedBy() {
+	return createdBy;
+}
+
+public void setCreatedBy(String createdBy) {
+	this.createdBy = createdBy;
+}
+
+public Date getCreatedDate() {
+	return createdDate;
+}
+
+public void setCreatedDate(Date createdDate) {
+	this.createdDate = createdDate;
+}
+
+public String getModifiedBy() {
+	return modifiedBy;
+}
+
+public void setModifiedBy(String modifiedBy) {
+	this.modifiedBy = modifiedBy;
+}
+
+public Date getModifiedDate() {
+	return modifiedDate;
+}
+
+public void setModifiedDate(Date modifiedDate) {
+	this.modifiedDate = modifiedDate;
+}
+
+public String getStatus() {
+	return status;
+}
+
+public void setStatus(String status) {
+	this.status = status;
+}
+
+public String getUrl() {
+	return url;
+}
+
+public void setUrl(String url) {
+	this.url = url;
+}
+
+public TeamEntity getTeam() {
+	return team;
+}
+
+public void setTeam(TeamEntity team) {
+	this.team = team;
+}
+
 
 }

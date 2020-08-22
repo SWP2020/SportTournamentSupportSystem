@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class Validator {
 
-	public String formatDate(Date date) {
+	public String formatDateToString(Date date) {
 		try {
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 			String strDate = formatter.format(date);
@@ -20,7 +20,17 @@ public class Validator {
 		}
 	}
 	
-	public int ConvertDobToAge(String dobEntity) {
+	public Date formatStringToDate(String date) {
+		try {
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+			Date dateExpected = formatter.parse(date);
+			return dateExpected;
+		} catch (Exception e) {
+			return null;
+		}
+	}
+	
+	public int convertDobToAge(String dobEntity) {
 		int res = -1;
 		try {
 			LocalDate dob = LocalDate.parse(dobEntity);

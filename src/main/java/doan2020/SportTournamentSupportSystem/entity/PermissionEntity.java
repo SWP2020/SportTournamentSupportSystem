@@ -28,9 +28,9 @@ public class PermissionEntity{
 	
 	private String description;
 	
-	private boolean can_edit;
+	private boolean canEdit;
 	
-	private boolean can_delete;
+	private boolean canDelete;
 	
 	private String createdBy;
 	
@@ -40,75 +40,95 @@ public class PermissionEntity{
 	
 	private Date modifiedDate;
 	
+	private String status;
+	
+	private String url;
+	
 
 
-	public Long getId() {
-		return id;
-	}
-	
-	public String getName() {
-		return name;
-	}
-	
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-	public String getDescription() {
-		return description;
-	}
-	
-	public void setDescription(String description) {
-		this.description = description;
-	}
-	
-	public boolean getCan_edit() {
-		return can_edit;
-	}
-	
-	public void setCan_edit(boolean can_edit) {
-		this.can_edit = can_edit;
-	}
-	
-	public boolean getCan_delete() {
-		return can_delete;
-	}
-	
-	public void setCan_delete(boolean can_delete) {
-		this.can_delete = can_delete;
-	}
-	
-	public String getCreatedby() {
-		return createdBy;
-	}
-	
-	public void setCreatedby(String createdBy) {
-		this.createdBy = createdBy;
-	}
-	
-	public Date getCreateddate() {
-		return createdDate;
-	}
-	
-	public void setCreateddate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
-	
-	public String getModifiedby() {
-		return modifiedBy;
-	}
-	
-	public void setModifiedby(String modifiedBy) {
-		this.modifiedBy = modifiedBy;
-	}
-	
-	public Date getModifieddate() {
-		return modifiedDate;
-	}
-	
-	public void setModifieddate(Date modifiedDate) {
-		this.modifiedDate = modifiedDate;
-	}
-	
+public Long getId() {
+	return id;
+}
+
+public String getName() {
+	return name;
+}
+
+public void setName(String name) {
+	this.name = name;
+}
+
+public String getDescription() {
+	return description;
+}
+
+public void setDescription(String description) {
+	this.description = description;
+}
+
+public boolean getCanEdit() {
+	return canEdit;
+}
+
+public void setCanEdit(boolean canEdit) {
+	this.canEdit = canEdit;
+}
+
+public boolean getCanDelete() {
+	return canDelete;
+}
+
+public void setCanDelete(boolean canDelete) {
+	this.canDelete = canDelete;
+}
+
+public String getCreatedBy() {
+	return createdBy;
+}
+
+public void setCreatedBy(String createdBy) {
+	this.createdBy = createdBy;
+}
+
+public Date getCreatedDate() {
+	return createdDate;
+}
+
+public void setCreatedDate(Date createdDate) {
+	this.createdDate = createdDate;
+}
+
+public String getModifiedBy() {
+	return modifiedBy;
+}
+
+public void setModifiedBy(String modifiedBy) {
+	this.modifiedBy = modifiedBy;
+}
+
+public Date getModifiedDate() {
+	return modifiedDate;
+}
+
+public void setModifiedDate(Date modifiedDate) {
+	this.modifiedDate = modifiedDate;
+}
+
+public String getStatus() {
+	return status;
+}
+
+public void setStatus(String status) {
+	this.status = status;
+}
+
+public String getUrl() {
+	return url;
+}
+
+public void setUrl(String url) {
+	this.url = url;
+}
+
 
 }

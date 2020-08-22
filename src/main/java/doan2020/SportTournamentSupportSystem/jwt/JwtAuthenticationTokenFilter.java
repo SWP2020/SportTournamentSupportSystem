@@ -2,6 +2,7 @@
 package doan2020.SportTournamentSupportSystem.jwt;
 
 import java.io.IOException;
+import java.util.Enumeration;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -28,7 +29,7 @@ public class JwtAuthenticationTokenFilter extends UsernamePasswordAuthentication
 
 	@Autowired
 	private UserDetailsServiceImpl userService;
-	
+
 //	@Autowired
 //	private IUserService userService;
 
@@ -36,34 +37,36 @@ public class JwtAuthenticationTokenFilter extends UsernamePasswordAuthentication
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
 
-		HttpServletRequest httpRequest = (HttpServletRequest) request;
-		String authToken = httpRequest.getHeader(TOKEN_HEADER);
+		System.out.println(
+				"=============================================NEW REQUEST=====================================================");
+		System.out.println(request.getRemoteAddr());
+		if (request instanceof HttpServletRequest) {
+			String url = ((HttpServletRequest) request).getRequestURL().toString();
+			String queryString = ((HttpServletRequest) request).getQueryString();
+			System.out.println("URL: " + url + "?" + queryString);
+		}
 
-		if (jwtService.validateTokenLogin(authToken)) {
-			String username = jwtService.getUsernameFromToken(authToken);
-//			String username = "DoVanCong";
-			UserDetails userDetails = userService.loadUserByUsername(username);
-//			UserEntity user = userService.loadUserByUsername(username);
-			System.out.println(username);
-			if (userDetails != null) {
-//				boolean enabled = true;
-//				boolean accountNonExpired = true;
-//				boolean credentialsNonExpired = true;
-//				boolean accountNonLocked = true;
-//				List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-//				authorities.add(new SimpleGrantedAuthority("Admin"));
-//				authorities.add(new SimpleGrantedAuthority("User"));
-//				UserDetails userDetails = new User(username, user.getPassword(), enabled, accountNonExpired,
-//						credentialsNonExpired, accountNonLocked, user.getAuthorities());
-				System.out.println(userDetails.getAuthorities().toString());
+		try {
+			HttpServletRequest httpRequest = (HttpServletRequest) request;
+			System.out.println("===========0");
+			String authToken = httpRequest.getHeader(TOKEN_HEADER);
 
-				UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails,
-						null, userDetails.getAuthorities());
-				authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpRequest));
-				SecurityContextHolder.getContext().setAuthentication(authentication);
-				System.out.println(userDetails.getAuthorities().toString());
-				System.out.println(username+ "2");
+			if (authToken != null && jwtService.validateJwtToken(authToken)) {
+				System.out.println("===========1");
+				String username = jwtService.getUserNameFromJwtToken(authToken);
+				UserDetails userDetails = userService.loadUserByUsername(username);
+				if (userDetails != null) {
+					System.out.println("===========2");
+					UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+							userDetails, null, userDetails.getAuthorities());
+					authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpRequest));
+					SecurityContextHolder.getContext().setAuthentication(authentication);
+
+				}
 			}
+		} catch (Exception e) {
+			System.out.println("===========3");
+			logger.error("Cannot set user authentication: {}", e);
 		}
 
 		chain.doFilter(request, response);

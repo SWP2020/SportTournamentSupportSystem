@@ -1,12 +1,23 @@
+
 package doan2020.SportTournamentSupportSystem.service.impl;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import doan2020.SportTournamentSupportSystem.config.Const;
+import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
+import doan2020.SportTournamentSupportSystem.entity.TeamEntity;
 import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
+import doan2020.SportTournamentSupportSystem.repository.CompetitionRepository;
 import doan2020.SportTournamentSupportSystem.repository.TournamentRepository;
 import doan2020.SportTournamentSupportSystem.service.ITournamentService;
 
@@ -16,73 +27,202 @@ public class TournamentService implements ITournamentService {
 	@Autowired
 	private TournamentRepository tournamentRepository;
 
-	@Override
-	public void addOne(TournamentEntity tournament) {
-		
-		tournamentRepository.save(tournament);
+	@Autowired
+	private CompetitionRepository competitionRepository;
 
+	@Override
+	public Long countAll() {
+		return tournamentRepository.count();
 	}
 
 	@Override
-	public void addMany(Collection<TournamentEntity> tournaments) {
-		for (TournamentEntity tournament : tournaments)
-			tournamentRepository.save(tournament);
+	public TournamentEntity create(TournamentEntity tournamentEntity) {
+		TournamentEntity newEntity = null;
+		try {
 
+			tournamentEntity.setStatus(Const.UNSTARTED_STATUS);
+
+			newEntity = tournamentRepository.save(tournamentEntity);
+		} catch (Exception e) {
+			return null;
+		}
+		return newEntity;
+	}
+
+	@Override
+	public TournamentEntity update(Long id, TournamentEntity newEntity) {
+		TournamentEntity updatedEntity = null;
+		try {
+			updatedEntity = tournamentRepository.findOneById(id);
+
+			updatedEntity.setFullName(newEntity.getFullName());
+			updatedEntity.setShortName(newEntity.getShortName());
+			updatedEntity.setDescription(newEntity.getDescription());
+//			updatedEntity.setCreator(newEntity.getCreator());
+			updatedEntity.setOpeningLocation(newEntity.getOpeningLocation());
+			updatedEntity.setOpeningTime(newEntity.getOpeningTime());
+			updatedEntity.setClosingLocation(newEntity.getClosingLocation());
+			updatedEntity.setClosingTime(newEntity.getClosingTime());
+			updatedEntity.setDonor(newEntity.getDonor());
+			updatedEntity.setCreatedBy(newEntity.getCreatedBy());
+			updatedEntity.setCreatedDate(newEntity.getCreatedDate());
+			updatedEntity.setModifiedBy(newEntity.getModifiedBy());
+			updatedEntity.setModifiedDate(newEntity.getModifiedDate());
+			updatedEntity.setStatus(newEntity.getStatus());
+			updatedEntity.setUrl(newEntity.getUrl());
+			updatedEntity = tournamentRepository.save(updatedEntity);
+		} catch (Exception e) {
+			return null;
+		}
+
+		return updatedEntity;
+	}
+
+	@Override
+	public TournamentEntity delete(Long id) {
+		TournamentEntity deletedEntity = null;
+		try {
+			deletedEntity = tournamentRepository.findOneById(id);
+			deletedEntity.setStatus("deleted");
+			deletedEntity = tournamentRepository.save(deletedEntity);
+		} catch (Exception e) {
+			return null;
+		}
+		return deletedEntity;
 	}
 
 	@Override
 	public TournamentEntity findOneById(Long id) {
-		TournamentEntity res = null;
+		TournamentEntity foundEntity = null;
 		try {
-			res = tournamentRepository.findOneById(id);
+			foundEntity = tournamentRepository.findOneById(id);
 		} catch (Exception e) {
-			System.out.println("Has exceoption in TournamentService.findById");
 			return null;
 		}
-		
-		return res;
+		return foundEntity;
 	}
 
 	@Override
-	public TournamentEntity findByName(String name) {
-		TournamentEntity res = null;
+	public Collection<TournamentEntity> findByCreatorId(Pageable pageable, Long creatorId) {
+		Collection<TournamentEntity> findTournaments = null;
 		try {
-			res = tournamentRepository.findByShortName(name);
+			findTournaments = tournamentRepository.findByCreatorId(pageable, creatorId).getContent();
 		} catch (Exception e) {
 			return null;
 		}
-		
-		return res;
+		return findTournaments;
 	}
 
 	@Override
 	public Collection<TournamentEntity> findAll(Pageable pageable) {
-		
-		return (Collection<TournamentEntity>) tournamentRepository.findAll(pageable).getContent();
+		Collection<TournamentEntity> findTournaments = null;
+		try {
+			findTournaments = tournamentRepository.findAll(pageable).getContent();
+		} catch (Exception e) {
+			return null;
+		}
+		return findTournaments;
 	}
 
 	@Override
-	public TournamentEntity update(Long id, TournamentEntity newData) {
-		
-		TournamentEntity old = tournamentRepository.findOneById(id);
-		old.setFullName(newData.getFullName());
-		old.setShortName(newData.getShortName());
-		old.setDescription(newData.getDescription());
-		old.setCreator(newData.getCreator());
-		old.setOpeningLocation(newData.getOpeningLocation());
-		old.setOpeningTime(newData.getOpeningTime());
-		old.setClosingLocation(newData.getClosingLocation());
-		old.setClosingTime(newData.getClosingTime());
-		old.setDonor(newData.getDonor());
-		old.setStatus(newData.getStatus());
-		old.setUrl(newData.getUrl());
-		old = tournamentRepository.save(old);
-		return old;
+	public Collection<TournamentEntity> findBySearchString(Pageable pageable, String searchString) {
+		List<TournamentEntity> findTournaments = null;
+		try {
+
+			findTournaments = (List<TournamentEntity>) tournamentRepository.findBySearchString(searchString);
+
+			System.out
+					.println("TournamentService: findBySearchString: findTournaments: size: " + findTournaments.size());
+
+			int start = (int) pageable.getOffset();
+			int end = (start + pageable.getPageSize()) > findTournaments.size() ? findTournaments.size()
+					: (start + pageable.getPageSize());
+			Page<TournamentEntity> pages = new PageImpl<TournamentEntity>(findTournaments.subList(start, end), pageable,
+					findTournaments.size());
+			findTournaments = pages.getContent();
+
+		} catch (Exception e) {
+			return null;
+		}
+		return findTournaments;
 	}
 
 	@Override
-	public Collection<TournamentEntity> findAllByCreator(Pageable pageable, Long creatorId) {
-		// TODO Auto-generated method stub
-		return (Collection<TournamentEntity>) tournamentRepository.findByCreatorId(creatorId, pageable).getContent();
+	public Long countBySearchString(String searchString) {
+		List<TournamentEntity> findTournaments = null;
+		try {
+			findTournaments = (List<TournamentEntity>) tournamentRepository.findBySearchString(searchString);
+		} catch (Exception e) {
+			return 0l;
+		}
+		return new Long(findTournaments.size());
 	}
+
+	@Override
+	public TournamentEntity updateAvatar(Long id, TournamentEntity newEntity) {
+		TournamentEntity updatedEntity = null;
+		try {
+			updatedEntity = tournamentRepository.findOneById(id);
+
+			updatedEntity.setAvatar(newEntity.getAvatar());
+			updatedEntity = tournamentRepository.save(updatedEntity);
+		} catch (Exception e) {
+			return null;
+		}
+
+		return updatedEntity;
+	}
+
+	@Override
+	public TournamentEntity updateBackground(Long id, TournamentEntity newEntity) {
+		TournamentEntity updatedEntity = null;
+		try {
+			updatedEntity = tournamentRepository.findOneById(id);
+
+			updatedEntity.setBackground(newEntity.getBackground());
+			updatedEntity = tournamentRepository.save(updatedEntity);
+		} catch (Exception e) {
+			return null;
+		}
+
+		return updatedEntity;
+	}
+
+	@Override
+	public Map<String, Object> getOtherInformation(Long id) {
+		Map<String, Object> option = new HashMap<String, Object>();
+		TournamentEntity thisTournament = tournamentRepository.findOneById(id);
+		Collection<CompetitionEntity> competitions = thisTournament.getCompetitions();
+
+		HashSet<String> sportsName = new HashSet<>();
+
+		int countPlayer = 0;
+
+		for (CompetitionEntity comp : competitions) {
+
+			sportsName.add(comp.getSport().getFullName());
+
+			for (TeamEntity teamEntity : comp.getTeams()) {
+				countPlayer += teamEntity.getPlayers().size();
+			}
+		}
+		option.put("sportsName", sportsName);
+		option.put("countPlayer", countPlayer);
+		option.put("process", 0);
+		return option;
+	}
+
+	@Override
+	public TournamentEntity updateStatus(TournamentEntity entity, String status) {
+		try {
+
+			entity.setStatus(status);
+			entity = tournamentRepository.save(entity);
+		} catch (Exception e) {
+			return null;
+		}
+
+		return entity;
+	}
+
 }

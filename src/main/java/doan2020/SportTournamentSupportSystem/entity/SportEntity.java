@@ -43,90 +43,110 @@ public class SportEntity{
 	
 	private Date modifiedDate;
 	
+	private String status;
+	
+	private String url;
+	
 
 	@ManyToOne
-	@JoinColumn(name = "scoringunitId")
-	private ScoringunitEntity scoringunit;
+	@JoinColumn(name = "scoringUnitId")
+	private ScoringUnitEntity scoringUnit;
 	
 	@OneToMany(mappedBy = "sport", cascade = CascadeType.ALL)
 	private Collection<CompetitionEntity> competitions;
 
 
-	public Long getId() {
-		return id;
-	}
-	
-	public String getFullname() {
-		return fullName;
-	}
-	
-	public void setFullname(String fullName) {
-		this.fullName = fullName;
-	}
-	
-	public String getShortname() {
-		return shortName;
-	}
-	
-	public void setShortname(String shortName) {
-		this.shortName = shortName;
-	}
-	
-	public String getDescription() {
-		return description;
-	}
-	
-	public void setDescription(String description) {
-		this.description = description;
-	}
-	
-	public String getCreatedby() {
-		return createdBy;
-	}
-	
-	public void setCreatedby(String createdBy) {
-		this.createdBy = createdBy;
-	}
-	
-	public Date getCreateddate() {
-		return createdDate;
-	}
-	
-	public void setCreateddate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
-	
-	public String getModifiedby() {
-		return modifiedBy;
-	}
-	
-	public void setModifiedby(String modifiedBy) {
-		this.modifiedBy = modifiedBy;
-	}
-	
-	public Date getModifieddate() {
-		return modifiedDate;
-	}
-	
-	public void setModifieddate(Date modifiedDate) {
-		this.modifiedDate = modifiedDate;
-	}
-	
-	public ScoringunitEntity getScoringunit() {
-		return scoringunit;
-	}
-	
-	public void setScoringunit(ScoringunitEntity scoringunit) {
-		this.scoringunit = scoringunit;
-	}
-	
-	public Collection<CompetitionEntity> getCompetitions() {
-		return competitions;
-	}
-	
-	public void setCompetitions(Collection<CompetitionEntity> competitions) {
-		this.competitions = competitions;
-	}
-	
+public Long getId() {
+	return id;
+}
+
+public String getFullName() {
+	return fullName;
+}
+
+public void setFullName(String fullName) {
+	this.fullName = fullName;
+}
+
+public String getShortName() {
+	return shortName;
+}
+
+public void setShortName(String shortName) {
+	this.shortName = shortName;
+}
+
+public String getDescription() {
+	return description;
+}
+
+public void setDescription(String description) {
+	this.description = description;
+}
+
+public String getCreatedBy() {
+	return createdBy;
+}
+
+public void setCreatedBy(String createdBy) {
+	this.createdBy = createdBy;
+}
+
+public Date getCreatedDate() {
+	return createdDate;
+}
+
+public void setCreatedDate(Date createdDate) {
+	this.createdDate = createdDate;
+}
+
+public String getModifiedBy() {
+	return modifiedBy;
+}
+
+public void setModifiedBy(String modifiedBy) {
+	this.modifiedBy = modifiedBy;
+}
+
+public Date getModifiedDate() {
+	return modifiedDate;
+}
+
+public void setModifiedDate(Date modifiedDate) {
+	this.modifiedDate = modifiedDate;
+}
+
+public String getStatus() {
+	return status;
+}
+
+public void setStatus(String status) {
+	this.status = status;
+}
+
+public String getUrl() {
+	return url;
+}
+
+public void setUrl(String url) {
+	this.url = url;
+}
+
+public ScoringUnitEntity getScoringUnit() {
+	return scoringUnit;
+}
+
+public void setScoringUnit(ScoringUnitEntity scoringUnit) {
+	this.scoringUnit = scoringUnit;
+}
+
+public Collection<CompetitionEntity> getCompetitions() {
+	return competitions;
+}
+
+public void setCompetitions(Collection<CompetitionEntity> competitions) {
+	this.competitions = competitions;
+}
+
 
 }

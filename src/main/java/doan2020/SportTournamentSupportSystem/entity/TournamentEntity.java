@@ -17,209 +17,237 @@ import java.util.Collection;
 import javax.persistence.OneToMany;
 import javax.persistence.CascadeType;
 
-
-
 @Entity
 @Table(name = "tournaments")
 @EntityListeners(AuditingEntityListener.class)
-public class TournamentEntity{
+public class TournamentEntity {
 
 	@Id
 	@NotNull
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	@NotNull
 	private String fullName;
-	
+
 	private String shortName;
-	
+
 	private String description;
-	
+
 	private String openingLocation;
-	
+
 	private Date openingTime;
-	
+
 	private String closingLocation;
-	
+
 	private Date closingTime;
-	
+
 	private String donor;
-	
-	private String status;
-	
-	private String url;
-	
+
 	private String createdBy;
-	
+
 	private Date createdDate;
-	
+
 	private String modifiedBy;
-	
+
 	private Date modifiedDate;
-	
+
+	private String status;
+
+	private String url;
+
+	private String avatar;
+
+	private String background;
 
 	@ManyToOne
 	@JoinColumn(name = "creatorId")
 	private UserEntity creator;
-	
+
 	@ManyToMany(mappedBy = "tournamentsList")
 	private Collection<UserEntity> usersList;
-	
+
+	@OneToMany(mappedBy = "tournament", cascade = CascadeType.ALL)
+	private Collection<ReportEntity> reports;
+
 	@OneToMany(mappedBy = "tournament", cascade = CascadeType.ALL)
 	private Collection<CompetitionEntity> competitions;
 
 	@OneToMany(mappedBy = "tournament", cascade = CascadeType.ALL)
 	private Collection<PostEntity> posts;
 
-
 	public Long getId() {
 		return id;
 	}
-	
+
 	public String getFullName() {
 		return fullName;
 	}
-	
+
 	public void setFullName(String fullName) {
 		this.fullName = fullName;
 	}
-	
+
 	public String getShortName() {
 		return shortName;
 	}
-	
+
 	public void setShortName(String shortName) {
 		this.shortName = shortName;
 	}
-	
+
 	public String getDescription() {
 		return description;
 	}
-	
+
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
+
 	public String getOpeningLocation() {
 		return openingLocation;
 	}
-	
+
 	public void setOpeningLocation(String openingLocation) {
 		this.openingLocation = openingLocation;
 	}
-	
+
 	public Date getOpeningTime() {
 		return openingTime;
 	}
-	
+
 	public void setOpeningTime(Date openingTime) {
 		this.openingTime = openingTime;
 	}
-	
+
 	public String getClosingLocation() {
 		return closingLocation;
 	}
-	
+
 	public void setClosingLocation(String closingLocation) {
 		this.closingLocation = closingLocation;
 	}
-	
+
 	public Date getClosingTime() {
 		return closingTime;
 	}
-	
+
 	public void setClosingTime(Date closingTime) {
 		this.closingTime = closingTime;
 	}
-	
+
 	public String getDonor() {
 		return donor;
 	}
-	
+
 	public void setDonor(String donor) {
 		this.donor = donor;
 	}
-	
+
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public String getModifiedBy() {
+		return modifiedBy;
+	}
+
+	public void setModifiedBy(String modifiedBy) {
+		this.modifiedBy = modifiedBy;
+	}
+
+	public Date getModifiedDate() {
+		return modifiedDate;
+	}
+
+	public void setModifiedDate(Date modifiedDate) {
+		this.modifiedDate = modifiedDate;
+	}
+
 	public String getStatus() {
 		return status;
 	}
-	
+
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	
+
 	public String getUrl() {
 		return url;
 	}
-	
+
 	public void setUrl(String url) {
 		this.url = url;
 	}
-	
-	public String getCreatedby() {
-		return createdBy;
-	}
-	
-	public void setCreatedby(String createdBy) {
-		this.createdBy = createdBy;
-	}
-	
-	public Date getCreateddate() {
-		return createdDate;
-	}
-	
-	public void setCreateddate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
-	
-	public String getModifiedby() {
-		return modifiedBy;
-	}
-	
-	public void setModifiedby(String modifiedBy) {
-		this.modifiedBy = modifiedBy;
-	}
-	
-	public Date getModifieddate() {
-		return modifiedDate;
-	}
-	
-	public void setModifieddate(Date modifiedDate) {
-		this.modifiedDate = modifiedDate;
-	}
-	
+
 	public UserEntity getCreator() {
 		return creator;
 	}
-	
+
 	public void setCreator(UserEntity creator) {
 		this.creator = creator;
 	}
-	
-	public Collection<UserEntity> getUserslist() {
+
+	public Collection<UserEntity> getUsersList() {
 		return usersList;
 	}
-	
-	public void setUserslist(Collection<UserEntity> usersList) {
+
+	public void setUsersList(Collection<UserEntity> usersList) {
 		this.usersList = usersList;
 	}
-	
+
+	public Collection<ReportEntity> getReports() {
+		return reports;
+	}
+
+	public void setReports(Collection<ReportEntity> reports) {
+		this.reports = reports;
+	}
+
 	public Collection<CompetitionEntity> getCompetitions() {
 		return competitions;
 	}
-	
+
 	public void setCompetitions(Collection<CompetitionEntity> competitions) {
 		this.competitions = competitions;
 	}
-	
+
 	public Collection<PostEntity> getPosts() {
 		return posts;
 	}
-	
+
 	public void setPosts(Collection<PostEntity> posts) {
 		this.posts = posts;
 	}
+
+	public String getAvatar() {
+		return avatar;
+	}
+
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
+	}
+
+	public String getBackground() {
+		return background;
+	}
+
+	public void setBackground(String background) {
+		this.background = background;
+	}
+	
 	
 
 }

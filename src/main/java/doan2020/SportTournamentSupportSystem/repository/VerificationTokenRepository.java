@@ -6,11 +6,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import doan2020.SportTournamentSupportSystem.entity.UserEntity;
-import doan2020.SportTournamentSupportSystem.entity.VerificationToken;
+import doan2020.SportTournamentSupportSystem.entity.VerificationTokenEntity;
 
 @Repository
-public interface VerificationTokenRepository extends JpaRepository<VerificationToken, Long> {
-	List<VerificationToken> findByUserEntityEmailAndUserEntity(String email,UserEntity userEntity);
+public interface VerificationTokenRepository extends JpaRepository<VerificationTokenEntity, Long> {
+	List<VerificationTokenEntity> findByUserEmailAndUser(String email,UserEntity userEntity);
 
-	List<VerificationToken> findByToken(String token);
+	VerificationTokenEntity findOneByToken(String token);
+	
+	VerificationTokenEntity findOneById(Long id);
 }

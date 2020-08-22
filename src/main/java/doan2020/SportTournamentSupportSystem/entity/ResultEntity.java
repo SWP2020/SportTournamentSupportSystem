@@ -25,11 +25,11 @@ public class ResultEntity{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	private int setNumber;
+	private int setNo;
 	
 	private float score;
 	
-	private boolean isWinner;
+	private int ranking;
 	
 	private String createdBy;
 	
@@ -38,6 +38,10 @@ public class ResultEntity{
 	private String modifiedBy;
 	
 	private Date modifiedDate;
+	
+	private String status;
+	
+	private String url;
 	
 
 	@ManyToOne
@@ -49,81 +53,97 @@ public class ResultEntity{
 	private TeamEntity team;
 	
 
-	public Long getId() {
-		return id;
-	}
-	
-	public int getSetnumber() {
-		return setNumber;
-	}
-	
-	public void setSetnumber(int setNumber) {
-		this.setNumber = setNumber;
-	}
-	
-	public float getScore() {
-		return score;
-	}
-	
-	public void setScore(float score) {
-		this.score = score;
-	}
-	
-	public boolean getIswinner() {
-		return isWinner;
-	}
-	
-	public void setIswinner(boolean isWinner) {
-		this.isWinner = isWinner;
-	}
-	
-	public String getCreatedby() {
-		return createdBy;
-	}
-	
-	public void setCreatedby(String createdBy) {
-		this.createdBy = createdBy;
-	}
-	
-	public Date getCreateddate() {
-		return createdDate;
-	}
-	
-	public void setCreateddate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
-	
-	public String getModifiedby() {
-		return modifiedBy;
-	}
-	
-	public void setModifiedby(String modifiedBy) {
-		this.modifiedBy = modifiedBy;
-	}
-	
-	public Date getModifieddate() {
-		return modifiedDate;
-	}
-	
-	public void setModifieddate(Date modifiedDate) {
-		this.modifiedDate = modifiedDate;
-	}
-	
-	public MatchEntity getMatch() {
-		return match;
-	}
-	
-	public void setMatch(MatchEntity match) {
-		this.match = match;
-	}
-	
-	public TeamEntity getTeam() {
-		return team;
-	}
-	
-	public void setTeam(TeamEntity team) {
-		this.team = team;
-	}
-	
+public Long getId() {
+	return id;
+}
+
+public int getSetNo() {
+	return setNo;
+}
+
+public void setSetNo(int setNo) {
+	this.setNo = setNo;
+}
+
+public float getScore() {
+	return score;
+}
+
+public void setScore(float score) {
+	this.score = score;
+}
+
+public int getRank() {
+	return ranking;
+}
+
+public void setRank(int rank) {
+	this.ranking = rank;
+}
+
+public String getCreatedBy() {
+	return createdBy;
+}
+
+public void setCreatedBy(String createdBy) {
+	this.createdBy = createdBy;
+}
+
+public Date getCreatedDate() {
+	return createdDate;
+}
+
+public void setCreatedDate(Date createdDate) {
+	this.createdDate = createdDate;
+}
+
+public String getModifiedBy() {
+	return modifiedBy;
+}
+
+public void setModifiedBy(String modifiedBy) {
+	this.modifiedBy = modifiedBy;
+}
+
+public Date getModifiedDate() {
+	return modifiedDate;
+}
+
+public void setModifiedDate(Date modifiedDate) {
+	this.modifiedDate = modifiedDate;
+}
+
+public String getStatus() {
+	return status;
+}
+
+public void setStatus(String status) {
+	this.status = status;
+}
+
+public String getUrl() {
+	return url;
+}
+
+public void setUrl(String url) {
+	this.url = url;
+}
+
+public MatchEntity getMatch() {
+	return match;
+}
+
+public void setMatch(MatchEntity match) {
+	this.match = match;
+}
+
+public TeamEntity getTeam() {
+	return team;
+}
+
+public void setTeam(TeamEntity team) {
+	this.team = team;
+}
+
 
 }
