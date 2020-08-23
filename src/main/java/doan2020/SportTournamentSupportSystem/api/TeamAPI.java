@@ -1,5 +1,6 @@
 package doan2020.SportTournamentSupportSystem.api;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,6 +26,7 @@ import doan2020.SportTournamentSupportSystem.dto.TeamDTO;
 import doan2020.SportTournamentSupportSystem.entity.PermissionEntity;
 import doan2020.SportTournamentSupportSystem.entity.TeamEntity;
 import doan2020.SportTournamentSupportSystem.entity.UserEntity;
+import doan2020.SportTournamentSupportSystem.model.Entity.Player;
 import doan2020.SportTournamentSupportSystem.response.Response;
 import doan2020.SportTournamentSupportSystem.service.IPermissionService;
 import doan2020.SportTournamentSupportSystem.service.ITeamService;
@@ -291,7 +293,8 @@ public class TeamAPI {
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
 	
-	@PostMapping
+	@SuppressWarnings("unchecked")
+	@PostMapping("/registerTeam")
 	@CrossOrigin
 	public ResponseEntity<Response> createTeamToRegister(
 			@RequestParam("competitionId") String competitionId,
@@ -305,6 +308,7 @@ public class TeamAPI {
 		Map<String, Object> error = new HashMap<String, Object>();
 		TeamEntity teamEntity = new TeamEntity();
 		TeamDTO teamDTO = null;
+		ArrayList<Player> listPlayer = null;
 
 		try {
 			if (map.containsKey("TeamDTO")) {
@@ -312,7 +316,7 @@ public class TeamAPI {
 			}
 			
 			if (map.containsKey("ListPlayer")) {
-//				ArrayList<Player> listPlayer = map.get("ListPlayer");
+				listPlayer = (ArrayList<Player>) map.get("ListPlayer");
 			}
 
 		} catch (Exception e) {

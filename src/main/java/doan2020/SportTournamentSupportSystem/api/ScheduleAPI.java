@@ -20,7 +20,7 @@ import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
 import doan2020.SportTournamentSupportSystem.entity.FormatEntity;
 import doan2020.SportTournamentSupportSystem.entity.MatchEntity;
 import doan2020.SportTournamentSupportSystem.entity.TeamEntity;
-import doan2020.SportTournamentSupportSystem.model.LogicEntity.EliminationTree;
+import doan2020.SportTournamentSupportSystem.model.ScheduleStruct.EliminationTree;
 import doan2020.SportTournamentSupportSystem.response.Response;
 import doan2020.SportTournamentSupportSystem.service.ICompetitionService;
 import doan2020.SportTournamentSupportSystem.service.IFileStorageService;
