@@ -14,9 +14,6 @@ import doan2020.SportTournamentSupportSystem.service.ITeamService;
 public class ResultConverter {
 	
 	@Autowired
-	private ITeamService teamService;
-	
-	@Autowired
 	private IMatchService matchService;
 	
 	public ResultEntity toEntity(ResultDTO dto){
@@ -48,6 +45,7 @@ public class ResultConverter {
 		System.out.println("ResultConverter: toDTO: finish");
 		ResultDTO dto = new ResultDTO();
 		try {
+			
 			dto.setMatchId(entity.getMatch().getId());
             dto.setSetNo(entity.getSetNo());
             dto.setTeam1Score(entity.getTeam1Score());

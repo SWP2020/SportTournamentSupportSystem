@@ -6,13 +6,9 @@ public class GroupStageSettingDTO {
 	private int maxTeamPerTable;
 
 	private int advanceTeamPerTable;
-
-	public GroupStageSettingDTO(Long id, int maxTeamPerTable, int advanceTeamPerTable) {
-		super();
-		this.id = id;
-		this.maxTeamPerTable = maxTeamPerTable;
-		this.advanceTeamPerTable = advanceTeamPerTable;
-	}
+	
+	private boolean has_home_match;
+	private Long formatId;
 
 	public GroupStageSettingDTO() {
 		// TODO Auto-generated constructor stub
@@ -41,6 +37,24 @@ public class GroupStageSettingDTO {
 	public void setAdvanceTeamPerTable(int advanceTeamPerTable) {
 		this.advanceTeamPerTable = advanceTeamPerTable;
 	}
+
+	public boolean isHas_home_match() {
+		return has_home_match;
+	}
+
+	public void setHas_home_match(boolean has_home_match) {
+		this.has_home_match = has_home_match;
+	}
+
+	public Long getFormatId() {
+		return formatId;
+	}
+
+	public void setFormatId(Long formatId) {
+		this.formatId = formatId;
+	}
+	
+	
 	
 	
 }

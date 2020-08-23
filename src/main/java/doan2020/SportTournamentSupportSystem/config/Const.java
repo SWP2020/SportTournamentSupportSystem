@@ -63,5 +63,10 @@ public final class Const {
 	public final static String TABLE_NAMING = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	public final static String WIN_BRANCH_NAMING = "A-";
 	public final static String LOSE_BRANCH_NAMING = "B-";
+	
+//	Constant for role
+	public final static String ROLE_ADMIN = "ROLE_ADMIN";
+	public final static String ROLE_USER = "ROLE_USER";
+	
 
 }

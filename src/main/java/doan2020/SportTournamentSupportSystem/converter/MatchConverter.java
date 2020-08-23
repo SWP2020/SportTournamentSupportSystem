@@ -84,17 +84,21 @@ public class MatchConverter {
 			dto.setId(entity.getId());
 			dto.setCompetitionId(entity.getCompetition().getId());
 			dto.setLocation(entity.getLocation());
-			dto.setLoserId(entity.getLoser().getId());
 			dto.setName(entity.getName());
 			dto.setStatus(entity.getStatus());
 			dto.setTeam1Bonus(entity.getTeam1Bonus());
-			dto.setTeam1Id(entity.getTeam1().getId());
+			if (entity.getTeam1() != null)
+				dto.setTeam1Id(entity.getTeam1().getId());
 			dto.setTeam2Bonus(entity.getTeam2Bonus());
-			dto.setTeam2Id(entity.getTeam2().getId());
+			if (entity.getTeam2() != null)
+				dto.setTeam2Id(entity.getTeam2().getId());
 			String time = validator.formatDateToString(entity.getTime());
 			dto.setTime(time);
 			dto.setUrl(entity.getUrl());
-			dto.setWinnerId(entity.getWinnner().getId());
+			if (entity.getWinnner() != null)
+				dto.setWinnerId(entity.getWinnner().getId());
+			if (entity.getLoser() != null)
+				dto.setLoserId(entity.getLoser().getId());
 			System.out.println("MatchConverter: toDTO: no exception");
 		} catch (Exception e) {
 			System.out.println("MatchConverter: toDTO: has exception");

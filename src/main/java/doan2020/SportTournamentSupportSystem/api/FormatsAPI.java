@@ -14,26 +14,26 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import doan2020.SportTournamentSupportSystem.converter.CompetitionFormatConverter;
-import doan2020.SportTournamentSupportSystem.dto.CompetitionFormatDTO;
-import doan2020.SportTournamentSupportSystem.entity.CompetitionFormatEntity;
+import doan2020.SportTournamentSupportSystem.converter.FormatConverter;
+import doan2020.SportTournamentSupportSystem.dto.FormatDTO;
+import doan2020.SportTournamentSupportSystem.entity.FormatEntity;
 import doan2020.SportTournamentSupportSystem.response.Response;
-import doan2020.SportTournamentSupportSystem.service.ICompetitionFormatService;
+import doan2020.SportTournamentSupportSystem.service.IFormatService;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/competitionFormats")
-public class CompetitionFormatsAPI {
+@RequestMapping("/formats")
+public class FormatsAPI {
 
 	@Autowired
-	private CompetitionFormatConverter converter;
+	private FormatConverter converter;
 	
 	@Autowired
-	private ICompetitionFormatService service;
+	private IFormatService service;
 	
 	@GetMapping("")
-	public ResponseEntity<Response> getAllCompetitionFormat() {
-		System.out.println("CompetitionFormatsAPI: getAllCompetitionFormat: start");
+	public ResponseEntity<Response> getAllFormat() {
+		System.out.println("FormatsAPI: getAllFormat: start");
 
 		Response response = new Response();
 		Map<String, Object> config = new HashMap<String, Object>();
@@ -41,14 +41,14 @@ public class CompetitionFormatsAPI {
 		Map<String, Object> error = new HashMap<String, Object>();
 		HttpStatus httpStatus = HttpStatus.OK;
 
-		Collection<CompetitionFormatEntity> findPage = new ArrayList<>();
-		List<CompetitionFormatDTO> findPageDTO = new ArrayList<>();
+		Collection<FormatEntity> findPage = new ArrayList<>();
+		List<FormatDTO> findPageDTO = new ArrayList<>();
 
 		try {
 			findPage = service.findAll();
 
-			for (CompetitionFormatEntity entity : findPage) {
-				CompetitionFormatDTO dto = converter.toDTO(entity);
+			for (FormatEntity entity : findPage) {
+				FormatDTO dto = converter.toDTO(entity);
 				findPageDTO.add(dto);
 			}
 
@@ -56,9 +56,9 @@ public class CompetitionFormatsAPI {
 			error.put("MessageCode", 0);
 			error.put("Message", "Get page successfully");
 
-			System.out.println("CompetitionFormatsAPI: getAllCompetitionFormat: no exception");
+			System.out.println("FormatsAPI: getAllFormat: no exception");
 		} catch (Exception e) {
-			System.out.println("CompetitionFormatsAPI: getAllCompetitionFormat: has exception");
+			System.out.println("FormatsAPI: getAllFormat: has exception");
 			result.put("Users", findPageDTO);
 			error.put("MessageCode", 1);
 			error.put("Message", "Server error");
@@ -66,7 +66,7 @@ public class CompetitionFormatsAPI {
 		response.setError(error);
 		response.setResult(result);
 		response.setConfig(config);
-		System.out.println("CompetitionFormatsAPI: getAllCompetitionFormat: finish");
+		System.out.println("FormatsAPI: getAllFormat: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
 }

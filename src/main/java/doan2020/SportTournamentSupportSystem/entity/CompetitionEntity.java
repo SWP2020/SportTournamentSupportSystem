@@ -54,14 +54,6 @@ public class CompetitionEntity {
 	@JoinColumn(name = "sportId")
 	private SportEntity sport;
 
-	@ManyToOne
-	@JoinColumn(name = "finalStageFormatId")
-	private CompetitionFormatEntity finalStageFormat;
-
-	@ManyToOne
-	@JoinColumn(name = "groupStageFormatId")
-	private CompetitionFormatEntity groupStageFormat;
-
 	@OneToMany(mappedBy = "competition", cascade = CascadeType.ALL)
 	private Collection<MatchEntity> matches;
 
@@ -158,22 +150,6 @@ public class CompetitionEntity {
 
 	public void setSport(SportEntity sport) {
 		this.sport = sport;
-	}
-
-	public CompetitionFormatEntity getFinalStageFormat() {
-		return finalStageFormat;
-	}
-
-	public void setFinalStageFormat(CompetitionFormatEntity finalStageFormat) {
-		this.finalStageFormat = finalStageFormat;
-	}
-
-	public CompetitionFormatEntity getGroupStageFormat() {
-		return groupStageFormat;
-	}
-
-	public void setGroupStageFormat(CompetitionFormatEntity groupStageFormat) {
-		this.groupStageFormat = groupStageFormat;
 	}
 
 	public Collection<MatchEntity> getMatches() {

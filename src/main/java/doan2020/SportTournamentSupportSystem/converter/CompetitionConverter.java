@@ -5,12 +5,10 @@ import org.springframework.stereotype.Component;
 
 import doan2020.SportTournamentSupportSystem.dto.CompetitionDTO;
 import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
-import doan2020.SportTournamentSupportSystem.entity.CompetitionFormatEntity;
 import doan2020.SportTournamentSupportSystem.entity.FinalStageSettingEntity;
 import doan2020.SportTournamentSupportSystem.entity.GroupStageSettingEntity;
 import doan2020.SportTournamentSupportSystem.entity.SportEntity;
 import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
-import doan2020.SportTournamentSupportSystem.service.ICompetitionFormatService;
 import doan2020.SportTournamentSupportSystem.service.IFinalStageSettingService;
 import doan2020.SportTournamentSupportSystem.service.IGroupStageSettingService;
 import doan2020.SportTournamentSupportSystem.service.ISportService;
@@ -21,9 +19,6 @@ public class CompetitionConverter {
 
 	@Autowired
 	private ITournamentService tournamentService;
-
-	@Autowired
-	private ICompetitionFormatService competitionFormatService;
 
 	@Autowired
 	private IFinalStageSettingService finalStageSettingService;
@@ -55,18 +50,6 @@ public class CompetitionConverter {
 				entity.setSport(sport);
 			}
 
-			if (dto.getFinalStageFormatId() != null) {
-				Long finalStageFormatId = dto.getFinalStageFormatId();
-				CompetitionFormatEntity finalStageFormat = competitionFormatService.findOneById(finalStageFormatId);
-				entity.setFinalStageFormat(finalStageFormat);
-			}
-
-			if (dto.getGroupStageFormatId() != null) {
-				Long groupStageFormatId = dto.getGroupStageFormatId();
-				CompetitionFormatEntity groupStageFormat = competitionFormatService.findOneById(groupStageFormatId);
-				entity.setGroupStageFormat(groupStageFormat);
-			}
-
 			if (dto.getFinalStageSettingId() != null) {
 				Long finalStageSettingId = dto.getFinalStageSettingId();
 				FinalStageSettingEntity finalStageSettingEntity = finalStageSettingService
@@ -75,7 +58,7 @@ public class CompetitionConverter {
 			}
 
 			if (dto.getGroupStageSettingId() != null) {
-				Long groupStageSettingId = dto.getFinalStageFormatId();
+				Long groupStageSettingId = dto.getGroupStageSettingId();
 				GroupStageSettingEntity groupStageSettingEntity = groupStageSettingService
 						.findOneById(groupStageSettingId);
 				entity.setGroupStageSetting(groupStageSettingEntity);
@@ -113,18 +96,6 @@ public class CompetitionConverter {
 			SportEntity sport = entity.getSport();
 			Long sportId = sport.getId();
 			dto.setSportId(sportId);
-
-			CompetitionFormatEntity finalStageFormat = entity.getFinalStageFormat();
-			if (finalStageFormat != null) {
-				Long finalStageFormatId = finalStageFormat.getId();
-				dto.setFinalStageFormatId(finalStageFormatId);
-			}
-
-			CompetitionFormatEntity groupStageFormat = entity.getGroupStageFormat();
-			if (groupStageFormat != null) {
-				Long groupStageFormatId = groupStageFormat.getId();
-				dto.setGroupStageFormatId(groupStageFormatId);
-			}
 
 			FinalStageSettingEntity finalStageSettingEntity = entity.getFinalStageSetting();
 			if (finalStageSettingEntity != null) {

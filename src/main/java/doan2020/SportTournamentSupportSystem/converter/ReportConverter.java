@@ -56,10 +56,11 @@ public class ReportConverter {
 		ReportDTO dto = new ReportDTO();
 		try {
 			dto.setId(entity.getId());
-			dto.setSenderId(entity.getSender().getId());
+			if (entity.getSender() != null)
+				dto.setSenderId(entity.getSender().getId());
 			dto.setSubject(entity.getSubject());
-
-			dto.setTournamentId(entity.getTournament().getId());
+			if (entity.getTournament() != null)
+				dto.setTournamentId(entity.getTournament().getId());
 			dto.setContent(entity.getContent());
 			dto.setStatus(entity.getStatus());
 			dto.setUrl(entity.getUrl());

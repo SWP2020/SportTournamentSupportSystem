@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import doan2020.SportTournamentSupportSystem.config.Const;
 import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
-import doan2020.SportTournamentSupportSystem.entity.CompetitionFormatEntity;
+import doan2020.SportTournamentSupportSystem.entity.FormatEntity;
 import doan2020.SportTournamentSupportSystem.entity.MatchEntity;
 import doan2020.SportTournamentSupportSystem.entity.TeamEntity;
 import doan2020.SportTournamentSupportSystem.model.LogicEntity.EliminationTree;
@@ -139,11 +139,11 @@ public class ScheduleAPI {
 				
 				schedule.put("TotalTeam", teams.size());
 				
-				CompetitionFormatEntity format;
+				FormatEntity format;
 				Long formatId;
 				
 				try {
-					format = thisCompetition.getFinalStageFormat();
+					format = thisCompetition.getFinalStageSetting().getFormat();
 					formatId = format.getId();
 					schedule.put("Format", format.getName());
 				} catch (Exception e) {

@@ -2,15 +2,15 @@ package doan2020.SportTournamentSupportSystem.converter;
 
 import org.springframework.stereotype.Component;
 
-import doan2020.SportTournamentSupportSystem.dto.CompetitionFormatDTO;
-import doan2020.SportTournamentSupportSystem.entity.CompetitionFormatEntity;
+import doan2020.SportTournamentSupportSystem.dto.FormatDTO;
+import doan2020.SportTournamentSupportSystem.entity.FormatEntity;
 
 @Component
-public class CompetitionFormatConverter {
+public class FormatConverter {
 	
-	public CompetitionFormatEntity toEntity(CompetitionFormatDTO dto){
+	public FormatEntity toEntity(FormatDTO dto){
 		System.out.println("CompetitionFormatConverter: toEntity: start");
-		CompetitionFormatEntity entity = new CompetitionFormatEntity();
+		FormatEntity entity = new FormatEntity();
 		try {
 			if (dto.getName() != null)
 				entity.setName(dto.getName());
@@ -18,7 +18,6 @@ public class CompetitionFormatConverter {
 			entity.setDescription(dto.getDescription());
 			entity.setStatus(dto.getStatus());
 			entity.setUrl(dto.getUrl());
-			entity.setHasHomeMatch(dto.isHasHomeMatch());
 			System.out.println("CompetitionFormatConverter: toEntity: no exception");
 		}catch (Exception e) {
 			System.out.println("CompetitionFormatConverter: toEntity: has exception");
@@ -28,9 +27,9 @@ public class CompetitionFormatConverter {
 		return entity;
 	}
 
-	public CompetitionFormatDTO toDTO(CompetitionFormatEntity entity){
+	public FormatDTO toDTO(FormatEntity entity){
 		System.out.println("CompetitionFormatConverter: toDTO: finish");
-		CompetitionFormatDTO dto = new CompetitionFormatDTO();
+		FormatDTO dto = new FormatDTO();
 		try {
 			
 			dto.setName(entity.getName());
@@ -38,7 +37,6 @@ public class CompetitionFormatConverter {
 			
 			dto.setStatus(entity.getStatus());
 			dto.setUrl(entity.getUrl());
-			dto.setHasHomeMatch(entity.isHasHomeMatch());
 			System.out.println("CompetitionFormatConverter: toDTO: no exception");
 		} catch (Exception e) {
 			System.out.println("CompetitionFormatConverter: toDTO: has exception");

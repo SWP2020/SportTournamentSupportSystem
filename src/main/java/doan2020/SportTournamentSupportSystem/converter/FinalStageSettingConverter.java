@@ -1,14 +1,27 @@
 package doan2020.SportTournamentSupportSystem.converter;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import doan2020.SportTournamentSupportSystem.dto.FinalStageSettingDTO;
 import doan2020.SportTournamentSupportSystem.entity.FinalStageSettingEntity;
+import doan2020.SportTournamentSupportSystem.entity.FormatEntity;
+import doan2020.SportTournamentSupportSystem.service.IFormatService;
 
 public class FinalStageSettingConverter {
+	
+	@Autowired
+	IFormatService formatService;
 	
 	public FinalStageSettingEntity toEntity(FinalStageSettingDTO dto){
 		System.out.println("FinalStageSettingConverter: toEntity: start");
 		FinalStageSettingEntity entity = new FinalStageSettingEntity();
 		try {
+			entity.setHasHomeMatch(dto.isHas_home_match());
+			if (dto.getFormatId() != null) {
+				Long formatId = dto.getFormatId();
+				FormatEntity format = formatService.findOneById(formatId);
+				entity.setFormat(format);
+			}
 			System.out.println("FinalStageSettingConverter: toEntity: no exception");
 		}catch (Exception e) {
 			System.out.println("FinalStageSettingConverter: toEntity: has exception");
@@ -23,7 +36,8 @@ public class FinalStageSettingConverter {
 		FinalStageSettingDTO dto = new FinalStageSettingDTO();
 		try {
 			dto.setId(entity.getId());
-			
+			if (entity.getFormat() != null)
+				dto.setFormatId(entity.getFormat().getId());
 			System.out.println("FinalStageSettingConverter: toDTO: no exception");
 		} catch (Exception e) {
 			System.out.println("FinalStageSettingConverter: toDTO: has exception");

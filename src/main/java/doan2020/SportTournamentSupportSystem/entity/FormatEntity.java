@@ -15,9 +15,9 @@ import javax.persistence.CascadeType;
 import java.util.Collection;
 
 @Entity
-@Table(name = "competition_formats")
+@Table(name = "formats")
 @EntityListeners(AuditingEntityListener.class)
-public class CompetitionFormatEntity {
+public class FormatEntity {
 
 	@Id
 	@NotNull
@@ -39,11 +39,12 @@ public class CompetitionFormatEntity {
 	private String status;
 
 	private String url;
-
-	private boolean hasHomeMatch;
-
-	@OneToMany(mappedBy = "groupStageFormat", cascade = CascadeType.ALL)
-	private Collection<CompetitionEntity> competitions;
+	
+	@OneToMany(mappedBy = "format", cascade = CascadeType.ALL)
+	private Collection<FinalStageSettingEntity> finalStageSettings;
+	
+	@OneToMany(mappedBy = "format", cascade = CascadeType.ALL)
+	private Collection<GroupStageSettingEntity> groupStageSettings;
 
 	public Long getId() {
 		return id;
@@ -112,23 +113,6 @@ public class CompetitionFormatEntity {
 	public void setUrl(String url) {
 		this.url = url;
 	}
-
-	public Collection<CompetitionEntity> getCompetitions() {
-		return competitions;
-	}
-
-	public void setCompetitions(Collection<CompetitionEntity> competitions) {
-		this.competitions = competitions;
-	}
-
-	public boolean isHasHomeMatch() {
-		return hasHomeMatch;
-	}
-
-	public void setHasHomeMatch(boolean hasHomeMatch) {
-		this.hasHomeMatch = hasHomeMatch;
-	}
-	
 	
 
 }
