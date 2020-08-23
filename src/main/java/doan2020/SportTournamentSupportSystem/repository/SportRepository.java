@@ -10,5 +10,4 @@ import doan2020.SportTournamentSupportSystem.entity.SportEntity;
 public interface SportRepository extends JpaRepository<SportEntity, Long>{
     SportEntity findOneById(Long id);
     
-    Collection<SportEntity> findByScoringUnitId(Long scoringUnitId);
 }

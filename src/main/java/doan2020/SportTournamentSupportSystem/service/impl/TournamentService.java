@@ -70,6 +70,8 @@ public class TournamentService implements ITournamentService {
 			updatedEntity.setModifiedDate(newEntity.getModifiedDate());
 			updatedEntity.setStatus(newEntity.getStatus());
 			updatedEntity.setUrl(newEntity.getUrl());
+			updatedEntity.setCloseRegistrationTime(newEntity.getCloseRegistrationTime());
+			updatedEntity.setOpenRegistrationTime(newEntity.getOpenRegistrationTime());
 			updatedEntity = tournamentRepository.save(updatedEntity);
 		} catch (Exception e) {
 			return null;
@@ -196,18 +198,16 @@ public class TournamentService implements ITournamentService {
 
 		HashSet<String> sportsName = new HashSet<>();
 
-		int countPlayer = 0;
+		int countTeam = 0;
 
 		for (CompetitionEntity comp : competitions) {
 
 			sportsName.add(comp.getSport().getFullName());
 
-			for (TeamEntity teamEntity : comp.getTeams()) {
-				countPlayer += teamEntity.getPlayers().size();
-			}
+			countTeam += comp.getTeams().size();
 		}
 		option.put("sportsName", sportsName);
-		option.put("countPlayer", countPlayer);
+		option.put("countTeam", countTeam);
 		option.put("process", 0);
 		return option;
 	}

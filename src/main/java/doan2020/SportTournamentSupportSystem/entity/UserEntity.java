@@ -111,25 +111,11 @@ public class UserEntity{
 	)
 	private Collection<TournamentEntity> tournamentsList;
 	
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinTable(
-		name = "user_post",
-		joinColumns = @JoinColumn(name = "user_id"),
-		inverseJoinColumns = @JoinColumn(name = "post_id")
-	)
-	private Collection<PostEntity> postsList;
-	
 	@ManyToMany(mappedBy = "usersList")
 	private Collection<NotificationEntity> notificationsList;
 	
 	@OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
 	private Collection<ReportEntity> reports;
-
-	@OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
-	private Collection<CommentEntity> comments;
-
-	@OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
-	private Collection<PostEntity> posts;
 
 	@OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
 	private Collection<TeamEntity> teams;
@@ -301,14 +287,6 @@ public void setTournamentsList(Collection<TournamentEntity> tournamentsList) {
 	this.tournamentsList = tournamentsList;
 }
 
-public Collection<PostEntity> getPostsList() {
-	return postsList;
-}
-
-public void setPostsList(Collection<PostEntity> postsList) {
-	this.postsList = postsList;
-}
-
 public Collection<NotificationEntity> getNotificationsList() {
 	return notificationsList;
 }
@@ -323,22 +301,6 @@ public Collection<ReportEntity> getReports() {
 
 public void setReports(Collection<ReportEntity> reports) {
 	this.reports = reports;
-}
-
-public Collection<CommentEntity> getComments() {
-	return comments;
-}
-
-public void setComments(Collection<CommentEntity> comments) {
-	this.comments = comments;
-}
-
-public Collection<PostEntity> getPosts() {
-	return posts;
-}
-
-public void setPosts(Collection<PostEntity> posts) {
-	this.posts = posts;
 }
 
 public Collection<TeamEntity> getTeams() {

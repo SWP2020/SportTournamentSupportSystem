@@ -52,15 +52,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		// Disable crsf cho đường dẫn /rest/**
 		http.csrf().ignoringAntMatchers("/**");
 
-		http.authorizeRequests().antMatchers("/login**").permitAll();
-		http.authorizeRequests().antMatchers("/register**").permitAll();
+		http.authorizeRequests().antMatchers("/login/**").permitAll();
+		http.authorizeRequests().antMatchers(HttpMethod.POST, "/user**").permitAll();
 		
 
 		http.antMatcher("/**").httpBasic().authenticationEntryPoint(restServicesEntryPoint()).and()
 		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
-		.antMatchers(HttpMethod.PUT, "/user**").access("hasRole('ROLE_USER')")
-		.antMatchers(HttpMethod.POST, "/tournament**").access("hasRole('ROLE_USER')")
-		.antMatchers(HttpMethod.PUT, "/tournament**").access("hasRole('ROLE_USER')")
+		.antMatchers(HttpMethod.POST, "/**").access("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
+		.antMatchers(HttpMethod.PUT, "/**").access("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
+		.antMatchers(HttpMethod.DELETE, "/**").access("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
 		.and()
 		.addFilterBefore(jwtAuthenticationTokenFilter(), UsernamePasswordAuthenticationFilter.class)
 		.exceptionHandling().accessDeniedHandler(customAccessDeniedHandler());

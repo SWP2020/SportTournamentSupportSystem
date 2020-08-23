@@ -35,7 +35,6 @@ public class NotificationService implements INotificationService {
 			updatedEntity = notificationRepository.findOneById(id);
 
 			updatedEntity.setTitle(newEntity.getTitle());
-			updatedEntity.setPost(newEntity.getPost());
 			updatedEntity.setContent(newEntity.getContent());
 			updatedEntity.setCreatedBy(newEntity.getCreatedBy());
 			updatedEntity.setCreatedDate(newEntity.getCreatedDate());
@@ -80,17 +79,6 @@ public class NotificationService implements INotificationService {
 		Collection<NotificationEntity> foundEntitys = null;
 		try {
 			foundEntitys = notificationRepository.findAll(pageable).getContent();
-		} catch (Exception e) {
-			return null;
-		}
-		return foundEntitys;
-	}
-
-	@Override
-	public Collection<NotificationEntity> findByPostId(Pageable pageable, Long postId) {
-		Collection<NotificationEntity> foundEntitys = null;
-		try {
-			foundEntitys = notificationRepository.findByPostId(pageable, postId).getContent();
 		} catch (Exception e) {
 			return null;
 		}

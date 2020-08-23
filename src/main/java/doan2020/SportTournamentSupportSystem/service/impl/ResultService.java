@@ -35,16 +35,15 @@ public class ResultService implements IResultService {
 			updatedEntity = resultRepository.findOneById(id);
 
 			updatedEntity.setMatch(newEntity.getMatch());
-			updatedEntity.setTeam(newEntity.getTeam());
-			updatedEntity.setSetNo(newEntity.getSetNo());
-			updatedEntity.setScore(newEntity.getScore());
-			updatedEntity.setRank(newEntity.getRank());
 			updatedEntity.setCreatedBy(newEntity.getCreatedBy());
 			updatedEntity.setCreatedDate(newEntity.getCreatedDate());
 			updatedEntity.setModifiedBy(newEntity.getModifiedBy());
 			updatedEntity.setModifiedDate(newEntity.getModifiedDate());
 			updatedEntity.setStatus(newEntity.getStatus());
 			updatedEntity.setUrl(newEntity.getUrl());
+			updatedEntity.setSetNo(newEntity.getSetNo());
+			updatedEntity.setTeam1Score(newEntity.getTeam1Score());
+			updatedEntity.setTeam2Score(newEntity.getTeam2Score());
 			updatedEntity = resultRepository.save(updatedEntity);
 		} catch (Exception e) {
 			return null;
@@ -93,17 +92,6 @@ public class ResultService implements IResultService {
 		Collection<ResultEntity> foundEntitys = null;
 		try {
 			foundEntitys = resultRepository.findByMatchId(matchId);
-		} catch (Exception e) {
-			return null;
-		}
-		return foundEntitys;
-	}
-
-	@Override
-	public Collection<ResultEntity> findByTeamId(Long teamId) {
-		Collection<ResultEntity> foundEntitys = null;
-		try {
-			foundEntitys = resultRepository.findByTeamId(teamId);
 		} catch (Exception e) {
 			return null;
 		}

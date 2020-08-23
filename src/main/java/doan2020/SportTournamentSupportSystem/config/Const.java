@@ -6,8 +6,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public final class Const {
-//	public final static String DOMAIN = "http://192.168.1.127:3000"; //vuthon8
-	public final static String DOMAIN = "http://192.168.43.15:3000"; //LongSama
+	public final static String DOMAIN = "http://192.168.1.127:3000"; //vuthon8
+//	public final static String DOMAIN = "http://192.168.43.15:3000"; //LongSama
 	
 	@SuppressWarnings("deprecation")
 	public final static Date DEFAULT_DATE = new Date(2020, 1, 1);
@@ -45,7 +45,11 @@ public final class Const {
   
 	public final static String UNSTARTED_STATUS = "unStarted";
 	public final static String STARTED_STATUS = "started";
-	public final static String FINISHED = "finished";
+	public final static String FINISHED_STATUS = "finished";
+	
+	public final static String PENDING_STATUS = "pending";
+	public final static String UNACCEPTED_STATUS = "unAccepted";
+	public final static String ACCEPTED_STATUS = "Accepted";
   
 //	Constant for naming match
 	
@@ -59,5 +63,10 @@ public final class Const {
 	public final static String TABLE_NAMING = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	public final static String WIN_BRANCH_NAMING = "A-";
 	public final static String LOSE_BRANCH_NAMING = "B-";
+	
+//	Constant for role
+	public final static String ROLE_ADMIN = "ROLE_ADMIN";
+	public final static String ROLE_USER = "ROLE_USER";
+	
 
 }

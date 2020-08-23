@@ -465,7 +465,7 @@ public class TournamentAPI {
 					error.put("Message", "Tournament is not exist");
 				} else {
 
-					thisTournament = service.updateStatus(thisTournament, Const.FINISHED);
+					thisTournament = service.updateStatus(thisTournament, Const.FINISHED_STATUS);
 
 					thisTournamentDTO = converter.toDTO(thisTournament);
 					

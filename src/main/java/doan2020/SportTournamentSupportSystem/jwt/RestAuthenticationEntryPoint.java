@@ -29,7 +29,7 @@ public final class RestAuthenticationEntryPoint implements AuthenticationEntryPo
         body.put("timestamp", new Date());
         body.put("status", HttpStatus.UNAUTHORIZED.value());
         body.put("error", "UNAUTHORIZED");
-        body.put("message", "account can't access to page");
+        body.put("message", "account with this role can't access to page, so you must to login again");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding(StandardCharsets.UTF_8.toString());

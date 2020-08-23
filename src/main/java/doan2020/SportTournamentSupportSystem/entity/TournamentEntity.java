@@ -1,21 +1,24 @@
 
 package doan2020.SportTournamentSupportSystem.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.EntityListeners;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import java.util.Collection;
 import java.util.Date;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import com.sun.istack.NotNull;
-import javax.persistence.GeneratedValue;
-import javax.persistence.ManyToOne;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
-import java.util.Collection;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.CascadeType;
+import javax.persistence.Table;
+
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import com.sun.istack.NotNull;
 
 @Entity
 @Table(name = "tournaments")
@@ -60,6 +63,9 @@ public class TournamentEntity {
 
 	private String background;
 
+	private Date openRegistrationTime;
+	private Date closeRegistrationTime;
+
 	@ManyToOne
 	@JoinColumn(name = "creatorId")
 	private UserEntity creator;
@@ -72,9 +78,6 @@ public class TournamentEntity {
 
 	@OneToMany(mappedBy = "tournament", cascade = CascadeType.ALL)
 	private Collection<CompetitionEntity> competitions;
-
-	@OneToMany(mappedBy = "tournament", cascade = CascadeType.ALL)
-	private Collection<PostEntity> posts;
 
 	public Long getId() {
 		return id;
@@ -224,12 +227,12 @@ public class TournamentEntity {
 		this.competitions = competitions;
 	}
 
-	public Collection<PostEntity> getPosts() {
-		return posts;
+	public String getBackground() {
+		return background;
 	}
 
-	public void setPosts(Collection<PostEntity> posts) {
-		this.posts = posts;
+	public void setBackground(String background) {
+		this.background = background;
 	}
 
 	public String getAvatar() {
@@ -240,14 +243,20 @@ public class TournamentEntity {
 		this.avatar = avatar;
 	}
 
-	public String getBackground() {
-		return background;
+	public Date getOpenRegistrationTime() {
+		return openRegistrationTime;
 	}
 
-	public void setBackground(String background) {
-		this.background = background;
+	public void setOpenRegistrationTime(Date openRegistrationTime) {
+		this.openRegistrationTime = openRegistrationTime;
 	}
-	
-	
+
+	public Date getCloseRegistrationTime() {
+		return closeRegistrationTime;
+	}
+
+	public void setCloseRegistrationTime(Date closeRegistrationTime) {
+		this.closeRegistrationTime = closeRegistrationTime;
+	}
 
 }

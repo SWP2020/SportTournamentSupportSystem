@@ -290,4 +290,43 @@ public class TeamAPI {
 		System.out.println("Team API - deleteTeam - pass");
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
+	
+	@PostMapping
+	@CrossOrigin
+	public ResponseEntity<Response> createTeamToRegister(
+			@RequestParam("competitionId") String competitionId,
+			@RequestBody Map<String, Object> map) {
+		System.out.println("Team API - createTeam - start");
+		HttpStatus httpStatus = null;
+		httpStatus = HttpStatus.OK;
+		Response response = new Response();
+		Map<String, Object> config = new HashMap<String, Object>();
+		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> error = new HashMap<String, Object>();
+		TeamEntity teamEntity = new TeamEntity();
+		TeamDTO teamDTO = null;
+
+		try {
+			if (map.containsKey("TeamDTO")) {
+				teamDTO = (TeamDTO) map.get("TeamDTO");
+			}
+			
+			if (map.containsKey("ListPlayer")) {
+//				ArrayList<Player> listPlayer = map.get("ListPlayer");
+			}
+
+		} catch (Exception e) {
+			System.out.println("Team API - createTeam - exception");
+			result.put("Team", teamDTO);
+			config.put("Global", 0);
+			error.put("MessageCode", 1);
+			error.put("Message", "server error");
+		}
+		response.setError(error);
+		response.setResult(result);
+		response.setConfig(config);
+		System.out.println("Team API - createTeam - pass");
+		return new ResponseEntity<Response>(response, httpStatus);
+	}
+	
 }

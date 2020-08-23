@@ -10,8 +10,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import doan2020.SportTournamentSupportSystem.config.FileStorageProperties;
 import doan2020.SportTournamentSupportSystem.converter.UserConverter;
 import doan2020.SportTournamentSupportSystem.dto.UserDTO;
 import doan2020.SportTournamentSupportSystem.entity.UserEntity;
@@ -41,11 +39,6 @@ public class TestUserConverter {
 		}
 		
 		@Bean
-		public FileStorageProperties fileStorageProperties() {
-			return new FileStorageProperties();
-		}
-		
-		@Bean
 		public UserConverter userConverter() {
 			return new UserConverter();
 		}
@@ -59,9 +52,6 @@ public class TestUserConverter {
 	
 	@MockBean
 	private IRoleService roleService;
-	
-	@MockBean
-	private FileStorageProperties fileStorageProperties;
 	
 	@Autowired
 	private UserConverter userConverter;
