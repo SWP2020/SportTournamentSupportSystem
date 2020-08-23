@@ -14,114 +14,121 @@ import javax.persistence.OneToMany;
 import javax.persistence.CascadeType;
 import java.util.Collection;
 
-
-
 @Entity
 @Table(name = "competition_formats")
 @EntityListeners(AuditingEntityListener.class)
-public class CompetitionFormatEntity{
+public class CompetitionFormatEntity {
 
 	@Id
 	@NotNull
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	private String name;
-	
+
 	private String description;
-	
+
 	private String createdBy;
-	
+
 	private Date createdDate;
-	
+
 	private String modifiedBy;
-	
+
 	private Date modifiedDate;
-	
+
 	private String status;
-	
+
 	private String url;
-	
+
+	private boolean hasHomeMatch;
 
 	@OneToMany(mappedBy = "groupStageFormat", cascade = CascadeType.ALL)
 	private Collection<CompetitionEntity> competitions;
 
+	public Long getId() {
+		return id;
+	}
 
-public Long getId() {
-	return id;
-}
+	public String getName() {
+		return name;
+	}
 
-public String getName() {
-	return name;
-}
+	public void setName(String name) {
+		this.name = name;
+	}
 
-public void setName(String name) {
-	this.name = name;
-}
+	public String getDescription() {
+		return description;
+	}
 
-public String getDescription() {
-	return description;
-}
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-public void setDescription(String description) {
-	this.description = description;
-}
+	public String getCreatedBy() {
+		return createdBy;
+	}
 
-public String getCreatedBy() {
-	return createdBy;
-}
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
 
-public void setCreatedBy(String createdBy) {
-	this.createdBy = createdBy;
-}
+	public Date getCreatedDate() {
+		return createdDate;
+	}
 
-public Date getCreatedDate() {
-	return createdDate;
-}
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
 
-public void setCreatedDate(Date createdDate) {
-	this.createdDate = createdDate;
-}
+	public String getModifiedBy() {
+		return modifiedBy;
+	}
 
-public String getModifiedBy() {
-	return modifiedBy;
-}
+	public void setModifiedBy(String modifiedBy) {
+		this.modifiedBy = modifiedBy;
+	}
 
-public void setModifiedBy(String modifiedBy) {
-	this.modifiedBy = modifiedBy;
-}
+	public Date getModifiedDate() {
+		return modifiedDate;
+	}
 
-public Date getModifiedDate() {
-	return modifiedDate;
-}
+	public void setModifiedDate(Date modifiedDate) {
+		this.modifiedDate = modifiedDate;
+	}
 
-public void setModifiedDate(Date modifiedDate) {
-	this.modifiedDate = modifiedDate;
-}
+	public String getStatus() {
+		return status;
+	}
 
-public String getStatus() {
-	return status;
-}
+	public void setStatus(String status) {
+		this.status = status;
+	}
 
-public void setStatus(String status) {
-	this.status = status;
-}
+	public String getUrl() {
+		return url;
+	}
 
-public String getUrl() {
-	return url;
-}
+	public void setUrl(String url) {
+		this.url = url;
+	}
 
-public void setUrl(String url) {
-	this.url = url;
-}
+	public Collection<CompetitionEntity> getCompetitions() {
+		return competitions;
+	}
 
-public Collection<CompetitionEntity> getCompetitions() {
-	return competitions;
-}
+	public void setCompetitions(Collection<CompetitionEntity> competitions) {
+		this.competitions = competitions;
+	}
 
-public void setCompetitions(Collection<CompetitionEntity> competitions) {
-	this.competitions = competitions;
-}
+	public boolean isHasHomeMatch() {
+		return hasHomeMatch;
+	}
 
+	public void setHasHomeMatch(boolean hasHomeMatch) {
+		this.hasHomeMatch = hasHomeMatch;
+	}
+	
+	
 
 }

@@ -143,7 +143,7 @@ public class ScheduleAPI {
 				Long formatId;
 				
 				try {
-					format = thisCompetition.getMainFormat();
+					format = thisCompetition.getFinalStageFormat();
 					formatId = format.getId();
 					schedule.put("Format", format.getName());
 				} catch (Exception e) {

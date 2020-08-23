@@ -29,15 +29,9 @@ public class ResultConverter {
 				entity.setMatch(match);			
 			}
 			
-			if (dto.getTeamId() != null) {
-				Long teamId = dto.getTeamId();
-				TeamEntity team = teamService.findOneById(teamId);
-				entity.setTeam(team);
-			}
-			
 			entity.setSetNo(dto.getSetNo());
-			entity.setScore(dto.getScore());
-			entity.setRank(dto.getRank());
+			entity.setTeam1Score(dto.getTeam1Score());
+			entity.setTeam2Score(dto.getTeam2Score());
 
 			entity.setStatus(dto.getStatus());
 			entity.setUrl(dto.getUrl());
@@ -55,12 +49,10 @@ public class ResultConverter {
 		ResultDTO dto = new ResultDTO();
 		try {
 			dto.setMatchId(entity.getMatch().getId());
-			dto.setTeamId(entity.getTeam().getId());
-			
-			dto.setSetNo(entity.getSetNo());
-			dto.setScore(entity.getScore());
-			dto.setRank(entity.getRank());
-			
+            dto.setSetNo(entity.getSetNo());
+            dto.setTeam1Score(entity.getTeam1Score());
+            dto.setTeam2Score(entity.getTeam2Score());
+			dto.setId(entity.getId());
 			dto.setStatus(entity.getStatus());
 			dto.setUrl(entity.getUrl());
 			System.out.println("ResultConverter: toDTO: no exception");

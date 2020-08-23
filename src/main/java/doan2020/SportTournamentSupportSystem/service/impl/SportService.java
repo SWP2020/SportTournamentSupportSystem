@@ -36,7 +36,6 @@ public class SportService implements ISportService {
 
 			updatedEntity.setFullName(newEntity.getFullName());
 			updatedEntity.setShortName(newEntity.getShortName());
-			updatedEntity.setScoringUnit(newEntity.getScoringUnit());
 			updatedEntity.setDescription(newEntity.getDescription());
 			updatedEntity.setCreatedBy(newEntity.getCreatedBy());
 			updatedEntity.setCreatedDate(newEntity.getCreatedDate());
@@ -86,16 +85,4 @@ public class SportService implements ISportService {
 		}
 		return foundEntitys;
 	}
-
-	@Override
-	public Collection<SportEntity> findByScoringUnitId(Long scoringUnitId) {
-		Collection<SportEntity> foundEntitys = null;
-		try {
-			foundEntitys = sportRepository.findByScoringUnitId(scoringUnitId);
-		} catch (Exception e) {
-			return null;
-		}
-		return foundEntitys;
-	}
-
 }

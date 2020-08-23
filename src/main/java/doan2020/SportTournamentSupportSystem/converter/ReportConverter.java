@@ -41,6 +41,7 @@ public class ReportConverter {
 			entity.setContent(dto.getContent());
 			entity.setStatus(dto.getStatus());
 			entity.setUrl(dto.getUrl());
+			entity.setType(dto.getType());
 			System.out.println("ReportConverter: toEntity: no exception");
 		} catch (Exception e) {
 			System.out.println("ReportConverter: toEntity: has exception");
@@ -62,6 +63,7 @@ public class ReportConverter {
 			dto.setContent(entity.getContent());
 			dto.setStatus(entity.getStatus());
 			dto.setUrl(entity.getUrl());
+			dto.setType(dto.getType());
 			System.out.println("ReportConverter: toDTO: no exception");
 		} catch (Exception e) {
 			System.out.println("ReportConverter: toDTO: has exception");

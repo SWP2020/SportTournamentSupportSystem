@@ -8,16 +8,18 @@ public class CompetitionFormatDTO{
 	private String description;
 	private String status;
 	private String url;
+	private boolean hasHomeMatch;
 
 	public CompetitionFormatDTO(){
 	}
 
-	public CompetitionFormatDTO(Long id, String name, String description, String status, String url){
+	public CompetitionFormatDTO(Long id, String name, String description, String status, String url, boolean hasHomeMatch){
 		this.id = id;
 		this.name = name;
 		this.description = description;
 		this.status = status;
 		this.url = url;
+		this.hasHomeMatch = hasHomeMatch;
 	}
 
 
@@ -59,6 +61,14 @@ public class CompetitionFormatDTO{
 	
 	public void setUrl(String url) {
 		this.url = url;
+	}
+
+	public boolean isHasHomeMatch() {
+		return hasHomeMatch;
+	}
+
+	public void setHasHomeMatch(boolean hasHomeMatch) {
+		this.hasHomeMatch = hasHomeMatch;
 	}
 	
 

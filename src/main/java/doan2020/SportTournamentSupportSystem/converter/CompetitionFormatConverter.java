@@ -18,6 +18,7 @@ public class CompetitionFormatConverter {
 			entity.setDescription(dto.getDescription());
 			entity.setStatus(dto.getStatus());
 			entity.setUrl(dto.getUrl());
+			entity.setHasHomeMatch(dto.isHasHomeMatch());
 			System.out.println("CompetitionFormatConverter: toEntity: no exception");
 		}catch (Exception e) {
 			System.out.println("CompetitionFormatConverter: toEntity: has exception");
@@ -37,6 +38,7 @@ public class CompetitionFormatConverter {
 			
 			dto.setStatus(entity.getStatus());
 			dto.setUrl(entity.getUrl());
+			dto.setHasHomeMatch(entity.isHasHomeMatch());
 			System.out.println("CompetitionFormatConverter: toDTO: no exception");
 		} catch (Exception e) {
 			System.out.println("CompetitionFormatConverter: toDTO: has exception");

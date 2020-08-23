@@ -13,127 +13,134 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.ManyToOne;
 import javax.persistence.JoinColumn;
 
-
-
 @Entity
 @Table(name = "reports")
 @EntityListeners(AuditingEntityListener.class)
-public class ReportEntity{
+public class ReportEntity {
 
 	@Id
 	@NotNull
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	private String subject;
-	
+
 	private String content;
-	
+
 	private String createdBy;
-	
+
 	private Date createdDate;
-	
+
 	private String modifiedBy;
-	
+
 	private Date modifiedDate;
-	
+
 	private String status;
-	
+
 	private String url;
 	
+	private String type;
 
 	@ManyToOne
 	@JoinColumn(name = "senderId")
 	private UserEntity sender;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "tournamentId")
 	private TournamentEntity tournament;
+
+	public Long getId() {
+		return id;
+	}
+
+	public String getSubject() {
+		return subject;
+	}
+
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public String getModifiedBy() {
+		return modifiedBy;
+	}
+
+	public void setModifiedBy(String modifiedBy) {
+		this.modifiedBy = modifiedBy;
+	}
+
+	public Date getModifiedDate() {
+		return modifiedDate;
+	}
+
+	public void setModifiedDate(Date modifiedDate) {
+		this.modifiedDate = modifiedDate;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public UserEntity getSender() {
+		return sender;
+	}
+
+	public void setSender(UserEntity sender) {
+		this.sender = sender;
+	}
+
+	public TournamentEntity getTournament() {
+		return tournament;
+	}
+
+	public void setTournament(TournamentEntity tournament) {
+		this.tournament = tournament;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
 	
-
-public Long getId() {
-	return id;
-}
-
-public String getSubject() {
-	return subject;
-}
-
-public void setSubject(String subject) {
-	this.subject = subject;
-}
-
-public String getContent() {
-	return content;
-}
-
-public void setContent(String content) {
-	this.content = content;
-}
-
-public String getCreatedBy() {
-	return createdBy;
-}
-
-public void setCreatedBy(String createdBy) {
-	this.createdBy = createdBy;
-}
-
-public Date getCreatedDate() {
-	return createdDate;
-}
-
-public void setCreatedDate(Date createdDate) {
-	this.createdDate = createdDate;
-}
-
-public String getModifiedBy() {
-	return modifiedBy;
-}
-
-public void setModifiedBy(String modifiedBy) {
-	this.modifiedBy = modifiedBy;
-}
-
-public Date getModifiedDate() {
-	return modifiedDate;
-}
-
-public void setModifiedDate(Date modifiedDate) {
-	this.modifiedDate = modifiedDate;
-}
-
-public String getStatus() {
-	return status;
-}
-
-public void setStatus(String status) {
-	this.status = status;
-}
-
-public String getUrl() {
-	return url;
-}
-
-public void setUrl(String url) {
-	this.url = url;
-}
-
-public UserEntity getSender() {
-	return sender;
-}
-
-public void setSender(UserEntity sender) {
-	this.sender = sender;
-}
-
-public TournamentEntity getTournament() {
-	return tournament;
-}
-
-public void setTournament(TournamentEntity tournament) {
-	this.tournament = tournament;
-}
-
+	
 
 }

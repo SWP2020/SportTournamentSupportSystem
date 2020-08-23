@@ -1,21 +1,24 @@
 
 package doan2020.SportTournamentSupportSystem.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.EntityListeners;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import java.util.Collection;
 import java.util.Date;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import com.sun.istack.NotNull;
-import javax.persistence.GeneratedValue;
-import javax.persistence.ManyToOne;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.CascadeType;
-import java.util.Collection;
+import javax.persistence.Table;
+
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import com.sun.istack.NotNull;
 
 @Entity
 @Table(name = "competitions")
@@ -30,8 +33,6 @@ public class CompetitionEntity {
 	private String name;
 
 	private String description;
-
-	private boolean groupStage;
 
 	private String createdBy;
 
@@ -54,8 +55,8 @@ public class CompetitionEntity {
 	private SportEntity sport;
 
 	@ManyToOne
-	@JoinColumn(name = "mainFormatId")
-	private CompetitionFormatEntity mainFormat;
+	@JoinColumn(name = "finalStageFormatId")
+	private CompetitionFormatEntity finalStageFormat;
 
 	@ManyToOne
 	@JoinColumn(name = "groupStageFormatId")
@@ -66,12 +67,14 @@ public class CompetitionEntity {
 
 	@OneToMany(mappedBy = "competition", cascade = CascadeType.ALL)
 	private Collection<TeamEntity> teams;
-
-	@OneToOne(mappedBy = "competition")
-	private CompetitionSettingEntity competition_setting;
-
-	@OneToMany(mappedBy = "competition", cascade = CascadeType.ALL)
-	private Collection<RegisterFormEntity> register_forms;
+	
+	@OneToOne
+	@JoinColumn(name = "groupStageSettingId")
+	private GroupStageSettingEntity groupStageSetting;
+	
+	@OneToOne
+	@JoinColumn(name = "finalStageSettingId")
+	private FinalStageSettingEntity finalStageSetting;
 
 	public Long getId() {
 		return id;
@@ -91,14 +94,6 @@ public class CompetitionEntity {
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	public boolean getGroupStage() {
-		return groupStage;
-	}
-
-	public void setGroupStage(boolean groupStage) {
-		this.groupStage = groupStage;
 	}
 
 	public String getCreatedBy() {
@@ -165,12 +160,12 @@ public class CompetitionEntity {
 		this.sport = sport;
 	}
 
-	public CompetitionFormatEntity getMainFormat() {
-		return mainFormat;
+	public CompetitionFormatEntity getFinalStageFormat() {
+		return finalStageFormat;
 	}
 
-	public void setMainFormat(CompetitionFormatEntity mainFormat) {
-		this.mainFormat = mainFormat;
+	public void setFinalStageFormat(CompetitionFormatEntity finalStageFormat) {
+		this.finalStageFormat = finalStageFormat;
 	}
 
 	public CompetitionFormatEntity getGroupStageFormat() {
@@ -197,20 +192,20 @@ public class CompetitionEntity {
 		this.teams = teams;
 	}
 
-	public CompetitionSettingEntity getCompetitionSetting() {
-		return competition_setting;
+	public GroupStageSettingEntity getGroupStageSetting() {
+		return groupStageSetting;
 	}
 
-	public void setCompetitionSetting(CompetitionSettingEntity competition_setting) {
-		this.competition_setting = competition_setting;
+	public void setGroupStageSetting(GroupStageSettingEntity groupStageSetting) {
+		this.groupStageSetting = groupStageSetting;
 	}
 
-	public Collection<RegisterFormEntity> getRegisterForms() {
-		return register_forms;
+	public FinalStageSettingEntity getFinalStageSetting() {
+		return finalStageSetting;
 	}
 
-	public void setRegisterForms(Collection<RegisterFormEntity> register_forms) {
-		this.register_forms = register_forms;
+	public void setFinalStageSetting(FinalStageSettingEntity finalStageSetting) {
+		this.finalStageSetting = finalStageSetting;
 	}
-
+	
 }

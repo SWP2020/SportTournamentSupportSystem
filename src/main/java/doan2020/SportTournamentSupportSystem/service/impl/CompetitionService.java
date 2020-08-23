@@ -40,8 +40,6 @@ public class CompetitionService implements ICompetitionService {
 			updatedEntity.setDescription(newEntity.getDescription());
 			updatedEntity.setTournament(newEntity.getTournament());
 			updatedEntity.setSport(newEntity.getSport());
-			updatedEntity.setMainFormat(newEntity.getMainFormat());
-			updatedEntity.setGroupStage(newEntity.getGroupStage());
 			updatedEntity.setGroupStageFormat(newEntity.getGroupStageFormat());
 			updatedEntity.setCreatedBy(newEntity.getCreatedBy());
 			updatedEntity.setCreatedDate(newEntity.getCreatedDate());
@@ -49,6 +47,10 @@ public class CompetitionService implements ICompetitionService {
 			updatedEntity.setModifiedDate(newEntity.getModifiedDate());
 			updatedEntity.setStatus(newEntity.getStatus());
 			updatedEntity.setUrl(newEntity.getUrl());
+			updatedEntity.setFinalStageFormat(newEntity.getFinalStageFormat());
+			updatedEntity.setGroupStageFormat(newEntity.getGroupStageFormat());
+			updatedEntity.setGroupStageSetting(newEntity.getGroupStageSetting());
+			updatedEntity.setFinalStageSetting(newEntity.getFinalStageSetting());
 			updatedEntity = competitionRepository.save(updatedEntity);
 		} catch (Exception e) {
 			System.out.println("CompetitionService: update: has exception");
