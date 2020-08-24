@@ -40,8 +40,7 @@ public class TournamentService implements ITournamentService {
 		TournamentEntity newEntity = null;
 		try {
 
-			tournamentEntity.setStatus(Const.UNSTARTED_STATUS);
-
+			tournamentEntity.setStatus(Const.TOURNAMENT_STATUS_INITIALIZING);
 			newEntity = tournamentRepository.save(tournamentEntity);
 		} catch (Exception e) {
 			return null;

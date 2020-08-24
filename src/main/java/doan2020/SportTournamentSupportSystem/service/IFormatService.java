@@ -18,4 +18,6 @@ public interface IFormatService {
 	public Collection<FormatEntity> findAll();
 	
 	public FormatEntity delete(Long id);
+	
+	public FormatEntity findByName(String name);
 }

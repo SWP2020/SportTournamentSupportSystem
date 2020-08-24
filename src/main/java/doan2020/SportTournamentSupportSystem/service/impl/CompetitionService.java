@@ -2,14 +2,15 @@
 package doan2020.SportTournamentSupportSystem.service.impl;
 
 import java.util.Collection;
+import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import doan2020.SportTournamentSupportSystem.config.Const;
 import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
 import doan2020.SportTournamentSupportSystem.repository.CompetitionRepository;
+import doan2020.SportTournamentSupportSystem.repository.MatchRepository;
 import doan2020.SportTournamentSupportSystem.service.ICompetitionService;
 
 @Service
@@ -17,12 +18,14 @@ public class CompetitionService implements ICompetitionService {
 
 	@Autowired
 	private CompetitionRepository competitionRepository;
+	
+	@Autowired
+	private MatchRepository matchRepository;
 
 	@Override
 	public CompetitionEntity create(CompetitionEntity competitionEntity) {
 		CompetitionEntity newEntity = null;
 		try {
-			competitionEntity.setStatus(Const.UNSTARTED_STATUS);
 			newEntity = competitionRepository.save(competitionEntity);
 		} catch (Exception e) {
 			return null;
@@ -138,5 +141,7 @@ public class CompetitionService implements ICompetitionService {
 		}
 		return entity;
 	}
+	
+	
 
 }

@@ -84,5 +84,15 @@ public class FormatService implements IFormatService {
 		}
 		return foundEntitys;
 	}
+	
+	@Override
+	public FormatEntity findByName(String name) {
+		FormatEntity foundEntity = null;
+		try {
+			foundEntity = formatRepository.findByName(name);
+		} catch (Exception e) {
+		}
+		return foundEntity;
+	}
 
 }

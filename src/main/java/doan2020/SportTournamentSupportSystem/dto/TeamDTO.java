@@ -1,6 +1,10 @@
 
 package doan2020.SportTournamentSupportSystem.dto;
 
+import java.util.ArrayList;
+
+import doan2020.SportTournamentSupportSystem.model.Entity.Player;
+
 public class TeamDTO{
 
 	private Long id;
@@ -20,6 +24,8 @@ public class TeamDTO{
 	private Long creatorId;
 	
 	private Long competitionId;
+	
+	private ArrayList<Player> players;
 	
 	public TeamDTO() {
 		
@@ -109,6 +115,14 @@ public class TeamDTO{
 
 	public void setCompetitionId(Long competitionId) {
 		this.competitionId = competitionId;
+	}
+
+	public ArrayList<Player> getPlayers() {
+		return players;
+	}
+
+	public void setPlayers(ArrayList<Player> players) {
+		this.players = players;
 	}
 	
 }

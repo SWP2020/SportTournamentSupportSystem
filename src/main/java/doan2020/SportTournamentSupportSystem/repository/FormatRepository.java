@@ -7,4 +7,6 @@ import doan2020.SportTournamentSupportSystem.entity.FormatEntity;
 
 public interface FormatRepository extends JpaRepository<FormatEntity, Long>{
     FormatEntity findOneById(Long id);
+    
+    FormatEntity findByName(String name);
 }
