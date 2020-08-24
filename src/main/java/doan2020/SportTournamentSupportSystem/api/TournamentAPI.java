@@ -26,17 +26,17 @@ import doan2020.SportTournamentSupportSystem.converter.TournamentConverter;
 import doan2020.SportTournamentSupportSystem.dto.PermissionDTO;
 import doan2020.SportTournamentSupportSystem.dto.TournamentDTO;
 import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
-import doan2020.SportTournamentSupportSystem.entity.MatchEntity;
 import doan2020.SportTournamentSupportSystem.entity.PermissionEntity;
 import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
 import doan2020.SportTournamentSupportSystem.entity.UserEntity;
 import doan2020.SportTournamentSupportSystem.response.Response;
 import doan2020.SportTournamentSupportSystem.service.ICompetitionService;
+import doan2020.SportTournamentSupportSystem.service.IFileStorageService;
 import doan2020.SportTournamentSupportSystem.service.IPermissionService;
 import doan2020.SportTournamentSupportSystem.service.ISportService;
 import doan2020.SportTournamentSupportSystem.service.ITournamentService;
-import doan2020.SportTournamentSupportSystem.service.impl.FileStorageService;
 import doan2020.SportTournamentSupportSystem.service.impl.JwtService;
+import doan2020.SportTournamentSupportSystem.service.impl.ScheduleService;
 import doan2020.SportTournamentSupportSystem.service.impl.UserService;
 
 @RestController
@@ -62,13 +62,15 @@ public class TournamentAPI {
 	private TournamentConverter converter;
 
 	@Autowired
-	private FileStorageService fileStorageService;
+	private IFileStorageService fileStorageService;
 
 	@Autowired
 	private IPermissionService permissionService;
 
 	@Autowired
 	private PermissionConverter permissionConverter;
+	
+	private ScheduleService scheduleService;
 
 	@Autowired
 	private JwtService jwtService;
@@ -376,23 +378,16 @@ public class TournamentAPI {
 					error.put("Message", "Tournament is not exist");
 				} else {
 
-					thisTournament = service.updateStatus(thisTournament, Const.STARTED_STATUS);
+					thisTournament = service.updateStatus(thisTournament, Const.TOURNAMENT_STATUS_PROCESSING);
 
 					thisTournamentDTO = converter.toDTO(thisTournament);
 					
 					Collection<CompetitionEntity> comps = thisTournament.getCompetitions();
 					ArrayList<HashMap<String, Object>> tests = new ArrayList<>();
 					for (CompetitionEntity comp: comps) {
-						CompetitionEntity competitionEntity = competitionService.updateStatus(comp, Const.STARTED_STATUS);
-						migratePlayersFromFileSystemToDatabase(comp);
-						HashMap<String, Object> test = migrateMatchesFromFileSystemToDatabase(comp);
-						test.put("CompetitionId", comp.getId());
-						test.put("CompetitionName", comp.getName());
-						tests.add(test);
+						CompetitionEntity competitionEntity = competitionService.updateStatus(comp, Const.TOURNAMENT_STATUS_PROCESSING);
+						scheduleService.saveScheduleToDatabase(comp.getId());
 					}
-					
-					result.put("Schedule", tests);
-					
 					result.put("Tournament", thisTournamentDTO);
 					config.put("Global", 0);
 					error.put("MessageCode", 0);
@@ -414,27 +409,6 @@ public class TournamentAPI {
 		response.setConfig(config);
 		System.out.println("TournamentAPI: startTournament: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
-	}
-
-	private void migratePlayersFromFileSystemToDatabase(CompetitionEntity competitionEntity) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	private HashMap<String, Object> migrateMatchesFromFileSystemToDatabase(CompetitionEntity competitionEntity) {
-		Collection<MatchEntity> matches = new ArrayList<>();
-		String fileName = "comp_" + competitionEntity.getId() + ".conf";
-		
-		String absFolderPath = fileStorageService.getFileStorageLocation(Const.BRANCH_CONFIG_FOLDER).toString();
-		try {
-			HashMap<String, Object> schedule = (HashMap<String, Object>) fileStorageService.getObjectFromFile(absFolderPath + "\\" + fileName);
-			
-			return schedule;
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			return null;
-		}
-		
 	}
 	
 	@PostMapping("/finish")
@@ -465,22 +439,18 @@ public class TournamentAPI {
 					error.put("Message", "Tournament is not exist");
 				} else {
 
-					thisTournament = service.updateStatus(thisTournament, Const.FINISHED_STATUS);
+					thisTournament = service.updateStatus(thisTournament, Const.TOURNAMENT_STATUS_FINISHED);
 
 					thisTournamentDTO = converter.toDTO(thisTournament);
 					
-//					Collection<CompetitionEntity> comps = thisTournament.getCompetitions();
-//					ArrayList<HashMap<String, Object>> tests = new ArrayList<>();
-//					for (CompetitionEntity comp: comps) {
-//						CompetitionEntity competitionEntity = competitionService.updateStatus(comp, Const.STARTED_STATUS);
-//						migratePlayersFromFileSystemToDatabase(comp);
-//						HashMap<String, Object> test = migrateMatchesFromFileSystemToDatabase(comp);
-//						test.put("CompetitionId", comp.getId());
-//						test.put("CompetitionName", comp.getName());
-//						tests.add(test);
-//					}
-//					
-//					result.put("Schedule", tests);
+					Collection<CompetitionEntity> comps = thisTournament.getCompetitions();
+					ArrayList<HashMap<String, Object>> tests = new ArrayList<>();
+					for (CompetitionEntity comp: comps) {
+						CompetitionEntity competitionEntity = competitionService.updateStatus(comp, Const.TOURNAMENT_STATUS_FINISHED);
+		
+						
+					}
+
 					
 					result.put("Tournament", thisTournamentDTO);
 					config.put("Global", 0);

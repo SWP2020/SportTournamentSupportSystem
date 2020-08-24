@@ -43,61 +43,6 @@ public class SportsAPI {
 	@Autowired
 	private ITournamentService tournamentService;
 
-	@GetMapping("/getByScoringUnitId")
-	public ResponseEntity<Response> getByScoringUnitId(@RequestParam(value = "scoringUnitId") Long scoringUnitId) {
-		System.out.println("SportsAPI: getByScoringUnitId: no exception");
-		HttpStatus httpStatus = HttpStatus.OK;
-		Response response = new Response();
-		Map<String, Object> config = new HashMap<String, Object>();
-		Map<String, Object> result = new HashMap<String, Object>();
-		Map<String, Object> error = new HashMap<String, Object>();
-		Collection<SportEntity> sportEntites = new ArrayList<SportEntity>();
-		List<SportDTO> sportDTOs = new ArrayList<SportDTO>();
-		try {
-
-			if (scoringUnitId == null) {// userId null
-				result.put("Sports", sportDTOs);
-				config.put("Global", 0);
-				error.put("MessageCode", 1);
-				error.put("Message", "Required param userId");
-			} else {// userId not null
-
-				sportEntites = service.findByScoringUnitId(scoringUnitId);
-
-				if (sportEntites.isEmpty()) { // not found
-					result.put("Sports", null);
-					config.put("Global", 0);
-					error.put("MessageCode", 1);
-					error.put("Message", "Not found");
-				} else { // found
-
-					for (SportEntity entity : sportEntites) {
-						SportDTO dto = converter.toDTO(entity);
-						sportDTOs.add(dto);
-					}
-
-					result.put("Sports", sportDTOs);
-					config.put("Global", 0);
-					error.put("MessageCode", 0);
-					error.put("Message", "Found");
-				}
-			}
-			System.out.println("SportsAPI: getByScoringUnitId: no exception");
-		} catch (Exception e) {
-			System.out.println("SportsAPI: getByScoringUnitId: has exception");
-			result.put("Sport", null);
-			config.put("Global", 0);
-			error.put("MessageCode", 1);
-			error.put("Message", "Server error");
-		}
-
-		response.setConfig(config);
-		response.setResult(result);
-		response.setError(error);
-		System.out.println("SportsAPI: getByScoringUnitId: finish");
-		return new ResponseEntity<Response>(response, httpStatus);
-	}
-
 	@GetMapping("")
 	public ResponseEntity<Response> getAllSport() {
 		System.out.println("SportsAPI: getAllSport: no exception");

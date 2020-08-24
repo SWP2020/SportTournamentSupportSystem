@@ -65,8 +65,7 @@ public class UserAPI {
 	/* get One User */
 
 	@GetMapping("")
-	public ResponseEntity<Response> getById(
-			@RequestHeader(value = Const.TOKEN_HEADER, required = false) String jwt,
+	public ResponseEntity<Response> getById(@RequestHeader(value = Const.TOKEN_HEADER, required = false) String jwt,
 			@RequestParam(value = "id", required = false) Long id) {
 		System.out.println("UserAPI: getById: start");
 		Response response = new Response();
@@ -100,18 +99,17 @@ public class UserAPI {
 					Long curentUserId = -1l;
 
 					try {
-						System.out.println("UserAPI: getById: jwt: "+ jwt);
+						System.out.println("UserAPI: getById: jwt: " + jwt);
 						String curentUserName = jwtService.getUserNameFromJwtToken(jwt);
 						user = userService.findByUsername(curentUserName);
 						curentUserId = user.getId();
 					} catch (Exception e) {
 
 					}
-					
 
 					if (curentUserId == id) {
 						permissionEntity = permissionService.findOneByName(Const.OWNER);
-						
+
 						permissionDTO = permissionConverter.toDTO(permissionEntity);
 					} else {
 						permissionEntity = permissionService.findOneByName(Const.VIEWER);
@@ -355,25 +353,34 @@ public class UserAPI {
 	}
 
 	@PostMapping("/sendMail")
-	public ResponseEntity<Response> sendMail(@RequestBody UserDTO userDTO) {
+	public ResponseEntity<Response> sendMail(@RequestParam(value = "username") String username) {
 		Response response = new Response();
 		HttpStatus httpStatus = null;
 		Map<String, Object> config = new HashMap<String, Object>();
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
 		httpStatus = HttpStatus.OK;
-		try {
-			if (verificationTokenService.createVerification(userDTO.getEmail(), userDTO.getUsername())) {
-				error.put("MessageCode", 0);
-				error.put("Message", "Sending mail successfully");
+		UserEntity user = null;
 
-			} else {
+		try {
+			user = userService.findByUsername(username);
+			if (user == null) {
+				result.put("User", null);
 				error.put("MessageCode", 1);
-				error.put("Message", "Sending mail fail");
-				response.setError(error);
-				response.setResult(result);
-				response.setConfig(config);
-				return new ResponseEntity<Response>(response, httpStatus);
+				error.put("Message", "User is not exist");
+			} else {
+				String email = user.getEmail();
+				UserDTO dto = userConverter.toDTO(user);
+				if (verificationTokenService.createVerification(email, username)) {
+					result.put("User", dto);
+					error.put("MessageCode", 0);
+					error.put("Message", "Sending mail successfully");
+
+				} else {
+					result.put("User", null);
+					error.put("MessageCode", 1);
+					error.put("Message", "Sending mail fail");
+				}
 			}
 
 		} catch (Exception e) {
@@ -476,7 +483,7 @@ public class UserAPI {
 			} else {// id not null
 				System.out.println("UserAPI: uploadAvatar: CP2");
 				System.out.println(file);
-				
+
 				String name = userService.findOneById(id).getUsername();
 				String fileName = fileStorageService.storeFileImage(file, name, Const.BACKGROUND);
 				System.out.println("UserAPI: uploadAvatar: CP3");

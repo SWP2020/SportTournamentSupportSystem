@@ -1,5 +1,6 @@
 package doan2020.SportTournamentSupportSystem.api;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,10 +23,13 @@ import doan2020.SportTournamentSupportSystem.converter.PermissionConverter;
 import doan2020.SportTournamentSupportSystem.converter.TeamConverter;
 import doan2020.SportTournamentSupportSystem.dto.PermissionDTO;
 import doan2020.SportTournamentSupportSystem.dto.TeamDTO;
+import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
 import doan2020.SportTournamentSupportSystem.entity.PermissionEntity;
 import doan2020.SportTournamentSupportSystem.entity.TeamEntity;
 import doan2020.SportTournamentSupportSystem.entity.UserEntity;
+import doan2020.SportTournamentSupportSystem.model.Entity.Player;
 import doan2020.SportTournamentSupportSystem.response.Response;
+import doan2020.SportTournamentSupportSystem.service.IFileStorageService;
 import doan2020.SportTournamentSupportSystem.service.IPermissionService;
 import doan2020.SportTournamentSupportSystem.service.ITeamService;
 import doan2020.SportTournamentSupportSystem.service.IUserService;
@@ -57,7 +61,8 @@ public class TeamAPI {
 	 * Get team theo id
 	 */
 	@GetMapping("")
-	public ResponseEntity<Response> getOneTeam(@RequestHeader(value = Const.TOKEN_HEADER, required = false) String jwt, @RequestParam(value = "id", required = true) Long id) {
+	public ResponseEntity<Response> getOneTeam(@RequestHeader(value = Const.TOKEN_HEADER, required = false) String jwt,
+			@RequestParam(value = "id", required = true) Long id) {
 		System.out.println("TeamAPI - getOneTeam - start");
 		System.out.println(id);
 		HttpStatus httpStatus = null;
@@ -75,7 +80,7 @@ public class TeamAPI {
 
 			if (id == null) {// id not exist
 				System.out.println("TeamAPI - getOneTeam - cp1");
-				result.put("Team", dto);
+				result.put("Team", null);
 				config.put("Global", 0);
 				error.put("MessageCode", 1);
 				error.put("Message", "Requried id");
@@ -83,18 +88,18 @@ public class TeamAPI {
 				teamEntity = service.findOneById(id);
 				System.out.println("TeamAPI - getOneTeam - cp1");
 				if (teamEntity == null) {// competition is not exist
-					System.out.println("TeamAPI - getOneTeam - cp2");
-					result.put("Team", dto);
+					result.put("Team", null);
 					config.put("Global", 0);
 					error.put("MessageCode", 1);
 					error.put("Message", "Team is not exist");
 				} else {// competition is exist
-					System.out.println("TeamAPI - getOneTeam - cp3");
+					
 					dto = converter.toDTO(teamEntity);
-					System.out.println("TeamAPI - getOneTeam - cp4");
+					ArrayList<Player> players = (ArrayList<Player>) service.getTeamPlayerFromFile(teamEntity.getCompetition().getId(), id);
+					dto.setPlayers(players);
 					
 					Long curentUserId = -1l;
-					
+
 					try {
 						String curentUserName = jwtService.getUserNameFromJwtToken(jwt);
 						user = userService.findByUsername(curentUserName);
@@ -112,17 +117,18 @@ public class TeamAPI {
 
 						permissionDTO = permissionConverter.toDTO(permissionEntity);
 					}
+					
 					result.put("Team", dto);
 					config.put("Global", permissionDTO);
 					error.put("MessageCode", 0);
 					error.put("Message", "get Team Successfully");
 				}
-					
+
 			}
 
 		} catch (Exception e) {
 			System.out.println("TeamAPI - getOneTeam - cp5");
-			result.put("Team", dto);
+			result.put("Team", null);
 			config.put("Global", 0);
 			error.put("MessageCode", 0);
 			error.put("Message", "exception");
@@ -138,9 +144,10 @@ public class TeamAPI {
 	 * Create one Team
 	 * 
 	 */
-	@PostMapping
+	@PostMapping()
 	@CrossOrigin
-	public ResponseEntity<Response> createTeam(@RequestBody TeamDTO teamDTO) {
+	public ResponseEntity<Response> createTeam(
+			@RequestBody TeamDTO dto) {
 		System.out.println("Team API - createTeam - start");
 		HttpStatus httpStatus = null;
 		httpStatus = HttpStatus.OK;
@@ -149,31 +156,40 @@ public class TeamAPI {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
 		TeamEntity teamEntity = new TeamEntity();
-		TeamDTO resDTO = new TeamDTO();
+		TeamDTO teamDTO = null;
+		ArrayList<Player> players = null;
 
 		try {
-			teamEntity = converter.toEntity(teamDTO);
+			teamEntity = converter.toEntity(dto);
+			players = new ArrayList<>();
 
-			if (teamEntity == null) {// convert false
-				System.out.println("Team API - createTeam - cp1");
-				result.put("Team", resDTO);
+			if (teamEntity == null) {
+				result.put("Team", dto);
 				config.put("Global", 0);
 				error.put("MessageCode", 1);
-				error.put("Message", "create new Team fail");
-			} else {// convert ok
-				System.out.println("Team API - createTeam - cp2: creator: " + teamDTO.getCreatorId());
-				service.create(teamEntity);
-				resDTO = converter.toDTO(teamEntity);
-				result.put("Team", resDTO);
+				error.put("Message", "Team info invalid");
+			} else {
+				
+				teamEntity.setStatus(Const.TEAM_STATUS_JOINED);
+				teamEntity = service.create(teamEntity);
+				teamDTO = converter.toDTO(teamEntity);
+				teamDTO.setPlayers(players);
+				
+				result.put("Team", teamDTO);
 				config.put("Global", 0);
-				error.put("MessageCode", 0);
-				error.put("Message", "create new Team successfull");
-				System.out.println("Team API - createTeam - cp3");
+				error.put("MessageCode", 1);
+				error.put("Message", "Team info invalid");
+
+				// save file
+
+				service.saveTeamPlayersToFile(teamEntity, players);
+
 			}
 
+			System.out.println("Team API - createTeam - no exception");
 		} catch (Exception e) {
-			System.out.println("Team API - createTeam - exception");
-			result.put("Team", resDTO);
+			System.out.println("Team API - createTeam - has exception");
+			result.put("Team", null);
 			config.put("Global", 0);
 			error.put("MessageCode", 1);
 			error.put("Message", "server error");
@@ -190,8 +206,8 @@ public class TeamAPI {
 	 * 
 	 */
 	@PutMapping
-	@CrossOrigin
-	public ResponseEntity<Response> editTeam(@RequestBody TeamDTO teamDTO, @RequestParam Long id) {
+	public ResponseEntity<Response> editTeam(@RequestParam("id") Long id,
+			@RequestBody TeamDTO teamDTO) {
 		System.out.println("Team API - editTeam - start");
 		HttpStatus httpStatus = null;
 		httpStatus = HttpStatus.OK;
@@ -200,41 +216,47 @@ public class TeamAPI {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
 		TeamEntity teamEntity = new TeamEntity();
-		TeamDTO resDTO = new TeamDTO();
+		TeamDTO dto = null;
+		ArrayList<Player> players = null;
 
 		try {
+			teamEntity = converter.toEntity(teamDTO);
 
-			if (id == null) {// id is not exist
-				System.out.println("Team API - editTeam - cp1");
-				result.put("Team", null);
+			if (teamEntity == null) {
+				result.put("Team", teamDTO);
 				config.put("Global", 0);
 				error.put("MessageCode", 1);
-				error.put("Message", "Required Id");
-			} else {// id is exist
-
-				teamEntity = converter.toEntity(teamDTO);
-
-				if (teamEntity == null) {// convert false
-					System.out.println("Team API - editTeam - cp2");
-					result.put("Team", resDTO);
-					config.put("Global", 0);
-					error.put("MessageCode", 1);
-					error.put("Message", "edit new Team fail");
-				} else {// convert ok
-					System.out.println("Team API - editTeam - cp3");
-					service.update(id, teamEntity);
-					resDTO = converter.toDTO(teamEntity);
-					result.put("Team", resDTO);
-					config.put("Global", 0);
-					error.put("MessageCode", 0);
-					error.put("Message", "edit new Team successfull");
-					System.out.println("Team API - editTeam - cp4");
+				error.put("Message", "Team info invalid");
+			} else {
+				
+				teamEntity = service.update(id, teamEntity);
+				players = teamDTO.getPlayers();
+				
+				if (players != null) {
+					service.saveTeamPlayersToFile(teamEntity, players);
+				} else {
+					players = (ArrayList<Player>) service.getTeamPlayerFromFile(teamEntity.getCompetition().getId(), id);
 				}
+				
+				dto = converter.toDTO(teamEntity);
+				dto.setPlayers(players);
+				
+				result.put("Team", dto);
+				config.put("Global", 0);
+				error.put("MessageCode", 1);
+				error.put("Message", "Team info invalid");
+
+				// save file
+
+				service.saveTeamPlayersToFile(teamEntity, players);
+
 			}
-			System.out.println("Team API - editTeam - has no exception");
+
+			System.out.println("Team API - editTeam - no exception");
 		} catch (Exception e) {
 			System.out.println("Team API - editTeam - has exception");
-			result.put("Team", resDTO);
+			result.put("Team", null);
+			result.put("PlayerList", null);
 			config.put("Global", 0);
 			error.put("MessageCode", 1);
 			error.put("Message", "server error");
@@ -242,7 +264,7 @@ public class TeamAPI {
 		response.setError(error);
 		response.setResult(result);
 		response.setConfig(config);
-		System.out.println("Team API - editTeam - pass");
+		System.out.println("Team API - editTeam - finish");
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
 
@@ -267,7 +289,7 @@ public class TeamAPI {
 				error.put("MessageCode", 1);
 				error.put("Message", "Required Id");
 			} else {// id is exist
-				service.delete(id);
+				teamEntity = service.delete(id);
 				resDTO = converter.toDTO(teamEntity);
 				result.put("Team", resDTO);
 				config.put("Global", 0);
@@ -290,4 +312,175 @@ public class TeamAPI {
 		System.out.println("Team API - deleteTeam - pass");
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
+
+	@PostMapping("/registerTeam")
+	public ResponseEntity<Response> createTeamByRegister(@RequestBody TeamDTO teamDTO) {
+		System.out.println("Team API - createTeamByRegister - start");
+		HttpStatus httpStatus = null;
+		httpStatus = HttpStatus.OK;
+		Response response = new Response();
+		Map<String, Object> config = new HashMap<String, Object>();
+		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> error = new HashMap<String, Object>();
+		TeamEntity teamEntity = new TeamEntity();
+		TeamDTO dto = null;
+		ArrayList<Player> players = null;
+
+		try {
+			teamEntity = converter.toEntity(teamDTO);
+			teamEntity.setStatus(Const.TEAM_STATUS_PENDING);
+			teamEntity = service.create(teamEntity);
+
+				
+			if (teamEntity == null) {
+				result.put("Team", teamDTO);
+				config.put("Global", 0);
+				error.put("MessageCode", 1);
+				error.put("Message", "Team info invalid");
+			} else {
+				dto = converter.toDTO(teamEntity);
+				dto.setPlayers(players);
+				
+				result.put("Team", dto);
+				config.put("Global", 0);
+				error.put("MessageCode", 1);
+				error.put("Message", "Team info invalid");
+
+				// save file
+
+				service.saveTeamPlayersToFile(teamEntity, players);
+
+			}
+
+			System.out.println("Team API - createTeamByRegister - no exception");
+		} catch (Exception e) {
+			System.out.println("Team API - createTeamByRegister - has exception");
+			result.put("Team", null);
+			config.put("Global", 0);
+			error.put("MessageCode", 1);
+			error.put("Message", "server error");
+		}
+		response.setError(error);
+		response.setResult(result);
+		response.setConfig(config);
+		System.out.println("Team API - createTeamByRegister - finish");
+		return new ResponseEntity<Response>(response, httpStatus);
+	}
+	
+	@PutMapping("/approve")
+	public ResponseEntity<Response> approveTeam(@RequestParam("id") Long id) {
+		System.out.println("Team API - editTeam - start");
+		HttpStatus httpStatus = null;
+		httpStatus = HttpStatus.OK;
+		Response response = new Response();
+		Map<String, Object> config = new HashMap<String, Object>();
+		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> error = new HashMap<String, Object>();
+		TeamEntity teamEntity = new TeamEntity();
+		TeamDTO teamDTO = null;
+		ArrayList<Player> players = null;
+
+		try {
+			
+			teamEntity = service.findOneById(id);
+
+			if (teamEntity == null) {
+				result.put("Team", null);
+				config.put("Global", 0);
+				error.put("MessageCode", 1);
+				error.put("Message", "Team not exist");
+			} else {
+				
+				teamEntity.setStatus(Const.TEAM_STATUS_JOINED);
+				teamEntity = service.update(id, teamEntity);
+				
+				players = (ArrayList<Player>) service.getTeamPlayerFromFile(teamEntity.getCompetition().getId(), id);
+				
+				teamDTO = converter.toDTO(teamEntity);
+				teamDTO.setPlayers(players);
+				
+				result.put("Team", teamDTO);
+				config.put("Global", 0);
+				error.put("MessageCode", 1);
+				error.put("Message", "Team info invalid");
+
+				// save file
+
+				service.saveTeamPlayersToFile(teamEntity, players);
+
+			}
+
+			System.out.println("Team API - editTeam - no exception");
+		} catch (Exception e) {
+			System.out.println("Team API - editTeam - has exception");
+			result.put("Team", null);
+			config.put("Global", 0);
+			error.put("MessageCode", 1);
+			error.put("Message", "server error");
+		}
+		response.setError(error);
+		response.setResult(result);
+		response.setConfig(config);
+		System.out.println("Team API - editTeam - finish");
+		return new ResponseEntity<Response>(response, httpStatus);
+	}
+	
+	@PutMapping("/reject")
+	public ResponseEntity<Response> rejectTeam(@RequestParam("id") Long id) {
+		System.out.println("Team API - editTeam - start");
+		HttpStatus httpStatus = null;
+		httpStatus = HttpStatus.OK;
+		Response response = new Response();
+		Map<String, Object> config = new HashMap<String, Object>();
+		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> error = new HashMap<String, Object>();
+		TeamEntity teamEntity = new TeamEntity();
+		TeamDTO teamDTO = null;
+		ArrayList<Player> players = null;
+
+		try {
+			
+			teamEntity = service.findOneById(id);
+
+			if (teamEntity == null) {
+				result.put("Team", null);
+				config.put("Global", 0);
+				error.put("MessageCode", 1);
+				error.put("Message", "Team not exist");
+			} else {
+				
+				teamEntity.setStatus(Const.TEAM_STATUS_REJECTED);
+				teamEntity = service.update(id, teamEntity);
+				
+				players = (ArrayList<Player>) service.getTeamPlayerFromFile(teamEntity.getCompetition().getId(), id);
+				
+				teamDTO = converter.toDTO(teamEntity);
+				teamDTO.setPlayers(players);
+				
+				result.put("Team", teamDTO);
+				config.put("Global", 0);
+				error.put("MessageCode", 1);
+				error.put("Message", "Team info invalid");
+
+				// save file
+
+				service.saveTeamPlayersToFile(teamEntity, players);
+
+			}
+
+			System.out.println("Team API - editTeam - no exception");
+		} catch (Exception e) {
+			System.out.println("Team API - editTeam - has exception");
+			result.put("Team", null);
+			config.put("Global", 0);
+			error.put("MessageCode", 1);
+			error.put("Message", "server error");
+		}
+		response.setError(error);
+		response.setResult(result);
+		response.setConfig(config);
+		System.out.println("Team API - editTeam - finish");
+		return new ResponseEntity<Response>(response, httpStatus);
+	}
+
 }

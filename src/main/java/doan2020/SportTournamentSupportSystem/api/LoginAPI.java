@@ -45,7 +45,6 @@ public class LoginAPI {
 	private IVerificationTokenService verificationTokenService;
 
 	@PostMapping
-
 	public ResponseEntity<Response> login(@RequestBody UserDTO user) {
 		System.out.println("LoginAPI: login: start");
 		HttpStatus httpStatus = null;

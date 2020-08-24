@@ -1,30 +1,18 @@
 package doan2020.SportTournamentSupportSystem.converter;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import doan2020.SportTournamentSupportSystem.dto.NotificationDTO;
 import doan2020.SportTournamentSupportSystem.entity.NotificationEntity;
-import doan2020.SportTournamentSupportSystem.entity.PostEntity;
-import doan2020.SportTournamentSupportSystem.service.IPostService;
 
 @Component
 public class NotificationConverter {
-	
-	@Autowired
-	private IPostService postService;
 	
 	public NotificationEntity toEntity(NotificationDTO dto) {
 		System.out.println("NotificationConverter: toEntity: start");
 		NotificationEntity entity = new NotificationEntity();
 		try {
 			entity.setTitle(dto.getTitle());
-			
-			if (dto.getPostId() != null) {
-				Long postId = dto.getPostId();
-				PostEntity post = postService.findOneById(postId);
-				entity.setPost(post);
-			}
 			
 			entity.setContent(dto.getContent());
 			entity.setStatus(dto.getStatus());
@@ -44,7 +32,6 @@ public class NotificationConverter {
 		try {
 			dto.setId(entity.getId());
 			dto.setTitle(entity.getTitle());
-			dto.setPostId(entity.getPost().getId());
 			dto.setContent(entity.getContent());
 			dto.setStatus(entity.getStatus());
 			dto.setUrl(entity.getUrl());

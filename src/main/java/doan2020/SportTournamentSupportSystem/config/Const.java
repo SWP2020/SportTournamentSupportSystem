@@ -6,8 +6,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public final class Const {
-//	public final static String DOMAIN = "http://192.168.1.127:3000"; //vuthon8
-	public final static String DOMAIN = "http://192.168.43.15:3000"; //LongSama
+	public final static String DOMAIN = "http://192.168.1.127:3000"; //vuthon8
+//	public final static String DOMAIN = "http://192.168.43.15:3000"; //LongSama
 	
 	@SuppressWarnings("deprecation")
 	public final static Date DEFAULT_DATE = new Date(2020, 1, 1);
@@ -25,7 +25,11 @@ public final class Const {
 	public final static String OWNER = "owner";
 	
 
-	public final static String BRANCH_CONFIG_FOLDER = "branch_config\\";
+	public final static String COMPETITION_FILESYSTEM = "competitions\\";
+	public final static String COMPETITION_FOLDER_NAMING = "comp_";
+	public final static String COMPETITION_SCHEDULING = "schedule.dat";
+	public final static String COMPETITION_TEAM_PLAYERS_NAMING = "team_";
+	public final static String FILE_EXTENDED = ".dat";
 	
 	public final static String IMAGE_FOLDER = "images\\";
 	
@@ -37,19 +41,18 @@ public final class Const {
 
 //	Constant for format
 	
-	public final static int SINGLE_ELIMINATION_FORMAT = 1;
-	public final static int DOUBLE_ELIMINATION_FORMAT = 2;
-	public final static int ROUND_ROBIN_FORMAT = 3;
+	public final static String SINGLE_ELIMINATION_FORMAT = "Single Elimination";
+	public final static String DOUBLE_ELIMINATION_FORMAT = "Double Elimination";
+	public final static String ROUND_ROBIN_FORMAT = "Round Robin";
+	public final static String ANOTHER_FORMAT = "Unknown";
 	
-//  status 
+//  status tournament
   
-	public final static String UNSTARTED_STATUS = "unStarted";
-	public final static String STARTED_STATUS = "started";
-	public final static String FINISHED_STATUS = "finished";
-	
-	public final static String PENDING_STATUS = "pending";
-	public final static String UNACCEPTED_STATUS = "unAccepted";
-	public final static String ACCEPTED_STATUS = "Accepted";
+	public final static String TOURNAMENT_STATUS_INITIALIZING = "initializing";
+	public final static String TOURNAMENT_STATUS_REGISTRATION_OPENING = "opening";
+	public final static String TOURNAMENT_STATUS_PROCESSING = "processing";
+	public final static String TOURNAMENT_STATUS_STOPPED = "stopped";
+	public final static String TOURNAMENT_STATUS_FINISHED = "finished";
   
 //	Constant for naming match
 	
@@ -63,5 +66,14 @@ public final class Const {
 	public final static String TABLE_NAMING = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	public final static String WIN_BRANCH_NAMING = "A-";
 	public final static String LOSE_BRANCH_NAMING = "B-";
-
+	
+//	Constant for role
+	public final static String ROLE_ADMIN = "ROLE_ADMIN";
+	public final static String ROLE_USER = "ROLE_USER";
+	
+//	Constant for team status
+	public final static String TEAM_STATUS_PENDING = "pending";
+	public final static String TEAM_STATUS_JOINED = "joined";
+	public final static String TEAM_STATUS_REJECTED = "rejected";
+	
 }

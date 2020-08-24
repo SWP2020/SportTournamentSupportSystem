@@ -21,5 +21,4 @@ public interface INotificationService {
 	
 	public NotificationEntity delete(Long id);
 	
-	public Collection<NotificationEntity> findByPostId(Pageable pageable, Long postId);
 }

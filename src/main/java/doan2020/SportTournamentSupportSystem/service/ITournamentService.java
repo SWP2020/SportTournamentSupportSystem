@@ -37,4 +37,5 @@ public interface ITournamentService {
 	
 	public TournamentEntity updateStatus(TournamentEntity newEntity, String status); 
 
+
 }

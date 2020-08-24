@@ -11,6 +11,4 @@ public interface ResultRepository extends JpaRepository<ResultEntity, Long> {
 	ResultEntity findOneById(Long id);
 
 	Collection<ResultEntity> findByMatchId(Long matchId);
-
-	Collection<ResultEntity> findByTeamId(Long teamId);
 }
