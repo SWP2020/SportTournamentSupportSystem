@@ -13,6 +13,7 @@ import doan2020.SportTournamentSupportSystem.model.Struct.Node;
 
 public class EliminationTree {
 
+	private int totalTeam;
 	private SeedList seedList = new SeedList();
 
 	private Integer totalWinBranchRound;
@@ -29,54 +30,47 @@ public class EliminationTree {
 	public EliminationTree() {
 	}
 
-	public EliminationTree(ArrayList<TeamEntity> teams, Long formatId) {
+	public EliminationTree(int totalTeam, Long formatId) {
 		System.out.println("EliminationTree: Contructor: start");
-
-		this.seedList = new SeedList(teams);
-
-		System.out.println("EliminationTree: Contructor: this.seedList.size(): " + this.seedList.size());
-
-		this.totalWinBranchRound = calTotalWinBranchRound(this.seedList.size());
-		this.winBranch = new BTree<>(this.buildWinBranch(null, 1, this.seedList.size(), 1));
-		System.out.println("EliminationTree: Contructor: create Win Branch: done");
+		
+		this.totalTeam = totalTeam;
+		
+		this.totalWinBranchRound = calTotalWinBranchRound(this.totalTeam);
+		this.winBranch = new BTree<>(this.buildWinBranch(null, 1, this.totalTeam, 1));
 		this.winBranchMatchNoIndexing();
 
 		if (formatId == 1l) {
-			this.winBranch.setName("Branch");
+			this.winBranch.setName("Bracket");
 		} else if (formatId == 2l) {
 			this.winBranch.setName("WinBranch");
-			
-			this.totalLoseBranchRound = calTotalLoseBranchRound(this.seedList.size());
-			this.loseBranch = new BTree<>(this.buildLoseBranch(null, 1, this.seedList.size() - 1, 1));
-			System.out.println("EliminationTree: Contructor: create Lose Branch: done");
+			this.totalLoseBranchRound = calTotalLoseBranchRound(this.totalTeam);
+			this.loseBranch = new BTree<>(this.buildLoseBranch(null, 1, this.totalTeam - 1, 1));
 			this.loseBranchMatchNoIndexing();
 			this.loseBranch.setName("LoseBranch");
 		}
-		System.out.println("EliminationTree: Contructor: completeTeamDescription: start");
 		this.completeTeamDescription();
-		System.out.println("EliminationTree: Contructor: completeTeamDescription: done");
 
 		System.out.println("EliminationTree: Contructor: finish");
 	}
 	
 	
 	
-	public EliminationTree(BTree<Match> winBranch, ArrayList<TeamEntity> teams) {
+	public EliminationTree(BTree<Match> winBranch, int totalTeam) {
 		this.winBranch = winBranch;
 		this.loseBranch = null;
-		this.seedList = new SeedList(teams);
-		this.totalWinBranchRound = calTotalWinBranchRound(this.seedList.size());
+		this.totalTeam = totalTeam;
+		this.totalWinBranchRound = calTotalWinBranchRound(this.totalTeam);
 		this.totalLoseBranchRound = 0;
 		this.winBranchMatchList = this.winBranch.toArrayList();
 	}
 	
 	
-	public EliminationTree(BTree<Match> winBranch, BTree<Match> loseBranch, ArrayList<TeamEntity> teams) {
+	public EliminationTree(BTree<Match> winBranch, BTree<Match> loseBranch, int totalTeam) {
 		this.winBranch = winBranch;
 		this.loseBranch = loseBranch;
-		this.seedList = new SeedList(teams);
-		this.totalWinBranchRound = calTotalWinBranchRound(this.seedList.size());
-		this.totalLoseBranchRound = calTotalLoseBranchRound(this.seedList.size());
+		this.totalTeam = totalTeam;
+		this.totalWinBranchRound = calTotalWinBranchRound(this.totalTeam);
+		this.totalLoseBranchRound = calTotalLoseBranchRound(this.totalTeam);
 		this.winBranchMatchList = this.winBranch.toArrayList();
 		this.loseBranchMatchList = this.loseBranch.toArrayList();
 	}
@@ -455,6 +449,31 @@ public class EliminationTree {
 		}
 		System.out.println("EliminationTree: completeTeamDescription: lose tree done");
 
+	}
+	
+	
+	private void updateSeedList(ArrayList<TeamEntity> teams) {
+		this.seedList = new SeedList(teams);
+		this.totalTeam = this.seedList.size();
+	}
+	
+	private void applySeedList() {
+		for (Node<Match> node: this.winBranchMatchList) {
+			if (node.getLeft() == null) { // a seed
+				int seedNo = node.getData().getTeam1().getDescription().getUnitIndex();
+				node.getData().getTeam1().setTeam(this.seedList.get(seedNo));
+			}
+			
+			if (node.getRight() == null) { // a seed
+				int seedNo = node.getData().getTeam2().getDescription().getUnitIndex();
+				node.getData().getTeam2().setTeam(this.seedList.get(seedNo));
+			}
+		}
+	}
+	
+	public void applySeedList(ArrayList<TeamEntity> teams) {
+		this.updateSeedList(teams);
+		this.applySeedList();
 	}
 
 	// ----------- support logic code

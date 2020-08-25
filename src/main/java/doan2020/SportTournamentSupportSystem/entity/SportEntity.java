@@ -2,9 +2,9 @@
 package doan2020.SportTournamentSupportSystem.entity;
 
 import java.util.Collection;
-import java.util.Date;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
@@ -13,9 +13,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import com.sun.istack.NotNull;
 
 @Entity
 @Table(name = "sports")
@@ -23,24 +22,18 @@ import com.sun.istack.NotNull;
 public class SportEntity {
 
 	@Id
-	@NotNull
+	@Column(nullable = false)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@NotNull
+	@Column(nullable = false)
 	private String fullName;
 
+	@Column(nullable = false)
 	private String shortName;
 
+	@ColumnDefault("'Chưa có mô tả.'")
 	private String description;
-
-	private String createdBy;
-
-	private Date createdDate;
-
-	private String modifiedBy;
-
-	private Date modifiedDate;
 
 	private String status;
 
@@ -75,38 +68,6 @@ public class SportEntity {
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	public String getCreatedBy() {
-		return createdBy;
-	}
-
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
-
-	public Date getCreatedDate() {
-		return createdDate;
-	}
-
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
-
-	public String getModifiedBy() {
-		return modifiedBy;
-	}
-
-	public void setModifiedBy(String modifiedBy) {
-		this.modifiedBy = modifiedBy;
-	}
-
-	public Date getModifiedDate() {
-		return modifiedDate;
-	}
-
-	public void setModifiedDate(Date modifiedDate) {
-		this.modifiedDate = modifiedDate;
 	}
 
 	public String getStatus() {

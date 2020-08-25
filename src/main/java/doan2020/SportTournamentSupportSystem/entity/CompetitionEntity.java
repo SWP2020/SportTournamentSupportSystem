@@ -2,11 +2,10 @@
 package doan2020.SportTournamentSupportSystem.entity;
 
 import java.util.Collection;
-import java.util.Date;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,42 +15,33 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import com.sun.istack.NotNull;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Table(name = "competitions")
-@EntityListeners(AuditingEntityListener.class)
 public class CompetitionEntity {
 
 	@Id
-	@NotNull
+	@Column(nullable = false)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@Column(nullable = false)
 	private String name;
 
+	@ColumnDefault("'Chưa có mô tả.'")
 	private String description;
-
-	private String createdBy;
-
-	private Date createdDate;
-
-	private String modifiedBy;
-
-	private Date modifiedDate;
 
 	private String status;
 
 	private String url;
 
 	@ManyToOne
-	@JoinColumn(name = "tournamentId")
+	@JoinColumn(name = "tournamentId", nullable = false)
 	private TournamentEntity tournament;
 
 	@ManyToOne
-	@JoinColumn(name = "sportId")
+	@JoinColumn(name = "sportId", nullable = false)
 	private SportEntity sport;
 
 	@OneToMany(mappedBy = "competition", cascade = CascadeType.ALL)
@@ -59,13 +49,13 @@ public class CompetitionEntity {
 
 	@OneToMany(mappedBy = "competition", cascade = CascadeType.ALL)
 	private Collection<TeamEntity> teams;
-	
+
 	@OneToOne
 	@JoinColumn(name = "groupStageSettingId")
 	private GroupStageSettingEntity groupStageSetting;
-	
+
 	@OneToOne
-	@JoinColumn(name = "finalStageSettingId")
+	@JoinColumn(name = "finalStageSettingId", nullable = false)
 	private FinalStageSettingEntity finalStageSetting;
 
 	public Long getId() {
@@ -86,38 +76,6 @@ public class CompetitionEntity {
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	public String getCreatedBy() {
-		return createdBy;
-	}
-
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
-
-	public Date getCreatedDate() {
-		return createdDate;
-	}
-
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
-
-	public String getModifiedBy() {
-		return modifiedBy;
-	}
-
-	public void setModifiedBy(String modifiedBy) {
-		this.modifiedBy = modifiedBy;
-	}
-
-	public Date getModifiedDate() {
-		return modifiedDate;
-	}
-
-	public void setModifiedDate(Date modifiedDate) {
-		this.modifiedDate = modifiedDate;
 	}
 
 	public String getStatus() {
@@ -183,5 +141,5 @@ public class CompetitionEntity {
 	public void setFinalStageSetting(FinalStageSettingEntity finalStageSetting) {
 		this.finalStageSetting = finalStageSetting;
 	}
-	
+
 }

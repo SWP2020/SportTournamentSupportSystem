@@ -16,6 +16,4 @@ public interface IPermissionService {
 	public PermissionEntity update(Long id, PermissionEntity newEntity);
 	
 //	public Collection<PermissionEntity> findAll();
-	
-	public PermissionEntity delete(Long id);
 }

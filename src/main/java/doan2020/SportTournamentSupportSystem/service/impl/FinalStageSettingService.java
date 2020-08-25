@@ -34,10 +34,6 @@ public class FinalStageSettingService implements IFinalStageSettingService{
 
 			updatedEntity.setFormat(newEntity.getFormat());
 			updatedEntity.setHasHomeMatch(newEntity.isHasHomeMatch());
-			updatedEntity.setCreatedBy(newEntity.getCreatedBy());
-			updatedEntity.setCreatedDate(newEntity.getCreatedDate());
-			updatedEntity.setModifiedBy(newEntity.getModifiedBy());
-			updatedEntity.setModifiedDate(newEntity.getModifiedDate());
 			updatedEntity.setStatus(newEntity.getStatus());
 			updatedEntity.setUrl(newEntity.getUrl());
 			updatedEntity = finalStageSettingRepository.save(updatedEntity);
@@ -53,8 +49,9 @@ public class FinalStageSettingService implements IFinalStageSettingService{
 		FinalStageSettingEntity deletedEntity = null;
 		try {
 			deletedEntity = finalStageSettingRepository.findOneById(id);
-			deletedEntity.setStatus("deleted");
-			deletedEntity = finalStageSettingRepository.save(deletedEntity);
+			finalStageSettingRepository.delete(deletedEntity);
+//			deletedEntity.setStatus("deleted");
+//			deletedEntity = finalStageSettingRepository.save(deletedEntity);
 		} catch (Exception e) {
 			return null;
 		}

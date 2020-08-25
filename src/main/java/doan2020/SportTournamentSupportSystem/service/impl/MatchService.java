@@ -36,10 +36,6 @@ public class MatchService implements IMatchService {
 
 			updatedEntity.setName(newEntity.getName());
 			updatedEntity.setCompetition(newEntity.getCompetition());
-			updatedEntity.setCreatedBy(newEntity.getCreatedBy());
-			updatedEntity.setCreatedDate(newEntity.getCreatedDate());
-			updatedEntity.setModifiedBy(newEntity.getModifiedBy());
-			updatedEntity.setModifiedDate(newEntity.getModifiedDate());
 			updatedEntity.setStatus(newEntity.getStatus());
 			updatedEntity.setUrl(newEntity.getUrl());
 			updatedEntity.setLocation(newEntity.getLocation());
@@ -64,8 +60,9 @@ public class MatchService implements IMatchService {
 		MatchEntity deletedEntity = null;
 		try {
 			deletedEntity = matchRepository.findOneById(id);
-			deletedEntity.setStatus("deleted");
-			deletedEntity = matchRepository.save(deletedEntity);
+			matchRepository.delete(deletedEntity);
+//			deletedEntity.setStatus("deleted");
+//			deletedEntity = matchRepository.save(deletedEntity);
 		} catch (Exception e) {
 			return null;
 		}

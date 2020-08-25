@@ -41,25 +41,25 @@ public class FormatsAPI {
 		Map<String, Object> error = new HashMap<String, Object>();
 		HttpStatus httpStatus = HttpStatus.OK;
 
-		Collection<FormatEntity> findPage = new ArrayList<>();
-		List<FormatDTO> findPageDTO = new ArrayList<>();
+		Collection<FormatEntity> formats = new ArrayList<>();
+		List<FormatDTO> dtos = new ArrayList<>();
 
 		try {
-			findPage = service.findAll();
+			formats = service.findAll();
 
-			for (FormatEntity entity : findPage) {
+			for (FormatEntity entity : formats) {
 				FormatDTO dto = converter.toDTO(entity);
-				findPageDTO.add(dto);
+				dtos.add(dto);
 			}
 
-			result.put("CompetitionSettings", findPageDTO);
+			result.put("CompetitionSettings", dtos);
 			error.put("MessageCode", 0);
 			error.put("Message", "Get page successfully");
 
 			System.out.println("FormatsAPI: getAllFormat: no exception");
 		} catch (Exception e) {
 			System.out.println("FormatsAPI: getAllFormat: has exception");
-			result.put("Users", findPageDTO);
+			result.put("Users", dtos);
 			error.put("MessageCode", 1);
 			error.put("Message", "Server error");
 		}

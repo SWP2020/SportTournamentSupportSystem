@@ -21,9 +21,11 @@ public class RoundRobinTable implements Serializable{
 	
 	private Long id;
 	private String name;
+	
 	private int totalMatch;
 	private boolean homeMatch = false;
 	
+	private int totalTeam;
 	private SeedList seedList = new SeedList();
 	
 	private LinkedList<TeamRanking> ranking = new LinkedList<>();
@@ -37,16 +39,31 @@ public class RoundRobinTable implements Serializable{
 	}
 	
 	
-	public RoundRobinTable(Long id, ArrayList<TeamEntity> teams, boolean homeMatch) {
+	public RoundRobinTable(Long id, int totalTeam, boolean homeMatch) {
 		this.id = id;
 		this.homeMatch = homeMatch;
 		this.name = "" + Const.TABLE_NAMING.charAt(this.id.intValue());
-		this.seedList = new SeedList(teams);
-		for (Team team: this.seedList) {
-			this.ranking.add(new TeamRanking(team));
-		}
-		this.matches = this.createMatches(this.seedList.size(), homeMatch);
-		this.totalMatch = this.matches.size();
+		this.totalTeam = totalTeam;
+		this.matches = this.createMatches(this.totalTeam, homeMatch);
+		this.setTotalMatch(this.matches.size());
+	}
+	
+	public RoundRobinTable(int totalTeam, boolean homeMatch) {
+		this.id = 1l;
+		this.homeMatch = homeMatch;
+		this.name = "" + Const.TABLE_NAMING.charAt(this.id.intValue());
+		this.totalTeam = totalTeam;
+		this.matches = this.createMatches(this.totalTeam, homeMatch);
+		this.setTotalMatch(this.matches.size());
+	}
+	
+	public RoundRobinTable(int totalTeam) {
+		this.id = 1l;
+		this.homeMatch = false;
+		this.name = "" + Const.TABLE_NAMING.charAt(this.id.intValue());
+		this.totalTeam = totalTeam;
+		this.matches = this.createMatches(this.totalTeam, homeMatch);
+		this.setTotalMatch(this.matches.size());
 	}
 
 
@@ -57,9 +74,7 @@ public class RoundRobinTable implements Serializable{
 			matches.addAll(createMatches(totalTeam, false));
 		}
 		
-		int totalSeed = totalTeam + totalTeam % 2;
-		
-		// totalSeed % 2 == 0 (always)
+		int totalSeed = totalTeam + totalTeam % 2; // totalSeed % 2 == 0 (always)
 		
 		int runSeed = totalSeed;
 		int rouletteTotal = totalSeed - 1;
@@ -122,6 +137,41 @@ public class RoundRobinTable implements Serializable{
 
 		}
 
+		return matches;
+	}
+
+
+	public boolean isHomeMatch() {
+		return homeMatch;
+	}
+
+
+	public void setHomeMatch(boolean homeMatch) {
+		this.homeMatch = homeMatch;
+	}
+
+
+	public int getTotalMatch() {
+		return totalMatch;
+	}
+
+
+	public void setTotalMatch(int totalMatch) {
+		this.totalMatch = totalMatch;
+	}
+
+
+	public String getName() {
+		return name;
+	}
+
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+
+	public ArrayList<Match> getMatches() {
 		return matches;
 	}
 	

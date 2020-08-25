@@ -29,42 +29,6 @@ public class ApiService implements IApiService {
 	}
 
 	@Override
-	public ApiEntity update(Long id, ApiEntity newEntity) {
-		ApiEntity updatedEntity = null;
-		try {
-			updatedEntity = apiRepository.findOneById(id);
-
-			updatedEntity.setName(newEntity.getName());
-			updatedEntity.setDescription(newEntity.getDescription());
-			updatedEntity.setMethod(newEntity.getMethod());
-			updatedEntity.setCreatedBy(newEntity.getCreatedBy());
-			updatedEntity.setCreatedDate(newEntity.getCreatedDate());
-			updatedEntity.setModifiedBy(newEntity.getModifiedBy());
-			updatedEntity.setModifiedDate(newEntity.getModifiedDate());
-			updatedEntity.setStatus(newEntity.getStatus());
-			updatedEntity.setUrl(newEntity.getUrl());
-			updatedEntity = apiRepository.save(updatedEntity);
-		} catch (Exception e) {
-			return null;
-		}
-        
-		return updatedEntity;
-	}
-
-	@Override
-	public ApiEntity delete(Long id) {
-		ApiEntity deletedEntity = null;
-		try {
-			deletedEntity = apiRepository.findOneById(id);
-			deletedEntity.setStatus("deleted");
-			deletedEntity = apiRepository.save(deletedEntity);
-		} catch (Exception e) {
-			return null;
-		}
-		return deletedEntity;
-	}
-
-	@Override
 	public ApiEntity findOneById(Long id) {
 		ApiEntity foundEntity = null;
 		try {

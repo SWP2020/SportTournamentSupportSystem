@@ -11,9 +11,5 @@ public interface IApiService {
 	
 	public ApiEntity create(ApiEntity apiEntity);
 	
-	public ApiEntity update(Long id, ApiEntity newEntity);
-	
 //	public Collection<ApiEntity> findAll();
-	
-	public ApiEntity delete(Long id);
 }

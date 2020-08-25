@@ -46,6 +46,12 @@ public final class Const {
 	public final static String ROUND_ROBIN_FORMAT = "Round Robin";
 	public final static String ANOTHER_FORMAT = "Unknown";
 	
+//	user status
+	public final static String STATUS_ACTIVE = "active";
+	public final static String STATUS_DEACTIVE = "deactive";
+	
+	public final static String STATUS_DELETED = "deleted";
+	
 //  status tournament
   
 	public final static String TOURNAMENT_STATUS_INITIALIZING = "initializing";
@@ -75,5 +81,10 @@ public final class Const {
 	public final static String TEAM_STATUS_PENDING = "pending";
 	public final static String TEAM_STATUS_JOINED = "joined";
 	public final static String TEAM_STATUS_REJECTED = "rejected";
+	
+//	report type
+	public static final String REPORT_VIOLATION = "violation"; // report tournament to admin
+	public static final String REPORT_FRAUD = "fraud"; // report fraud to tournament manager
+	public static final String REPORT_SYSTEM_ERROR = "syserror"; // report system error to admin
 	
 }

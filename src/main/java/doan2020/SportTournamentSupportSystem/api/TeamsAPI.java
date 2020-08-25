@@ -236,7 +236,7 @@ public class TeamsAPI {
 					result.put("Total page", 0);
 					result.put("Teams", null);
 					config.put("Global", 0);
-					error.put("MessageCode", 0);
+					error.put("MessageCode", 1);
 					error.put("Message", "List is not exist");
 
 				} else {// list is exist
@@ -310,7 +310,7 @@ public class TeamsAPI {
 				result.put("Total page", 0);
 				result.put("Teams", teamDTOs);
 				config.put("Global", 0);
-				error.put("MessageCode", 0);
+				error.put("MessageCode", 1);
 				error.put("Message", "required competitionId");
 			} else {
 
@@ -320,7 +320,7 @@ public class TeamsAPI {
 					result.put("Total page", 0);
 					result.put("Teams", teamDTOs);
 					config.put("Global", 0);
-					error.put("MessageCode", 0);
+					error.put("MessageCode", 1);
 					error.put("Message", "Page Teams is not exist");
 
 				} else {// list is exist

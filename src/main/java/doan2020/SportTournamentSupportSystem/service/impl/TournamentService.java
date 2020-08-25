@@ -63,10 +63,6 @@ public class TournamentService implements ITournamentService {
 			updatedEntity.setClosingLocation(newEntity.getClosingLocation());
 			updatedEntity.setClosingTime(newEntity.getClosingTime());
 			updatedEntity.setDonor(newEntity.getDonor());
-			updatedEntity.setCreatedBy(newEntity.getCreatedBy());
-			updatedEntity.setCreatedDate(newEntity.getCreatedDate());
-			updatedEntity.setModifiedBy(newEntity.getModifiedBy());
-			updatedEntity.setModifiedDate(newEntity.getModifiedDate());
 			updatedEntity.setStatus(newEntity.getStatus());
 			updatedEntity.setUrl(newEntity.getUrl());
 			updatedEntity.setCloseRegistrationTime(newEntity.getCloseRegistrationTime());
@@ -84,8 +80,9 @@ public class TournamentService implements ITournamentService {
 		TournamentEntity deletedEntity = null;
 		try {
 			deletedEntity = tournamentRepository.findOneById(id);
-			deletedEntity.setStatus("deleted");
-			deletedEntity = tournamentRepository.save(deletedEntity);
+			tournamentRepository.delete(deletedEntity);
+//			deletedEntity.setStatus("deleted");
+//			deletedEntity = tournamentRepository.save(deletedEntity);
 		} catch (Exception e) {
 			return null;
 		}

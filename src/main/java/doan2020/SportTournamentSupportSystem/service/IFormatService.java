@@ -13,11 +13,7 @@ public interface IFormatService {
 	
 	public FormatEntity create(FormatEntity formatEntity);
 	
-	public FormatEntity update(Long id, FormatEntity newEntity);
-	
 	public Collection<FormatEntity> findAll();
-	
-	public FormatEntity delete(Long id);
 	
 	public FormatEntity findByName(String name);
 }

@@ -17,10 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import doan2020.SportTournamentSupportSystem.config.Const;
 import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
+import doan2020.SportTournamentSupportSystem.entity.FinalStageSettingEntity;
 import doan2020.SportTournamentSupportSystem.entity.FormatEntity;
 import doan2020.SportTournamentSupportSystem.entity.MatchEntity;
 import doan2020.SportTournamentSupportSystem.entity.TeamEntity;
 import doan2020.SportTournamentSupportSystem.model.ScheduleStruct.EliminationTree;
+import doan2020.SportTournamentSupportSystem.model.ScheduleStruct.RoundRobinTable;
 import doan2020.SportTournamentSupportSystem.response.Response;
 import doan2020.SportTournamentSupportSystem.service.ICompetitionService;
 import doan2020.SportTournamentSupportSystem.service.IFileStorageService;
@@ -117,7 +119,9 @@ public class ScheduleAPI {
 		Collection<MatchEntity> matches = new ArrayList<>();
 		ArrayList<TeamEntity> teams = new ArrayList<>();
 		HashMap<String, Object> schedule = new HashMap<>();
+		
 		EliminationTree tree = new EliminationTree();
+		RoundRobinTable table = new RoundRobinTable();
 
 		try {
 			CompetitionEntity thisCompetition = competitionService.findOneById(competitionId);
@@ -163,7 +167,7 @@ public class ScheduleAPI {
 						error.put("Message", "Not enough teams");
 						err = true;
 					} else {
-						tree = new EliminationTree(teams, format.getId());
+						tree = new EliminationTree(teams.size(), format.getId());
 						schedule.put("Bracket", tree.getWinBranch());
 					}
 				}
@@ -178,7 +182,7 @@ public class ScheduleAPI {
 						error.put("Message", "Not enough teams");
 						err = true;
 					} else {
-						tree = new EliminationTree(teams, format.getId());
+						tree = new EliminationTree(teams.size(), format.getId());
 						System.out.println("ScheduleAPI: createFinalStageScheduleByCompetitionId: build tree complete");
 						schedule.put("WinBranch", tree.getWinBranch());
 						schedule.put("LoseBranch", tree.getLoseBranch());
@@ -188,7 +192,16 @@ public class ScheduleAPI {
 				
 				if (formatName == Const.ROUND_ROBIN_FORMAT) {
 					System.out.println("ScheduleAPI: createFinalStageScheduleByCompetitionId: case: ROUND_ROBIN_FORMAT");
-					
+					if (teams.size() < 2) {
+						config.put("Global", 0);
+						error.put("MessageCode", 1);
+						error.put("Message", "Not enough teams");
+						err = true;
+					} else {
+						
+						table = new RoundRobinTable(teams.size());
+						schedule.put("Table", table.getMatches());
+					}
 					
 				}
 
@@ -226,6 +239,13 @@ public class ScheduleAPI {
 		response.setError(error);
 		System.out.println("ScheduleAPI: createFinalStageScheduleByCompetitionId: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
+	}
+	
+	
+	private HashMap<String, Object> finalStageScheduling(int totalTeam, String formatName, FinalStageSettingEntity setting){
+		HashMap<String, Object> schedule = null;
+		
+		return schedule;
 	}
 
 }

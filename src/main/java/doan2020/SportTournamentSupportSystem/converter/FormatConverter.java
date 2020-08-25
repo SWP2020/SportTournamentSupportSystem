@@ -31,7 +31,7 @@ public class FormatConverter {
 		System.out.println("CompetitionFormatConverter: toDTO: finish");
 		FormatDTO dto = new FormatDTO();
 		try {
-			
+			dto.setId(entity.getId());
 			dto.setName(entity.getName());
 			dto.setDescription(entity.getDescription());
 			

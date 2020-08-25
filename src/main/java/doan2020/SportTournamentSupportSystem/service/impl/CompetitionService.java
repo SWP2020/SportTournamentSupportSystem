@@ -43,10 +43,6 @@ public class CompetitionService implements ICompetitionService {
 			updatedEntity.setDescription(newEntity.getDescription());
 			updatedEntity.setTournament(newEntity.getTournament());
 			updatedEntity.setSport(newEntity.getSport());
-			updatedEntity.setCreatedBy(newEntity.getCreatedBy());
-			updatedEntity.setCreatedDate(newEntity.getCreatedDate());
-			updatedEntity.setModifiedBy(newEntity.getModifiedBy());
-			updatedEntity.setModifiedDate(newEntity.getModifiedDate());
 			updatedEntity.setStatus(newEntity.getStatus());
 			updatedEntity.setUrl(newEntity.getUrl());
 			updatedEntity.setGroupStageSetting(newEntity.getGroupStageSetting());
@@ -64,8 +60,9 @@ public class CompetitionService implements ICompetitionService {
 		CompetitionEntity deletedEntity = null;
 		try {
 			deletedEntity = competitionRepository.findOneById(id);
-			deletedEntity.setStatus("deleted");
-			deletedEntity = competitionRepository.save(deletedEntity);
+			competitionRepository.delete(deletedEntity);
+//			deletedEntity.setStatus("deleted");
+//			deletedEntity = competitionRepository.save(deletedEntity);
 		} catch (Exception e) {
 			return null;
 		}

@@ -36,10 +36,6 @@ public class NotificationService implements INotificationService {
 
 			updatedEntity.setTitle(newEntity.getTitle());
 			updatedEntity.setContent(newEntity.getContent());
-			updatedEntity.setCreatedBy(newEntity.getCreatedBy());
-			updatedEntity.setCreatedDate(newEntity.getCreatedDate());
-			updatedEntity.setModifiedBy(newEntity.getModifiedBy());
-			updatedEntity.setModifiedDate(newEntity.getModifiedDate());
 			updatedEntity.setStatus(newEntity.getStatus());
 			updatedEntity.setUrl(newEntity.getUrl());
 			updatedEntity = notificationRepository.save(updatedEntity);
@@ -55,8 +51,9 @@ public class NotificationService implements INotificationService {
 		NotificationEntity deletedEntity = null;
 		try {
 			deletedEntity = notificationRepository.findOneById(id);
-			deletedEntity.setStatus("deleted");
-			deletedEntity = notificationRepository.save(deletedEntity);
+			notificationRepository.delete(deletedEntity);
+//			deletedEntity.setStatus("deleted");
+//			deletedEntity = notificationRepository.save(deletedEntity);
 		} catch (Exception e) {
 			return null;
 		}
