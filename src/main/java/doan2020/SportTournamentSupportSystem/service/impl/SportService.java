@@ -37,10 +37,6 @@ public class SportService implements ISportService {
 			updatedEntity.setFullName(newEntity.getFullName());
 			updatedEntity.setShortName(newEntity.getShortName());
 			updatedEntity.setDescription(newEntity.getDescription());
-			updatedEntity.setCreatedBy(newEntity.getCreatedBy());
-			updatedEntity.setCreatedDate(newEntity.getCreatedDate());
-			updatedEntity.setModifiedBy(newEntity.getModifiedBy());
-			updatedEntity.setModifiedDate(newEntity.getModifiedDate());
 			updatedEntity.setStatus(newEntity.getStatus());
 			updatedEntity.setUrl(newEntity.getUrl());
 			updatedEntity = sportRepository.save(updatedEntity);
@@ -56,8 +52,9 @@ public class SportService implements ISportService {
 		SportEntity deletedEntity = null;
 		try {
 			deletedEntity = sportRepository.findOneById(id);
-			deletedEntity.setStatus("deleted");
-			deletedEntity = sportRepository.save(deletedEntity);
+			sportRepository.delete(deletedEntity);
+//			deletedEntity.setStatus("deleted");
+//			deletedEntity = sportRepository.save(deletedEntity);
 		} catch (Exception e) {
 			return null;
 		}

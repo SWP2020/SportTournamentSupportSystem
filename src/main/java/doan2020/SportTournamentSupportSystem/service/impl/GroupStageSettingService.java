@@ -34,10 +34,6 @@ public class GroupStageSettingService implements IGroupStageSettingService{
 
 			updatedEntity.setFormat(newEntity.getFormat());
 			updatedEntity.setHasHomeMatch(newEntity.isHasHomeMatch());
-			updatedEntity.setCreatedBy(newEntity.getCreatedBy());
-			updatedEntity.setCreatedDate(newEntity.getCreatedDate());
-			updatedEntity.setModifiedBy(newEntity.getModifiedBy());
-			updatedEntity.setModifiedDate(newEntity.getModifiedDate());
 			updatedEntity.setStatus(newEntity.getStatus());
 			updatedEntity.setUrl(newEntity.getUrl());
 			updatedEntity = groupStageSettingRepository.save(updatedEntity);
@@ -53,8 +49,9 @@ public class GroupStageSettingService implements IGroupStageSettingService{
 		GroupStageSettingEntity deletedEntity = null;
 		try {
 			deletedEntity = groupStageSettingRepository.findOneById(id);
-			deletedEntity.setStatus("deleted");
-			deletedEntity = groupStageSettingRepository.save(deletedEntity);
+			groupStageSettingRepository.delete(deletedEntity);
+//			deletedEntity.setStatus("deleted");
+//			deletedEntity = groupStageSettingRepository.save(deletedEntity);
 		} catch (Exception e) {
 			return null;
 		}

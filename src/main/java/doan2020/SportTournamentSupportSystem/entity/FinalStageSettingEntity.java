@@ -1,7 +1,6 @@
 package doan2020.SportTournamentSupportSystem.entity;
 
-import java.util.Date;
-
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
@@ -11,38 +10,32 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import com.sun.istack.NotNull;
-
 @Entity
-@Table(name = "final_stage_setting")
+@Table(name = "final_stage_settings")
 @EntityListeners(AuditingEntityListener.class)
 public class FinalStageSettingEntity {
 
 	@Id
-	@NotNull
+	@Column(nullable = false)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
-	private String createdBy;
-
-	private Date createdDate;
-
-	private String modifiedBy;
-
-	private Date modifiedDate;
 
 	public Long getId() {
 		return id;
 	}
-	
+
+	@Column(nullable = false)
+	@ColumnDefault("0")
 	private boolean hasHomeMatch;
-	
+
 	@ManyToOne
-	@JoinColumn(name = "formatId")
+	@JoinColumn(name = "formatId", nullable = false)
+	@ColumnDefault("1")
 	private FormatEntity format;
-	
+
 	private String status;
 
 	private String url;
@@ -63,38 +56,6 @@ public class FinalStageSettingEntity {
 		this.format = format;
 	}
 
-	public String getCreatedBy() {
-		return createdBy;
-	}
-
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
-
-	public Date getCreatedDate() {
-		return createdDate;
-	}
-
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
-
-	public String getModifiedBy() {
-		return modifiedBy;
-	}
-
-	public void setModifiedBy(String modifiedBy) {
-		this.modifiedBy = modifiedBy;
-	}
-
-	public Date getModifiedDate() {
-		return modifiedDate;
-	}
-
-	public void setModifiedDate(Date modifiedDate) {
-		this.modifiedDate = modifiedDate;
-	}
-
 	public String getStatus() {
 		return status;
 	}
@@ -110,7 +71,5 @@ public class FinalStageSettingEntity {
 	public void setUrl(String url) {
 		this.url = url;
 	}
-	
-	
-	
+
 }

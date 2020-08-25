@@ -58,10 +58,6 @@ public class UserService implements IUserService {
 //			updatedEntity.setAvatar(newEntity.getAvatar());
 //			updatedEntity.setBackground(newEntity.getBackground());
 			updatedEntity.setRole(newEntity.getRole());
-			updatedEntity.setCreatedBy(newEntity.getCreatedBy());
-			updatedEntity.setCreatedDate(newEntity.getCreatedDate());
-			updatedEntity.setModifiedBy(newEntity.getModifiedBy());
-			updatedEntity.setModifiedDate(newEntity.getModifiedDate());
 			updatedEntity.setStatus(newEntity.getStatus());
 			updatedEntity.setUrl(newEntity.getUrl());
 			updatedEntity = userRepository.save(updatedEntity);
@@ -105,8 +101,9 @@ public class UserService implements IUserService {
 		UserEntity deletedEntity = null;
 		try {
 			deletedEntity = userRepository.findOneById(id);
-			deletedEntity.setStatus("deleted");
-			deletedEntity = userRepository.save(deletedEntity);
+			userRepository.delete(deletedEntity);
+//			deletedEntity.setStatus("deleted");
+//			deletedEntity = userRepository.save(deletedEntity);
 		} catch (Exception e) {
 			return null;
 		}

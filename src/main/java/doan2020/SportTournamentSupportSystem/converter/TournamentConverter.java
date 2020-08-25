@@ -93,13 +93,11 @@ public class TournamentConverter{
 			dto.setDonor(entity.getDonor());
 			dto.setStatus(entity.getStatus());
 			dto.setUrl(entity.getUrl());
-			String createdDate = validator.formatDateToString(entity.getCreatedDate());
-			dto.setCreateDate(createdDate);
 			dto.setAvatar(entity.getAvatar());
 			dto.setBackground(entity.getBackground());
-			String closeRegistrationTime = validator.formatDateToString(entity.getCreatedDate());
+			String closeRegistrationTime = validator.formatDateToString(entity.getCloseRegistrationTime());
 			dto.setCloseRegistrationTime(closeRegistrationTime);
-			String openRegistrationTime = validator.formatDateToString(entity.getCreatedDate());
+			String openRegistrationTime = validator.formatDateToString(entity.getOpenRegistrationTime());
 			dto.setOpenRegistrationTime(openRegistrationTime);
 			System.out.println("TournamentConverter: toDTO: no exception");
 		} catch (Exception e) {

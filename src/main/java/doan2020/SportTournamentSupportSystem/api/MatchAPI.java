@@ -88,7 +88,6 @@ public class MatchAPI {
 	 * 
 	 */
 	@PostMapping
-	@CrossOrigin
 	public ResponseEntity<Response> createMatch(@RequestBody MatchDTO newMatch) {
 		System.out.println("MatchAPI: createMatch: start");
 		HttpStatus httpStatus = HttpStatus.OK;

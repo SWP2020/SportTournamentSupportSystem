@@ -35,10 +35,6 @@ public class ResultService implements IResultService {
 			updatedEntity = resultRepository.findOneById(id);
 
 			updatedEntity.setMatch(newEntity.getMatch());
-			updatedEntity.setCreatedBy(newEntity.getCreatedBy());
-			updatedEntity.setCreatedDate(newEntity.getCreatedDate());
-			updatedEntity.setModifiedBy(newEntity.getModifiedBy());
-			updatedEntity.setModifiedDate(newEntity.getModifiedDate());
 			updatedEntity.setStatus(newEntity.getStatus());
 			updatedEntity.setUrl(newEntity.getUrl());
 			updatedEntity.setSetNo(newEntity.getSetNo());
@@ -57,8 +53,9 @@ public class ResultService implements IResultService {
 		ResultEntity deletedEntity = null;
 		try {
 			deletedEntity = resultRepository.findOneById(id);
-			deletedEntity.setStatus("deleted");
-			deletedEntity = resultRepository.save(deletedEntity);
+			resultRepository.delete(deletedEntity);
+//			deletedEntity.setStatus("deleted");
+//			deletedEntity = resultRepository.save(deletedEntity);
 		} catch (Exception e) {
 			return null;
 		}

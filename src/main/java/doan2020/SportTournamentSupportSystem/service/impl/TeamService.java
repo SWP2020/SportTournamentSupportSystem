@@ -34,8 +34,6 @@ public class TeamService implements ITeamService {
 			} else if (teamEntity.getStatus() == Const.TEAM_STATUS_JOINED) {
 				Long competitionId = teamEntity.getCompetition().getId();
 				Long maxSeedNo = teamRepository.getMaxSeedNoByCompetitionId(competitionId);
-				if (maxSeedNo == null)
-					maxSeedNo = 0l;
 				teamEntity.setSeedNo(maxSeedNo + 1);
 				newEntity = teamRepository.save(teamEntity);
 			}
@@ -55,10 +53,6 @@ public class TeamService implements ITeamService {
 			updatedEntity.setDescription(newEntity.getDescription());
 			updatedEntity.setCreator(newEntity.getCreator());
 			updatedEntity.setCompetition(newEntity.getCompetition());
-			updatedEntity.setCreatedBy(newEntity.getCreatedBy());
-			updatedEntity.setCreatedDate(newEntity.getCreatedDate());
-			updatedEntity.setModifiedBy(newEntity.getModifiedBy());
-			updatedEntity.setModifiedDate(newEntity.getModifiedDate());
 			updatedEntity.setStatus(newEntity.getStatus());
 			updatedEntity.setUrl(newEntity.getUrl());
 			updatedEntity = teamRepository.save(updatedEntity);
@@ -74,8 +68,9 @@ public class TeamService implements ITeamService {
 		TeamEntity deletedEntity = null;
 		try {
 			deletedEntity = teamRepository.findOneById(id);
-			deletedEntity.setStatus("deleted");
-			deletedEntity = teamRepository.save(deletedEntity);
+			teamRepository.delete(deletedEntity);
+//			deletedEntity.setStatus("deleted");
+//			deletedEntity = teamRepository.save(deletedEntity);
 		} catch (Exception e) {
 			return null;
 		}
@@ -214,6 +209,20 @@ public class TeamService implements ITeamService {
 			return null;
 		}
 		return foundEntities;
+	}
+	
+	@Override
+	public Long getMaxSeedNoByCompetitionId(Long competitionId) {
+		Long maxSeedNo = 0l;
+		try {
+			maxSeedNo = teamRepository.getMaxSeedNoByCompetitionId(competitionId);
+			if (maxSeedNo == null) {
+				return 0l;
+			}
+		} catch (Exception e) {
+		}
+		
+		return maxSeedNo;
 	}
 
 }

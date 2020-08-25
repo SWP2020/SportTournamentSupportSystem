@@ -1,17 +1,18 @@
 
 package doan2020.SportTournamentSupportSystem.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Table;
 import javax.persistence.EntityListeners;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import java.util.Date;
+import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import com.sun.istack.NotNull;
-import javax.persistence.GeneratedValue;
-import javax.persistence.ManyToOne;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.ColumnDefault;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Table(name = "results")
@@ -19,30 +20,26 @@ import javax.persistence.JoinColumn;
 public class ResultEntity {
 
 	@Id
-	@NotNull
+	@Column(nullable = false)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@Column(nullable = false)
+	@ColumnDefault("1")
 	private int setNo;
 
+	@ColumnDefault("0")
 	private int team1Score;
 
+	@ColumnDefault("0")
 	private int team2Score;
-
-	private String createdBy;
-
-	private Date createdDate;
-
-	private String modifiedBy;
-
-	private Date modifiedDate;
 
 	private String status;
 
 	private String url;
 
 	@ManyToOne
-	@JoinColumn(name = "matchId")
+	@JoinColumn(name = "matchId", nullable = false)
 	private MatchEntity match;
 
 	public Long getId() {
@@ -55,38 +52,6 @@ public class ResultEntity {
 
 	public void setSetNo(int setNo) {
 		this.setNo = setNo;
-	}
-
-	public String getCreatedBy() {
-		return createdBy;
-	}
-
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
-
-	public Date getCreatedDate() {
-		return createdDate;
-	}
-
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
-
-	public String getModifiedBy() {
-		return modifiedBy;
-	}
-
-	public void setModifiedBy(String modifiedBy) {
-		this.modifiedBy = modifiedBy;
-	}
-
-	public Date getModifiedDate() {
-		return modifiedDate;
-	}
-
-	public void setModifiedDate(Date modifiedDate) {
-		this.modifiedDate = modifiedDate;
 	}
 
 	public String getStatus() {
@@ -128,7 +93,5 @@ public class ResultEntity {
 	public void setTeam2Score(int team2Score) {
 		this.team2Score = team2Score;
 	}
-	
-	
 
 }

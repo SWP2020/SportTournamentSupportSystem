@@ -383,9 +383,9 @@ public class TournamentAPI {
 					thisTournamentDTO = converter.toDTO(thisTournament);
 					
 					Collection<CompetitionEntity> comps = thisTournament.getCompetitions();
-					ArrayList<HashMap<String, Object>> tests = new ArrayList<>();
+					
 					for (CompetitionEntity comp: comps) {
-						CompetitionEntity competitionEntity = competitionService.updateStatus(comp, Const.TOURNAMENT_STATUS_PROCESSING);
+						competitionService.updateStatus(comp, Const.TOURNAMENT_STATUS_PROCESSING);
 						scheduleService.saveScheduleToDatabase(comp.getId());
 					}
 					result.put("Tournament", thisTournamentDTO);

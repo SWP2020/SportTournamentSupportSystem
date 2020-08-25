@@ -108,9 +108,7 @@ public class TestLoginAPI {
 		userEntity = new UserEntity((long)1, "Cong", "123456", 
 				"Do Van", "Cong", "Thanh Xuan, Ha Noi", 
 				"12345678", true, returnUserDob, 
-				"cong123@gmail.com", "ava1.jpg", "background1.jpg", 
-				"creator1", returnUserCreatedDate, 
-				"modifier1", returnUserModifiedDate, 
+				"cong123@gmail.com", "ava1.jpg", "background1.jpg", 	
 				"active", "stss.com/user/abcdef", null);
 		userDto = new UserDTO((long)1, "Cong", "123456", 
 				"Do Van", "Cong", "Thanh Xuan, Ha Noi", 

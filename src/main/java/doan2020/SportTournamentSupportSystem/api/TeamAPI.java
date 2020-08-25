@@ -177,8 +177,8 @@ public class TeamAPI {
 				
 				result.put("Team", teamDTO);
 				config.put("Global", 0);
-				error.put("MessageCode", 1);
-				error.put("Message", "Team info invalid");
+				error.put("MessageCode", 0);
+				error.put("Message", "Successful");
 
 				// save file
 
@@ -243,8 +243,8 @@ public class TeamAPI {
 				
 				result.put("Team", dto);
 				config.put("Global", 0);
-				error.put("MessageCode", 1);
-				error.put("Message", "Team info invalid");
+				error.put("MessageCode", 0);
+				error.put("Message", "Successful");
 
 				// save file
 
@@ -343,8 +343,8 @@ public class TeamAPI {
 				
 				result.put("Team", dto);
 				config.put("Global", 0);
-				error.put("MessageCode", 1);
-				error.put("Message", "Team info invalid");
+				error.put("MessageCode", 0);
+				error.put("Message", "Successful");
 
 				// save file
 
@@ -392,6 +392,9 @@ public class TeamAPI {
 			} else {
 				
 				teamEntity.setStatus(Const.TEAM_STATUS_JOINED);
+				Long competitionId = teamEntity.getCompetition().getId();
+				Long maxSeedNo = service.getMaxSeedNoByCompetitionId(competitionId);
+				teamEntity.setSeedNo(maxSeedNo + 1);
 				teamEntity = service.update(id, teamEntity);
 				
 				players = (ArrayList<Player>) service.getTeamPlayerFromFile(teamEntity.getCompetition().getId(), id);
@@ -401,8 +404,8 @@ public class TeamAPI {
 				
 				result.put("Team", teamDTO);
 				config.put("Global", 0);
-				error.put("MessageCode", 1);
-				error.put("Message", "Team info invalid");
+				error.put("MessageCode", 0);
+				error.put("Message", "Successful");
 
 				// save file
 
@@ -459,8 +462,8 @@ public class TeamAPI {
 				
 				result.put("Team", teamDTO);
 				config.put("Global", 0);
-				error.put("MessageCode", 1);
-				error.put("Message", "Team info invalid");
+				error.put("MessageCode", 0);
+				error.put("Message", "Successful");
 
 				// save file
 

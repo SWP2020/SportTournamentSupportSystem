@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Date;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
@@ -15,9 +16,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import com.sun.istack.NotNull;
 
 @Entity
 @Table(name = "matches")
@@ -25,30 +25,25 @@ import com.sun.istack.NotNull;
 public class MatchEntity {
 
 	@Id
-	@NotNull
+	@Column(nullable = false)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	private String name;
 
+	@ColumnDefault("'Chưa có mô tả'")
+	private String description;
+
 	private Date time;
 
 	private String location;
-
-	private String createdBy;
-
-	private Date createdDate;
-
-	private String modifiedBy;
-
-	private Date modifiedDate;
 
 	private String status;
 
 	private String url;
 
 	@ManyToOne
-	@JoinColumn(name = "competitionId")
+	@JoinColumn(name = "competitionId", nullable = false)
 	private CompetitionEntity competition;
 
 	@ManyToOne
@@ -67,17 +62,19 @@ public class MatchEntity {
 	@JoinColumn(name = "loserId")
 	private TeamEntity loser;
 
+	@ColumnDefault("0")
 	private float team1Bonus;
 
+	@ColumnDefault("0")
 	private float team2Bonus;
 
 	@OneToMany(mappedBy = "match", cascade = CascadeType.ALL)
 	private Collection<ResultEntity> results;
 
 	public MatchEntity() {
-		
+
 	}
-	
+
 	public Long getId() {
 		return id;
 	}
@@ -104,38 +101,6 @@ public class MatchEntity {
 
 	public void setLocation(String location) {
 		this.location = location;
-	}
-
-	public String getCreatedBy() {
-		return createdBy;
-	}
-
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
-
-	public Date getCreatedDate() {
-		return createdDate;
-	}
-
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
-
-	public String getModifiedBy() {
-		return modifiedBy;
-	}
-
-	public void setModifiedBy(String modifiedBy) {
-		this.modifiedBy = modifiedBy;
-	}
-
-	public Date getModifiedDate() {
-		return modifiedDate;
-	}
-
-	public void setModifiedDate(Date modifiedDate) {
-		this.modifiedDate = modifiedDate;
 	}
 
 	public String getStatus() {
@@ -217,7 +182,13 @@ public class MatchEntity {
 	public void setResults(Collection<ResultEntity> results) {
 		this.results = results;
 	}
-	
-	
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
 }

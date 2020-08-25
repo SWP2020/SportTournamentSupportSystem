@@ -11,11 +11,7 @@ public interface IRoleService {
 	
 	public RoleEntity create(RoleEntity roleEntity);
 	
-	public RoleEntity update(Long id, RoleEntity newEntity);
-	
 //	public Collection<RoleEntity> findAll();
-	
-	public RoleEntity delete(Long id);
 	
 	public RoleEntity findOneByName(String name);
 }

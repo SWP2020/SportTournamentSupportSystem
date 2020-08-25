@@ -51,10 +51,6 @@ public class VerificationTokenService implements IVerificationTokenService {
 			updatedEntity.setIssuedDateTime(newEntity.getIssuedDateTime());
 			updatedEntity.setConfirmedDateTime(newEntity.getConfirmedDateTime());
 			updatedEntity.setUser(newEntity.getUser());
-			updatedEntity.setCreatedBy(newEntity.getCreatedBy());
-			updatedEntity.setCreatedDate(newEntity.getCreatedDate());
-			updatedEntity.setModifiedBy(newEntity.getModifiedBy());
-			updatedEntity.setModifiedDate(newEntity.getModifiedDate());
 			updatedEntity.setStatus(newEntity.getStatus());
 			updatedEntity.setUrl(newEntity.getUrl());
 			updatedEntity = verificationTokenRepository.save(updatedEntity);

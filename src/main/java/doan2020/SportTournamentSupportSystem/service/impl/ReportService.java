@@ -38,10 +38,6 @@ public class ReportService implements IReportService {
 			updatedEntity.setSubject(newEntity.getSubject());
 			updatedEntity.setContent(newEntity.getContent());
 			updatedEntity.setTournament(newEntity.getTournament());
-			updatedEntity.setCreatedBy(newEntity.getCreatedBy());
-			updatedEntity.setCreatedDate(newEntity.getCreatedDate());
-			updatedEntity.setModifiedBy(newEntity.getModifiedBy());
-			updatedEntity.setModifiedDate(newEntity.getModifiedDate());
 			updatedEntity.setStatus(newEntity.getStatus());
 			updatedEntity.setUrl(newEntity.getUrl());
 			updatedEntity = reportRepository.save(updatedEntity);
@@ -57,8 +53,9 @@ public class ReportService implements IReportService {
 		ReportEntity deletedEntity = null;
 		try {
 			deletedEntity = reportRepository.findOneById(id);
-			deletedEntity.setStatus("deleted");
-			deletedEntity = reportRepository.save(deletedEntity);
+			reportRepository.delete(deletedEntity);
+//			deletedEntity.setStatus("deleted");
+//			deletedEntity = reportRepository.save(deletedEntity);
 		} catch (Exception e) {
 			return null;
 		}

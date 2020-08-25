@@ -1,12 +1,14 @@
 package doan2020.SportTournamentSupportSystem.converter;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import doan2020.SportTournamentSupportSystem.dto.FinalStageSettingDTO;
 import doan2020.SportTournamentSupportSystem.entity.FinalStageSettingEntity;
 import doan2020.SportTournamentSupportSystem.entity.FormatEntity;
 import doan2020.SportTournamentSupportSystem.service.IFormatService;
 
+@Component
 public class FinalStageSettingConverter {
 	
 	@Autowired
@@ -16,7 +18,7 @@ public class FinalStageSettingConverter {
 		System.out.println("FinalStageSettingConverter: toEntity: start");
 		FinalStageSettingEntity entity = new FinalStageSettingEntity();
 		try {
-			entity.setHasHomeMatch(dto.isHas_home_match());
+			entity.setHasHomeMatch(dto.isHasHomeMatch());
 			if (dto.getFormatId() != null) {
 				Long formatId = dto.getFormatId();
 				FormatEntity format = formatService.findOneById(formatId);

@@ -7,7 +7,7 @@ public class GroupStageSettingDTO {
 
 	private int advanceTeamPerTable;
 	
-	private boolean has_home_match;
+	private boolean hasHomeMatch;
 	private Long formatId;
 
 	public GroupStageSettingDTO() {
@@ -38,12 +38,14 @@ public class GroupStageSettingDTO {
 		this.advanceTeamPerTable = advanceTeamPerTable;
 	}
 
-	public boolean isHas_home_match() {
-		return has_home_match;
+
+
+	public boolean isHasHomeMatch() {
+		return hasHomeMatch;
 	}
 
-	public void setHas_home_match(boolean has_home_match) {
-		this.has_home_match = has_home_match;
+	public void setHasHomeMatch(boolean hasHomeMatch) {
+		this.hasHomeMatch = hasHomeMatch;
 	}
 
 	public Long getFormatId() {

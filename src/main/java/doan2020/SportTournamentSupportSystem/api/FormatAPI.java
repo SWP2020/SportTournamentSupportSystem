@@ -85,44 +85,5 @@ public class FormatAPI {
 	}
 
 	
-	@PutMapping
-	@CrossOrigin
-	public ResponseEntity<Response> editFormat(
-			@RequestBody FormatDTO competitionFormat,
-			@RequestParam Long id) {
-		System.out.println("FormatAPI: editFormat: start");
-		
-		HttpStatus httpStatus = HttpStatus.OK;
-		Response response = new Response();
-		Map<String, Object> config = new HashMap<String, Object>();
-		Map<String, Object> result = new HashMap<String, Object>();
-		Map<String, Object> error = new HashMap<String, Object>();
-		FormatEntity formatEntity = new FormatEntity();
-		
-		try {
-			formatEntity = converter.toEntity(competitionFormat);
-			
-			formatEntity = service.update(id, formatEntity);
-			
-			FormatDTO dto = converter.toDTO(formatEntity);
-
-			result.put("Format", dto);
-			config.put("Global", 0);
-			error.put("MessageCode", 0);
-			error.put("Message", "Format update successfuly");
-			System.out.println("FormatAPI: editFormat: no exception");
-		} catch (Exception e) {
-			System.out.println("FormatAPI: editFormat: has exception");
-			result.put("Format", null);
-			config.put("Global", 0);
-			error.put("MessageCode", 1);
-			error.put("Message", "Server error");
-		}
-
-		response.setConfig(config);
-		response.setResult(result);
-		response.setError(error);
-		System.out.println("FormatAPI: editFormat: finish");
-		return new ResponseEntity<Response>(response, httpStatus);
-	}
+	
 }

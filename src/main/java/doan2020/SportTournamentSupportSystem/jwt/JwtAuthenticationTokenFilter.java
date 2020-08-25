@@ -3,6 +3,7 @@ package doan2020.SportTournamentSupportSystem.jwt;
 
 import java.io.IOException;
 import java.util.Enumeration;
+import java.util.stream.Collectors;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -44,6 +45,13 @@ public class JwtAuthenticationTokenFilter extends UsernamePasswordAuthentication
 			String url = ((HttpServletRequest) request).getRequestURL().toString();
 			String queryString = ((HttpServletRequest) request).getQueryString();
 			System.out.println("URL: " + url + "?" + queryString);
+
+//			if ("POST".equalsIgnoreCase(((HttpServletRequest) request).getMethod())) {
+//				System.out.println("Data: ");
+//				String test = request.getReader().toString();
+//				System.out.println(test);
+//				System.out.println("-----------------------------");
+//			}
 		}
 
 		try {
