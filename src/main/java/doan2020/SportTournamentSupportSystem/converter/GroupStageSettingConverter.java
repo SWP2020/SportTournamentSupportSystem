@@ -56,6 +56,7 @@ public class GroupStageSettingConverter {
 				dto.setFormatId(entity.getFormat().getId());
 			if (entity.getCompetition() != null)
 				dto.setCompetitionId(entity.getCompetition().getId());
+			dto.setHasHomeMatch(entity.isHasHomeMatch());
 			dto.setMaxTeamPerTable(entity.getMaxTeamPerTable());
 			dto.setAdvanceTeamPerTable(entity.getAdvanceTeamPerTable());
 			dto.setStatus(entity.getStatus());

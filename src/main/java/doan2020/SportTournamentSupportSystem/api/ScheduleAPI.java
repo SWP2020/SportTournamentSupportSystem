@@ -22,8 +22,8 @@ import doan2020.SportTournamentSupportSystem.entity.FormatEntity;
 import doan2020.SportTournamentSupportSystem.entity.GroupStageSettingEntity;
 import doan2020.SportTournamentSupportSystem.entity.MatchEntity;
 import doan2020.SportTournamentSupportSystem.entity.TeamEntity;
-import doan2020.SportTournamentSupportSystem.model.ScheduleStruct.EliminationTree;
-import doan2020.SportTournamentSupportSystem.model.ScheduleStruct.RoundRobinTable;
+import doan2020.SportTournamentSupportSystem.model.ScheduleFormat.RoundRobinTable;
+import doan2020.SportTournamentSupportSystem.model.ScheduleFormat.SingleEliminationTree;
 import doan2020.SportTournamentSupportSystem.response.Response;
 import doan2020.SportTournamentSupportSystem.service.ICompetitionService;
 import doan2020.SportTournamentSupportSystem.service.IFileStorageService;
@@ -39,28 +39,27 @@ public class ScheduleAPI {
 
 	@Autowired
 	private ICompetitionService competitionService;
-	
+
 	@Autowired
 	private IScheduleService scheduleService;
-	
+
 	@Autowired
 	private ITeamService teamService;
-	
+
 	@Autowired
 	private IFinalStageSettingService finalStageService;
-	
+
 	@Autowired
 	private IGroupStageSettingService groupStageService;
-	
-	
+
 	/*
 	 * Get schedule for a competition
 	 */
 
 	@GetMapping()
-	public ResponseEntity<Response> getFinalStageScheduleByCompetition(
+	public ResponseEntity<Response> getScheduleByCompetitionId(
 			@RequestParam(value = "competitionId", required = false) Long competitionId) {
-		System.out.println("ScheduleAPI: getScheduleByCompetition: start");
+		System.out.println("ScheduleAPI: getScheduleByCompetitionId: start");
 		Response response = new Response();
 		HttpStatus httpStatus = HttpStatus.OK;
 		Map<String, Object> config = new HashMap<String, Object>();
@@ -72,9 +71,7 @@ public class ScheduleAPI {
 
 		try {
 
-			System.out.println("ScheduleAPI: getScheduleByCompetition: competitionId: " + competitionId);
 			CompetitionEntity thisCompetition = competitionService.findOneById(competitionId);
-			System.out.println("ScheduleAPI: getScheduleByCompetition: thisCompetition: " + thisCompetition);
 			if (thisCompetition == null) {
 				result.put("Schedule", null);
 				config.put("Global", 0);
@@ -83,17 +80,17 @@ public class ScheduleAPI {
 			} else {
 				HashMap<String, Object> schedule;
 				try {
-					System.out.println("ScheduleAPI: getScheduleByCompetition: try to get schedule");
+					System.out.println("ScheduleAPI: getScheduleByCompetitionId: try to get schedule");
 					schedule = scheduleService.getSchedule(competitionId);
 					// Check for changes in team numbers
 					int dbTeamNumber = thisCompetition.getTeams().size();
 					int cfTeamNumber = (int) schedule.get("TotalTeam");
 
 					if (dbTeamNumber != cfTeamNumber)
-						return createFinalStageScheduleByCompetitionId(competitionId);
+						return schedulingByCompetitionId(competitionId);
 				} catch (Exception e) {
 					System.out.println("ScheduleAPI: getScheduleByCompetition: schedule not yet created");
-					return createFinalStageScheduleByCompetitionId(competitionId);
+					return schedulingByCompetitionId(competitionId);
 				}
 
 				result.put("Schedule", schedule);
@@ -102,9 +99,9 @@ public class ScheduleAPI {
 				error.put("Message", "Successful");
 
 			}
-			System.out.println("ScheduleAPI: getScheduleByCompetition: no exception");
+			System.out.println("ScheduleAPI: getScheduleByCompetitionId: no exception");
 		} catch (Exception e) {
-			System.out.println("ScheduleAPI: getScheduleByCompetition: has exception");
+			System.out.println("ScheduleAPI: getScheduleByCompetitionId: has exception");
 			result.put("Schedule", null);
 			config.put("Global", 0);
 			error.put("MessageCode", 1);
@@ -114,12 +111,12 @@ public class ScheduleAPI {
 		response.setConfig(config);
 		response.setResult(result);
 		response.setError(error);
-		System.out.println("ScheduleAPI: getScheduleByCompetition: finish");
+		System.out.println("ScheduleAPI: getScheduleByCompetitionId: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
 
 	@PostMapping()
-	public ResponseEntity<Response> createFinalStageScheduleByCompetitionId(
+	public ResponseEntity<Response> schedulingByCompetitionId(
 			@RequestParam(value = "competitionId", required = false) Long competitionId) {
 		System.out.println("ScheduleAPI: createFinalStageScheduleByCompetitionId: start");
 		Response response = new Response();
@@ -131,8 +128,10 @@ public class ScheduleAPI {
 		Collection<MatchEntity> matches = new ArrayList<>();
 		ArrayList<TeamEntity> teams = new ArrayList<>();
 		HashMap<String, Object> schedule = new HashMap<>();
-		
-		EliminationTree tree = new EliminationTree();
+		HashMap<String, Object> groupStageSchedule = new HashMap<>();
+		HashMap<String, Object> finalStageSchedule = new HashMap<>();
+
+		SingleEliminationTree tree = new SingleEliminationTree();
 		RoundRobinTable table = new RoundRobinTable();
 
 		try {
@@ -145,91 +144,64 @@ public class ScheduleAPI {
 				error.put("Message", "Competition not found");
 			} else {
 
-				int totalTeam;
-				String formatName;
+				int totalTeamBeforeGroupStage;
+				int totalTeamAfterGroupStage;
+
 				FormatEntity finalFormat;
 				FormatEntity groupFormat;
-				totalTeam = teamService.countByCompetitionIdAndStatus(competitionId, Const.TEAM_STATUS_JOINED).intValue();
 
+				totalTeamBeforeGroupStage = teamService
+						.countByCompetitionIdAndStatus(competitionId, Const.TEAM_STATUS_JOINED).intValue();
+
+				boolean hasGroupStage = thisCompetition.isHasGroupStage();
 				FinalStageSettingEntity finalStageSetting = thisCompetition.getFinalStageSetting();
-				GroupStageSettingEntity groupStageSettingEntity = thisCompetition.getGroupStageSetting();
-//				
-//				if (finalStageSetting == null) {
-//					result.put("Schedule", null);
-//					config.put("Global", 0);
-//					error.put("MessageCode", 1);
-//					error.put("Message", "Missing final stage setting");
-//				} else {
-//					try {
-//						finalFormat = finalStageSetting.getFormat();
-//						formatName = format.getName();
-//					} catch (Exception e) {
-//						format = null;
-//						formatName = Const.ANOTHER_FORMAT;
-//
-//					}
-//					
-//				}
-//
-//				schedule.put("Format", formatName);
+				GroupStageSettingEntity groupStageSetting = thisCompetition.getGroupStageSetting();
 
-//				boolean err = false;
+				if (finalStageSetting == null) {
+					result.put("Schedule", null);
+					config.put("Global", 0);
+					error.put("MessageCode", 1);
+					error.put("Message", "Missing final stage setting");
+				} else {
+
+					// group
+					if (hasGroupStage) {
+
+						groupFormat = groupStageSetting.getFormat();
+						boolean hasHomeMatch = groupStageSetting.isHasHomeMatch();
+						int maxTeamPerTable = groupStageSetting.getMaxTeamPerTable();
+						int advanceTeamPerTable = groupStageSetting.getAdvanceTeamPerTable();
+						int totalTable = totalTeamBeforeGroupStage / maxTeamPerTable;
+						int totalTeamInFinalTable = totalTeamBeforeGroupStage % totalTable;
+						if (totalTeamInFinalTable == 0) {
+							totalTeamInFinalTable = maxTeamPerTable;
+						} else {
+							totalTable++;
+						}
+
+						// schedule for group stage
+						String formatName = groupFormat.getName();
+						groupStageSchedule = scheduleService.groupStageScheduling(totalTeamBeforeGroupStage, formatName,
+								hasHomeMatch, maxTeamPerTable, advanceTeamPerTable);
+						totalTeamAfterGroupStage = (totalTable - 1) * maxTeamPerTable
+								+ (int) Math.min(totalTeamInFinalTable, advanceTeamPerTable);
+
+					} else {
+
+						totalTeamAfterGroupStage = totalTeamBeforeGroupStage;
+					}
+
+					// final
+					finalFormat = finalStageSetting.getFormat();
+					boolean hasHomeMatch = groupStageSetting.isHasHomeMatch();
+					String formatName = finalFormat.getName();
+					finalStageSchedule = scheduleService.finalStageScheduling(totalTeamAfterGroupStage, formatName,
+							hasHomeMatch);
+
+				}
+
 //
-//				if (formatName == Const.SINGLE_ELIMINATION_FORMAT) {
-//					System.out.println("ScheduleAPI: createFinalStageScheduleByCompetitionId: case: SINGLE_ELIMINATION_FORMAT");
-//					if (teams.size() < 2) {
-//						System.out.println(
-//								"ScheduleAPI: createFinalStageScheduleByCompetitionId: case: SINGLE_ELIMINATION_FORMAT: Not enough teams");
-//						config.put("Global", 0);
-//						error.put("MessageCode", 1);
-//						error.put("Message", "Not enough teams");
-//						err = true;
-//					} else {
-//						tree = new EliminationTree(teams.size(), format.getId());
-//						schedule.put("Bracket", tree.getWinBranch());
-//					}
-//				}
-//
-//				if (formatName == Const.DOUBLE_ELIMINATION_FORMAT) {
-//					System.out.println("ScheduleAPI: createFinalStageScheduleByCompetitionId: case: DOUBLE_ELIMINATION_FORMAT");
-//					if (teams.size() < 3) {
-//						System.out.println(
-//								"ScheduleAPI: createFinalStageScheduleByCompetitionId: case: DOUBLE_ELIMINATION_FORMAT: Not enough teams");
-//						config.put("Global", 0);
-//						error.put("MessageCode", 1);
-//						error.put("Message", "Not enough teams");
-//						err = true;
-//					} else {
-//						tree = new EliminationTree(teams.size(), format.getId());
-//						System.out.println("ScheduleAPI: createFinalStageScheduleByCompetitionId: build tree complete");
-//						schedule.put("WinBranch", tree.getWinBranch());
-//						schedule.put("LoseBranch", tree.getLoseBranch());
-//						System.out.println("ScheduleAPI: createFinalStageScheduleByCompetitionId: set schedule complete");
-//					}
-//				}
-//				
-//				if (formatName == Const.ROUND_ROBIN_FORMAT) {
-//					System.out.println("ScheduleAPI: createFinalStageScheduleByCompetitionId: case: ROUND_ROBIN_FORMAT");
-//					if (teams.size() < 2) {
-//						config.put("Global", 0);
-//						error.put("MessageCode", 1);
-//						error.put("Message", "Not enough teams");
-//						err = true;
-//					} else {
-//						
-//						table = new RoundRobinTable(teams.size());
-//						schedule.put("Table", table.getMatches());
-//					}
-//					
-//				}
-//
-//				if (formatName == Const.ANOTHER_FORMAT) {
-//					System.out.println("ScheduleAPI: createFinalStageScheduleByCompetitionId: format not support ");
-//					config.put("Global", 0);
-//					error.put("MessageCode", 1);
-//					error.put("Message", "Not support format");
-//					err = true;
-//				}
+
 //
 //				result.put("Schedule", schedule);
 //
@@ -257,21 +229,6 @@ public class ScheduleAPI {
 		response.setError(error);
 		System.out.println("ScheduleAPI: createFinalStageScheduleByCompetitionId: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
-	}
-	
-	
-	private HashMap<String, Object> finalStageScheduling(int totalTeam, String formatName, boolean hasHomeMatch){
-		HashMap<String, Object> schedule = new HashMap<>();
-		schedule.put("totalTeam", totalTeam);
-		schedule.put("formatName", formatName);
-		schedule.put("hasHomeMatch", hasHomeMatch);
-		try {
-			
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-		
-		return schedule;
 	}
 
 }

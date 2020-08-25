@@ -63,11 +63,18 @@ public final class Const {
 //	Constant for naming match
 	
 	public final static String MATCH = "trận ";
+	public final static String ROUND = "vòng";
 	public final static String TABLE = "bảng ";
 	public final static String TABLE_TOP = "Hạng ";
 	public final static String WIN_MATCH = "Thắng ";
 	public final static String LOSE_MATCH = "Thua ";
 	public final static String SEED_NO = "Hạt giống số ";
+	
+	public final static String FINAL = "Chung kết";
+	public final static String SEMIFINAL = "Bán kết";
+	public final static String QUARTERFINAL = "Tứ kết";
+	public final static String THIRD_PLACE = "Tranh hạng 3";
+	
 	
 	public final static String TABLE_NAMING = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	public final static String WIN_BRANCH_NAMING = "A-";

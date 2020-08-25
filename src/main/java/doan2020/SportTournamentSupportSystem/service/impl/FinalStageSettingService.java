@@ -1,7 +1,5 @@
 package doan2020.SportTournamentSupportSystem.service.impl;
 
-import java.util.Collection;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -64,6 +62,17 @@ public class FinalStageSettingService implements IFinalStageSettingService{
 		FinalStageSettingEntity foundEntity = null;
 		try {
 			foundEntity = finalStageSettingRepository.findOneById(id);
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntity;
+	}
+	
+	@Override
+	public FinalStageSettingEntity findByCompetitionId(Long competitionId) {
+		FinalStageSettingEntity foundEntity = null;
+		try {
+			foundEntity = finalStageSettingRepository.findByCompetitionId(competitionId);
 		} catch (Exception e) {
 			return null;
 		}

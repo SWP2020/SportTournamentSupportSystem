@@ -35,8 +35,8 @@ public class GroupStageSettingAPI {
 	private IGroupStageSettingService service;
 	
 	
-	@GetMapping("")
-	public ResponseEntity<Response> getGroupStageSetting(@RequestParam(value = "id", required = false) Long id) {
+	@GetMapping("/getByCompetitionId")
+	public ResponseEntity<Response> getGroupStageSetting(@RequestParam(value = "competitionId", required = false) Long competitionId) {
 		System.out.println("GroupStageSettingAPI: getGroupStageSetting: no exception");
 		HttpStatus httpStatus = HttpStatus.OK;
 		Response response = new Response();
@@ -46,14 +46,14 @@ public class GroupStageSettingAPI {
 		GroupStageSettingEntity groupStageSettingEntity = new GroupStageSettingEntity();
 		GroupStageSettingDTO groupStageSettingDTO = new GroupStageSettingDTO();
 		try {
-			if (id == null) { // id null
+			if (competitionId == null) { // competitionId null
 				result.put("GroupStageSetting", null);
 				config.put("Global", 0);
 				error.put("MessageCode", 1);
-				error.put("Message", "Required param id");
+				error.put("Message", "Required param competitionId");
 			} else { // id not null
 				
-				groupStageSettingEntity = service.findOneById(id);
+				groupStageSettingEntity = service.findByCompetitionId(competitionId);
 				
 				if (groupStageSettingEntity == null) { // not found
 					result.put("GroupStageSetting", null);
@@ -139,11 +139,14 @@ public class GroupStageSettingAPI {
 		
 		try {
 			groupStageSettingEntity = converter.toEntity(groupStageSetting);
-			
+			System.out.println("GroupStageSettingAPI: editGroupStageSetting: groupStageSetting: " + groupStageSetting.isHasHomeMatch());
+
+			System.out.println("GroupStageSettingAPI: editGroupStageSetting: groupStageSettingEntity: " + groupStageSettingEntity.isHasHomeMatch());
 			groupStageSettingEntity = service.update(id, groupStageSettingEntity);
+			System.out.println("GroupStageSettingAPI: editGroupStageSetting: groupStageSettingEntity: " + groupStageSettingEntity.isHasHomeMatch());
 			
 			GroupStageSettingDTO dto = converter.toDTO(groupStageSettingEntity);
-
+			System.out.println("GroupStageSettingAPI: editGroupStageSetting: dto: " + dto.isHasHomeMatch());
 			result.put("GroupStageSetting", dto);
 			config.put("Global", 0);
 			error.put("MessageCode", 0);

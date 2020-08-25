@@ -124,20 +124,20 @@ public class BTree<E> implements Serializable{
 	}
 	
 	
-	public ArrayList<Node<E>> toArrayList(){
+	public ArrayList<E> toArrayList(){
 		return toArrayList(this.root);
 	}
 	
 	
-	private ArrayList<Node<E>> toArrayList(Node<E> node){
-		ArrayList<Node<E>> list = new ArrayList<>();
+	private ArrayList<E> toArrayList(Node<E> node){
+		ArrayList<E> list = new ArrayList<>();
 		
 		if (node == null)
 			return list;
 		
 		list.addAll(toArrayList(node.getLeft()));
 		list.addAll(toArrayList(node.getRight()));
-		list.add(node);
+		list.add(node.getData());
 		
 		return list;
 	}

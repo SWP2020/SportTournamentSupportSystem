@@ -1,7 +1,6 @@
 package doan2020.SportTournamentSupportSystem.service;
 
 import doan2020.SportTournamentSupportSystem.entity.FinalStageSettingEntity;
-import doan2020.SportTournamentSupportSystem.entity.FormatEntity;
 
 public interface IFinalStageSettingService {
 	public FinalStageSettingEntity findOneById(Long id);
@@ -15,4 +14,6 @@ public interface IFinalStageSettingService {
 //	public Collection<FinalStageSettingEntity> findAll();
 	
 	public FinalStageSettingEntity delete(Long id);
+	
+	public FinalStageSettingEntity findByCompetitionId(Long competitionId);
 }

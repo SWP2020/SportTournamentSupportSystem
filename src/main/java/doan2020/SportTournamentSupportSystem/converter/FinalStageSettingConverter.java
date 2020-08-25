@@ -54,6 +54,7 @@ public class FinalStageSettingConverter {
 				dto.setFormatId(entity.getFormat().getId());
 			if (entity.getCompetition() != null)
 				dto.setCompetitionId(entity.getCompetition().getId());
+			dto.setHasHomeMatch(entity.isHasHomeMatch());
 			dto.setStatus(entity.getStatus());
 			dto.setUrl(entity.getUrl());
 			System.out.println("FinalStageSettingConverter: toDTO: no exception");

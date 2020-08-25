@@ -1,4 +1,4 @@
-package doan2020.SportTournamentSupportSystem.model.ScheduleStruct;
+package doan2020.SportTournamentSupportSystem.model.ScheduleFormat;
 
 import java.io.Serializable;
 import java.util.ArrayList;

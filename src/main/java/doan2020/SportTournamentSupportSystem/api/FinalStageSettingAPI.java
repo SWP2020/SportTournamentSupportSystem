@@ -35,8 +35,8 @@ public class FinalStageSettingAPI {
 	private IFinalStageSettingService service;
 	
 	
-	@GetMapping("")
-	public ResponseEntity<Response> getFinalStageSetting(@RequestParam(value = "id", required = false) Long id) {
+	@GetMapping("/getByCompetitionId")
+	public ResponseEntity<Response> getFinalStageSetting(@RequestParam(value = "competitionId", required = false) Long competitionId) {
 		System.out.println("FinalStageSettingAPI: getFinalStageSetting: no exception");
 		HttpStatus httpStatus = HttpStatus.OK;
 		Response response = new Response();
@@ -46,14 +46,14 @@ public class FinalStageSettingAPI {
 		FinalStageSettingEntity finalStageSettingEntity = new FinalStageSettingEntity();
 		FinalStageSettingDTO finalStageSettingDTO = new FinalStageSettingDTO();
 		try {
-			if (id == null) { // id null
+			if (competitionId == null) { // competitionId null
 				result.put("FinalStageSetting", null);
 				config.put("Global", 0);
 				error.put("MessageCode", 1);
-				error.put("Message", "Required param id");
-			} else { // id not null
+				error.put("Message", "Required param competitionId");
+			} else { // competitionId not null
 				
-				finalStageSettingEntity = service.findOneById(id);
+				finalStageSettingEntity = service.findByCompetitionId(competitionId);
 				
 				if (finalStageSettingEntity == null) { // not found
 					result.put("FinalStageSetting", null);
@@ -138,11 +138,16 @@ public class FinalStageSettingAPI {
 		FinalStageSettingEntity finalStageSettingEntity = new FinalStageSettingEntity();
 		
 		try {
+			
+			System.out.println("FinalStageSettingAPI: editFinalStageSetting: dto: " + finalStageSetting.isHasHomeMatch());
 			finalStageSettingEntity = converter.toEntity(finalStageSetting);
+			System.out.println("FinalStageSettingAPI: editFinalStageSetting: entity: " + finalStageSettingEntity.isHasHomeMatch());
 			
 			finalStageSettingEntity = service.update(id, finalStageSettingEntity);
+			System.out.println("FinalStageSettingAPI: editFinalStageSetting: entity: " + finalStageSettingEntity.isHasHomeMatch());
 			
 			FinalStageSettingDTO dto = converter.toDTO(finalStageSettingEntity);
+			System.out.println("FinalStageSettingAPI: editFinalStageSetting: dto: " + dto.isHasHomeMatch());
 
 			result.put("FinalStageSetting", dto);
 			config.put("Global", 0);

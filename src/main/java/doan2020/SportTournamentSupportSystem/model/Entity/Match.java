@@ -11,9 +11,9 @@ public class Match implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private Long id;
-	private Integer matchNo;
-	private Integer roundNo;
+	private Long id; // id to identify in DB
+	private Integer matchNo; // identify in schedule struct
+	private Integer roundNo; 
 	private String name;
 	
 	private MatchSlot team1;
