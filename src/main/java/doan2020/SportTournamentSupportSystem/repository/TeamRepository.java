@@ -20,6 +20,8 @@ public interface TeamRepository extends JpaRepository<TeamEntity, Long>{
     
     Collection<TeamEntity> findByCompetitionIdAndStatus(Long competitionId, String status);
     
+    Long countByCompetitionIdAndStatus(Long competitionId, String status);
+    
     Long countByCompetitionId(Long competitionId);
     
     @Query(value="SELECT MAX(seed_no) FROM teams WHERE competition_id = ?1 and status = \'" + Const.TEAM_STATUS_JOINED + "\'", nativeQuery = true)

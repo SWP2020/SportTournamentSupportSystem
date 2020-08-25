@@ -32,6 +32,7 @@ public class GroupStageSettingService implements IGroupStageSettingService{
 		try {
 			updatedEntity = groupStageSettingRepository.findOneById(id);
 
+			updatedEntity.setCompetition(newEntity.getCompetition());
 			updatedEntity.setFormat(newEntity.getFormat());
 			updatedEntity.setHasHomeMatch(newEntity.isHasHomeMatch());
 			updatedEntity.setStatus(newEntity.getStatus());

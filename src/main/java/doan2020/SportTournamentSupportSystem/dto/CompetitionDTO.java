@@ -17,9 +17,7 @@ public class CompetitionDTO {
 
 	private Long sportId;
 
-	private Long groupStageSettingId;
-
-	private Long finalStageSettingId;
+	private boolean hasGroupStage;
 
 	public CompetitionDTO() {
 	}
@@ -73,23 +71,6 @@ public class CompetitionDTO {
 		this.sportId = sportId;
 	}
 
-	public Long getGroupStageSettingId() {
-		return groupStageSettingId;
-	}
-
-	public void setGroupStageSettingId(Long groupStageSettingId) {
-		this.groupStageSettingId = groupStageSettingId;
-	}
-
-	public Long getFinalStageSettingId() {
-		return finalStageSettingId;
-	}
-
-	public void setFinalStageSettingId(Long finalStageSettingId) {
-		this.finalStageSettingId = finalStageSettingId;
-	}
-
-
 
 	public Long getTournamentId() {
 		return tournamentId;
@@ -99,6 +80,16 @@ public class CompetitionDTO {
 
 	public void setTournamentId(Long tournamentId) {
 		this.tournamentId = tournamentId;
+	}
+
+
+	public boolean isHasGroupStage() {
+		return hasGroupStage;
+	}
+
+
+	public void setHasGroupStage(boolean hasGroupStage) {
+		this.hasGroupStage = hasGroupStage;
 	}
 	
 	

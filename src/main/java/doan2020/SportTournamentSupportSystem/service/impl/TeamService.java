@@ -224,5 +224,19 @@ public class TeamService implements ITeamService {
 		
 		return maxSeedNo;
 	}
+	
+	@Override
+	public Long countByCompetitionIdAndStatus(Long competitionId, String status) {
+		Long totalTeam = 0l;
+		try {
+			totalTeam = teamRepository.countByCompetitionIdAndStatus(competitionId, status);
+			if (totalTeam == null) {
+				return 0l;
+			}
+		} catch (Exception e) {
+		}
+		
+		return totalTeam;
+	}
 
 }

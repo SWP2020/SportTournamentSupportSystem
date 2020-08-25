@@ -45,8 +45,7 @@ public class CompetitionService implements ICompetitionService {
 			updatedEntity.setSport(newEntity.getSport());
 			updatedEntity.setStatus(newEntity.getStatus());
 			updatedEntity.setUrl(newEntity.getUrl());
-			updatedEntity.setGroupStageSetting(newEntity.getGroupStageSetting());
-			updatedEntity.setFinalStageSetting(newEntity.getFinalStageSetting());
+			updatedEntity.setHasGroupStage(newEntity.isHasGroupStage());
 			updatedEntity = competitionRepository.save(updatedEntity);
 		} catch (Exception e) {
 			System.out.println("CompetitionService: update: has exception");

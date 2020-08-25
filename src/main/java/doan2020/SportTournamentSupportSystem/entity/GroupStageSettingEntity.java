@@ -8,6 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.ColumnDefault;
@@ -22,6 +23,10 @@ public class GroupStageSettingEntity {
 	@Column(nullable = false)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
+	@OneToOne
+	@JoinColumn(name = "competition_id", nullable = false)
+	private CompetitionEntity competition;
 
 	@Column(nullable = false)
 	@ColumnDefault("4")
@@ -94,6 +99,14 @@ public class GroupStageSettingEntity {
 
 	public void setUrl(String url) {
 		this.url = url;
+	}
+
+	public CompetitionEntity getCompetition() {
+		return competition;
+	}
+
+	public void setCompetition(CompetitionEntity competition) {
+		this.competition = competition;
 	}
 
 }

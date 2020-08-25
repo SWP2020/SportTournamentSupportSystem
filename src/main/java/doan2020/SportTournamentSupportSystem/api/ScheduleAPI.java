@@ -19,6 +19,7 @@ import doan2020.SportTournamentSupportSystem.config.Const;
 import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
 import doan2020.SportTournamentSupportSystem.entity.FinalStageSettingEntity;
 import doan2020.SportTournamentSupportSystem.entity.FormatEntity;
+import doan2020.SportTournamentSupportSystem.entity.GroupStageSettingEntity;
 import doan2020.SportTournamentSupportSystem.entity.MatchEntity;
 import doan2020.SportTournamentSupportSystem.entity.TeamEntity;
 import doan2020.SportTournamentSupportSystem.model.ScheduleStruct.EliminationTree;
@@ -26,7 +27,10 @@ import doan2020.SportTournamentSupportSystem.model.ScheduleStruct.RoundRobinTabl
 import doan2020.SportTournamentSupportSystem.response.Response;
 import doan2020.SportTournamentSupportSystem.service.ICompetitionService;
 import doan2020.SportTournamentSupportSystem.service.IFileStorageService;
-import doan2020.SportTournamentSupportSystem.service.impl.ScheduleService;
+import doan2020.SportTournamentSupportSystem.service.IFinalStageSettingService;
+import doan2020.SportTournamentSupportSystem.service.IGroupStageSettingService;
+import doan2020.SportTournamentSupportSystem.service.IScheduleService;
+import doan2020.SportTournamentSupportSystem.service.ITeamService;
 
 @RestController
 @CrossOrigin
@@ -35,12 +39,20 @@ public class ScheduleAPI {
 
 	@Autowired
 	private ICompetitionService competitionService;
-
-	@Autowired
-	private IFileStorageService fileService;
 	
-	private ScheduleService scheduleService;
-
+	@Autowired
+	private IScheduleService scheduleService;
+	
+	@Autowired
+	private ITeamService teamService;
+	
+	@Autowired
+	private IFinalStageSettingService finalStageService;
+	
+	@Autowired
+	private IGroupStageSettingService groupStageService;
+	
+	
 	/*
 	 * Get schedule for a competition
 	 */
@@ -133,96 +145,102 @@ public class ScheduleAPI {
 				error.put("Message", "Competition not found");
 			} else {
 
-				for (TeamEntity team : thisCompetition.getTeams()) {
-					if (team.getStatus() == Const.TEAM_STATUS_JOINED)
-						teams.add(team);
-				}
-
-				schedule.put("TotalTeam", teams.size());
-
-				FormatEntity format;
+				int totalTeam;
 				String formatName;
+				FormatEntity finalFormat;
+				FormatEntity groupFormat;
+				totalTeam = teamService.countByCompetitionIdAndStatus(competitionId, Const.TEAM_STATUS_JOINED).intValue();
 
-				try {
-					format = thisCompetition.getFinalStageSetting().getFormat();
-					formatName = format.getName();
-				} catch (Exception e) {
-					format = null;
-					formatName = Const.ANOTHER_FORMAT;
+				FinalStageSettingEntity finalStageSetting = thisCompetition.getFinalStageSetting();
+				GroupStageSettingEntity groupStageSettingEntity = thisCompetition.getGroupStageSetting();
+//				
+//				if (finalStageSetting == null) {
+//					result.put("Schedule", null);
+//					config.put("Global", 0);
+//					error.put("MessageCode", 1);
+//					error.put("Message", "Missing final stage setting");
+//				} else {
+//					try {
+//						finalFormat = finalStageSetting.getFormat();
+//						formatName = format.getName();
+//					} catch (Exception e) {
+//						format = null;
+//						formatName = Const.ANOTHER_FORMAT;
+//
+//					}
+//					
+//				}
+//
+//				schedule.put("Format", formatName);
 
-				}
-
-				System.out.println("ScheduleAPI: createFinalStageScheduleByCompetitionId: format: " + formatName);
-				schedule.put("Format", formatName);
-
-				boolean err = false;
-
-				if (formatName == Const.SINGLE_ELIMINATION_FORMAT) {
-					System.out.println("ScheduleAPI: createFinalStageScheduleByCompetitionId: case: SINGLE_ELIMINATION_FORMAT");
-					if (teams.size() < 2) {
-						System.out.println(
-								"ScheduleAPI: createFinalStageScheduleByCompetitionId: case: SINGLE_ELIMINATION_FORMAT: Not enough teams");
-						config.put("Global", 0);
-						error.put("MessageCode", 1);
-						error.put("Message", "Not enough teams");
-						err = true;
-					} else {
-						tree = new EliminationTree(teams.size(), format.getId());
-						schedule.put("Bracket", tree.getWinBranch());
-					}
-				}
-
-				if (formatName == Const.DOUBLE_ELIMINATION_FORMAT) {
-					System.out.println("ScheduleAPI: createFinalStageScheduleByCompetitionId: case: DOUBLE_ELIMINATION_FORMAT");
-					if (teams.size() < 3) {
-						System.out.println(
-								"ScheduleAPI: createFinalStageScheduleByCompetitionId: case: DOUBLE_ELIMINATION_FORMAT: Not enough teams");
-						config.put("Global", 0);
-						error.put("MessageCode", 1);
-						error.put("Message", "Not enough teams");
-						err = true;
-					} else {
-						tree = new EliminationTree(teams.size(), format.getId());
-						System.out.println("ScheduleAPI: createFinalStageScheduleByCompetitionId: build tree complete");
-						schedule.put("WinBranch", tree.getWinBranch());
-						schedule.put("LoseBranch", tree.getLoseBranch());
-						System.out.println("ScheduleAPI: createFinalStageScheduleByCompetitionId: set schedule complete");
-					}
-				}
-				
-				if (formatName == Const.ROUND_ROBIN_FORMAT) {
-					System.out.println("ScheduleAPI: createFinalStageScheduleByCompetitionId: case: ROUND_ROBIN_FORMAT");
-					if (teams.size() < 2) {
-						config.put("Global", 0);
-						error.put("MessageCode", 1);
-						error.put("Message", "Not enough teams");
-						err = true;
-					} else {
-						
-						table = new RoundRobinTable(teams.size());
-						schedule.put("Table", table.getMatches());
-					}
-					
-				}
-
-				if (formatName == Const.ANOTHER_FORMAT) {
-					System.out.println("ScheduleAPI: createFinalStageScheduleByCompetitionId: format not support ");
-					config.put("Global", 0);
-					error.put("MessageCode", 1);
-					error.put("Message", "Not support format");
-					err = true;
-				}
-
-				result.put("Schedule", schedule);
-
-				if (!err) {
-					config.put("Global", 0);
-					error.put("MessageCode", 0);
-					error.put("Message", "Successful");
-
-				}
-				// save file
-				scheduleService.saveSchedule(schedule, competitionId);
+//				boolean err = false;
+//
+//				if (formatName == Const.SINGLE_ELIMINATION_FORMAT) {
+//					System.out.println("ScheduleAPI: createFinalStageScheduleByCompetitionId: case: SINGLE_ELIMINATION_FORMAT");
+//					if (teams.size() < 2) {
+//						System.out.println(
+//								"ScheduleAPI: createFinalStageScheduleByCompetitionId: case: SINGLE_ELIMINATION_FORMAT: Not enough teams");
+//						config.put("Global", 0);
+//						error.put("MessageCode", 1);
+//						error.put("Message", "Not enough teams");
+//						err = true;
+//					} else {
+//						tree = new EliminationTree(teams.size(), format.getId());
+//						schedule.put("Bracket", tree.getWinBranch());
+//					}
+//				}
+//
+//				if (formatName == Const.DOUBLE_ELIMINATION_FORMAT) {
+//					System.out.println("ScheduleAPI: createFinalStageScheduleByCompetitionId: case: DOUBLE_ELIMINATION_FORMAT");
+//					if (teams.size() < 3) {
+//						System.out.println(
+//								"ScheduleAPI: createFinalStageScheduleByCompetitionId: case: DOUBLE_ELIMINATION_FORMAT: Not enough teams");
+//						config.put("Global", 0);
+//						error.put("MessageCode", 1);
+//						error.put("Message", "Not enough teams");
+//						err = true;
+//					} else {
+//						tree = new EliminationTree(teams.size(), format.getId());
+//						System.out.println("ScheduleAPI: createFinalStageScheduleByCompetitionId: build tree complete");
+//						schedule.put("WinBranch", tree.getWinBranch());
+//						schedule.put("LoseBranch", tree.getLoseBranch());
+//						System.out.println("ScheduleAPI: createFinalStageScheduleByCompetitionId: set schedule complete");
+//					}
+//				}
+//				
+//				if (formatName == Const.ROUND_ROBIN_FORMAT) {
+//					System.out.println("ScheduleAPI: createFinalStageScheduleByCompetitionId: case: ROUND_ROBIN_FORMAT");
+//					if (teams.size() < 2) {
+//						config.put("Global", 0);
+//						error.put("MessageCode", 1);
+//						error.put("Message", "Not enough teams");
+//						err = true;
+//					} else {
+//						
+//						table = new RoundRobinTable(teams.size());
+//						schedule.put("Table", table.getMatches());
+//					}
+//					
+//				}
+//
+//				if (formatName == Const.ANOTHER_FORMAT) {
+//					System.out.println("ScheduleAPI: createFinalStageScheduleByCompetitionId: format not support ");
+//					config.put("Global", 0);
+//					error.put("MessageCode", 1);
+//					error.put("Message", "Not support format");
+//					err = true;
+//				}
+//
+//				result.put("Schedule", schedule);
+//
+//				if (!err) {
+//					config.put("Global", 0);
+//					error.put("MessageCode", 0);
+//					error.put("Message", "Successful");
+//
+//				}
+//				// save file
+//				scheduleService.saveSchedule(schedule, competitionId);
 
 			}
 			System.out.println("ScheduleAPI: createFinalStageScheduleByCompetitionId: no exception");
@@ -242,8 +260,16 @@ public class ScheduleAPI {
 	}
 	
 	
-	private HashMap<String, Object> finalStageScheduling(int totalTeam, String formatName, FinalStageSettingEntity setting){
-		HashMap<String, Object> schedule = null;
+	private HashMap<String, Object> finalStageScheduling(int totalTeam, String formatName, boolean hasHomeMatch){
+		HashMap<String, Object> schedule = new HashMap<>();
+		schedule.put("totalTeam", totalTeam);
+		schedule.put("formatName", formatName);
+		schedule.put("hasHomeMatch", hasHomeMatch);
+		try {
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 		
 		return schedule;
 	}

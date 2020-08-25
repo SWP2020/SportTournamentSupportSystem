@@ -50,19 +50,7 @@ public class CompetitionConverter {
 				entity.setSport(sport);
 			}
 
-			if (dto.getFinalStageSettingId() != null) {
-				Long finalStageSettingId = dto.getFinalStageSettingId();
-				FinalStageSettingEntity finalStageSettingEntity = finalStageSettingService
-						.findOneById(finalStageSettingId);
-				entity.setFinalStageSetting(finalStageSettingEntity);
-			}
-
-			if (dto.getGroupStageSettingId() != null) {
-				Long groupStageSettingId = dto.getGroupStageSettingId();
-				GroupStageSettingEntity groupStageSettingEntity = groupStageSettingService
-						.findOneById(groupStageSettingId);
-				entity.setGroupStageSetting(groupStageSettingEntity);
-			}
+			entity.setHasGroupStage(dto.isHasGroupStage());
 
 			System.out.println("CompetitionConverter: toEntity: CP 1");
 			System.out.println("CompetitionConverter: toEntity: CP 2");
@@ -97,17 +85,7 @@ public class CompetitionConverter {
 			Long sportId = sport.getId();
 			dto.setSportId(sportId);
 
-			FinalStageSettingEntity finalStageSettingEntity = entity.getFinalStageSetting();
-			if (finalStageSettingEntity != null) {
-				Long finalStageSettingId = finalStageSettingEntity.getId();
-				dto.setFinalStageSettingId(finalStageSettingId);
-			}
-
-			GroupStageSettingEntity groupStageSettingEntity = entity.getGroupStageSetting();
-			if (groupStageSettingEntity != null) {
-				Long groupStageSettingId = groupStageSettingEntity.getId();
-				dto.setGroupStageSettingId(groupStageSettingId);
-			}
+			dto.setHasGroupStage(entity.isHasGroupStage());
 
 			dto.setStatus(entity.getStatus());
 			dto.setUrl(entity.getUrl());

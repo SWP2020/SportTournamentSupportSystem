@@ -7,9 +7,10 @@ import org.springframework.stereotype.Service;
 
 import doan2020.SportTournamentSupportSystem.config.Const;
 import doan2020.SportTournamentSupportSystem.service.IFileStorageService;
+import doan2020.SportTournamentSupportSystem.service.IScheduleService;
 
 @Service
-public class ScheduleService {
+public class ScheduleService implements IScheduleService{
 	
 	@Autowired
 	private IFileStorageService fileService;

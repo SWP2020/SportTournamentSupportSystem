@@ -31,6 +31,10 @@ public class CompetitionEntity {
 
 	@ColumnDefault("'Chưa có mô tả.'")
 	private String description;
+	
+	@ColumnDefault("0")
+	@Column(nullable = false)
+	private boolean hasGroupStage;
 
 	private String status;
 
@@ -50,12 +54,10 @@ public class CompetitionEntity {
 	@OneToMany(mappedBy = "competition", cascade = CascadeType.ALL)
 	private Collection<TeamEntity> teams;
 
-	@OneToOne
-	@JoinColumn(name = "groupStageSettingId")
+	@OneToOne(mappedBy = "competition")
 	private GroupStageSettingEntity groupStageSetting;
 
-	@OneToOne
-	@JoinColumn(name = "finalStageSettingId", nullable = false)
+	@OneToOne(mappedBy = "competition")
 	private FinalStageSettingEntity finalStageSetting;
 
 	public Long getId() {
@@ -140,6 +142,14 @@ public class CompetitionEntity {
 
 	public void setFinalStageSetting(FinalStageSettingEntity finalStageSetting) {
 		this.finalStageSetting = finalStageSetting;
+	}
+
+	public boolean isHasGroupStage() {
+		return hasGroupStage;
+	}
+
+	public void setHasGroupStage(boolean hasGroupStage) {
+		this.hasGroupStage = hasGroupStage;
 	}
 
 }
