@@ -35,9 +35,11 @@ public class NotificationEntity {
 	@ColumnDefault("'Không có nội dung'")
 	private String content = "no content";
 
+	
+	@ColumnDefault("'unknown'")
 	private String status;
 
-	private String url;
+	private String url = "/?";
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "notification_user", joinColumns = @JoinColumn(name = "notification_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))

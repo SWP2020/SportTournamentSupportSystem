@@ -35,7 +35,7 @@ public class ResultService implements IResultService {
 			updatedEntity = resultRepository.findOneById(id);
 
 			updatedEntity.setMatch(newEntity.getMatch());
-			updatedEntity.setStatus(newEntity.getStatus());
+			if (newEntity.getStatus() != null) {updatedEntity.setStatus(newEntity.getStatus());}
 			updatedEntity.setUrl(newEntity.getUrl());
 			updatedEntity.setSetNo(newEntity.getSetNo());
 			updatedEntity.setTeam1Score(newEntity.getTeam1Score());

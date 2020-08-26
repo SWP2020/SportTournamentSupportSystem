@@ -161,6 +161,10 @@ public class TeamAPI {
 
 		try {
 			teamEntity = converter.toEntity(dto);
+			
+			System.out.println("Team API: createTeam: CP1");
+			System.out.println(dto.toString());
+			
 			players = new ArrayList<>();
 
 			if (teamEntity == null) {
@@ -170,8 +174,16 @@ public class TeamAPI {
 				error.put("Message", "Team info invalid");
 			} else {
 				
+				System.out.println(teamEntity.toString());
+				
 				teamEntity.setStatus(Const.TEAM_STATUS_JOINED);
+				
+				System.out.println("OK");
+				
 				teamEntity = service.create(teamEntity);
+				
+				System.out.println(teamEntity.toString());
+				
 				teamDTO = converter.toDTO(teamEntity);
 				teamDTO.setPlayers(players);
 				

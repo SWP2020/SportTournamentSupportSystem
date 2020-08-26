@@ -98,7 +98,6 @@ public class GroupStageSettingAPI {
 		
 		try {
 			groupStageSettingEntity = converter.toEntity(newGroupStageSetting);
-			
 			groupStageSettingEntity = service.create(groupStageSettingEntity);
 			
 			GroupStageSettingDTO dto = converter.toDTO(groupStageSettingEntity);

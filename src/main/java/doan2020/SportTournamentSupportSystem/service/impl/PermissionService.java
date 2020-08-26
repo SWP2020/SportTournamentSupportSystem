@@ -35,7 +35,7 @@ public class PermissionService implements IPermissionService {
 			updatedEntity.setDescription(newEntity.getDescription());
 			updatedEntity.setCanEdit(newEntity.getCanEdit());
 			updatedEntity.setCanDelete(newEntity.getCanDelete());
-			updatedEntity.setStatus(newEntity.getStatus());
+			if (newEntity.getStatus() != null) {updatedEntity.setStatus(newEntity.getStatus());}
 			updatedEntity.setUrl(newEntity.getUrl());
 			updatedEntity = permissionRepository.save(updatedEntity);
 		} catch (Exception e) {

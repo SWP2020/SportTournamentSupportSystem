@@ -35,9 +35,10 @@ public class SportEntity {
 	@ColumnDefault("'Chưa có mô tả.'")
 	private String description;
 
+	@ColumnDefault("'unknown'")
 	private String status;
 
-	private String url;
+	private String url = "/?";
 
 	@OneToMany(mappedBy = "sport", cascade = CascadeType.ALL)
 	private Collection<CompetitionEntity> competitions;

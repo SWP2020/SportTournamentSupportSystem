@@ -22,6 +22,8 @@ import doan2020.SportTournamentSupportSystem.entity.FormatEntity;
 import doan2020.SportTournamentSupportSystem.entity.GroupStageSettingEntity;
 import doan2020.SportTournamentSupportSystem.entity.MatchEntity;
 import doan2020.SportTournamentSupportSystem.entity.TeamEntity;
+import doan2020.SportTournamentSupportSystem.model.EntityStruct.RankingTable;
+import doan2020.SportTournamentSupportSystem.model.LogicStruct.TeamDescription;
 import doan2020.SportTournamentSupportSystem.model.ScheduleFormat.RoundRobinTable;
 import doan2020.SportTournamentSupportSystem.model.ScheduleFormat.SingleEliminationTree;
 import doan2020.SportTournamentSupportSystem.response.Response;
@@ -150,12 +152,16 @@ public class ScheduleAPI {
 				FormatEntity finalFormat;
 				FormatEntity groupFormat;
 
+				ArrayList<TeamDescription> descriptions = new ArrayList<>();
+
 				totalTeamBeforeGroupStage = teamService
 						.countByCompetitionIdAndStatus(competitionId, Const.TEAM_STATUS_JOINED).intValue();
 
+				System.out.println("++++++++++++++++++++++++++++++++++++++ totalTeamBeforeGroupStage: "
+						+ totalTeamBeforeGroupStage);
+
 				boolean hasGroupStage = thisCompetition.isHasGroupStage();
 				FinalStageSettingEntity finalStageSetting = thisCompetition.getFinalStageSetting();
-				GroupStageSettingEntity groupStageSetting = thisCompetition.getGroupStageSetting();
 
 				if (finalStageSetting == null) {
 					result.put("Schedule", null);
@@ -167,57 +173,93 @@ public class ScheduleAPI {
 					// group
 					if (hasGroupStage) {
 
+						GroupStageSettingEntity groupStageSetting = thisCompetition.getGroupStageSetting();
 						groupFormat = groupStageSetting.getFormat();
 						boolean hasHomeMatch = groupStageSetting.isHasHomeMatch();
 						int maxTeamPerTable = groupStageSetting.getMaxTeamPerTable();
 						int advanceTeamPerTable = groupStageSetting.getAdvanceTeamPerTable();
-						int totalTable = totalTeamBeforeGroupStage / maxTeamPerTable;
-						int totalTeamInFinalTable = totalTeamBeforeGroupStage % totalTable;
+						int totalTable = (int) (totalTeamBeforeGroupStage / maxTeamPerTable);
+
+						int totalTeamInFinalTable;
+
+						if (totalTable != 0) {
+							totalTeamInFinalTable = totalTeamBeforeGroupStage % totalTable;
+						} else {
+							totalTeamInFinalTable = totalTeamBeforeGroupStage;
+						}
+
 						if (totalTeamInFinalTable == 0) {
 							totalTeamInFinalTable = maxTeamPerTable;
 						} else {
 							totalTable++;
 						}
 
+						System.out.println("+++++++++++++++++++++++++++ maxTeamPerTable: " + maxTeamPerTable);
+						System.out.println("+++++++++++++++++++++++++++ totalTable: " + totalTable);
+
 						// schedule for group stage
 						String formatName = groupFormat.getName();
 						groupStageSchedule = scheduleService.groupStageScheduling(totalTeamBeforeGroupStage, formatName,
-								hasHomeMatch, maxTeamPerTable, advanceTeamPerTable);
-						totalTeamAfterGroupStage = (totalTable - 1) * maxTeamPerTable
+								hasHomeMatch, maxTeamPerTable, advanceTeamPerTable, totalTable, totalTeamInFinalTable);
+						System.out.println("++++++++++++++++++++++++++++++++++++++ CP6 ");
+						totalTeamAfterGroupStage = (totalTable - 1) * advanceTeamPerTable
 								+ (int) Math.min(totalTeamInFinalTable, advanceTeamPerTable);
+
+						// create descriptions
+						ArrayList<RankingTable> rankingTables = new ArrayList<>();
+						@SuppressWarnings("unchecked")
+						ArrayList<HashMap<String, Object>> tables = (ArrayList<HashMap<String, Object>>) groupStageSchedule
+								.get("Tables");
+						for (HashMap<String, Object> tb : tables) {
+							RankingTable rankingTable = (RankingTable) tb.get("RankingTable");
+							rankingTables.add(rankingTable);
+						}
+
+						for (int i = 0; i < advanceTeamPerTable; i++) {
+						
+							for (RankingTable tb : rankingTables) {
+					
+								if (tb.size() > i) {
+									descriptions.add(tb.get(i).getDescription());
+									
+								}
+							}
+						}
 
 					} else {
 
 						totalTeamAfterGroupStage = totalTeamBeforeGroupStage;
 					}
 
+					System.out.println("++++++++++++++++++++++++++++++++++++++ totalTeamAfterGroupStage: "
+							+ totalTeamAfterGroupStage);
+
 					// final
+
 					finalFormat = finalStageSetting.getFormat();
-					boolean hasHomeMatch = groupStageSetting.isHasHomeMatch();
+					boolean hasHomeMatch = finalStageSetting.isHasHomeMatch();
 					String formatName = finalFormat.getName();
 					finalStageSchedule = scheduleService.finalStageScheduling(totalTeamAfterGroupStage, formatName,
-							hasHomeMatch);
+							hasHomeMatch, -1, descriptions);
 
 				}
+				
+				schedule.put("FinalStageSchedule", finalStageSchedule);
+				schedule.put("GroupStageSchedule", groupStageSchedule);
 
-//
+				result.put("Schedule", schedule);
+				config.put("Global", 0);
+				error.put("MessageCode", 0);
+				error.put("Message", "Success");
 
-//
-//				result.put("Schedule", schedule);
-//
-//				if (!err) {
-//					config.put("Global", 0);
-//					error.put("MessageCode", 0);
-//					error.put("Message", "Successful");
-//
-//				}
-//				// save file
-//				scheduleService.saveSchedule(schedule, competitionId);
+				// save file
+				scheduleService.saveSchedule(schedule, competitionId);
 
 			}
 			System.out.println("ScheduleAPI: createFinalStageScheduleByCompetitionId: no exception");
 		} catch (Exception e) {
 			System.out.println("ScheduleAPI: createFinalStageScheduleByCompetitionId: has exception");
+			System.out.println(e);
 			result.put("Schedule", null);
 			config.put("Global", 0);
 			error.put("MessageCode", 1);

@@ -40,11 +40,12 @@ public class TeamEntity implements Comparator<TeamEntity> {
 
 	@Column(nullable = false)
 	@ColumnDefault("0")
-	private Long seedNo;
+	private Long seedNo = 0l;
 
+	@ColumnDefault("'unknown'")
 	private String status;
 
-	private String url;
+	private String url = "/?";
 
 	@ManyToOne
 	@JoinColumn(name = "creatorId", nullable = false)
@@ -172,5 +173,14 @@ public class TeamEntity implements Comparator<TeamEntity> {
 	public int compare(TeamEntity o1, TeamEntity o2) {
 		return new Long(o1.getSeedNo() - o2.getSeedNo()).intValue();
 	}
+
+	@Override
+	public String toString() {
+		return "TeamEntity [id=" + id + ", fullName=" + fullName + ", shortName=" + shortName + ", description="
+				+ description + ", seedNo=" + seedNo + ", status=" + status + ", url=" + url + ", creator=" + creator
+				+ ", competition=" + competition + "]";
+	}
+	
+	
 
 }

@@ -43,7 +43,7 @@ public class CompetitionService implements ICompetitionService {
 			updatedEntity.setDescription(newEntity.getDescription());
 			updatedEntity.setTournament(newEntity.getTournament());
 			updatedEntity.setSport(newEntity.getSport());
-			updatedEntity.setStatus(newEntity.getStatus());
+			if (newEntity.getStatus() != null) {updatedEntity.setStatus(newEntity.getStatus());}
 			updatedEntity.setUrl(newEntity.getUrl());
 			updatedEntity.setHasGroupStage(newEntity.isHasGroupStage());
 			updatedEntity = competitionRepository.save(updatedEntity);

@@ -36,9 +36,10 @@ public class PermissionEntity {
 	@ColumnDefault("0")
 	private boolean canDelete;
 
+	@ColumnDefault("'unknown'")
 	private String status;
 
-	private String url;
+	private String url = "/?";
 
 	public Long getId() {
 		return id;

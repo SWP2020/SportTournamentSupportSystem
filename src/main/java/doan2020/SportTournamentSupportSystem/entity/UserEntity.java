@@ -62,9 +62,10 @@ public class UserEntity {
 
 	private String background;
 
+	@ColumnDefault("'unknown'")
 	private String status;
 
-	private String url;
+	private String url = "/?";
 
 	public UserEntity(Long id, String username, String password, String firstName, String lastName, String address,
 			String phoneNumber, boolean gender, Date dob, String email, String avatar, String background, String status,

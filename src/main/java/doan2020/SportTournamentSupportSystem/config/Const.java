@@ -41,7 +41,7 @@ public final class Const {
 
 //	Constant for format
 	
-	public final static String SINGLE_ELIMINATION_FORMAT = "Single Elimination";
+	public final static String SINGLE_ELIMINATION_FORMAT = "Single Elimination"; 
 	public final static String DOUBLE_ELIMINATION_FORMAT = "Double Elimination";
 	public final static String ROUND_ROBIN_FORMAT = "Round Robin";
 	public final static String ANOTHER_FORMAT = "Unknown";
@@ -62,9 +62,9 @@ public final class Const {
   
 //	Constant for naming match
 	
-	public final static String MATCH = "trận ";
-	public final static String ROUND = "vòng";
-	public final static String TABLE = "bảng ";
+	public final static String MATCH = " trận ";
+	public final static String ROUND = " vòng ";
+	public final static String TABLE = " bảng ";
 	public final static String TABLE_TOP = "Hạng ";
 	public final static String WIN_MATCH = "Thắng ";
 	public final static String LOSE_MATCH = "Thua ";
@@ -77,8 +77,11 @@ public final class Const {
 	
 	
 	public final static String TABLE_NAMING = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-	public final static String WIN_BRANCH_NAMING = "A-";
-	public final static String LOSE_BRANCH_NAMING = "B-";
+	public final static String SINGLE_BRACKET_NAMING = "M-";
+	public final static String ROUND_ROBIN_MATCH_NAMING = "M-"; //"Trận ";
+	public final static String WIN_BRANCH_NAMING = "W-";
+	public final static String LOSE_BRANCH_NAMING = "L-";
+	public final static String SUMMARY_FINAL = "Final-";
 	
 //	Constant for role
 	public final static String ROLE_ADMIN = "ROLE_ADMIN";

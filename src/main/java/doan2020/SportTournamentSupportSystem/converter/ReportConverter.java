@@ -39,8 +39,8 @@ public class ReportConverter {
 			}
 			
 			entity.setContent(dto.getContent());
-			entity.setStatus(dto.getStatus());
-			entity.setUrl(dto.getUrl());
+			
+			
 			entity.setType(dto.getType());
 			System.out.println("ReportConverter: toEntity: no exception");
 		} catch (Exception e) {

@@ -34,9 +34,10 @@ public class ResultEntity {
 	@ColumnDefault("0")
 	private int team2Score;
 
+	@ColumnDefault("'unknown'")
 	private String status;
 
-	private String url;
+	private String url = "/?";
 
 	@ManyToOne
 	@JoinColumn(name = "matchId", nullable = false)

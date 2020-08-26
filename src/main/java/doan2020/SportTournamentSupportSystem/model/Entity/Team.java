@@ -10,6 +10,10 @@ public class Team implements Serializable{
 	private String fullName;
 	private String shortName;
 	
+	private Double difference = 0.0;
+	private Integer score = 0;
+	private Integer totalWin = 0;
+	private Integer totalLose = 0;
 	
 	public Long getId() {
 		return id;
@@ -28,6 +32,30 @@ public class Team implements Serializable{
 	}
 	public void setShortName(String shortName) {
 		this.shortName = shortName;
+	}
+	public Double getDifference() {
+		return difference;
+	}
+	public void setDifference(Double difference) {
+		this.difference = difference;
+	}
+	public Integer getScore() {
+		return score;
+	}
+	public void setScore(Integer score) {
+		this.score = score;
+	}
+	public Integer getTotalWin() {
+		return totalWin;
+	}
+	public void setTotalWin(Integer totalWin) {
+		this.totalWin = totalWin;
+	}
+	public Integer getTotalLose() {
+		return totalLose;
+	}
+	public void setTotalLose(Integer totalLose) {
+		this.totalLose = totalLose;
 	}
 	
 	

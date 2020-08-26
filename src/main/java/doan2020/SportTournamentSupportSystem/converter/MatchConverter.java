@@ -65,8 +65,8 @@ public class MatchConverter {
 				entity.setWinnner(winner);
 			}
 
-			entity.setStatus(dto.getStatus());
-			entity.setUrl(dto.getUrl());
+			
+			
 			
 			System.out.println("MatchConverter: toEntity: no exception");
 		} catch (Exception e) {

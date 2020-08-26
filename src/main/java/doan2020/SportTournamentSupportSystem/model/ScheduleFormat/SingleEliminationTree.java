@@ -7,12 +7,15 @@ import doan2020.SportTournamentSupportSystem.model.LogicStruct.MatchSlot;
 import doan2020.SportTournamentSupportSystem.model.LogicStruct.TeamDescription;
 import doan2020.SportTournamentSupportSystem.model.Struct.BTree;
 import doan2020.SportTournamentSupportSystem.model.Struct.Node;
+import doan2020.SportTournamentSupportSystem.model.Struct.ScheduleStruct;
 
 public class SingleEliminationTree extends ScheduleStruct {
 
-	protected BTree<Match> bracket;
+	private static final long serialVersionUID = 1L;
 
-	protected int completeTreeDegree;
+	protected BTree<Match> bracket;
+	protected String bracketMatchNaming = Const.SINGLE_BRACKET_NAMING;
+
 	protected int firstRoundTotalMatch;
 	protected int firstRoundCurrentMatch;
 	protected Match match34;
@@ -23,26 +26,80 @@ public class SingleEliminationTree extends ScheduleStruct {
 	}
 
 	public SingleEliminationTree(int totalTeam) {
+		super(totalTeam);
 		System.out.println("SingleEliminationTree: Contructor: start");
-
-		this.totalTeam = totalTeam;
+		
 		this.totalRound = calTotalRound(totalTeam);
-		this.completeTreeDegree = floorLog2(totalTeam);
-		this.firstRoundTotalMatch = totalTeam - (int) Math.pow(2, this.completeTreeDegree);
+		this.firstRoundTotalMatch = calFirstRoundTotalMatch(totalTeam);
 		this.firstRoundCurrentMatch = 0;
 		
 		this.bracket = new BTree<>(this.buildBracket(null, 1, this.totalTeam, 1));
-		this.matches = this.bracket.toArrayList();
+		System.out.println("SingleEliminationTree: Contructor: build tree OK");
 		this.bracket.setName("Bracket");
+		
+		this.match34 = getMatch34();
+		System.out.println("SingleEliminationTree: Contructor: get match34 OK");
+		
+		this.matches = this.bracket.toArrayList();
 
 		System.out.println("SingleEliminationTree: Contructor: finish");
 	}
 
 	public SingleEliminationTree(BTree<Match> bracket, int totalTeam) {
+		super(totalTeam);
+		
+		this.totalRound = calTotalRound(totalTeam);
+		this.firstRoundTotalMatch = calFirstRoundTotalMatch(totalTeam);
+		this.firstRoundCurrentMatch = 0;
+		
 		this.bracket = bracket;
-		this.totalTeam = totalTeam;
-		this.totalRound = calTotalRound(this.totalTeam);
+		this.bracket.setName("Bracket");
+		
+		this.match34 = getMatch34();
+
 		this.matches = this.bracket.toArrayList();
+
+	}
+	
+	public SingleEliminationTree(String naming) {
+		super();
+		this.bracketMatchNaming = naming;
+	}
+
+	public SingleEliminationTree(int totalTeam, String naming) {
+		super(totalTeam);
+		System.out.println("SingleEliminationTree: Contructor: start");
+		
+		this.bracketMatchNaming = naming;
+		this.totalRound = calTotalRound(totalTeam);
+		this.firstRoundTotalMatch = calFirstRoundTotalMatch(totalTeam);
+		this.firstRoundCurrentMatch = 0;
+		
+		this.bracket = new BTree<>(this.buildBracket(null, 1, this.totalTeam, 1));
+		this.bracket.setName("Bracket");
+		
+		this.match34 = getMatch34();
+		
+		this.matches = this.bracket.toArrayList();
+
+		System.out.println("SingleEliminationTree: Contructor: finish");
+	}
+
+	public SingleEliminationTree(BTree<Match> bracket, int totalTeam, String naming) {
+		super(totalTeam);
+		
+		this.bracketMatchNaming = naming;
+		this.totalRound = calTotalRound(totalTeam);
+		this.firstRoundTotalMatch = calFirstRoundTotalMatch(totalTeam);
+		this.firstRoundCurrentMatch = 0;
+		
+		this.bracket = bracket;
+		this.bracket.setName("Bracket");
+		
+		this.match34 = getMatch34();
+
+		this.matches = this.bracket.toArrayList();
+
 	}
 
 	// ------------Getter setter
@@ -61,8 +118,6 @@ public class SingleEliminationTree extends ScheduleStruct {
 	protected Node<Match> buildBracket(Node<Match> parent, Integer index, Integer totalSeed, Integer leftSeedIndex) {
 
 		System.out.println("SingleEliminationTree: buildBracket: start");
-		System.out.println(index);
-		System.out.println(totalSeed);
 
 		if (totalSeed < 2) // less than 2 seeds
 			return null; // can't schedule
@@ -89,7 +144,6 @@ public class SingleEliminationTree extends ScheduleStruct {
 		System.out.println("SingleEliminationTree: buildBracket: CP2");
 
 		info.setMatchNo(calMatchNo(index));
-		info.setName(Const.WIN_BRANCH_NAMING + info.getMatchNo());
 		info.setTeam1(new MatchSlot());
 		info.setTeam2(new MatchSlot());
 		info.setWinner(new MatchSlot());
@@ -119,7 +173,7 @@ public class SingleEliminationTree extends ScheduleStruct {
 				info.setTeam2(node.getRight().getData().getWinner());
 
 				info.getTeam1().setDescription(new TeamDescription((long) leftSeedIndex));
-				info.getTeam2().setDescription(new TeamDescription(2l, node.getRight().getData().getMatchNo()));
+//				info.getTeam2().setDescription(new TeamDescription(2l, node.getRight().getData().getMatchNo()));
 				info.setStatus(2);
 			} else {
 				node.setLeft(buildBracket(node, index * 2, totalSeed, leftSeedIndex));
@@ -128,12 +182,14 @@ public class SingleEliminationTree extends ScheduleStruct {
 				info.setTeam1(node.getLeft().getData().getWinner());
 				info.setTeam2(node.getRight().getData().getWinner());
 
-				info.getTeam1().setDescription(new TeamDescription(2l, node.getLeft().getData().getMatchNo()));
-				info.getTeam2().setDescription(new TeamDescription(2l, node.getRight().getData().getMatchNo()));
+//				info.getTeam1().setDescription(new TeamDescription(2l, node.getLeft().getData().getMatchNo()));
+//				info.getTeam2().setDescription(new TeamDescription(2l, node.getRight().getData().getMatchNo()));
 
 				info.setStatus(1);
 			}
 		}
+		
+		info.setName(this.bracketMatchNaming + info.getMatchNo());
 		
 		info.getWinner().setDescription(new TeamDescription(2l, info.getMatchNo()));
 		info.getLoser().setDescription(new TeamDescription(4l, info.getMatchNo()));
@@ -148,26 +204,44 @@ public class SingleEliminationTree extends ScheduleStruct {
 	// ------------------ browse the tree
 
 	protected void setMatch34() {
+		System.out.println("SingleEliminationTree: setMatch34: start");
+		if (this.totalTeam < 4) {
+			System.out.println("SingleEliminationTree: setMatch34: total team < 4: finish");
+			this.match34 = null;
+			return;
+		}
+		this.match34 = new Match();
+		
+		System.out.println("SingleEliminationTree: setMatch34: total team > 4");
+		System.out.println(this.bracket);
+		System.out.println(this.bracket.getTotalNode());
 		this.match34.setMatchNo(this.bracket.getTotalNode() + 1);
-		this.match34.setName(Const.WIN_BRANCH_NAMING + this.match34.getRoundNo());
+		System.out.println("SingleEliminationTree: setMatch34: setMatchNo OK");
+		this.match34.setName(this.bracketMatchNaming + this.match34.getMatchNo());
+		System.out.println("SingleEliminationTree: setMatch34: setMatchNo OK");
 
 		MatchSlot winner = new MatchSlot();
 		MatchSlot loser = new MatchSlot();
+		
+		winner.setDescription(new TeamDescription(2l, this.match34.getMatchNo()));
+		loser.setDescription(new TeamDescription(4l, this.match34.getMatchNo()));
+		
+		this.match34.setWinner(winner);
+		System.out.println("SingleEliminationTree: setMatch34: setWinner OK");
+		this.match34.setLoser(loser);
+		System.out.println("SingleEliminationTree: setMatch34: setLoser OK");
 
 		this.match34.setTeam1(this.bracket.getRoot().getLeft().getData().getLoser());
-		this.match34.getTeam1()
-				.setDescription(new TeamDescription(4l, this.bracket.getRoot().getLeft().getData().getMatchNo()));
-
+		System.out.println("SingleEliminationTree: setMatch34: setTeam1 OK");
 		this.match34.setTeam2(this.bracket.getRoot().getRight().getData().getLoser());
-		this.match34.getTeam2()
-				.setDescription(new TeamDescription(4l, this.bracket.getRoot().getRight().getData().getMatchNo()));
+		System.out.println("SingleEliminationTree: setMatch34: setTeam2 OK");
 
-		this.match34.setWinner(winner);
-		this.match34.setLoser(loser);
+		
 		this.match34.setRoundNo(this.bracket.getRoot().getData().getRoundNo());
+		System.out.println("SingleEliminationTree: setMatch34: finish");
 	}
 	
-	protected Match getMatch34() {
+	public Match getMatch34() {
 		if (this.match34 == null) {
 			this.setMatch34();
 		}
@@ -183,7 +257,7 @@ public class SingleEliminationTree extends ScheduleStruct {
 	protected void applySeedList(Node<Match> node) {
 		TeamDescription description1 = node.getData().getTeam1().getDescription();
 		if (description1.getDescType() == 0) {
-			int seedNo = description1.getUnitIndex();
+			int seedNo = description1.getUnitIndex() - 1;
 			node.getData().getTeam1().setTeam(this.seedList.get(seedNo));
 		} else {
 			applySeedList(node.getLeft());
@@ -191,10 +265,36 @@ public class SingleEliminationTree extends ScheduleStruct {
 
 		TeamDescription description2 = node.getData().getTeam2().getDescription();
 		if (description2.getDescType() == 0) {
-			int seedNo = description2.getUnitIndex();
+			int seedNo = description2.getUnitIndex() - 1;
 			node.getData().getTeam2().setTeam(this.seedList.get(seedNo));
 		} else {
 			applySeedList(node.getRight());
+		}
+	}
+	
+	@Override
+	protected void applyDescriptions() {
+		if (this.descriptions.size() != this.totalTeam) {
+			return;
+		}
+		applyDescriptions(this.bracket.getRoot());
+	}
+	
+	protected void applyDescriptions(Node<Match> node) {
+		TeamDescription description1 = node.getData().getTeam1().getDescription();
+		if (description1.getDescType() == 0) {
+			int seedNo = description1.getUnitIndex() - 1;
+			node.getData().getTeam1().setDescription(this.descriptions.get(seedNo));
+		} else {
+			applyDescriptions(node.getLeft());
+		}
+
+		TeamDescription description2 = node.getData().getTeam2().getDescription();
+		if (description2.getDescType() == 0) {
+			int seedNo = description2.getUnitIndex() - 1;
+			node.getData().getTeam2().setDescription(this.descriptions.get(seedNo));
+		} else {
+			applyDescriptions(node.getRight());
 		}
 	}
 
@@ -233,11 +333,19 @@ public class SingleEliminationTree extends ScheduleStruct {
 		}
 		return totalRound;
 	}
+	
+	protected int calCompleteDegree(int totalTeam) {
+		return floorLog2(totalTeam);
+	}
+	
+	protected int calFirstRoundTotalMatch(int totalTeam) {
+		return totalTeam - (int) Math.pow(2, calCompleteDegree(totalTeam));
+	}
 
 	protected int calMatchNo(int index) {
 		int matchNo;
 		int thisNodeDegree = this.ceilLog2(index + 1);
-		int totalNodeBelow = (int) Math.pow(2,  this.completeTreeDegree) - (int) Math.pow(2, thisNodeDegree);
+		int totalNodeBelow = (int) Math.pow(2,  calCompleteDegree(this.totalTeam)) - (int) Math.pow(2, thisNodeDegree);
 		int totalNodeAbove = (int) Math.pow(2, thisNodeDegree - 1) - 1;
 
 		matchNo = index + totalNodeBelow - totalNodeAbove + this.firstRoundTotalMatch;
@@ -248,10 +356,10 @@ public class SingleEliminationTree extends ScheduleStruct {
 //	public static void main(String[] args) {
 //		int totalTeam = 14;
 //		SingleEliminationTree tree = new SingleEliminationTree(totalTeam);
-//		int index = 15;
+//		int index = 1;
 //		
 //		Node<Match> x = tree.bracket.getById(index);
-//		System.out.println(x.getData().getMatchNo());
+//		System.out.println(x.getData().getTeam1().getDescription().getDescription());
 //	}
 
 }

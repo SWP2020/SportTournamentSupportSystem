@@ -51,14 +51,8 @@ public class CompetitionConverter {
 			}
 
 			entity.setHasGroupStage(dto.isHasGroupStage());
-
-			System.out.println("CompetitionConverter: toEntity: CP 1");
-			System.out.println("CompetitionConverter: toEntity: CP 2");
-
-			System.out.println("CompetitionConverter: toEntity: CP 3");
-
-			entity.setStatus(dto.getStatus());
-			entity.setUrl(dto.getUrl());
+			
+			
 			System.out.println("CompetitionConverter: toEntity: no exception");
 		} catch (Exception e) {
 			System.out.println("CompetitionConverter: toEntity: has exception");

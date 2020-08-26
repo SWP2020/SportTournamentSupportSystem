@@ -27,18 +27,26 @@ public class TeamService implements ITeamService {
 
 	@Override
 	public TeamEntity create(TeamEntity teamEntity) {
+		System.out.println("TeamService: create: start");
 		TeamEntity newEntity = null;
 		try {
 			if (teamEntity.getStatus() == Const.TEAM_STATUS_PENDING) {
+				System.out.println("TeamService: create: TEAM_STATUS_PENDING");
 				newEntity = teamRepository.save(teamEntity);
 			} else if (teamEntity.getStatus() == Const.TEAM_STATUS_JOINED) {
+				System.out.println("TeamService: create: TEAM_STATUS_JOINED");
 				Long competitionId = teamEntity.getCompetition().getId();
-				Long maxSeedNo = teamRepository.getMaxSeedNoByCompetitionId(competitionId);
-				teamEntity.setSeedNo(maxSeedNo + 1);
+				Long maxSeedNo = getMaxSeedNoByCompetitionId(competitionId);
+				teamEntity.setSeedNo(maxSeedNo + 1l);
 				newEntity = teamRepository.save(teamEntity);
+				System.out.println("TeamService: create: no exception");
 			}
 		} catch (Exception e) {
+			System.out.println("TeamService: create: has exception");
+			System.out.println(e);
+			
 		}
+		System.out.println("TeamService: create: finish");
 		return newEntity;
 	}
 
@@ -53,7 +61,7 @@ public class TeamService implements ITeamService {
 			updatedEntity.setDescription(newEntity.getDescription());
 			updatedEntity.setCreator(newEntity.getCreator());
 			updatedEntity.setCompetition(newEntity.getCompetition());
-			updatedEntity.setStatus(newEntity.getStatus());
+			if (newEntity.getStatus() != null) {updatedEntity.setStatus(newEntity.getStatus());}
 			updatedEntity.setUrl(newEntity.getUrl());
 			updatedEntity = teamRepository.save(updatedEntity);
 		} catch (Exception e) {

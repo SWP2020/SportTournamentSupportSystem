@@ -33,8 +33,8 @@ public class FinalStageSettingConverter {
 				}
 				FormatEntity format = formatService.findOneById(formatId);
 				entity.setFormat(format);
-				entity.setStatus(dto.getStatus());
-				entity.setUrl(dto.getUrl());
+				
+				
 			}
 			System.out.println("FinalStageSettingConverter: toEntity: no exception");
 		}catch (Exception e) {

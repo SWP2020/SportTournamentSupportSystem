@@ -42,8 +42,8 @@ public class BTree<E> implements Serializable{
 		return totalNode;
 	}
 	
-	private Integer calTotalNode() {
-		
+	protected Integer calTotalNode() {
+
 		return countNode(root);
 	}
 	
@@ -118,9 +118,7 @@ public class BTree<E> implements Serializable{
 			else 
 				poiter = poiter.getRight();
 		}
-		
 		poiter.setData(data);
-		
 	}
 	
 	
@@ -129,7 +127,7 @@ public class BTree<E> implements Serializable{
 	}
 	
 	
-	private ArrayList<E> toArrayList(Node<E> node){
+	protected ArrayList<E> toArrayList(Node<E> node){
 		ArrayList<E> list = new ArrayList<>();
 		
 		if (node == null)

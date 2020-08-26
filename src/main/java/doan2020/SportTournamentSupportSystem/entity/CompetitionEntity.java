@@ -36,9 +36,10 @@ public class CompetitionEntity {
 	@Column(nullable = false)
 	private boolean hasGroupStage;
 
+	@ColumnDefault("'unknown'")
 	private String status;
 
-	private String url;
+	private String url = "/?";
 
 	@ManyToOne
 	@JoinColumn(name = "tournamentId", nullable = false)

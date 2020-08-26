@@ -5,9 +5,9 @@ public class GroupStageSettingDTO {
 	
 	private Long competitionId;
 
-	private int maxTeamPerTable;
+	private Integer maxTeamPerTable;
 
-	private int advanceTeamPerTable;
+	private Integer advanceTeamPerTable;
 	
 	private boolean hasHomeMatch;
 	private Long formatId;
@@ -28,19 +28,19 @@ public class GroupStageSettingDTO {
 		this.id = id;
 	}
 
-	public int getMaxTeamPerTable() {
+	public Integer getMaxTeamPerTable() {
 		return maxTeamPerTable;
 	}
 
-	public void setMaxTeamPerTable(int maxTeamPerTable) {
+	public void setMaxTeamPerTable(Integer maxTeamPerTable) {
 		this.maxTeamPerTable = maxTeamPerTable;
 	}
 
-	public int getAdvanceTeamPerTable() {
+	public Integer getAdvanceTeamPerTable() {
 		return advanceTeamPerTable;
 	}
 
-	public void setAdvanceTeamPerTable(int advanceTeamPerTable) {
+	public void setAdvanceTeamPerTable(Integer advanceTeamPerTable) {
 		this.advanceTeamPerTable = advanceTeamPerTable;
 	}
 

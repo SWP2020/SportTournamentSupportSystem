@@ -15,8 +15,8 @@ public class NotificationConverter {
 			entity.setTitle(dto.getTitle());
 			
 			entity.setContent(dto.getContent());
-			entity.setStatus(dto.getStatus());
-			entity.setUrl(dto.getUrl());
+			
+			
 			System.out.println("NotificationConverter: toEntity: no exception");
 		} catch (Exception e) {
 			System.out.println("NotificationConverter: toEntity: has exception");

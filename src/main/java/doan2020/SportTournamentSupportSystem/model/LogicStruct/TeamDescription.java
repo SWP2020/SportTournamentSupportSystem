@@ -9,12 +9,14 @@ public class TeamDescription implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	/* Type:
-	 * -1: unknown
+	 * -1: orther
 	 * 0: seed
 	 * 1: top x from a table
-	 * 2: winner from a match in win branch (win branch)
-	 * 3: winner from a match in lose branch (lose branch)
-	 * 4: loser from a math in win branch (lose branch)
+	 * 2: winner from a match in win branch 
+	 * 3: winner from a match in lose branch 
+	 * 4: loser from a match in win branch 
+	 * 5: loser from a match in lose branch  
+	 * 6: top in final stage
 	 */
 	Long descType;
 	
@@ -100,6 +102,13 @@ public class TeamDescription implements Serializable{
 			this.unitResult = Const.LOSE_MATCH;
 			this.unitType = Const.WIN_BRANCH_NAMING;
 			break;
+		case 5:
+			this.unitResult = Const.LOSE_MATCH;
+			this.unitType = Const.LOSE_BRANCH_NAMING;
+			break;
+		case 6:
+			this.unitResult = "";
+			this.unitType = Const.TABLE_TOP;
 		default: // unknown
 			this.descType = -1l;
 			this.unitResult = "";

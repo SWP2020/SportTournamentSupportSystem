@@ -1,24 +1,31 @@
 package doan2020.SportTournamentSupportSystem.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import doan2020.SportTournamentSupportSystem.config.Const;
+import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
+import doan2020.SportTournamentSupportSystem.model.EntityStruct.RankingTable;
+import doan2020.SportTournamentSupportSystem.model.LogicStruct.TeamDescription;
 import doan2020.SportTournamentSupportSystem.model.ScheduleFormat.DoubleEliminationTree;
 import doan2020.SportTournamentSupportSystem.model.ScheduleFormat.RoundRobinTable;
 import doan2020.SportTournamentSupportSystem.model.ScheduleFormat.SingleEliminationTree;
+import doan2020.SportTournamentSupportSystem.service.ICompetitionService;
 import doan2020.SportTournamentSupportSystem.service.IFileStorageService;
 import doan2020.SportTournamentSupportSystem.service.IScheduleService;
 
 @Service
-public class ScheduleService implements IScheduleService{
-	
+public class ScheduleService implements IScheduleService {
+
 	@Autowired
 	private IFileStorageService fileService;
 	
-	
+	@Autowired
+	private ICompetitionService competitionService;
+
 	@SuppressWarnings("unchecked")
 	public HashMap<String, Object> getSchedule(Long competitionId) {
 		String fileName = Const.COMPETITION_SCHEDULING;
@@ -57,84 +64,154 @@ public class ScheduleService implements IScheduleService{
 		return absFilePath;
 
 	}
-	
 
 	public void saveScheduleToDatabase(Long id) {
+		CompetitionEntity thisComp = competitionService.findOneById(id);
 		HashMap<String, Object> schedule = getSchedule(id);
-		String format = (String) schedule.get("Format");
+		HashMap<String, Object> finalStageSchedule = (HashMap<String, Object>) schedule.get("FinalStageSchedule");
 		
-		
-	}
-	
-	public HashMap<String, Object> finalStageScheduling(int totalTeam, String formatName, boolean hasHomeMatch) {
-		HashMap<String, Object> schedule = new HashMap<>();
-		schedule.put("totalTeam", totalTeam);
-		schedule.put("formatName", formatName);
-		
-		boolean scheduled = false;
-		boolean err = false;
-		
-		try {
-			if (formatName == Const.SINGLE_ELIMINATION_FORMAT) {
-				if (totalTeam < 2) {
-					err = true;
-				} else {
-					SingleEliminationTree tree = new SingleEliminationTree(totalTeam);
-					schedule.put("Bracket", tree.getBracket());
-					if (hasHomeMatch) {
-//						schedule.put("Game34", tree.getMatch34());
-					}
-					scheduled = true;
-				}
-			}
-
-			if (formatName == Const.DOUBLE_ELIMINATION_FORMAT) {
-				if (totalTeam < 3) {
-					err = true;
-				} else {
-					DoubleEliminationTree tree = new DoubleEliminationTree(totalTeam);
-					schedule.put("WinBranch", tree.getWinBranch());
-					schedule.put("LoseBranch", tree.getLoseBranch());
-					scheduled = true;
-				}
-			}
-
-			if (formatName == Const.ROUND_ROBIN_FORMAT) {
-				if (totalTeam < 2) {
-					err = true;
-				} else {
-
-					RoundRobinTable table = new RoundRobinTable(totalTeam, hasHomeMatch);
-					schedule.put("Table", table.getMatches());
-					scheduled = true;
-				}
-
-			}
-			
-			if (!scheduled) {
-				
-			}
-		} catch (Exception e) {
-			// TODO: handle exception
+		if (thisComp.isHasGroupStage()) {
+			HashMap<String, Object> groupStageSchedule = (HashMap<String, Object>) schedule.get("GroupStageSchedule");
+//			HashMap<String, Object> tables = (HashMap<String, Object>) 
 		}
 
+	}
+
+	public HashMap<String, Object> finalStageScheduling(int totalTeam, String formatName, boolean hasHomeMatch,
+			int tableId, ArrayList<TeamDescription> descriptions) {
+		System.out.println("ScheduleService: finalStageScheduling: start");
+
+		System.out.println("ScheduleService: finalStageScheduling: totalTeam: " + totalTeam);
+		System.out.println("ScheduleService: finalStageScheduling: formatName: " + formatName);
+		System.out.println("ScheduleService: finalStageScheduling: tableId: " + tableId);
+
+		HashMap<String, Object> schedule = new HashMap<>();
+		schedule.put("TotalTeam", totalTeam);
+		schedule.put("FormatName", formatName);
+		if (tableId >= 0) {
+			schedule.put("Table", Const.TABLE_NAMING.charAt(tableId));
+		}
+
+		boolean scheduled = false;
+
+		try {
+			if (formatName.contains(Const.SINGLE_ELIMINATION_FORMAT)) {
+				if (totalTeam < 2) {
+					RankingTable rb;
+					if (tableId < 0)
+						rb = new RankingTable(totalTeam);
+					else 
+						rb = new RankingTable(totalTeam, tableId);
+					schedule.put("RankingTable", rb);
+				} else {
+					SingleEliminationTree tree = new SingleEliminationTree(totalTeam);
+					System.out.println("ScheduleService: finalStageScheduling: build tree OK");
+					if (tableId < 0) {
+						tree.applyDescriptions(descriptions);
+						System.out.println("ScheduleService: finalStageScheduling: apply description OK");
+					}
+					
+					tree.setTableId(tableId);
+					System.out.println("ScheduleService: finalStageScheduling: set table id OK");
+					schedule.put("Bracket", tree.getBracket());
+					System.out.println("ScheduleService: finalStageScheduling: CP1");
+					schedule.put("HasMatch34", hasHomeMatch);
+					schedule.put("Match34", tree.getMatch34());
+					System.out.println("ScheduleService: finalStageScheduling: CP2");
+					schedule.put("RankingTable", tree.getRankingTable());
+					System.out.println("ScheduleService: finalStageScheduling: CP3");
+					scheduled = true;
+				}
+				
+			}
+
+			if (formatName.contains(Const.DOUBLE_ELIMINATION_FORMAT)) {
+				if (totalTeam < 2) {
+					RankingTable rb;
+					if (tableId < 0)
+						rb = new RankingTable(totalTeam);
+					else 
+						rb = new RankingTable(totalTeam, tableId);
+					schedule.put("RankingTable", rb);
+				} else {
+
+					DoubleEliminationTree tree = new DoubleEliminationTree(totalTeam);
+					if (tableId < 0)
+						tree.applyDescriptions(descriptions);
+					tree.setTableId(tableId);
+					schedule.put("WinBranch", tree.getWinBranch());
+					schedule.put("LoseBranch", tree.getLoseBranch());
+					schedule.put("SummaryFinal", tree.getSummaryFinal());
+					schedule.put("OptionFinal", tree.gettOptionFinal());
+					schedule.put("RankingTable", tree.getRankingTable());
+					scheduled = true;
+				}
+			}
+
+			if (formatName.contains(Const.ROUND_ROBIN_FORMAT)) {
+				if (totalTeam < 2) {
+					RankingTable rb;
+					if (tableId < 0)
+						rb = new RankingTable(totalTeam);
+					else 
+						rb = new RankingTable(totalTeam, tableId);
+					schedule.put("RankingTable", rb);
+				} else {
+					RoundRobinTable table;
+					if (tableId >= 0) {
+						table = new RoundRobinTable((long) tableId, totalTeam, hasHomeMatch);
+					} else {
+						table = new RoundRobinTable(totalTeam, hasHomeMatch);
+					}
+					if (tableId < 0)
+						table.applyDescriptions(descriptions);
+					table.setTableId(tableId);
+					schedule.put("Bracket", table.getMatches());
+					schedule.put("HasHomeMatch", hasHomeMatch);
+					schedule.put("TotalRound", table.getTotalRound());
+					schedule.put("RankingTable", table.getRankingTable());
+					scheduled = true;
+				}
+
+			}
+
+			if (!scheduled) {
+				System.out.println("ScheduleService: finalStageScheduling: unknown format");
+				schedule.put("FormatName", Const.ANOTHER_FORMAT);
+			}
+			System.out.println("ScheduleService: finalStageScheduling: no exception");
+		} catch (Exception e) {
+			System.out.println(e);
+			System.out.println("ScheduleService: finalStageScheduling: has exception");
+		}
+
+		System.out.println("ScheduleService: finalStageScheduling: start");
 		return schedule;
 	}
 
 	public HashMap<String, Object> groupStageScheduling(int totalTeam, String formatName, boolean hasHomeMatch,
-			int maxTeamPerTable, int advanceTeamPerTable) {
+			int maxTeamPerTable, int advanceTeamPerTable, int totalTable, int totalTeamInFinalTable) {
 		HashMap<String, Object> schedule = new HashMap<>();
-		schedule.put("totalTeam", totalTeam);
-		schedule.put("formatName", formatName);
-		schedule.put("hasHomeMatch", hasHomeMatch);
-		schedule.put("maxTeamPerTable", maxTeamPerTable);
-		schedule.put("advanceTeamPerTable", advanceTeamPerTable);
-		try {
+		schedule.put("TotalTeam", totalTeam);
+		schedule.put("FormatName", formatName);
+		schedule.put("HasHomeMatch", hasHomeMatch);
+		schedule.put("MaxTeamPerTable", maxTeamPerTable);
+		schedule.put("AdvanceTeamPerTable", advanceTeamPerTable);
+		schedule.put("TotalTable", totalTable);
+		schedule.put("TotalTeamInFinalTable", totalTeamInFinalTable);
 
-		} catch (Exception e) {
-			// TODO: handle exception
+		ArrayList<HashMap<String, Object>> tables = new ArrayList<>();
+
+		ArrayList<TeamDescription> descriptions = new ArrayList<>();
+		for (int tableId = 0; tableId < totalTable - 1; tableId++) {
+			
+			HashMap<String, Object> table = finalStageScheduling(maxTeamPerTable, formatName, hasHomeMatch, tableId, descriptions);
+			tables.add(table);
 		}
 
+		tables.add(finalStageScheduling(totalTeamInFinalTable, formatName, hasHomeMatch, totalTable - 1, descriptions));
+		schedule.put("Tables", tables);
+		
 		return schedule;
 	}
 

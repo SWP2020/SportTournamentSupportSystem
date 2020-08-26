@@ -34,16 +34,17 @@ public class FinalStageSettingEntity {
 
 	@Column(nullable = false)
 	@ColumnDefault("0")
-	private boolean hasHomeMatch;
+	private boolean hasHomeMatch = false;
 
 	@ManyToOne
 	@JoinColumn(name = "formatId", nullable = false)
 	@ColumnDefault("1")
 	private FormatEntity format;
 
+	@ColumnDefault("'unknown'")
 	private String status;
 
-	private String url;
+	private String url = "/?";
 
 	public boolean isHasHomeMatch() {
 		return hasHomeMatch;

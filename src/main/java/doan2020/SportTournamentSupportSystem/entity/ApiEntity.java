@@ -30,9 +30,10 @@ public class ApiEntity {
 
 	private String method;
 
+	@ColumnDefault("'unknown'")
 	private String status;
 
-	private String url;
+	private String url = "/?";
 
 	@ManyToMany(mappedBy = "apisList")
 	private Collection<RoleEntity> rolesList;

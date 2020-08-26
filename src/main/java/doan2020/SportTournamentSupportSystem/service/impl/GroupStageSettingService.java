@@ -35,7 +35,7 @@ public class GroupStageSettingService implements IGroupStageSettingService{
 			updatedEntity.setHasHomeMatch(newEntity.isHasHomeMatch());
 			updatedEntity.setAdvanceTeamPerTable(newEntity.getAdvanceTeamPerTable());
 			updatedEntity.setMaxTeamPerTable(newEntity.getMaxTeamPerTable());
-			updatedEntity.setStatus(newEntity.getStatus());
+			if (newEntity.getStatus() != null) {updatedEntity.setStatus(newEntity.getStatus());}
 			updatedEntity.setUrl(newEntity.getUrl());
 			updatedEntity = groupStageSettingRepository.save(updatedEntity);
 		} catch (Exception e) {

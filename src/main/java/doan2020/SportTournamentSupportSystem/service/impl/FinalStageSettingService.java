@@ -33,7 +33,7 @@ public class FinalStageSettingService implements IFinalStageSettingService{
 			updatedEntity.setCompetition(newEntity.getCompetition());
 			updatedEntity.setFormat(newEntity.getFormat());
 			updatedEntity.setHasHomeMatch(newEntity.isHasHomeMatch());
-			updatedEntity.setStatus(newEntity.getStatus());
+			if (newEntity.getStatus() != null) {updatedEntity.setStatus(newEntity.getStatus());}
 			updatedEntity.setUrl(newEntity.getUrl());
 			updatedEntity = finalStageSettingRepository.save(updatedEntity);
 		} catch (Exception e) {

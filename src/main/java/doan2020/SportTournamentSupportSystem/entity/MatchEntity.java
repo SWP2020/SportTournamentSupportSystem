@@ -38,9 +38,10 @@ public class MatchEntity {
 
 	private String location;
 
+	@ColumnDefault("'unknown'")
 	private String status;
 
-	private String url;
+	private String url = "/?";
 
 	@ManyToOne
 	@JoinColumn(name = "competitionId", nullable = false)
