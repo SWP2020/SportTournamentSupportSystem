@@ -1,4 +1,4 @@
-package doan2020.SportTournamentSupportSystem.model.EntityStruct;
+package doan2020.SportTournamentSupportSystem.model.ContainerCollection;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -7,7 +7,7 @@ import java.util.Collections;
 import org.hibernate.mapping.Collection;
 
 import doan2020.SportTournamentSupportSystem.model.Entity.Team;
-import doan2020.SportTournamentSupportSystem.model.LogicStruct.RankingTableSlot;
+import doan2020.SportTournamentSupportSystem.model.LogicBox.RankingTableSlot;
 import doan2020.SportTournamentSupportSystem.model.LogicStruct.TeamDescription;
 
 public class RankingTable extends ArrayList<RankingTableSlot> implements Serializable{

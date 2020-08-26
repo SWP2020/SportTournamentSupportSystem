@@ -1,9 +1,9 @@
 package doan2020.SportTournamentSupportSystem.model.ScheduleFormat;
 
 import doan2020.SportTournamentSupportSystem.config.Const;
+import doan2020.SportTournamentSupportSystem.model.ContainerCollection.SeedList;
 import doan2020.SportTournamentSupportSystem.model.Entity.Match;
-import doan2020.SportTournamentSupportSystem.model.EntityStruct.SeedList;
-import doan2020.SportTournamentSupportSystem.model.LogicStruct.MatchSlot;
+import doan2020.SportTournamentSupportSystem.model.LogicBox.MatchSlot;
 import doan2020.SportTournamentSupportSystem.model.LogicStruct.TeamDescription;
 import doan2020.SportTournamentSupportSystem.model.Struct.BTree;
 import doan2020.SportTournamentSupportSystem.model.Struct.Node;
@@ -258,7 +258,7 @@ public class SingleEliminationTree extends ScheduleStruct {
 		TeamDescription description1 = node.getData().getTeam1().getDescription();
 		if (description1.getDescType() == 0) {
 			int seedNo = description1.getUnitIndex() - 1;
-			node.getData().getTeam1().setTeam(this.seedList.get(seedNo));
+			node.getData().getTeam1().setTeam(this.seedList.get(seedNo).getTeam());
 		} else {
 			applySeedList(node.getLeft());
 		}
@@ -266,36 +266,34 @@ public class SingleEliminationTree extends ScheduleStruct {
 		TeamDescription description2 = node.getData().getTeam2().getDescription();
 		if (description2.getDescType() == 0) {
 			int seedNo = description2.getUnitIndex() - 1;
-			node.getData().getTeam2().setTeam(this.seedList.get(seedNo));
+			node.getData().getTeam2().setTeam(this.seedList.get(seedNo).getTeam());
 		} else {
 			applySeedList(node.getRight());
 		}
 	}
 	
-	@Override
-	protected void applyDescriptions() {
-		if (this.descriptions.size() != this.totalTeam) {
-			return;
-		}
-		applyDescriptions(this.bracket.getRoot());
-	}
-	
-	protected void applyDescriptions(Node<Match> node) {
+	protected void applyDescriptionsDownTree(Node<Match> node) {
 		TeamDescription description1 = node.getData().getTeam1().getDescription();
 		if (description1.getDescType() == 0) {
 			int seedNo = description1.getUnitIndex() - 1;
-			node.getData().getTeam1().setDescription(this.descriptions.get(seedNo));
+			node.getData().getTeam1().setDescription(this.seedList.get(seedNo).getDescription());
 		} else {
-			applyDescriptions(node.getLeft());
+			applyDescriptionsDownTree(node.getLeft());
 		}
 
 		TeamDescription description2 = node.getData().getTeam2().getDescription();
 		if (description2.getDescType() == 0) {
 			int seedNo = description2.getUnitIndex() - 1;
-			node.getData().getTeam2().setDescription(this.descriptions.get(seedNo));
+			node.getData().getTeam2().setDescription(this.seedList.get(seedNo).getDescription());
 		} else {
-			applyDescriptions(node.getRight());
+			applyDescriptionsDownTree(node.getRight());
 		}
+	}
+	
+	@Override
+	protected void applyDescriptions() {
+		applyDescriptionsDownTree(this.getBracket().getRoot());
+		
 	}
 
 	// ----------- support logic code

@@ -5,7 +5,7 @@ import java.io.Serializable;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import doan2020.SportTournamentSupportSystem.entity.MatchEntity;
-import doan2020.SportTournamentSupportSystem.model.LogicStruct.MatchSlot;
+import doan2020.SportTournamentSupportSystem.model.LogicBox.MatchSlot;
 
 public class Match implements Serializable {
 	

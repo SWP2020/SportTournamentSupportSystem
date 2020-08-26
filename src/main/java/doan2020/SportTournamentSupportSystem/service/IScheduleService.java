@@ -16,7 +16,7 @@ public interface IScheduleService {
 	public String saveSchedule(HashMap<String, Object> schedule, Long competitionId);
 
 	public HashMap<String, Object> finalStageScheduling(int totalTeam, String formatName, boolean hasHomeMatch,
-			int tableId, ArrayList<TeamDescription> descriptions);
+			int tableId, ArrayList<TeamDescription> descriptions, int firstSeed);
 
 	public HashMap<String, Object> groupStageScheduling(int totalTeam, String formatName, boolean hasHomeMatch,
 			int maxTeamPerTable, int advanceTeamPerTable, int totalTable, int totalTeamInFinalTable);

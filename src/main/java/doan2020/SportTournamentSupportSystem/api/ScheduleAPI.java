@@ -22,7 +22,7 @@ import doan2020.SportTournamentSupportSystem.entity.FormatEntity;
 import doan2020.SportTournamentSupportSystem.entity.GroupStageSettingEntity;
 import doan2020.SportTournamentSupportSystem.entity.MatchEntity;
 import doan2020.SportTournamentSupportSystem.entity.TeamEntity;
-import doan2020.SportTournamentSupportSystem.model.EntityStruct.RankingTable;
+import doan2020.SportTournamentSupportSystem.model.ContainerCollection.RankingTable;
 import doan2020.SportTournamentSupportSystem.model.LogicStruct.TeamDescription;
 import doan2020.SportTournamentSupportSystem.model.ScheduleFormat.RoundRobinTable;
 import doan2020.SportTournamentSupportSystem.model.ScheduleFormat.SingleEliminationTree;
@@ -240,7 +240,7 @@ public class ScheduleAPI {
 					boolean hasHomeMatch = finalStageSetting.isHasHomeMatch();
 					String formatName = finalFormat.getName();
 					finalStageSchedule = scheduleService.finalStageScheduling(totalTeamAfterGroupStage, formatName,
-							hasHomeMatch, -1, descriptions);
+							hasHomeMatch, -1, descriptions, 1);
 
 				}
 				

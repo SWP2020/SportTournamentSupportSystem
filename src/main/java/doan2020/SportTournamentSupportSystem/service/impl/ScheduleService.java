@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import doan2020.SportTournamentSupportSystem.config.Const;
 import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
-import doan2020.SportTournamentSupportSystem.model.EntityStruct.RankingTable;
+import doan2020.SportTournamentSupportSystem.model.ContainerCollection.RankingTable;
 import doan2020.SportTournamentSupportSystem.model.LogicStruct.TeamDescription;
 import doan2020.SportTournamentSupportSystem.model.ScheduleFormat.DoubleEliminationTree;
 import doan2020.SportTournamentSupportSystem.model.ScheduleFormat.RoundRobinTable;
@@ -72,13 +72,14 @@ public class ScheduleService implements IScheduleService {
 		
 		if (thisComp.isHasGroupStage()) {
 			HashMap<String, Object> groupStageSchedule = (HashMap<String, Object>) schedule.get("GroupStageSchedule");
-//			HashMap<String, Object> tables = (HashMap<String, Object>) 
+			HashMap<String, Object> tables = (HashMap<String, Object>) groupStageSchedule.get("Tables");
+			
 		}
 
 	}
 
 	public HashMap<String, Object> finalStageScheduling(int totalTeam, String formatName, boolean hasHomeMatch,
-			int tableId, ArrayList<TeamDescription> descriptions) {
+			int tableId, ArrayList<TeamDescription> descriptions, int firstSeed) {
 		System.out.println("ScheduleService: finalStageScheduling: start");
 
 		System.out.println("ScheduleService: finalStageScheduling: totalTeam: " + totalTeam);
@@ -109,6 +110,8 @@ public class ScheduleService implements IScheduleService {
 					if (tableId < 0) {
 						tree.applyDescriptions(descriptions);
 						System.out.println("ScheduleService: finalStageScheduling: apply description OK");
+					} else {
+						tree.applyDescriptions(firstSeed);
 					}
 					
 					tree.setTableId(tableId);
@@ -138,6 +141,9 @@ public class ScheduleService implements IScheduleService {
 					DoubleEliminationTree tree = new DoubleEliminationTree(totalTeam);
 					if (tableId < 0)
 						tree.applyDescriptions(descriptions);
+					else {
+						tree.applyDescriptions(firstSeed);
+					}
 					tree.setTableId(tableId);
 					schedule.put("WinBranch", tree.getWinBranch());
 					schedule.put("LoseBranch", tree.getLoseBranch());
@@ -165,6 +171,9 @@ public class ScheduleService implements IScheduleService {
 					}
 					if (tableId < 0)
 						table.applyDescriptions(descriptions);
+					else {
+						table.applyDescriptions(firstSeed);
+					}
 					table.setTableId(tableId);
 					schedule.put("Bracket", table.getMatches());
 					schedule.put("HasHomeMatch", hasHomeMatch);
@@ -203,13 +212,17 @@ public class ScheduleService implements IScheduleService {
 		ArrayList<HashMap<String, Object>> tables = new ArrayList<>();
 
 		ArrayList<TeamDescription> descriptions = new ArrayList<>();
+		
 		for (int tableId = 0; tableId < totalTable - 1; tableId++) {
 			
-			HashMap<String, Object> table = finalStageScheduling(maxTeamPerTable, formatName, hasHomeMatch, tableId, descriptions);
+			int firstSeed = tableId * maxTeamPerTable + 1;
+			HashMap<String, Object> table = finalStageScheduling(maxTeamPerTable, formatName, hasHomeMatch, tableId, descriptions, firstSeed);
 			tables.add(table);
 		}
+		
+		int firstSeed = (totalTable - 1) * maxTeamPerTable;
 
-		tables.add(finalStageScheduling(totalTeamInFinalTable, formatName, hasHomeMatch, totalTable - 1, descriptions));
+		tables.add(finalStageScheduling(totalTeamInFinalTable, formatName, hasHomeMatch, totalTable - 1, descriptions, firstSeed));
 		schedule.put("Tables", tables);
 		
 		return schedule;

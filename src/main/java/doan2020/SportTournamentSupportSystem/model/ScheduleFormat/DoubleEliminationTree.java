@@ -3,9 +3,9 @@ package doan2020.SportTournamentSupportSystem.model.ScheduleFormat;
 import java.io.Serializable;
 
 import doan2020.SportTournamentSupportSystem.config.Const;
+import doan2020.SportTournamentSupportSystem.model.ContainerCollection.SeedList;
 import doan2020.SportTournamentSupportSystem.model.Entity.Match;
-import doan2020.SportTournamentSupportSystem.model.EntityStruct.SeedList;
-import doan2020.SportTournamentSupportSystem.model.LogicStruct.MatchSlot;
+import doan2020.SportTournamentSupportSystem.model.LogicBox.MatchSlot;
 import doan2020.SportTournamentSupportSystem.model.LogicStruct.TeamDescription;
 import doan2020.SportTournamentSupportSystem.model.Struct.BTree;
 import doan2020.SportTournamentSupportSystem.model.Struct.DoubleBTree;

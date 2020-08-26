@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 import doan2020.SportTournamentSupportSystem.config.Const;
 import doan2020.SportTournamentSupportSystem.model.Entity.Match;
-import doan2020.SportTournamentSupportSystem.model.LogicStruct.MatchSlot;
+import doan2020.SportTournamentSupportSystem.model.LogicBox.MatchSlot;
 import doan2020.SportTournamentSupportSystem.model.LogicStruct.TeamDescription;
 import doan2020.SportTournamentSupportSystem.model.Struct.ScheduleStruct;
 
@@ -137,10 +137,10 @@ public class RoundRobinTable extends ScheduleStruct implements Serializable {
 	protected void applySeedList() {
 		for (Match match : this.matches) {
 			TeamDescription description1 = match.getTeam1().getDescription();
-			match.getTeam1().setTeam(this.seedList.get(description1.getUnitIndex() - 1));
+			match.getTeam1().setTeam(this.seedList.get(description1.getUnitIndex() - 1).getTeam());
 
 			TeamDescription description2 = match.getTeam2().getDescription();
-			match.getTeam2().setTeam(this.seedList.get(description2.getUnitIndex() - 1));
+			match.getTeam2().setTeam(this.seedList.get(description2.getUnitIndex() - 1).getTeam());
 		}
 	}
 
@@ -148,10 +148,10 @@ public class RoundRobinTable extends ScheduleStruct implements Serializable {
 	protected void applyDescriptions() {
 		for (Match match : this.matches) {
 			TeamDescription description1 = match.getTeam1().getDescription();
-			match.getTeam1().setDescription(this.descriptions.get(description1.getUnitIndex() - 1));
+			match.getTeam1().setDescription(this.seedList.get(description1.getUnitIndex() - 1).getDescription());
 
 			TeamDescription description2 = match.getTeam2().getDescription();
-			match.getTeam2().setDescription(this.descriptions.get(description2.getUnitIndex() - 1));
+			match.getTeam2().setDescription(this.seedList.get(description2.getUnitIndex() - 1).getDescription());
 		}
 	}
 

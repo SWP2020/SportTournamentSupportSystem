@@ -4,10 +4,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import doan2020.SportTournamentSupportSystem.entity.TeamEntity;
+import doan2020.SportTournamentSupportSystem.model.ContainerCollection.RankingTable;
+import doan2020.SportTournamentSupportSystem.model.ContainerCollection.SeedList;
 import doan2020.SportTournamentSupportSystem.model.Entity.Match;
-import doan2020.SportTournamentSupportSystem.model.EntityStruct.RankingTable;
-import doan2020.SportTournamentSupportSystem.model.EntityStruct.SeedList;
-import doan2020.SportTournamentSupportSystem.model.LogicStruct.RankingTableSlot;
+import doan2020.SportTournamentSupportSystem.model.LogicBox.RankingTableSlot;
 import doan2020.SportTournamentSupportSystem.model.LogicStruct.TeamDescription;
 
 abstract public class ScheduleStruct implements Serializable{
@@ -19,7 +19,6 @@ abstract public class ScheduleStruct implements Serializable{
 	protected SeedList seedList = new SeedList();
 	protected Integer totalRound;
 	protected ArrayList<Match> matches = new ArrayList<>();
-	protected ArrayList<TeamDescription> descriptions;
 	protected RankingTable rankingTable;
 	protected int tableId = -1;
 	
@@ -43,10 +42,6 @@ abstract public class ScheduleStruct implements Serializable{
 
 	}
 	
-	protected void updateDescriptions(ArrayList<TeamDescription> descriptions) {
-		this.descriptions = descriptions;
-	}
-	
 	abstract protected void applyDescriptions();
 	
 	abstract protected void applySeedList();
@@ -56,12 +51,21 @@ abstract public class ScheduleStruct implements Serializable{
 		this.applySeedList();
 	}
 	
-	public void applyDescriptions(ArrayList<TeamDescription> descriptions) {
-		if (descriptions.size() != this.totalTeam) {
+	public void applyDescriptions(int firstSeed) {
+		if (firstSeed < 1) {
 			return;
 		}
-		this.updateDescriptions(descriptions);
+		
+		this.seedList = new SeedList(this.totalTeam, firstSeed);
 		this.applyDescriptions();
+	}
+	
+	public void applyDescriptions(ArrayList<TeamDescription> descriptions) {
+		if (descriptions.size() != totalTeam) {
+			return;
+		}
+		
+		this.seedList = new SeedList(descriptions, this.totalTeam);
 	}
 	
 	public RankingTable getRankingTable() {
@@ -78,10 +82,6 @@ abstract public class ScheduleStruct implements Serializable{
 
 	public ArrayList<Match> getMatches() {
 		return matches;
-	}
-
-	public ArrayList<TeamDescription> getDescriptions() {
-		return descriptions;
 	}
 
 	public int getTableId() {

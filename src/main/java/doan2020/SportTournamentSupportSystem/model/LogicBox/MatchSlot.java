@@ -1,8 +1,9 @@
-package doan2020.SportTournamentSupportSystem.model.LogicStruct;
+package doan2020.SportTournamentSupportSystem.model.LogicBox;
 
 import java.io.Serializable;
 
 import doan2020.SportTournamentSupportSystem.model.Entity.Team;
+import doan2020.SportTournamentSupportSystem.model.LogicStruct.TeamDescription;
 
 public class MatchSlot implements Serializable{
 
