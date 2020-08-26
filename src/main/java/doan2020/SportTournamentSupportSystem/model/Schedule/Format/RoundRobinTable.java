@@ -1,13 +1,13 @@
-package doan2020.SportTournamentSupportSystem.model.ScheduleFormat;
+package doan2020.SportTournamentSupportSystem.model.Schedule.Format;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
 import doan2020.SportTournamentSupportSystem.config.Const;
 import doan2020.SportTournamentSupportSystem.model.Entity.Match;
+import doan2020.SportTournamentSupportSystem.model.Entity.BoxDescription;
 import doan2020.SportTournamentSupportSystem.model.LogicBox.MatchSlot;
-import doan2020.SportTournamentSupportSystem.model.LogicStruct.TeamDescription;
-import doan2020.SportTournamentSupportSystem.model.Struct.ScheduleStruct;
+import doan2020.SportTournamentSupportSystem.model.Schedule.ScheduleStruct;
 
 public class RoundRobinTable extends ScheduleStruct implements Serializable {
 
@@ -91,11 +91,11 @@ public class RoundRobinTable extends ScheduleStruct implements Serializable {
 				info.setTime(null);
 				info.setStatus(0);
 				if ((freeSeed % 2 != 0 && !homeMatch) || (freeSeed % 2 == 0 && homeMatch)) {
-					info.getTeam1().setDescription(new TeamDescription((long) freeSeed));
-					info.getTeam2().setDescription(new TeamDescription((long) runSeed));
+					info.getTeam1().setDescription(new BoxDescription((long) freeSeed));
+					info.getTeam2().setDescription(new BoxDescription((long) runSeed));
 				} else {
-					info.getTeam1().setDescription(new TeamDescription((long) runSeed));
-					info.getTeam2().setDescription(new TeamDescription((long) freeSeed));
+					info.getTeam1().setDescription(new BoxDescription((long) runSeed));
+					info.getTeam2().setDescription(new BoxDescription((long) freeSeed));
 				}
 				matches.add(info);
 
@@ -118,11 +118,11 @@ public class RoundRobinTable extends ScheduleStruct implements Serializable {
 				info.setTime(null);
 				info.setStatus(0);
 				if (homeMatch) {
-					info.getTeam1().setDescription(new TeamDescription((long) left));
-					info.getTeam2().setDescription(new TeamDescription((long) right));
+					info.getTeam1().setDescription(new BoxDescription((long) left));
+					info.getTeam2().setDescription(new BoxDescription((long) right));
 				} else {
-					info.getTeam1().setDescription(new TeamDescription((long) right));
-					info.getTeam2().setDescription(new TeamDescription((long) left));
+					info.getTeam1().setDescription(new BoxDescription((long) right));
+					info.getTeam2().setDescription(new BoxDescription((long) left));
 				}
 
 				matches.add(info);
@@ -134,23 +134,24 @@ public class RoundRobinTable extends ScheduleStruct implements Serializable {
 	}
 
 	@Override
-	protected void applySeedList() {
+	protected void applyTeams() {
 		for (Match match : this.matches) {
-			TeamDescription description1 = match.getTeam1().getDescription();
+			BoxDescription description1 = match.getTeam1().getDescription();
 			match.getTeam1().setTeam(this.seedList.get(description1.getUnitIndex() - 1).getTeam());
 
-			TeamDescription description2 = match.getTeam2().getDescription();
+			BoxDescription description2 = match.getTeam2().getDescription();
 			match.getTeam2().setTeam(this.seedList.get(description2.getUnitIndex() - 1).getTeam());
 		}
 	}
 
 	@Override
 	protected void applyDescriptions() {
+		
 		for (Match match : this.matches) {
-			TeamDescription description1 = match.getTeam1().getDescription();
+			BoxDescription description1 = match.getTeam1().getDescription();
 			match.getTeam1().setDescription(this.seedList.get(description1.getUnitIndex() - 1).getDescription());
 
-			TeamDescription description2 = match.getTeam2().getDescription();
+			BoxDescription description2 = match.getTeam2().getDescription();
 			match.getTeam2().setDescription(this.seedList.get(description2.getUnitIndex() - 1).getDescription());
 		}
 	}

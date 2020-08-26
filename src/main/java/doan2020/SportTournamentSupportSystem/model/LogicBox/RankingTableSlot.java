@@ -4,14 +4,14 @@ import java.io.Serializable;
 import java.util.Comparator;
 
 import doan2020.SportTournamentSupportSystem.model.Entity.Team;
-import doan2020.SportTournamentSupportSystem.model.LogicStruct.TeamDescription;
+import doan2020.SportTournamentSupportSystem.model.Entity.BoxDescription;
 
 public class RankingTableSlot implements Serializable, Comparator<RankingTableSlot>{
 
 	private static final long serialVersionUID = 1L;
 	
 	private Team team;
-	private TeamDescription description;
+	private BoxDescription description;
 
 	public RankingTableSlot(Team team) {
 		this.team = team;
@@ -42,11 +42,11 @@ public class RankingTableSlot implements Serializable, Comparator<RankingTableSl
 		}
 	}
 
-	public TeamDescription getDescription() {
+	public BoxDescription getDescription() {
 		return description;
 	}
 
-	public void setDescription(TeamDescription description) {
+	public void setDescription(BoxDescription description) {
 		this.description = description;
 	}
 	

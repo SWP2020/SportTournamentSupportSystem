@@ -9,10 +9,14 @@ import org.springframework.stereotype.Service;
 import doan2020.SportTournamentSupportSystem.config.Const;
 import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
 import doan2020.SportTournamentSupportSystem.model.ContainerCollection.RankingTable;
-import doan2020.SportTournamentSupportSystem.model.LogicStruct.TeamDescription;
-import doan2020.SportTournamentSupportSystem.model.ScheduleFormat.DoubleEliminationTree;
-import doan2020.SportTournamentSupportSystem.model.ScheduleFormat.RoundRobinTable;
-import doan2020.SportTournamentSupportSystem.model.ScheduleFormat.SingleEliminationTree;
+import doan2020.SportTournamentSupportSystem.model.Entity.BoxDescription;
+import doan2020.SportTournamentSupportSystem.model.Entity.Match;
+import doan2020.SportTournamentSupportSystem.model.LogicBox.MatchSlot;
+import doan2020.SportTournamentSupportSystem.model.Schedule.Format.DoubleEliminationTree;
+import doan2020.SportTournamentSupportSystem.model.Schedule.Format.RoundRobinTable;
+import doan2020.SportTournamentSupportSystem.model.Schedule.Format.SingleEliminationTree;
+import doan2020.SportTournamentSupportSystem.model.Struct.BTree;
+import doan2020.SportTournamentSupportSystem.model.Struct.Node;
 import doan2020.SportTournamentSupportSystem.service.ICompetitionService;
 import doan2020.SportTournamentSupportSystem.service.IFileStorageService;
 import doan2020.SportTournamentSupportSystem.service.IScheduleService;
@@ -79,7 +83,7 @@ public class ScheduleService implements IScheduleService {
 	}
 
 	public HashMap<String, Object> finalStageScheduling(int totalTeam, String formatName, boolean hasHomeMatch,
-			int tableId, ArrayList<TeamDescription> descriptions, int firstSeed) {
+			int tableId, ArrayList<BoxDescription> descriptions, int firstSeed) {
 		System.out.println("ScheduleService: finalStageScheduling: start");
 
 		System.out.println("ScheduleService: finalStageScheduling: totalTeam: " + totalTeam);
@@ -98,6 +102,19 @@ public class ScheduleService implements IScheduleService {
 		try {
 			if (formatName.contains(Const.SINGLE_ELIMINATION_FORMAT)) {
 				if (totalTeam < 2) {
+					schedule.put("TotalRound", 1);
+					BTree<Match> winBranch = new BTree<>(new Node<Match>());
+					Match match = new Match();
+					BoxDescription des = new BoxDescription((long)firstSeed + 1);
+					MatchSlot slot1 = new MatchSlot();
+					MatchSlot slot2 = new MatchSlot();
+					slot1.setDescription(des);
+					slot2.setDescription(new BoxDescription());
+					match.setTeam1(slot1);
+					match.setTeam2(slot2);
+					match.setRoundNo(1);
+					winBranch.getRoot().setData(match);
+					schedule.put("Bracket", winBranch);
 					RankingTable rb;
 					if (tableId < 0)
 						rb = new RankingTable(totalTeam);
@@ -130,6 +147,19 @@ public class ScheduleService implements IScheduleService {
 
 			if (formatName.contains(Const.DOUBLE_ELIMINATION_FORMAT)) {
 				if (totalTeam < 2) {
+					schedule.put("TotalRound", 1);
+					BTree<Match> winBranch = new BTree<>(new Node<Match>());
+					Match match = new Match();
+					BoxDescription des = new BoxDescription((long)firstSeed + 1);
+					MatchSlot slot1 = new MatchSlot();
+					MatchSlot slot2 = new MatchSlot();
+					slot1.setDescription(des);
+					slot2.setDescription(new BoxDescription());
+					match.setTeam1(slot1);
+					match.setTeam2(slot2);
+					match.setRoundNo(1);
+					winBranch.getRoot().setData(match);
+					schedule.put("WinBranch", winBranch);
 					RankingTable rb;
 					if (tableId < 0)
 						rb = new RankingTable(totalTeam);
@@ -156,6 +186,20 @@ public class ScheduleService implements IScheduleService {
 
 			if (formatName.contains(Const.ROUND_ROBIN_FORMAT)) {
 				if (totalTeam < 2) {
+					schedule.put("TotalRound", 1);
+					schedule.put("HasHomeMatch", hasHomeMatch);
+					ArrayList<Match> bracket = new ArrayList<>();
+					Match match = new Match();
+					BoxDescription des = new BoxDescription((long)firstSeed + 1);
+					MatchSlot slot1 = new MatchSlot();
+					MatchSlot slot2 = new MatchSlot();
+					slot1.setDescription(des);
+					slot2.setDescription(new BoxDescription());
+					match.setTeam1(slot1);
+					match.setTeam2(slot2);
+					match.setRoundNo(1);
+					bracket.add(match);
+					schedule.put("Bracket", bracket);
 					RankingTable rb;
 					if (tableId < 0)
 						rb = new RankingTable(totalTeam);
@@ -166,14 +210,13 @@ public class ScheduleService implements IScheduleService {
 					RoundRobinTable table;
 					if (tableId >= 0) {
 						table = new RoundRobinTable((long) tableId, totalTeam, hasHomeMatch);
+						table.applyDescriptions(firstSeed);
+//						System.out.println(table.getSeedList().toString());
 					} else {
 						table = new RoundRobinTable(totalTeam, hasHomeMatch);
-					}
-					if (tableId < 0)
 						table.applyDescriptions(descriptions);
-					else {
-						table.applyDescriptions(firstSeed);
 					}
+					
 					table.setTableId(tableId);
 					schedule.put("Bracket", table.getMatches());
 					schedule.put("HasHomeMatch", hasHomeMatch);
@@ -211,7 +254,7 @@ public class ScheduleService implements IScheduleService {
 
 		ArrayList<HashMap<String, Object>> tables = new ArrayList<>();
 
-		ArrayList<TeamDescription> descriptions = new ArrayList<>();
+		ArrayList<BoxDescription> descriptions = new ArrayList<>();
 		
 		for (int tableId = 0; tableId < totalTable - 1; tableId++) {
 			

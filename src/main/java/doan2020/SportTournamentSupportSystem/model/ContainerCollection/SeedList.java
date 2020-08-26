@@ -3,56 +3,92 @@ package doan2020.SportTournamentSupportSystem.model.ContainerCollection;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import org.springframework.context.annotation.Description;
+
 import doan2020.SportTournamentSupportSystem.entity.TeamEntity;
 import doan2020.SportTournamentSupportSystem.model.Entity.Team;
-import doan2020.SportTournamentSupportSystem.model.LogicStruct.Seed;
-import doan2020.SportTournamentSupportSystem.model.LogicStruct.TeamDescription;
+import doan2020.SportTournamentSupportSystem.model.Entity.BoxDescription;
+import doan2020.SportTournamentSupportSystem.model.LogicBox.Seed;
 
 public class SeedList extends ArrayList<Seed> implements Serializable {
 
 	private static final long serialVersionUID = 3368100502342752403L;
 
+	private int totalSeed;
+
 	public SeedList() {
+		this.totalSeed = 0;
 	}
 
-	public SeedList(ArrayList<TeamEntity> teams) {
+	public SeedList(int totalTeam) {
+		System.out.println("HERE ========================================================= START: ");
+		for (int i = 1; i <= totalTeam; i++) {
+			Seed s = new Seed(i);
+			System.out.println(s.getDescription().getDescription());
+			this.add(s);
+		}
+		this.totalSeed = totalTeam;
+		System.out.println("HERE ========================================================= HERE: ");
+		System.out.println(this.toString());
+	}
 
+	public SeedList(int totalTeam, int firstSeed) {
+		
+		for (int i = firstSeed; i <= totalTeam + firstSeed - 1; i++) {
+			Seed s = new Seed(i);
+			this.add(s);
+		}
+		this.totalSeed = totalTeam;
+	}
+
+	public void applyTeams(ArrayList<TeamEntity> teams) {
 		java.util.Collections.sort(teams, new TeamEntity());
 		int seedNo = 0;
-		for (TeamEntity team : teams) {
-			seedNo ++;
-			Seed s = new Seed(seedNo);
+		for (Seed seed : this) {
 			Team t = new Team();
-			t.setId(team.getId());
-			t.setShortName(team.getShortName());
-			t.setFullName(team.getFullName());
-			s.setTeam(t);
-			this.add(s);
+			t.setId(teams.get(seedNo).getId());
+			t.setShortName(teams.get(seedNo).getShortName());
+			t.setFullName(teams.get(seedNo).getFullName());
+			t.setTotalLose(0);
+			t.setTotalWin(0);
+			t.setDifference(0.0);
+			t.setScore(0);
+			seed.setTeam(t);
+			seedNo++;
 		}
 	}
-	
-	public SeedList(int totalTeam) {
-		for (int i=1; i<=totalTeam; i++) {
-			Seed s = new Seed(i);
-			this.add(s);
+
+	public void applyDescriptions(ArrayList<BoxDescription> descriptions) {
+		int seedNo = 0;
+		for (Seed seed : this) {
+			seed.setDescription(descriptions.get(seedNo));
+			seedNo++;
 		}
 	}
-	
-	public SeedList(int totalTeam, int fisrtSeed) {
+
+	public void applyDescriptions(int firstSeed) {
+		System.out.println("Before apply:");
+		System.out.println(this.toString());
+		int seedNo = 0;
+		for (Seed seed : this) {
+			seed.getDescription().setUnitIndex(seedNo + firstSeed);;
+			seedNo++;
+		}
 		
-		for (int i=fisrtSeed; i<=totalTeam + fisrtSeed - 1; i++) {
-			Seed s = new Seed(i);
-			this.add(s);
+		System.out.println("After apply:");
+		System.out.println(this.toString());
+
+	}
+
+	@Override
+	public String toString() {
+		String s = "";
+		for (Seed seed: this) {
+			s += "\n[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[" + seed.getDescription().getDescription();
 		}
+		return s;
 	}
 	
-	public SeedList(ArrayList<TeamDescription> descriptions, int totalTeam) {
-		for (TeamDescription description: descriptions) {
-			Seed s = new Seed();
-			s.setDescription(description);
-			this.add(s);
-			
-		}
-	}
+	
 
 }

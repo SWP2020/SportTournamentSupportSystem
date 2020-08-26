@@ -1,8 +1,9 @@
-package doan2020.SportTournamentSupportSystem.model.LogicStruct;
+package doan2020.SportTournamentSupportSystem.model.LogicBox;
 
 import java.io.Serializable;
 
 import doan2020.SportTournamentSupportSystem.model.Entity.Team;
+import doan2020.SportTournamentSupportSystem.model.Entity.BoxDescription;
 
 public class Seed implements Serializable{
 	/**
@@ -12,13 +13,13 @@ public class Seed implements Serializable{
 	
 	private int seedNo;
 	private Team team;
-	private TeamDescription description;
+	private BoxDescription description;
 	
 	public Seed() {
 	}
 	
 	public Seed(int seedNo) {
-		this.description = new TeamDescription(0l, seedNo);
+		this.description = new BoxDescription((long)seedNo);
 	}
 	
 	
@@ -28,10 +29,10 @@ public class Seed implements Serializable{
 	public void setTeam(Team team) {
 		this.team = team;
 	}
-	public TeamDescription getDescription() {
+	public BoxDescription getDescription() {
 		return description;
 	}
-	public void setDescription(TeamDescription description) {
+	public void setDescription(BoxDescription description) {
 		this.description = description;
 	}
 	public int getSeedNo() {

@@ -23,9 +23,9 @@ import doan2020.SportTournamentSupportSystem.entity.GroupStageSettingEntity;
 import doan2020.SportTournamentSupportSystem.entity.MatchEntity;
 import doan2020.SportTournamentSupportSystem.entity.TeamEntity;
 import doan2020.SportTournamentSupportSystem.model.ContainerCollection.RankingTable;
-import doan2020.SportTournamentSupportSystem.model.LogicStruct.TeamDescription;
-import doan2020.SportTournamentSupportSystem.model.ScheduleFormat.RoundRobinTable;
-import doan2020.SportTournamentSupportSystem.model.ScheduleFormat.SingleEliminationTree;
+import doan2020.SportTournamentSupportSystem.model.Entity.BoxDescription;
+import doan2020.SportTournamentSupportSystem.model.Schedule.Format.RoundRobinTable;
+import doan2020.SportTournamentSupportSystem.model.Schedule.Format.SingleEliminationTree;
 import doan2020.SportTournamentSupportSystem.response.Response;
 import doan2020.SportTournamentSupportSystem.service.ICompetitionService;
 import doan2020.SportTournamentSupportSystem.service.IFileStorageService;
@@ -152,7 +152,7 @@ public class ScheduleAPI {
 				FormatEntity finalFormat;
 				FormatEntity groupFormat;
 
-				ArrayList<TeamDescription> descriptions = new ArrayList<>();
+				ArrayList<BoxDescription> descriptions = new ArrayList<>();
 
 				totalTeamBeforeGroupStage = teamService
 						.countByCompetitionIdAndStatus(competitionId, Const.TEAM_STATUS_JOINED).intValue();

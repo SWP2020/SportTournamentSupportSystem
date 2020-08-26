@@ -1,12 +1,12 @@
-package doan2020.SportTournamentSupportSystem.model.ScheduleFormat;
+package doan2020.SportTournamentSupportSystem.model.Schedule.Format;
 
 import java.io.Serializable;
 
 import doan2020.SportTournamentSupportSystem.config.Const;
 import doan2020.SportTournamentSupportSystem.model.ContainerCollection.SeedList;
 import doan2020.SportTournamentSupportSystem.model.Entity.Match;
+import doan2020.SportTournamentSupportSystem.model.Entity.BoxDescription;
 import doan2020.SportTournamentSupportSystem.model.LogicBox.MatchSlot;
-import doan2020.SportTournamentSupportSystem.model.LogicStruct.TeamDescription;
 import doan2020.SportTournamentSupportSystem.model.Struct.BTree;
 import doan2020.SportTournamentSupportSystem.model.Struct.DoubleBTree;
 import doan2020.SportTournamentSupportSystem.model.Struct.Node;
@@ -126,8 +126,8 @@ public class DoubleEliminationTree extends SingleEliminationTree implements Seri
 		int matchNo = calLoseMatchNo(index, node.getDegree() + 1);
 		info.setMatchNo(matchNo);
 		
-		info.getWinner().setDescription(new TeamDescription(3l, matchNo));
-		info.getLoser().setDescription(new TeamDescription(5l, matchNo));
+		info.getWinner().setDescription(new BoxDescription(3l, matchNo));
+		info.getLoser().setDescription(new BoxDescription(5l, matchNo));
 
 		Integer rightIndex = reverseIndex(leftIndex) * 2 + 1;
 
@@ -196,8 +196,8 @@ public class DoubleEliminationTree extends SingleEliminationTree implements Seri
 		int matchNo = calLoseMatchNo(index, node.getDegree() + 1);
 		info.setMatchNo(matchNo);
 		
-		info.getWinner().setDescription(new TeamDescription(3l, matchNo));
-		info.getLoser().setDescription(new TeamDescription(5l, matchNo));
+		info.getWinner().setDescription(new BoxDescription(3l, matchNo));
+		info.getLoser().setDescription(new BoxDescription(5l, matchNo));
 		
 		Integer rightIndex = leftIndex + 1;
 
@@ -272,8 +272,8 @@ public class DoubleEliminationTree extends SingleEliminationTree implements Seri
 		MatchSlot winner = new MatchSlot();
 		MatchSlot loser = new MatchSlot();
 		
-		winner.setDescription(new TeamDescription(-1l, Const.WIN_MATCH, 0l, Const.SUMMARY_FINAL, 1));
-		loser.setDescription(new TeamDescription(-1l, Const.LOSE_MATCH, 0l, Const.SUMMARY_FINAL, 1));
+		winner.setDescription(new BoxDescription(-1l, Const.WIN_MATCH, 0l, Const.SUMMARY_FINAL, 1));
+		loser.setDescription(new BoxDescription(-1l, Const.LOSE_MATCH, 0l, Const.SUMMARY_FINAL, 1));
 		
 		this.summaryFinal.setWinner(winner);
 		this.summaryFinal.setLoser(loser);
@@ -295,8 +295,8 @@ public class DoubleEliminationTree extends SingleEliminationTree implements Seri
 		MatchSlot winner = new MatchSlot();
 		MatchSlot loser = new MatchSlot();
 		
-		winner.setDescription(new TeamDescription(-1l, Const.WIN_MATCH, 0l, Const.SUMMARY_FINAL, 2));
-		loser.setDescription(new TeamDescription(-1l, Const.LOSE_MATCH, 0l, Const.SUMMARY_FINAL, 2));
+		winner.setDescription(new BoxDescription(-1l, Const.WIN_MATCH, 0l, Const.SUMMARY_FINAL, 2));
+		loser.setDescription(new BoxDescription(-1l, Const.LOSE_MATCH, 0l, Const.SUMMARY_FINAL, 2));
 		
 		this.optionFinal.setWinner(winner);
 		this.optionFinal.setLoser(loser);

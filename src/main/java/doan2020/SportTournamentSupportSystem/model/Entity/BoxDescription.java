@@ -1,10 +1,10 @@
-package doan2020.SportTournamentSupportSystem.model.LogicStruct;
+package doan2020.SportTournamentSupportSystem.model.Entity;
 
 import java.io.Serializable;
 
 import doan2020.SportTournamentSupportSystem.config.Const;
 
-public class TeamDescription implements Serializable{
+public class BoxDescription implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
@@ -20,23 +20,6 @@ public class TeamDescription implements Serializable{
 	 */
 	Long descType;
 	
-	/*
-	 * unit result:
-	 * 0: Hạng
-	 * 1: Thắng
-	 * 2: Thua
-	 * 
-	 * 
-	 * unit rank:
-	 * 0: ""
-	 * 1: "1"
-	 * ...
-	 * 
-	 * unit type: bảng(bảng), trận(A, B)
-	 * unit index: bảng(A, B, C,...) trận (1, 2, 3,...)
-	 * 
-	 * unit name: bảng A, bảng B, A-1, A-2,...
-	 */
 	String unitResult;
 	Long unitRank;
 	
@@ -50,7 +33,7 @@ public class TeamDescription implements Serializable{
 	String description;
 	
 	
-	public TeamDescription() {
+	public BoxDescription() {
 		super();
 		this.descType = -1l;
 		this.unitResult = "";
@@ -61,7 +44,7 @@ public class TeamDescription implements Serializable{
 		this.description = unitResult + getUnitRankString() + unitName;
 	}
 	
-	public TeamDescription(Long seed_no) { // for seed
+	public BoxDescription(Long seed_no) { // for seed
 		super();
 		this.descType = 0l;
 		this.unitResult = "";
@@ -72,7 +55,7 @@ public class TeamDescription implements Serializable{
 		this.description = unitResult + getUnitRankString() + unitName;
 	}
 	
-	public TeamDescription(int tableNo, Long rankNo) { // for table
+	public BoxDescription(int tableNo, Long rankNo) { // for table
 		super();
 		this.descType = 1l;
 		this.unitResult = Const.TABLE_TOP;
@@ -83,7 +66,7 @@ public class TeamDescription implements Serializable{
 		this.description = unitResult + getUnitRankString() + unitName;
 	}
 	
-	public TeamDescription(Long descType, int matchNo) { // for match
+	public BoxDescription(Long descType, int matchNo) { // for match
 		super();
 		this.descType = descType;
 		this.unitIndex = matchNo;
@@ -122,7 +105,7 @@ public class TeamDescription implements Serializable{
 		this.description = unitResult + getUnitRankString() + unitName;
 	}
 	
-	public TeamDescription(Long descType, String unitResult, Long unitRank, String unitType, int unitIndex) {
+	public BoxDescription(Long descType, String unitResult, Long unitRank, String unitType, int unitIndex) {
 		super();
 		this.descType = descType;
 		this.unitResult = unitResult;
@@ -151,6 +134,8 @@ public class TeamDescription implements Serializable{
 
 	public void setDescType(Long descType) {
 		this.descType = descType;
+		this.unitName = unitType + unitIndex;
+		this.description = unitResult + getUnitRankString() + unitName;
 	}
 
 	public String getUnitResult() {
@@ -159,6 +144,8 @@ public class TeamDescription implements Serializable{
 
 	public void setUnitResult(String unitResult) {
 		this.unitResult = unitResult;
+		this.unitName = unitType + unitIndex;
+		this.description = unitResult + getUnitRankString() + unitName;
 	}
 
 	public Long getUnitRank() {
@@ -167,6 +154,8 @@ public class TeamDescription implements Serializable{
 
 	public void setUnitRank(Long unitRank) {
 		this.unitRank = unitRank;
+		this.unitName = unitType + unitIndex;
+		this.description = unitResult + getUnitRankString() + unitName;
 	}
 
 	public String getUnitType() {
@@ -175,6 +164,8 @@ public class TeamDescription implements Serializable{
 
 	public void setUnitType(String unitType) {
 		this.unitType = unitType;
+		this.unitName = unitType + unitIndex;
+		this.description = unitResult + getUnitRankString() + unitName;
 	}
 
 	public int getUnitIndex() {
@@ -183,19 +174,15 @@ public class TeamDescription implements Serializable{
 
 	public void setUnitIndex(int unitIndex) {
 		this.unitIndex = unitIndex;
+		this.unitName = unitType + unitIndex;
+		this.description = unitResult + getUnitRankString() + unitName;
 	}
 
 	public String getUnitName() {
 		return unitName;
 	}
 
-	public void setUnitName(String unitName) {
-		this.unitName = unitName;
-	}
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
 		
 	
 }
