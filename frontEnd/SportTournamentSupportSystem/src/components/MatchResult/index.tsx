@@ -1,12 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import SheetData, { ISheetDataConfig } from 'components/SheetData';
-import { IParams, IBracketTeamInfo } from 'interfaces/common';
+import { IParams } from 'interfaces/common';
 import { IState } from 'redux-saga/reducers';
 import './styles.css';
 
 interface IMatchResultProps extends React.ClassAttributes<MatchResult> {
-  teamsInfo: IBracketTeamInfo[];
+  teamsInfo: IParams[];
 }
 
 interface IMatchResultState {
@@ -34,14 +34,14 @@ class MatchResult extends React.Component<IMatchResultProps, IMatchResultState> 
             <div style={style}>{rowIndex}</div>
           ),
         },
-        {
-          label: 'Tên đội',
-          width: 140,
-          style: { justifyContent: 'center' },
-          element: (rowData: IParams, rowIndex: number, style?: React.CSSProperties) => (
-            <div style={style}>{rowData.teamInfo ? (rowData.teamInfo as IParams).name : ''}</div>
-          ),
-        },
+        // {
+        //   label: 'Tên đội',
+        //   width: 140,
+        //   style: { justifyContent: 'center' },
+        //   element: (rowData: IParams, rowIndex: number, style?: React.CSSProperties) => (
+        //     <div style={style}>{rowData.teamInfo ? (rowData.teamInfo as IParams).name : ''}</div>
+        //   ),
+        // },
         {
           label: 'Hạng',
           width: 40,

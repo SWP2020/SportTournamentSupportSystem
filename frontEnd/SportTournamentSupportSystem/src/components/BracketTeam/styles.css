@@ -26,7 +26,8 @@
 }
 
 .BracketTeam-name-text2 {
-  color: black;
+  font-style: italic;
+  font-size: 11px;
 }
 
 .BracketTeam-beingHovered {

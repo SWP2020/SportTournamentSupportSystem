@@ -1,17 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Styles } from 'react-modal';
-import ReduxBlockUi from 'react-block-ui/redux';
 import Select, { ValueType, OptionTypeBase } from 'react-select';
 import { MdDelete } from 'react-icons/md';
 import TextInput from 'components/TextInput';
 import CustomModal from 'components/CustomModal';
 import { IParams, IBigRequest } from 'interfaces/common';
-import { EDIT_COMPETITION_INFO } from 'redux-saga/actions';
-import { editCompetitionInfo } from './actions';
-import { EDIT_COMPETITION_INFO_SUCCESS, EDIT_COMPETITION_INFO_FAILED } from './reducers';
 import './styles.css';
 import Teams from 'components/Teams';
+import { Link } from 'react-router-dom';
 
 interface ICompetitionSettingCompetitionsItemProps extends React.ClassAttributes<CompetitionSettingCompetitionsItem> {
   info: IParams;
@@ -19,8 +16,6 @@ interface ICompetitionSettingCompetitionsItemProps extends React.ClassAttributes
   listCompetition: IParams[] | null;
   tournamentId: number;
   tournamentInfo: IParams | null;
-
-  editCompetitionInfo(param: IBigRequest): void;
 }
 
 interface ICompetitionSettingCompetitionsItemState {
@@ -222,40 +217,40 @@ class CompetitionSettingCompetitionsItem extends React.Component<ICompetitionSet
     });
   }
 
-  private handleSaveChange = () => {
-    const { competitionNameError, competitionNameErrorContent, competitionFormatError, competitionFormatErrorContent, competitionSportError, competitionSportErrorContent } = this.validate();
-    this.setState({
-      competitionNameError,
-      competitionNameErrorContent,
-      competitionFormatError,
-      competitionFormatErrorContent,
-      competitionSportError,
-      competitionSportErrorContent
-    });
-    if (competitionNameError === true || competitionFormatError === true) {
-      return;
-    }
-    const params = {
-      path: '',
-      param: {
-        id: this.props.info.id,
-      },
-      data: {
-        name: this.state.competitionName,
-        tournamentId: this.props.tournamentId,
-        sportId: (this.state.selectedSport as IParams).value,
-        description: '',
-        mainFormatId: this.state.onePhase === true ? (this.state.selectedCompetitionFormatPhase1 as IParams).value : (this.state.selectedCompetitionFormatPhase2 as IParams).value,
-        groupStageFormatId: this.state.onePhase === true ? null : (this.state.selectedCompetitionFormatPhase1 as IParams).value,
-        groupStage: this.state.twoPhase === true,
-        status: 'dit me thang hieu',
-        url: 'dit cu thang hieu',
-        indexOfEdit: this.props.index,
-      },
-    };
+  // private handleSaveChange = () => {
+  //   const { competitionNameError, competitionNameErrorContent, competitionFormatError, competitionFormatErrorContent, competitionSportError, competitionSportErrorContent } = this.validate();
+  //   this.setState({
+  //     competitionNameError,
+  //     competitionNameErrorContent,
+  //     competitionFormatError,
+  //     competitionFormatErrorContent,
+  //     competitionSportError,
+  //     competitionSportErrorContent
+  //   });
+  //   if (competitionNameError === true || competitionFormatError === true) {
+  //     return;
+  //   }
+  //   const params = {
+  //     path: '',
+  //     param: {
+  //       id: this.props.info.id,
+  //     },
+  //     data: {
+  //       name: this.state.competitionName,
+  //       tournamentId: this.props.tournamentId,
+  //       sportId: (this.state.selectedSport as IParams).value,
+  //       description: '',
+  //       mainFormatId: this.state.onePhase === true ? (this.state.selectedCompetitionFormatPhase1 as IParams).value : (this.state.selectedCompetitionFormatPhase2 as IParams).value,
+  //       groupStageFormatId: this.state.onePhase === true ? null : (this.state.selectedCompetitionFormatPhase1 as IParams).value,
+  //       groupStage: this.state.twoPhase === true,
+  //       status: 'dit me thang hieu',
+  //       url: 'dit cu thang hieu',
+  //       indexOfEdit: this.props.index,
+  //     },
+  //   };
 
-    this.props.editCompetitionInfo(params);
-  }
+  //   this.props.editCompetitionInfo(params);
+  // }
 
   private onChangeCompetitionFormatPhase1 = (value: ValueType<OptionTypeBase>) => {
     this.setState({
@@ -331,14 +326,15 @@ class CompetitionSettingCompetitionsItem extends React.Component<ICompetitionSet
 
   render() {
     return (
-      <ReduxBlockUi
-        tag="div"
-        block={EDIT_COMPETITION_INFO}
-        unblock={[EDIT_COMPETITION_INFO_SUCCESS, EDIT_COMPETITION_INFO_FAILED]}
-      >
+      // <ReduxBlockUi
+      //   tag="div"
+      //   block={EDIT_COMPETITION_INFO}
+      //   unblock={[EDIT_COMPETITION_INFO_SUCCESS, EDIT_COMPETITION_INFO_FAILED]}
+      // >
         <div className="CompetitionSettingCompetitionsItem-info-container">
           <div className="CompetitionSettingCompetitionsItem-container">
-            <div className="CompetitionSettingCompetitionsItem-container-container" onClick={this.handleSeeMore}>
+          <Link to={`/competition/${this.props.info.id}`} style={{ textDecoration: 'none', color: 'white' }} target={'_blank'} >
+            <div className="CompetitionSettingCompetitionsItem-container-container">
               <div className="CompetitionSettingCompetitionsItem-order-number-container">
                 <div className="CompetitionSettingCompetitionsItem-order-number-box">
                   <p>{this.props.index + 1}</p>
@@ -354,8 +350,9 @@ class CompetitionSettingCompetitionsItem extends React.Component<ICompetitionSet
                 </div>
               </div>
             </div>
+          </Link>
           </div>
-          {this.state.seeMoreInfo === true &&
+          {/* {this.state.seeMoreInfo === true &&
             <div className="CompetitionSettingCompetitionsItem-moreInfo-container">
               <div className="CompetitionSettingCompetitionsItem-moreInfo-normalInfo-container">
                 <div className="TournamentInfo-info-item">
@@ -449,8 +446,7 @@ class CompetitionSettingCompetitionsItem extends React.Component<ICompetitionSet
                   </div>}
               </div>
             </div>
-          }
-        </div>
+          } */}
         <CustomModal
           customStyles={customStyles}
           handleCloseModal={this.handleCloseModal}
@@ -460,12 +456,13 @@ class CompetitionSettingCompetitionsItem extends React.Component<ICompetitionSet
         >
           <Teams competitionInfo={this.props.info} tournamentInfo={this.props.tournamentInfo} id={this.props.info.id as number} type={'competition'} />
         </CustomModal>
-      </ReduxBlockUi>
+        </div>
+      // </ReduxBlockUi>
     );
   }
 }
 
 export default connect(
   null,
-  { editCompetitionInfo }
+  null
 )(CompetitionSettingCompetitionsItem);

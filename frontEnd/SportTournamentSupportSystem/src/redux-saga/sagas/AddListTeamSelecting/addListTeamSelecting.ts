@@ -5,7 +5,6 @@ import { ADD_LIST_TEAM_SELECTING, SWAP_TWO_TEAM_IN_BRACKET, COMMON_SHOW_NOTIFICA
 
 function* doAddListTeamSelecting(request: IRequest<IParams>) {
   try {
-    console.log('request.data', request.data);
     yield put({
       type: request.response.success,
       payload: request.data.listTeamId,

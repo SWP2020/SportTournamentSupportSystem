@@ -10,12 +10,12 @@ import config from 'config';
 
 const uploadFile = (data: IParams, path: string | number, param: IParams) => {
   if (param.file != null) {
-    const file: File = (param.file as IParams[])[0] as unknown as File;
+    const file: File = (param.file as unknown as IParams[])[0] as unknown as File;
     const form = new FormData();
     form.append('file', file);
     // return query(uri, METHOD.POST, undefined, undefined, paths, form);
     return new Promise<IResponse<IParams>>((resolve: Function, reject: Function) => {
-      axios.post(`${config.apiUrl.baseURI}/user/uploadAvatar`,
+      axios.post(`${config.apiUrl.baseURI}user/uploadAvatar`,
         form,
         {
           params: { id: param.id },

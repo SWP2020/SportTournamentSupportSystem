@@ -24,6 +24,10 @@
   flex-direction: row;
 }
 
+.Option-container1 {
+  background-color: black;
+}
+
 .SearchBar-container {
   flex: 4;
   display: flex;
@@ -39,7 +43,7 @@
 }
 
 .Right-container {
-  flex: 3;
+  flex: 2;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -61,6 +65,10 @@
   color: white;
   padding-left: 15px;
   padding-right: 15px;
+}
+
+.Link-text-selected {
+  color: #ff7324 !important;
 }
 
 .Link-text-no-hover {

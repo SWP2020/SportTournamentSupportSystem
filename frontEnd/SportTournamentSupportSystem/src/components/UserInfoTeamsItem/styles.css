@@ -12,6 +12,7 @@
   background-color: black;
   padding-left: 25px;
   padding-right: 25px;
+  padding-bottom: 25px;
 }
 
 .UserInfoTeamsItem-moreInfo-listTeamInfo-item-container {
@@ -120,4 +121,61 @@
 }
 
 .UserInfoTeamsItem-team-setting-icon {
+}
+
+.UserInfoTeamsItem-join-tournament-container {
+  height: 50px;
+  background-color: black;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  align-items: center;
+}
+
+.UserInfoTeamsItem-join-tournament-item1 {
+  flex: 2;
+  display: flex;
+  justify-content: center;
+}
+
+.UserInfoTeamsItem-join-tournament-item2 {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.UserInfoTeamsItem-join-tournament-setting {
+  width: 50px;
+  display: flex;
+  justify-content: center;
+}
+
+.UserInfoTeamsItem-join-tournament-setting :hover {
+  cursor: pointer;
+}
+
+.UserInfoTeamsItem-login-container {
+  margin-top: 25px;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+}
+
+.UserInfoTeamsItem-login-container :hover {
+  cursor: pointer;
+}
+
+.UserInfoTeamsItem-login {
+  background-color: #ff7324;
+  border-radius: 10px;
+  width: 100px;
+  height: 50px;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
+.UserInfoTeamsItem-login-text {
+  color: white;
+  font-weight: bold;
 }

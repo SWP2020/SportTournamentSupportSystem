@@ -52,7 +52,7 @@ class UserInfoTournament extends React.Component<IUserInfoTournamentProps, IUser
     return (
       <div className="UserInfoTournament-container">
         <div className="UserInfoTournament-container-container">
-          {this.props.listTournamentOfUser && this.props.listTournamentOfUser.Tournaments ? ((this.props.listTournamentOfUser.Tournaments as IParams[]).length > 0 ? (this.props.listTournamentOfUser.Tournaments as IParams[]).map(
+          {this.props.listTournamentOfUser && this.props.listTournamentOfUser.Tournaments ? ((this.props.listTournamentOfUser.Tournaments as unknown as IParams[]).length > 0 ? (this.props.listTournamentOfUser.Tournaments as unknown as IParams[]).map(
             (item, index) => <TournamentOverview info={item} index={index} key={index} />) : <p>Không tìm thấy kết quả nào!</p>) :
             <Skeleton />
           }

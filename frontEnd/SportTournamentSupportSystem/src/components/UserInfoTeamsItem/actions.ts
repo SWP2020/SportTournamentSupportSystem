@@ -1,12 +1,12 @@
 import { IBigRequest } from "interfaces/common";
-import { QUERY_LIST_PLAYER_OF_TEAM } from "redux-saga/actions";
-import { QUERY_LIST_PLAYER_OF_TEAM_SUCCESS, QUERY_LIST_PLAYER_OF_TEAM_FAILED } from "./reducers";
+import { EDIT_TEAM } from "redux-saga/actions";
+import { EDIT_TEAM_SUCCESS, EDIT_TEAM_FAILED } from "./reducers";
 
-export const queryListPlayerOfTeam = (data: IBigRequest) => ({
-  type: QUERY_LIST_PLAYER_OF_TEAM,
+export const editTeam = (data: IBigRequest) => ({
+  type: EDIT_TEAM,
   response: {
-    success: QUERY_LIST_PLAYER_OF_TEAM_SUCCESS,
-    failed: QUERY_LIST_PLAYER_OF_TEAM_FAILED,
+    success: EDIT_TEAM_SUCCESS,
+    failed: EDIT_TEAM_FAILED,
   },
   data: {
     path: data.path,

@@ -29,10 +29,10 @@ export async function query<T>(
             "Authorization": cookies.get(COOKIES_TYPE.AUTH_TOKEN) != null ? cookies.get(COOKIES_TYPE.AUTH_TOKEN).Authentication : null,
           } })
           .then((response) => {
-            console.log('response1', response);
+            console.log('response1', uri, response);
             resolve(response);
           }).catch((error) => {
-            console.log('error1', error);
+            console.log('error1', uri, error);
             reject(error);
           });
         break;
@@ -44,10 +44,10 @@ export async function query<T>(
           }
         })
           .then((response) => {
-            console.log('response1', response);
+            console.log('response1', uri, response);
             resolve(response);
           }).catch((error) => {
-            console.log('error1', error);
+            console.log('error1', uri, error);
             reject(error);
           });
         break;
@@ -59,16 +59,27 @@ export async function query<T>(
           }
         })
           .then((response) => {
-            console.log('response1', response);
+            console.log('response1', uri, response);
             resolve(response);
           }).catch((error) => {
-            console.log('error1', error);
+            console.log('error1', uri, error);
             reject(error);
           });
         break;
       }
       case METHOD.DELETE: {
-
+        axios.delete(`${realUrl}${path !== '' ? `/${path}` : ''}`, {
+          params, data, headers: {
+            "Authorization": cookies.get(COOKIES_TYPE.AUTH_TOKEN) != null ? cookies.get(COOKIES_TYPE.AUTH_TOKEN).Authentication : null,
+          }
+        })
+          .then((response) => {
+            console.log('response1', uri, response);
+            resolve(response);
+          }).catch((error) => {
+            console.log('error1', uri, error);
+            reject(error);
+          });
         break;
       }
       default: {

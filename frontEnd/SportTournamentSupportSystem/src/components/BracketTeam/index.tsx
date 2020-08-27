@@ -65,7 +65,15 @@ class BracketTeam extends React.Component<IBracketTeamProps, IBracketTeamState> 
               }
             }}
           >
-            {this.props.info != null && this.props.info.name != null ? <p className={"BracketTeam-name-text"}>{this.props.info.name}</p> : (this.props.description != null && ((this.props.description.descType === 1 || this.props.description.descType === 4) ? <p className={"BracketTeam-name-text BracketTeam-name-text2"}>{this.props.description.description}</p> : (this.props.description.descType === 0 && <p className={"BracketTeam-name-text"}>{this.props.listTeam![(this.props.description.unitIndex as number) - 1].shortName}</p>)))}
+            {this.props.info != null &&
+              this.props.info.name != null ?
+              <p className={"BracketTeam-name-text"}>{this.props.info.name}</p> :
+              (this.props.description != null &&
+                ((this.props.description.descType === 1 || this.props.description.descType === 4) ?
+                  <p className={"BracketTeam-name-text BracketTeam-name-text2"}>{this.props.description.description}</p> :
+                  (this.props.description.descType === 0 && <p className={"BracketTeam-name-text"}>{this.props.listTeam![(this.props.description.unitIndex as number) - 1] &&
+                    this.props.listTeam![(this.props.description.unitIndex as number) - 1].shortName ?
+                    this.props.listTeam![(this.props.description.unitIndex as number) - 1].shortName : ''}</p>)))}
           </div>
         </div>
         <div className={`BracketTeam-score-container BracketTeam-score-top2-container`}
