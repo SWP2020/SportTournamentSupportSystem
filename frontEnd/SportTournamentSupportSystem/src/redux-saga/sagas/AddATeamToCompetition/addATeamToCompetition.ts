@@ -15,7 +15,6 @@ const addATeamToCompetition = (data: IParams, path: string | number, param: IPar
 function* doAddATeamToCompetition(request: IRequest<IBigRequest>) {
   try {
     const response = yield call(addATeamToCompetition, request.data.data, request.data.path, request.data.param);
-    const data = response.data.result;
     if (response.data.error.MessageCode === 0) {
       yield put({
         type: QUERY_LIST_TEAM,

@@ -1,8 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { FaRunning } from 'react-icons/fa';
-import { IoIosPeople } from 'react-icons/io';
 import { IParams } from 'interfaces/common';
 import './styles.css';
 

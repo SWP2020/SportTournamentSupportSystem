@@ -7,7 +7,7 @@ import { LOGIN_FAILED } from 'screens/Login/reducers';
 
 function* doLogOut() {
   try {
-    yield cookies.remove(COOKIES_TYPE.AUTH_TOKEN);
+    yield cookies.remove(COOKIES_TYPE.AUTH_TOKEN, { path: '/' });
     yield put({
       type: LOGIN_FAILED,
     });

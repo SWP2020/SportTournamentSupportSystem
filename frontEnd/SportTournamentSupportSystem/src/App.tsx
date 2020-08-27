@@ -18,6 +18,7 @@ import ChangePassword from 'screens/ChangePassword';
 import AllTournaments from 'components/AllTournaments';
 import CreateNewTournament from 'screens/CreateNewTournament';
 import ActiveAccount from 'screens/ActiveAccount';
+import CompetitionInfo from 'screens/CompetitionInfo';
 import AllUsers from 'components/AllUsers';
 import { setGlobalSearchString } from 'redux-saga/global-actions/SetGlobalSearchString-actions';
 import { IState } from 'redux-saga/reducers';
@@ -57,6 +58,7 @@ class App extends React.Component<IAppProps, IAppState> {
               <Route path="/newTournament" render={() => <Header currentPage={'newTournament'} />} />
               <Route path="/changePassword" render={() => <Header currentPage={'changePassword'} />} />
               <Route path="/active/:tokenVerify" render={() => <Header currentPage={'active'} />} />
+              <Route path="/competition/:competitionId" render={() => <Header currentPage={'competitionInfo'} />} />
             </Switch>
             <Content transparent={false}>
               <Switch>
@@ -71,6 +73,7 @@ class App extends React.Component<IAppProps, IAppState> {
                 <Route path="/newTournament" render={() => { return cookies.get(COOKIES_TYPE.AUTH_TOKEN) == null ? <Redirect to="/login" /> : <CreateNewTournament />; }} />
                 <Route path="/changePassword" render={() => { return cookies.get(COOKIES_TYPE.AUTH_TOKEN) == null ? <Redirect to="/login" /> : <ChangePassword />; }} />
                 <Route path="/active/:tokenVerify" render={(info) => <ActiveAccount routerInfo={info} />} />
+                <Route path="/competition/:competitionId" render={(info) => <CompetitionInfo routerInfo={info} />} />
                 <Route render={() => <Redirect to="/" />} />
               </Switch>
               <ToastContainer />

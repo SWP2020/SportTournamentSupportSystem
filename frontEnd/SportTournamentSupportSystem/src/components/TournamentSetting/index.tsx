@@ -344,6 +344,18 @@ class TournamentSetting extends React.Component<ITournamentSettingProps, ITourna
           <div className="TournamentSetting-container">
             <div className="TournamentSetting-tournament-container">
               <p className="TournamentSetting-header-text">Thông tin giải đấu</p>
+              {/* <div className={'TournamentSetting-listManager-container'}>
+                <p>Danh sách quản trị viên: </p>
+                <div className={'TournamentSetting-listManager-container-container'}>
+                  {this.state.listManager.map((item, index) => <div className={'TournamentSetting-manager-container'} key={index}>
+                    <p className={'TournamentSetting-manager-text'}>{item}</p>
+                    <div className={'TournamentSetting-icon-container'} onClick={() => { this.onDeleteManager(item) }}>
+                      <AiOutlineClose />
+                    </div>
+                  </div>)}
+                  <TextInput label='nhập username để thêm quản trị viên' error={this.state.usernameError} errorContent={this.state.usernameErrorContent} onChangeText={this.onChangeUsername} onHandleSubmit={this.handleAddManager} />
+                </div>
+              </div> */}
               <div className={'TournamentSetting-listManager-container'}>
                 <p>Tên giải:</p>
                 <div className={'TournamentSetting-tounamentName-container-container'}>

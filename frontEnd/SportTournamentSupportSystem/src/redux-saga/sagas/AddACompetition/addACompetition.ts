@@ -18,6 +18,10 @@ function* doAddACompetition(request: IRequest<IBigRequest>) {
     const data = response.data.result;
     if (response.data.error.MessageCode === 0) {
       yield put({
+        type: request.response.success,
+        payload: data.Competition,
+      });
+      yield put({
         type: QUERY_ALL_COMPETITION_BY_TOURNAMENT_ID,
         response: {
           success: QUERY_ALL_COMPETITION_BY_TOURNAMENT_ID_SUCCESS,

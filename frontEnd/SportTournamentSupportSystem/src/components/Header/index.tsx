@@ -14,7 +14,7 @@ import { logOut, searchTournaments, searchUsers } from './actions';
 import './styles.css';
 
 interface IHeaderProps extends React.ClassAttributes<Header> {
-  currentPage: 'login' | 'signUp' | 'tournaments' | 'tournamentInfo' | 'users' | 'userInfo' | 'home' | 'forgotPassword' | 'newTournament' | 'changePassword' | 'active';
+  currentPage: 'competitionInfo' | 'login' | 'signUp' | 'tournaments' | 'tournamentInfo' | 'users' | 'userInfo' | 'home' | 'forgotPassword' | 'newTournament' | 'changePassword' | 'active';
   currentUserInfo: IParams | null;
 
   logOut(): void;
@@ -27,6 +27,7 @@ interface IHeaderState {
   showUserOption: boolean;
   searchText: string;
   selectedSearchOption: ValueType<OptionTypeBase>;
+  errorLoadImage: boolean;
 }
 
 const searchOption = [
@@ -41,6 +42,7 @@ class Header extends React.Component<IHeaderProps, IHeaderState> {
       showUserOption: false,
       searchText: '',
       selectedSearchOption: { value: 1, label: 'Tìm Giải' },
+      errorLoadImage: false,
     };
   }
 
@@ -116,6 +118,12 @@ class Header extends React.Component<IHeaderProps, IHeaderState> {
     }
   }
 
+  private onImageError = () => {
+    this.setState({
+      errorLoadImage: true,
+    });
+  };
+
   render() {
     const currentUserInfo = this.props.currentUserInfo;
     return (
@@ -125,9 +133,9 @@ class Header extends React.Component<IHeaderProps, IHeaderState> {
             <img style={{ width: '100%', height: '100%' }} src={require('../../assets/logo.png')} alt={'logo'} />
           </Link>
         </div>
-        <div className="Option-container">
+        <div className={`Option-container ${this.props.currentPage === 'tournaments' ? 'Option-container1' : ''}`}>
           <Link to="/tournaments" style={{ textDecoration: 'none' }} onClick={() => { this.props.setGlobalSearchString('') }}>
-            <div className="Link"><p className="Link-text">Các giải đấu</p></div>
+            <div className="Link"><p className={`Link-text ${this.props.currentPage === 'tournaments' ? 'Link-text-selected' : ''}`}>Các giải đấu</p></div>
           </Link>
           {/* <Link to="/news" style={{ textDecoration: 'none' }}>
             <div className="Link"><p className="Link-text">Tin tức</p></div>
@@ -153,14 +161,20 @@ class Header extends React.Component<IHeaderProps, IHeaderState> {
             <FaSearch className={'Header-icon'} size={25} />
           </div>
         </div>
-        {this.props.currentPage !== 'newTournament' && <Link to="/newTournament" style={{ textDecoration: 'none' }}>
+        {this.props.currentPage !== 'newTournament' && this.props.currentPage !== 'login' && <Link to="/newTournament" style={{ textDecoration: 'none' }}>
           <div className="SignUp-Button-container"><p className="Button">Tạo giải ngay</p></div>
         </Link>}
         {currentUserInfo != null && cookies.get(COOKIES_TYPE.AUTH_TOKEN) != null ?
           <div className="Right-container Right-container-hover">
             <div className={'UserOption-container'} onClick={this.handleShowUserOption}>
               <div className={'UserOption-avatar-container'}>
-                <img className={'UserOption-avatar-image'} src={require('../../assets/7ab1b0125d485c8dd6a4e78832b0a4b2fbed3cf8.png')} alt={'logo'} />
+                <img className={'UserOption-avatar-image'} src={require(
+                  // `${this.state.errorLoadImage === false ?
+                    '../../assets/7ab1b0125d485c8dd6a4e78832b0a4b2fbed3cf8.png'
+                    // :
+                    // '../../assets/avatar-man-icon-profile-placeholder-260nw-1229862502.jpg'}`
+                    )
+                  } alt={'logo'} onError={this.onImageError} />
               </div>
               <p className={'UserOption-name-text'}>{`${currentUserInfo.firstName}`}</p>
               {this.state.showUserOption === true ? <FaChevronDown color={'white'} /> : <FaChevronUp color={'white'} />}

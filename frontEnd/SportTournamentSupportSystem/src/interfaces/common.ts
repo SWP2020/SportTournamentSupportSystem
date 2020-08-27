@@ -1,6 +1,5 @@
 import { AnyAction } from "redux";
 import * as toast from 'react-toastify';
-import { MATCH_TYPE } from "global";
 
 export type TypeAny =
   | undefined
@@ -17,16 +16,8 @@ export type TypeAny =
   | FormData
   | INotification
   | INotification[]
-  | IBracketMatchInfo[]
-  | IBracketMatchInfo
-  | IBracketTeamInfo
-  | IBracketTeamInfo[]
-  | ITeamInfo
-  | ITeamInfo[]
-  | IBracketRoundInfo
-  | IBracketRoundInfo[]
-  | IBracketBoardInfo
-  | IBracketBoardInfo[];
+  | IParams
+  | IParams[];
 
 export interface IParams {
   [s: string]: TypeAny;
@@ -68,37 +59,4 @@ export interface IAction<T> {
 export interface IResponse<T> {
   data: T;
   status?: IParams;
-}
-
-export interface IBracketMatchInfo {
-  id: string;
-  type: MATCH_TYPE;
-  numericalOrderMatch: number;
-  listTeam: IBracketTeamInfo[];
-  time?: string;
-  location?: string;
-  editable: boolean;
-}
-
-export interface IBracketTeamInfo {
-  teamInfo?: ITeamInfo;
-  top?: '1' | '2' | '3' | 'in10' | 'other';
-  score?: string;
-}
-
-export interface ITeamInfo {
-  id: string;
-  name?: string;
-}
-
-export interface IBracketRoundInfo {
-  roundName: string;
-  roundNumber: number;
-  listMatch: IBracketMatchInfo[];
-}
-
-export interface IBracketBoardInfo {
-  id: string;
-  listRound: IBracketRoundInfo[];
-  started: boolean;
 }

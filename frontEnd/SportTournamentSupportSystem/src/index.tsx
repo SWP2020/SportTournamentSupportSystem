@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
+import Favicon from 'react-favicon';
 import store from './redux-saga/store';
 import './index.css';
 import App from './App';
@@ -10,6 +11,7 @@ import * as serviceWorker from './serviceWorker';
 ReactDOM.render(
   // <React.StrictMode>
   <Provider store={store}>
+    <Favicon url={require('./assets/logo.png')} animated={true} />
     <BrowserRouter>
       <App />
     </BrowserRouter>

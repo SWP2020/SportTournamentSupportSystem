@@ -112,13 +112,13 @@ class UserInfo extends React.Component<IUserInfoProps, IUserInfoState> {
   private handleOpenEditUserInfo = () => {
     this.setState({
       editMode: true,
-      firstName: this.props.userInfo != null && (this.props.userInfo.User as IParams).firstName != null ? (this.props.userInfo.User as IParams).firstName as string : '',
-      lastName: this.props.userInfo != null && (this.props.userInfo.User as IParams).lastName != null ? (this.props.userInfo.User as IParams).lastName as string : '',
-      email: this.props.userInfo != null && (this.props.userInfo.User as IParams).email != null ? (this.props.userInfo.User as IParams).email as string : '',
-      address: this.props.userInfo != null && (this.props.userInfo.User as IParams).address != null ? (this.props.userInfo.User as IParams).address as string : '',
-      phoneNumber: this.props.userInfo != null && (this.props.userInfo.User as IParams).phoneNumber != null ? (this.props.userInfo.User as IParams).phoneNumber as string : '',
-      gender: this.props.userInfo != null && (this.props.userInfo.User as IParams).gender === true ? { value: true, label: 'Nam' } : { value: false, label: 'Nữ' },
-      dateOfBirth: this.props.userInfo != null && (this.props.userInfo.User as IParams).dob != null ? formatStringToDate((this.props.userInfo.User as IParams).dob as string, 'yyyy-MM-dd') : new Date(),
+      firstName: this.props.userInfo != null && (this.props.userInfo.User as unknown as IParams).firstName != null ? (this.props.userInfo.User as unknown as IParams).firstName as string : '',
+      lastName: this.props.userInfo != null && (this.props.userInfo.User as unknown as IParams).lastName != null ? (this.props.userInfo.User as unknown as IParams).lastName as string : '',
+      email: this.props.userInfo != null && (this.props.userInfo.User as unknown as IParams).email != null ? (this.props.userInfo.User as unknown as IParams).email as string : '',
+      address: this.props.userInfo != null && (this.props.userInfo.User as unknown as IParams).address != null ? (this.props.userInfo.User as unknown as IParams).address as string : '',
+      phoneNumber: this.props.userInfo != null && (this.props.userInfo.User as unknown as IParams).phoneNumber != null ? (this.props.userInfo.User as unknown as IParams).phoneNumber as string : '',
+      gender: this.props.userInfo != null && (this.props.userInfo.User as unknown as IParams).gender === true ? { value: true, label: 'Nam' } : { value: false, label: 'Nữ' },
+      dateOfBirth: this.props.userInfo != null && (this.props.userInfo.User as unknown as IParams).dob != null ? formatStringToDate((this.props.userInfo.User as unknown as IParams).dob as string, 'yyyy-MM-dd') : new Date(),
     });
   }
 
@@ -202,11 +202,11 @@ class UserInfo extends React.Component<IUserInfoProps, IUserInfoState> {
         email: this.state.email,
         gender: (this.state.gender as IParams).value,
         address: this.state.address,
-        username: this.props.userInfo != null && (this.props.userInfo.User as IParams).username,
+        username: this.props.userInfo != null && (this.props.userInfo.User as unknown as IParams).username,
         phoneNumber: this.state.phoneNumber,
-        roleId: this.props.userInfo != null && (this.props.userInfo.User as IParams).roleId,
-        status: this.props.userInfo != null && (this.props.userInfo.User as IParams).status,
-        url: this.props.userInfo != null && (this.props.userInfo.User as IParams).url,
+        roleId: this.props.userInfo != null && (this.props.userInfo.User as unknown as IParams).roleId,
+        status: this.props.userInfo != null && (this.props.userInfo.User as unknown as IParams).status,
+        url: this.props.userInfo != null && (this.props.userInfo.User as unknown as IParams).url,
       },
     };
 
@@ -285,9 +285,9 @@ class UserInfo extends React.Component<IUserInfoProps, IUserInfoState> {
     return (
       <div className="UserInfo-Container">
         <div className="UserInfo-background-image-container UserInfo-background-image-container2">
-          <img className={'UserInfo-background-image'} src={require('../../assets/7ab1b0125d485c8dd6a4e78832b0a4b2fbed3cf8.png')} alt={'logo'} />
-          {this.props.userInfo != null && (this.props.userInfo as IParams).Config != null && ((this.props.userInfo as IParams).Config as IParams).canEdit === true && <AiFillCamera className={'UserInfo-change-image-icon'} />}
-          {this.props.userInfo != null && (this.props.userInfo as IParams).Config != null && ((this.props.userInfo as IParams).Config as IParams).canEdit === true && <div className={'Overlay'}>
+          <img className={'UserInfo-background-image'} src={require('../../assets/image-384.png')} alt={'logo'} />
+          {this.props.userInfo != null && (this.props.userInfo as IParams).Config != null && ((this.props.userInfo as unknown as IParams).Config as unknown as IParams).canEdit === true && <AiFillCamera className={'UserInfo-change-image-icon'} />}
+          {this.props.userInfo != null && (this.props.userInfo as IParams).Config != null && ((this.props.userInfo as unknown as IParams).Config as unknown as IParams).canEdit === true && <div className={'Overlay'}>
             <input type="file" onChange={(e) => this.updateBackground(e.target.files)} />
           </div>}
         </div>
@@ -299,8 +299,8 @@ class UserInfo extends React.Component<IUserInfoProps, IUserInfoState> {
               unblock={[EDIT_USER_INFO_SUCCESS, EDIT_USER_INFO_FAILED]}
             >
               <img className={'UserInfo-avatar-image'} src={require('../../assets/7ab1b0125d485c8dd6a4e78832b0a4b2fbed3cf8.png')} alt={'logo'} />
-              {this.props.userInfo != null && (this.props.userInfo as IParams).Config != null && ((this.props.userInfo as IParams).Config as IParams).canEdit === true && <AiFillCamera className={'UserInfo-change-avatar-icon'} />}
-              {this.props.userInfo != null && (this.props.userInfo as IParams).Config != null && ((this.props.userInfo as IParams).Config as IParams).canEdit === true && <div className={'Overlay2'}>
+              {this.props.userInfo != null && (this.props.userInfo as IParams).Config != null && ((this.props.userInfo as unknown as IParams).Config as unknown as IParams).canEdit === true && <AiFillCamera className={'UserInfo-change-avatar-icon'} />}
+              {this.props.userInfo != null && (this.props.userInfo as IParams).Config != null && ((this.props.userInfo as unknown as IParams).Config as unknown as IParams).canEdit === true && <div className={'Overlay2'}>
                 <input type="file" onChange={(e) => this.updateAvatar(e.target.files)} />
               </div>}
               <div className="UserInfo-content-info-basic-info-container">
@@ -310,7 +310,7 @@ class UserInfo extends React.Component<IUserInfoProps, IUserInfoState> {
                   </div>}
                 {this.state.editMode === false ?
                   <div className="UserInfo-content-info-basic-info-container-singleRow">
-                    <p className="UserInfo-name-text">{this.props.userInfo != null && this.props.userInfo.User != null && (this.props.userInfo.User as IParams).firstName != null && (this.props.userInfo.User as IParams).lastName != null ? `${(this.props.userInfo.User as IParams).firstName} ${(this.props.userInfo.User as IParams).lastName}` : <Skeleton width={250} height={30} />}</p>
+                    <p className="UserInfo-name-text">{this.props.userInfo != null && this.props.userInfo.User != null && (this.props.userInfo.User as unknown as IParams).firstName != null && (this.props.userInfo.User as unknown as IParams).lastName != null ? `${(this.props.userInfo.User as unknown as IParams).firstName} ${(this.props.userInfo.User as unknown as IParams).lastName}` : <Skeleton width={250} height={30} />}</p>
                   </div> :
                   <div className="UserInfo-content-info-basic-info-container-singleRow">
                     <TextInput style={{ width: 300 }} label={'Tên'} value={this.state.firstName} onChangeText={this.onChangeFirstName} error={this.state.firstNameError} errorContent={this.state.firstNameErrorContent} />
@@ -321,7 +321,7 @@ class UserInfo extends React.Component<IUserInfoProps, IUserInfoState> {
                   </div>}
                 {this.state.editMode === false ?
                   <div className="UserInfo-content-info-basic-info-container-singleRow">
-                    <p className="UserInfo-otherInfo-text">{this.props.userInfo != null && this.props.userInfo.User != null ? `Giới tính: ${formatGender((this.props.userInfo.User as IParams).gender as boolean | null)}` : <Skeleton width={100} height={20} />}</p>
+                    <p className="UserInfo-otherInfo-text">{this.props.userInfo != null && this.props.userInfo.User != null ? `Giới tính: ${formatGender((this.props.userInfo.User as unknown as IParams).gender as boolean | null)}` : <Skeleton width={100} height={20} />}</p>
                   </div> :
                   <div className="UserInfo-content-info-basic-info-container-singleRow">
                     <p>Giới tính</p>
@@ -336,7 +336,7 @@ class UserInfo extends React.Component<IUserInfoProps, IUserInfoState> {
                   </div>}
                 {this.state.editMode === false ?
                   <div className="UserInfo-content-info-basic-info-container-singleRow">
-                    <p className="UserInfo-otherInfo-text">{this.props.userInfo != null && this.props.userInfo.User != null ? `Ngày sinh: ${formatDateToDisplay((this.props.userInfo.User as IParams).dob as string, 'dd/MM/yyyy', 'yyyy-MM-dd')}` : <Skeleton width={200} height={20} />}</p>
+                    <p className="UserInfo-otherInfo-text">{this.props.userInfo != null && this.props.userInfo.User != null ? `Ngày sinh: ${formatDateToDisplay((this.props.userInfo.User as unknown as IParams).dob as string, 'dd/MM/yyyy', 'yyyy-MM-dd')}` : <Skeleton width={200} height={20} />}</p>
                   </div> :
                   <div className="UserInfo-content-info-basic-info-container-singleRow">
                     <p className="UserInfo-otherInfo-text">Ngày sinh</p>
@@ -349,24 +349,24 @@ class UserInfo extends React.Component<IUserInfoProps, IUserInfoState> {
                   </div>}
                 {this.state.editMode === false &&
                   <div className="UserInfo-content-info-basic-info-container-singleRow">
-                  <p className="UserInfo-otherInfo-text">{this.props.userInfo != null && this.props.userInfo.User != null ? `Email: ${(this.props.userInfo.User as IParams).email != null ? (this.props.userInfo.User as IParams).email : ''}` : <Skeleton width={200} height={20} />}</p>
+                  <p className="UserInfo-otherInfo-text">{this.props.userInfo != null && this.props.userInfo.User != null ? `Email: ${(this.props.userInfo.User as unknown as IParams).email != null ? (this.props.userInfo.User as unknown as IParams).email : ''}` : <Skeleton width={200} height={20} />}</p>
                   </div>}
                 {this.state.editMode === false ?
                   <div className="UserInfo-content-info-basic-info-container-singleRow">
-                    <p className="UserInfo-otherInfo-text">{this.props.userInfo != null && this.props.userInfo.User != null ? `Địa chỉ: ${(this.props.userInfo.User as IParams).address != null ? (this.props.userInfo.User as IParams).address : ''}` : <Skeleton width={300} height={20} />}</p>
+                    <p className="UserInfo-otherInfo-text">{this.props.userInfo != null && this.props.userInfo.User != null ? `Địa chỉ: ${(this.props.userInfo.User as unknown as IParams).address != null ? (this.props.userInfo.User as unknown as IParams).address : ''}` : <Skeleton width={300} height={20} />}</p>
                   </div> :
                   <div className="UserInfo-content-info-basic-info-container-singleRow">
                     <TextInput style={{ width: 500 }} label={'Địa chỉ'} value={this.state.address} onChangeText={this.onChangeAddress} error={this.state.addressError} errorContent={this.state.addressErrorContent} />
                   </div>}
                 {this.state.editMode === false ?
                   <div className="UserInfo-content-info-basic-info-container-singleRow">
-                    <p className="UserInfo-otherInfo-text">{this.props.userInfo != null && this.props.userInfo.User != null ? `Số điện thoại: ${(this.props.userInfo.User as IParams).phoneNumber != null ? (this.props.userInfo.User as IParams).phoneNumber : ''}` : <Skeleton width={200} height={20} />}</p>
+                    <p className="UserInfo-otherInfo-text">{this.props.userInfo != null && this.props.userInfo.User != null ? `Số điện thoại: ${(this.props.userInfo.User as unknown as IParams).phoneNumber != null ? (this.props.userInfo.User as unknown as IParams).phoneNumber : ''}` : <Skeleton width={200} height={20} />}</p>
                   </div> :
                   <div className="UserInfo-content-info-basic-info-container-singleRow">
                     <TextInput style={{ width: 500 }} label={'Số điện thoại'} value={this.state.phoneNumber} onChangeText={this.onChangePhoneNumber} error={this.state.phoneNumberError} errorContent={this.state.phoneNumberErrorContent} />
                   </div>}
                 <div className="UserInfo-content-info-basic-info-container-singleRow">
-                  {this.props.userInfo != null && this.props.userInfo.Config != null && (this.props.userInfo as IParams).Config != null && ((this.props.userInfo as IParams).Config as IParams).canEdit === true && (this.state.editMode === false ? <div className="UserInfo-button-container">
+                  {this.props.userInfo != null && this.props.userInfo.Config != null && (this.props.userInfo as IParams).Config != null && ((this.props.userInfo as IParams).Config as unknown as IParams).canEdit === true && (this.state.editMode === false ? <div className="UserInfo-button-container">
                     <div className="UserInfo-button" onClick={this.handleOpenEditUserInfo}>
                       <h4 className="UserInfo-button-text">Chỉnh sửa thông tin</h4>
                     </div>
