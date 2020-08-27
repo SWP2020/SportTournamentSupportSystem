@@ -38,4 +38,8 @@ public interface IUserService {
 	public Collection<UserEntity> findByRoleId(Pageable pageable, Long roleId);
 	
 	public int countByRoleId(Long roleId);
+	
+	public UserEntity updateStatus(UserEntity newEntity, String status); 
+	
+	public UserEntity updateRole(UserEntity entity, String roleName);
 }

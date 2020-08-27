@@ -10,8 +10,9 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
+import doan2020.SportTournamentSupportSystem.entity.RoleEntity;
 import doan2020.SportTournamentSupportSystem.entity.UserEntity;
+import doan2020.SportTournamentSupportSystem.repository.RoleRepository;
 import doan2020.SportTournamentSupportSystem.repository.UserRepository;
 import doan2020.SportTournamentSupportSystem.service.IUserService;
 
@@ -20,6 +21,9 @@ public class UserService implements IUserService {
 
 	@Autowired
 	private UserRepository userRepository;
+
+	@Autowired
+	private RoleRepository roleRepository;
 
 	@Override
 	public Long countAll() {
@@ -58,7 +62,9 @@ public class UserService implements IUserService {
 //			updatedEntity.setAvatar(newEntity.getAvatar());
 //			updatedEntity.setBackground(newEntity.getBackground());
 			updatedEntity.setRole(newEntity.getRole());
-			if (newEntity.getStatus() != null) {updatedEntity.setStatus(newEntity.getStatus());}
+			if (newEntity.getStatus() != null) {
+				updatedEntity.setStatus(newEntity.getStatus());
+			}
 			updatedEntity.setUrl(newEntity.getUrl());
 			updatedEntity = userRepository.save(updatedEntity);
 		} catch (Exception e) {
@@ -207,7 +213,6 @@ public class UserService implements IUserService {
 		return count;
 	}
 
-	
 	@Override
 	public Long countBySearchString(String searchString) {
 		List<UserEntity> findUsers = null;
@@ -217,6 +222,35 @@ public class UserService implements IUserService {
 			return 0l;
 		}
 		return new Long(findUsers.size());
+	}
+
+	@Override
+	public UserEntity updateStatus(UserEntity entity, String status) {
+		try {
+
+			entity.setStatus(status);
+			entity = userRepository.save(entity);
+		} catch (Exception e) {
+			return null;
+		}
+
+		return entity;
+	}
+
+	@Override
+	public UserEntity updateRole(UserEntity entity, String roleName) {
+		try {
+
+			RoleEntity roleEntity = roleRepository.findOneByName(roleName);
+			if (roleEntity != null)
+				entity.setRole(roleEntity);
+			
+			entity = userRepository.save(entity);
+		} catch (Exception e) {
+			return null;
+		}
+
+		return entity;
 	}
 
 }
