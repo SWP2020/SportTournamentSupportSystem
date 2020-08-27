@@ -19,11 +19,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import doan2020.SportTournamentSupportSystem.config.Const;
 import doan2020.SportTournamentSupportSystem.converter.TeamConverter;
 import doan2020.SportTournamentSupportSystem.dto.TeamDTO;
 import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
 import doan2020.SportTournamentSupportSystem.entity.TeamEntity;
 import doan2020.SportTournamentSupportSystem.entity.UserEntity;
+import doan2020.SportTournamentSupportSystem.model.Entity.Player;
 import doan2020.SportTournamentSupportSystem.response.Response;
 import doan2020.SportTournamentSupportSystem.service.ICompetitionService;
 import doan2020.SportTournamentSupportSystem.service.ITeamService;
@@ -197,7 +199,7 @@ public class TeamsAPI {
 	}
 
 	/*
-	 * Get all team Paging by CompetitionId
+	 * Get all joined team by CompetitionId
 	 */
 	@GetMapping("/getByCompetitionId")
 	public ResponseEntity<Response> getTeamsByCompetitionId(
@@ -222,27 +224,28 @@ public class TeamsAPI {
 
 			if (competitionId == null) {
 				result.put("Total page", 0);
-				result.put("Teams", teamDTOs);
+				result.put("Teams", null);
 				config.put("Global", 0);
 				error.put("MessageCode", 0);
 				error.put("Message", "required competitionId");
 			} else {
 
-				list = (List<TeamEntity>) service.findByCompetitionId(competitionId);
+				list = (List<TeamEntity>) service.findByCompetitionIdAndStatus(competitionId, Const.TEAM_STATUS_JOINED);
 
-				if (list.isEmpty()) {// list is not exist
+				if (list == null) {// list is not exist
 					result.put("Total page", 0);
-					result.put("Teams", teamDTOs);
+					result.put("Teams", null);
 					config.put("Global", 0);
-					error.put("MessageCode", 0);
-					error.put("Message", "Page Teams is not exist");
+					error.put("MessageCode", 1);
+					error.put("Message", "List is not exist");
 
 				} else {// list is exist
 					Collections.sort(list, new TeamEntity());
 
 					for (TeamEntity teamEntity : list) {
-
+						ArrayList<Player> players = (ArrayList<Player>) service.getTeamPlayerFromFile(teamEntity.getCompetition().getId(), teamEntity.getId());
 						TeamDTO resDTO = converter.toDTO(teamEntity);
+						resDTO.setPlayers(players);
 						teamDTOs.add(resDTO);
 					}
 
@@ -259,9 +262,10 @@ public class TeamsAPI {
 					error.put("MessageCode", 0);
 					error.put("Message", "get Page Teams successfully");
 
-					System.out.println("TeamsAPI: getTeams: no exception");
+					
 				}
 			}
+			System.out.println("TeamsAPI: getTeams: no exception");
 		} catch (Exception e) {
 			System.out.println("TeamsAPI: getTeams: has exception");
 			result.put("Teams", teamDTOs);
@@ -273,9 +277,95 @@ public class TeamsAPI {
 		response.setConfig(config);
 		response.setResult(result);
 		response.setError(error);
-		System.out.println("TeamsAPI: getTeams: pass");
+		System.out.println("TeamsAPI: getTeams: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
+	
+	
+	/*
+	 * Get all pending team by CompetitionId
+	 */
+	@GetMapping("/getPendingTeamsByCompetitionId")
+	public ResponseEntity<Response> getPendingTeamsByCompetitionId(
+			@RequestParam(value = "page", required = false) Integer page,
+			@RequestParam(value = "limit", required = false) Integer limit,
+			@RequestParam(value = "competitionId") Long competitionId) {
+		System.out.println("TeamsAPI: getPendingTeamsByCompetitionId: start");
+		HttpStatus httpStatus = HttpStatus.OK;
+		Response response = new Response();
+		Map<String, Object> config = new HashMap<String, Object>();
+		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> error = new HashMap<String, Object>();
+		List<TeamDTO> teamDTOs = new ArrayList<TeamDTO>();
+		List<TeamEntity> list = new ArrayList<TeamEntity>();
+		try {
+
+			if (limit == null || limit <= 0)
+				limit = 3;
+
+			if (page == null || page <= 0)
+				page = 1;
+
+			if (competitionId == null) {
+				result.put("Total page", 0);
+				result.put("Teams", teamDTOs);
+				config.put("Global", 0);
+				error.put("MessageCode", 1);
+				error.put("Message", "required competitionId");
+			} else {
+
+				list = (List<TeamEntity>) service.findByCompetitionIdAndStatus(competitionId, Const.TEAM_STATUS_PENDING);
+
+				if (list == null) {// list is not exist
+					result.put("Total page", 0);
+					result.put("Teams", teamDTOs);
+					config.put("Global", 0);
+					error.put("MessageCode", 1);
+					error.put("Message", "Page Teams is not exist");
+
+				} else {// list is exist
+					Collections.sort(list, new TeamEntity());
+
+					for (TeamEntity teamEntity : list) {
+						ArrayList<Player> players = (ArrayList<Player>) service.getTeamPlayerFromFile(teamEntity.getCompetition().getId(), teamEntity.getId());
+						TeamDTO resDTO = converter.toDTO(teamEntity);
+						resDTO.setPlayers(players);
+						teamDTOs.add(resDTO);
+					}
+
+					CompetitionEntity competitionEntity = competitionService.findOneById(competitionId);
+
+					int total = competitionEntity.getTeams().size();
+					int totalPage = total / limit;
+					if (total % limit != 0) {
+						totalPage++;
+					}
+					result.put("Total page", totalPage);
+					result.put("Teams", teamDTOs);
+					config.put("Global", 0);
+					error.put("MessageCode", 0);
+					error.put("Message", "get Page Teams successfully");
+
+					
+				}
+			}
+			System.out.println("TeamsAPI: getPendingTeamsByCompetitionId: no exception");
+		} catch (Exception e) {
+			System.out.println("TeamsAPI: getPendingTeamsByCompetitionId: has exception");
+			result.put("Teams", teamDTOs);
+			config.put("Global", 0);
+			error.put("MessageCode", 1);
+			error.put("Message", "Server error");
+		}
+
+		response.setConfig(config);
+		response.setResult(result);
+		response.setError(error);
+		System.out.println("TeamsAPI: getPendingTeamsByCompetitionId: finish");
+		return new ResponseEntity<Response>(response, httpStatus);
+	}
+	
+	
 
 	@PutMapping("/swap")
 	public ResponseEntity<Response> swapTowTeams(@RequestParam(value = "team1Id", required = true) Long team1Id,
@@ -306,8 +396,9 @@ public class TeamsAPI {
 			teams = (List<TeamEntity>) service.swap(team1Id, team2Id);
 
 			for (TeamEntity teamEntity : teams) {
-
+				ArrayList<Player> players = (ArrayList<Player>) service.getTeamPlayerFromFile(teamEntity.getCompetition().getId(), teamEntity.getId());
 				TeamDTO resDTO = converter.toDTO(teamEntity);
+				resDTO.setPlayers(players);
 				teamDTOs.add(resDTO);
 			}
 			result.put("Teams", teamDTOs);

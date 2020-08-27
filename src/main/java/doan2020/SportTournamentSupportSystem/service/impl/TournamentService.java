@@ -40,8 +40,7 @@ public class TournamentService implements ITournamentService {
 		TournamentEntity newEntity = null;
 		try {
 
-			tournamentEntity.setStatus(Const.UNSTARTED_STATUS);
-
+			tournamentEntity.setStatus(Const.TOURNAMENT_STATUS_INITIALIZING);
 			newEntity = tournamentRepository.save(tournamentEntity);
 		} catch (Exception e) {
 			return null;
@@ -64,12 +63,10 @@ public class TournamentService implements ITournamentService {
 			updatedEntity.setClosingLocation(newEntity.getClosingLocation());
 			updatedEntity.setClosingTime(newEntity.getClosingTime());
 			updatedEntity.setDonor(newEntity.getDonor());
-			updatedEntity.setCreatedBy(newEntity.getCreatedBy());
-			updatedEntity.setCreatedDate(newEntity.getCreatedDate());
-			updatedEntity.setModifiedBy(newEntity.getModifiedBy());
-			updatedEntity.setModifiedDate(newEntity.getModifiedDate());
-			updatedEntity.setStatus(newEntity.getStatus());
+			if (newEntity.getStatus() != null) {updatedEntity.setStatus(newEntity.getStatus());}
 			updatedEntity.setUrl(newEntity.getUrl());
+			updatedEntity.setCloseRegistrationTime(newEntity.getCloseRegistrationTime());
+			updatedEntity.setOpenRegistrationTime(newEntity.getOpenRegistrationTime());
 			updatedEntity = tournamentRepository.save(updatedEntity);
 		} catch (Exception e) {
 			return null;
@@ -83,8 +80,9 @@ public class TournamentService implements ITournamentService {
 		TournamentEntity deletedEntity = null;
 		try {
 			deletedEntity = tournamentRepository.findOneById(id);
-			deletedEntity.setStatus("deleted");
-			deletedEntity = tournamentRepository.save(deletedEntity);
+			tournamentRepository.delete(deletedEntity);
+//			deletedEntity.setStatus("deleted");
+//			deletedEntity = tournamentRepository.save(deletedEntity);
 		} catch (Exception e) {
 			return null;
 		}
@@ -196,18 +194,16 @@ public class TournamentService implements ITournamentService {
 
 		HashSet<String> sportsName = new HashSet<>();
 
-		int countPlayer = 0;
+		int countTeam = 0;
 
 		for (CompetitionEntity comp : competitions) {
 
 			sportsName.add(comp.getSport().getFullName());
 
-			for (TeamEntity teamEntity : comp.getTeams()) {
-				countPlayer += teamEntity.getPlayers().size();
-			}
+			countTeam += comp.getTeams().size();
 		}
 		option.put("sportsName", sportsName);
-		option.put("countPlayer", countPlayer);
+		option.put("countTeam", countTeam);
 		option.put("process", 0);
 		return option;
 	}

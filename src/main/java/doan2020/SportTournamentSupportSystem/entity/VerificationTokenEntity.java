@@ -1,17 +1,21 @@
 
 package doan2020.SportTournamentSupportSystem.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.EntityListeners;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.util.Date;
+
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import com.sun.istack.NotNull;
-import javax.persistence.GeneratedValue;
-import javax.persistence.ManyToOne;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.ColumnDefault;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import com.sun.istack.NotNull;
 
 
 
@@ -33,17 +37,10 @@ public class VerificationTokenEntity{
 	
 	private Date confirmedDateTime;
 	
-	private String createdBy;
-	
-	private Date createdDate;
-	
-	private String modifiedBy;
-	
-	private Date modifiedDate;
-	
+	@ColumnDefault("'unknown'")
 	private String status;
 	
-	private String url;
+	private String url = "/?";
 	
 
 	@ManyToOne
@@ -85,38 +82,6 @@ public Date getConfirmedDateTime() {
 
 public void setConfirmedDateTime(Date confirmedDateTime) {
 	this.confirmedDateTime = confirmedDateTime;
-}
-
-public String getCreatedBy() {
-	return createdBy;
-}
-
-public void setCreatedBy(String createdBy) {
-	this.createdBy = createdBy;
-}
-
-public Date getCreatedDate() {
-	return createdDate;
-}
-
-public void setCreatedDate(Date createdDate) {
-	this.createdDate = createdDate;
-}
-
-public String getModifiedBy() {
-	return modifiedBy;
-}
-
-public void setModifiedBy(String modifiedBy) {
-	this.modifiedBy = modifiedBy;
-}
-
-public Date getModifiedDate() {
-	return modifiedDate;
-}
-
-public void setModifiedDate(Date modifiedDate) {
-	this.modifiedDate = modifiedDate;
 }
 
 public String getStatus() {

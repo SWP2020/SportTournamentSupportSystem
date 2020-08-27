@@ -1,21 +1,24 @@
 
 package doan2020.SportTournamentSupportSystem.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.EntityListeners;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import java.util.Collection;
 import java.util.Date;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import com.sun.istack.NotNull;
-import javax.persistence.GeneratedValue;
-import javax.persistence.ManyToOne;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
-import java.util.Collection;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.CascadeType;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.ColumnDefault;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Table(name = "tournaments")
@@ -23,15 +26,17 @@ import javax.persistence.CascadeType;
 public class TournamentEntity {
 
 	@Id
-	@NotNull
+	@Column(nullable = false)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@NotNull
+	@Column(nullable = false)
 	private String fullName;
 
+	@Column(nullable = false)
 	private String shortName;
 
+	@ColumnDefault("'Chưa có mô tả.'")
 	private String description;
 
 	private String openingLocation;
@@ -42,26 +47,24 @@ public class TournamentEntity {
 
 	private Date closingTime;
 
+	@ColumnDefault("'Không có nhà tài trợ'")
 	private String donor;
 
-	private String createdBy;
-
-	private Date createdDate;
-
-	private String modifiedBy;
-
-	private Date modifiedDate;
-
+	@ColumnDefault("'unknown'")
 	private String status;
 
-	private String url;
+	private String url = "/?";
 
 	private String avatar;
 
 	private String background;
 
+	private Date openRegistrationTime;
+	private Date closeRegistrationTime;
+
+
 	@ManyToOne
-	@JoinColumn(name = "creatorId")
+	@JoinColumn(name = "creatorId", nullable = false)
 	private UserEntity creator;
 
 	@ManyToMany(mappedBy = "tournamentsList")
@@ -72,9 +75,6 @@ public class TournamentEntity {
 
 	@OneToMany(mappedBy = "tournament", cascade = CascadeType.ALL)
 	private Collection<CompetitionEntity> competitions;
-
-	@OneToMany(mappedBy = "tournament", cascade = CascadeType.ALL)
-	private Collection<PostEntity> posts;
 
 	public Long getId() {
 		return id;
@@ -144,38 +144,6 @@ public class TournamentEntity {
 		this.donor = donor;
 	}
 
-	public String getCreatedBy() {
-		return createdBy;
-	}
-
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
-
-	public Date getCreatedDate() {
-		return createdDate;
-	}
-
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
-
-	public String getModifiedBy() {
-		return modifiedBy;
-	}
-
-	public void setModifiedBy(String modifiedBy) {
-		this.modifiedBy = modifiedBy;
-	}
-
-	public Date getModifiedDate() {
-		return modifiedDate;
-	}
-
-	public void setModifiedDate(Date modifiedDate) {
-		this.modifiedDate = modifiedDate;
-	}
-
 	public String getStatus() {
 		return status;
 	}
@@ -224,12 +192,12 @@ public class TournamentEntity {
 		this.competitions = competitions;
 	}
 
-	public Collection<PostEntity> getPosts() {
-		return posts;
+	public String getBackground() {
+		return background;
 	}
 
-	public void setPosts(Collection<PostEntity> posts) {
-		this.posts = posts;
+	public void setBackground(String background) {
+		this.background = background;
 	}
 
 	public String getAvatar() {
@@ -240,14 +208,20 @@ public class TournamentEntity {
 		this.avatar = avatar;
 	}
 
-	public String getBackground() {
-		return background;
+	public Date getOpenRegistrationTime() {
+		return openRegistrationTime;
 	}
 
-	public void setBackground(String background) {
-		this.background = background;
+	public void setOpenRegistrationTime(Date openRegistrationTime) {
+		this.openRegistrationTime = openRegistrationTime;
 	}
-	
-	
+
+	public Date getCloseRegistrationTime() {
+		return closeRegistrationTime;
+	}
+
+	public void setCloseRegistrationTime(Date closeRegistrationTime) {
+		this.closeRegistrationTime = closeRegistrationTime;
+	}
 
 }

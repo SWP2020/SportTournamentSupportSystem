@@ -20,8 +20,6 @@ public interface IResultService {
 	public ResultEntity delete(Long id);
 	
 	Collection<ResultEntity> findByMatchId(Long matchId);
-
-	Collection<ResultEntity> findByTeamId(Long teamId);
 	
 	
 }

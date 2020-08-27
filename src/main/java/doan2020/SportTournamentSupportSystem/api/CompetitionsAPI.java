@@ -40,7 +40,7 @@ public class CompetitionsAPI {
 	private TournamentService tournamentService;
 
 	/*
-	 * ---------------- find all Competition by TournamentId
+	 * ---------------- find all Competition
 	 * ------------------------
 	 */
 	@GetMapping("")
@@ -100,7 +100,6 @@ public class CompetitionsAPI {
 
 	/*
 	 * ---------------- find all Competition by TournamentId
-	 * ------------------------
 	 */
 	@GetMapping("/getByTournamentId")
 	public ResponseEntity<Response> getAllCompetitonByTournamentId(

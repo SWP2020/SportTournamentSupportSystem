@@ -138,58 +138,58 @@ public class ResultsAPI {
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
 	
-	@GetMapping("/getByTeamId")
-	public ResponseEntity<Response> getByTeamId(@RequestParam(value = "teamId") Long teamId) {
-		System.out.println("ResultsAPI: getByTeamId: no exception");
-		HttpStatus httpStatus = HttpStatus.OK;
-		Response response = new Response();
-		Map<String, Object> config = new HashMap<String, Object>();
-		Map<String, Object> result = new HashMap<String, Object>();
-		Map<String, Object> error = new HashMap<String, Object>();
-		Collection<ResultEntity> resultEntites = new ArrayList<ResultEntity>();
-		List<ResultDTO> resultDTOs = new ArrayList<ResultDTO>();
-		try {
-
-			if (teamId == null) {// teamId null
-				result.put("Results", resultDTOs);
-				config.put("Global", 0);
-				error.put("MessageCode", 1);
-				error.put("Message", "Required param teamId");
-			} else {// teamId not null
-
-				resultEntites = service.findByTeamId(teamId);
-
-				if (resultEntites.isEmpty()) { // not found
-					result.put("Results", null);
-					config.put("Global", 0);
-					error.put("MessageCode", 1);
-					error.put("Message", "Not found");
-				} else { // found
-
-					for (ResultEntity entity : resultEntites) {
-						ResultDTO dto = converter.toDTO(entity);
-						resultDTOs.add(dto);
-					}
-
-					result.put("Results", resultDTOs);
-					config.put("Global", 0);
-					error.put("MessageCode", 0);
-					error.put("Message", "Found");
-				}
-			}
-			System.out.println("ResultsAPI: getByTeamId: no exception");
-		} catch (Exception e) {
-			System.out.println("ResultsAPI: getByTeamId: has exception");
-			result.put("Result", null);
-			config.put("Global", 0);
-			error.put("MessageCode", 1);
-			error.put("Message", "Server error");
-		}
-
-		response.setConfig(config);
-		response.setResult(result);
-		response.setError(error);
-		System.out.println("ResultsAPI: getByTeamId: finish");
-		return new ResponseEntity<Response>(response, httpStatus);
-	}
+//	@GetMapping("/getByTeamId")
+//	public ResponseEntity<Response> getByTeamId(@RequestParam(value = "teamId") Long teamId) {
+//		System.out.println("ResultsAPI: getByTeamId: no exception");
+//		HttpStatus httpStatus = HttpStatus.OK;
+//		Response response = new Response();
+//		Map<String, Object> config = new HashMap<String, Object>();
+//		Map<String, Object> result = new HashMap<String, Object>();
+//		Map<String, Object> error = new HashMap<String, Object>();
+//		Collection<ResultEntity> resultEntites = new ArrayList<ResultEntity>();
+//		List<ResultDTO> resultDTOs = new ArrayList<ResultDTO>();
+//		try {
+//
+//			if (teamId == null) {// teamId null
+//				result.put("Results", resultDTOs);
+//				config.put("Global", 0);
+//				error.put("MessageCode", 1);
+//				error.put("Message", "Required param teamId");
+//			} else {// teamId not null
+//
+//				resultEntites = service.findByTeamId(teamId);
+//
+//				if (resultEntites.isEmpty()) { // not found
+//					result.put("Results", null);
+//					config.put("Global", 0);
+//					error.put("MessageCode", 1);
+//					error.put("Message", "Not found");
+//				} else { // found
+//
+//					for (ResultEntity entity : resultEntites) {
+//						ResultDTO dto = converter.toDTO(entity);
+//						resultDTOs.add(dto);
+//					}
+//
+//					result.put("Results", resultDTOs);
+//					config.put("Global", 0);
+//					error.put("MessageCode", 0);
+//					error.put("Message", "Found");
+//				}
+//			}
+//			System.out.println("ResultsAPI: getByTeamId: no exception");
+//		} catch (Exception e) {
+//			System.out.println("ResultsAPI: getByTeamId: has exception");
+//			result.put("Result", null);
+//			config.put("Global", 0);
+//			error.put("MessageCode", 1);
+//			error.put("Message", "Server error");
+//		}
+//
+//		response.setConfig(config);
+//		response.setResult(result);
+//		response.setError(error);
+//		System.out.println("ResultsAPI: getByTeamId: finish");
+//		return new ResponseEntity<Response>(response, httpStatus);
+//	}
 }

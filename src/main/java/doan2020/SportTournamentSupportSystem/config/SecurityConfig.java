@@ -52,7 +52,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		// Disable crsf cho đường dẫn /rest/**
 		http.csrf().ignoringAntMatchers("/**");
 
-		http.authorizeRequests().antMatchers("/login**").permitAll();
+		http.authorizeRequests().antMatchers("/login/**").permitAll();
 		http.authorizeRequests().antMatchers(HttpMethod.POST, "/user**").permitAll();
 		
 

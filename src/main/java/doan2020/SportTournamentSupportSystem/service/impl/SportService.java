@@ -36,13 +36,8 @@ public class SportService implements ISportService {
 
 			updatedEntity.setFullName(newEntity.getFullName());
 			updatedEntity.setShortName(newEntity.getShortName());
-			updatedEntity.setScoringUnit(newEntity.getScoringUnit());
 			updatedEntity.setDescription(newEntity.getDescription());
-			updatedEntity.setCreatedBy(newEntity.getCreatedBy());
-			updatedEntity.setCreatedDate(newEntity.getCreatedDate());
-			updatedEntity.setModifiedBy(newEntity.getModifiedBy());
-			updatedEntity.setModifiedDate(newEntity.getModifiedDate());
-			updatedEntity.setStatus(newEntity.getStatus());
+			if (newEntity.getStatus() != null) {updatedEntity.setStatus(newEntity.getStatus());}
 			updatedEntity.setUrl(newEntity.getUrl());
 			updatedEntity = sportRepository.save(updatedEntity);
 		} catch (Exception e) {
@@ -57,8 +52,9 @@ public class SportService implements ISportService {
 		SportEntity deletedEntity = null;
 		try {
 			deletedEntity = sportRepository.findOneById(id);
-			deletedEntity.setStatus("deleted");
-			deletedEntity = sportRepository.save(deletedEntity);
+			sportRepository.delete(deletedEntity);
+//			deletedEntity.setStatus("deleted");
+//			deletedEntity = sportRepository.save(deletedEntity);
 		} catch (Exception e) {
 			return null;
 		}
@@ -86,16 +82,4 @@ public class SportService implements ISportService {
 		}
 		return foundEntitys;
 	}
-
-	@Override
-	public Collection<SportEntity> findByScoringUnitId(Long scoringUnitId) {
-		Collection<SportEntity> foundEntitys = null;
-		try {
-			foundEntitys = sportRepository.findByScoringUnitId(scoringUnitId);
-		} catch (Exception e) {
-			return null;
-		}
-		return foundEntitys;
-	}
-
 }

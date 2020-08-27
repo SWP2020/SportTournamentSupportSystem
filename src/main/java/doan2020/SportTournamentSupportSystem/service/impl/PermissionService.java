@@ -35,11 +35,7 @@ public class PermissionService implements IPermissionService {
 			updatedEntity.setDescription(newEntity.getDescription());
 			updatedEntity.setCanEdit(newEntity.getCanEdit());
 			updatedEntity.setCanDelete(newEntity.getCanDelete());
-			updatedEntity.setCreatedBy(newEntity.getCreatedBy());
-			updatedEntity.setCreatedDate(newEntity.getCreatedDate());
-			updatedEntity.setModifiedBy(newEntity.getModifiedBy());
-			updatedEntity.setModifiedDate(newEntity.getModifiedDate());
-			updatedEntity.setStatus(newEntity.getStatus());
+			if (newEntity.getStatus() != null) {updatedEntity.setStatus(newEntity.getStatus());}
 			updatedEntity.setUrl(newEntity.getUrl());
 			updatedEntity = permissionRepository.save(updatedEntity);
 		} catch (Exception e) {
@@ -47,19 +43,6 @@ public class PermissionService implements IPermissionService {
 		}
         
 		return updatedEntity;
-	}
-
-	@Override
-	public PermissionEntity delete(Long id) {
-		PermissionEntity deletedEntity = null;
-		try {
-			deletedEntity = permissionRepository.findOneById(id);
-			deletedEntity.setStatus("deleted");
-			deletedEntity = permissionRepository.save(deletedEntity);
-		} catch (Exception e) {
-			return null;
-		}
-		return deletedEntity;
 	}
 
 	@Override

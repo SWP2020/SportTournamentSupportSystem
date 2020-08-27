@@ -1,15 +1,19 @@
 
 package doan2020.SportTournamentSupportSystem.service.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import doan2020.SportTournamentSupportSystem.config.Const;
 import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
 import doan2020.SportTournamentSupportSystem.entity.TeamEntity;
+import doan2020.SportTournamentSupportSystem.model.Entity.Player;
 import doan2020.SportTournamentSupportSystem.repository.TeamRepository;
+import doan2020.SportTournamentSupportSystem.service.IFileStorageService;
 import doan2020.SportTournamentSupportSystem.service.ITeamService;
 
 @Service
@@ -17,20 +21,32 @@ public class TeamService implements ITeamService {
 
 	@Autowired
 	private TeamRepository teamRepository;
+	
+	@Autowired
+	private IFileStorageService fileService;
 
 	@Override
 	public TeamEntity create(TeamEntity teamEntity) {
+		System.out.println("TeamService: create: start");
 		TeamEntity newEntity = null;
 		try {
-			Long competitionId = teamEntity.getCompetition().getId();
-			Long maxSeedNo = teamRepository.getMaxSeedNoByCompetitionId(competitionId);
-			if (maxSeedNo == null)
-				maxSeedNo = 0l;
-			teamEntity.setSeedNo(maxSeedNo + 1);
-			newEntity = teamRepository.save(teamEntity);
+			if (teamEntity.getStatus() == Const.TEAM_STATUS_PENDING) {
+				System.out.println("TeamService: create: TEAM_STATUS_PENDING");
+				newEntity = teamRepository.save(teamEntity);
+			} else if (teamEntity.getStatus() == Const.TEAM_STATUS_JOINED) {
+				System.out.println("TeamService: create: TEAM_STATUS_JOINED");
+				Long competitionId = teamEntity.getCompetition().getId();
+				Long maxSeedNo = getMaxSeedNoByCompetitionId(competitionId);
+				teamEntity.setSeedNo(maxSeedNo + 1l);
+				newEntity = teamRepository.save(teamEntity);
+				System.out.println("TeamService: create: no exception");
+			}
 		} catch (Exception e) {
-			return null;
+			System.out.println("TeamService: create: has exception");
+			System.out.println(e);
+			
 		}
+		System.out.println("TeamService: create: finish");
 		return newEntity;
 	}
 
@@ -45,11 +61,7 @@ public class TeamService implements ITeamService {
 			updatedEntity.setDescription(newEntity.getDescription());
 			updatedEntity.setCreator(newEntity.getCreator());
 			updatedEntity.setCompetition(newEntity.getCompetition());
-			updatedEntity.setCreatedBy(newEntity.getCreatedBy());
-			updatedEntity.setCreatedDate(newEntity.getCreatedDate());
-			updatedEntity.setModifiedBy(newEntity.getModifiedBy());
-			updatedEntity.setModifiedDate(newEntity.getModifiedDate());
-			updatedEntity.setStatus(newEntity.getStatus());
+			if (newEntity.getStatus() != null) {updatedEntity.setStatus(newEntity.getStatus());}
 			updatedEntity.setUrl(newEntity.getUrl());
 			updatedEntity = teamRepository.save(updatedEntity);
 		} catch (Exception e) {
@@ -64,8 +76,9 @@ public class TeamService implements ITeamService {
 		TeamEntity deletedEntity = null;
 		try {
 			deletedEntity = teamRepository.findOneById(id);
-			deletedEntity.setStatus("deleted");
-			deletedEntity = teamRepository.save(deletedEntity);
+			teamRepository.delete(deletedEntity);
+//			deletedEntity.setStatus("deleted");
+//			deletedEntity = teamRepository.save(deletedEntity);
 		} catch (Exception e) {
 			return null;
 		}
@@ -149,6 +162,89 @@ public class TeamService implements ITeamService {
 		}
 		
 		return teams;
+	}
+	
+	public String saveTeamPlayersToFile(TeamEntity team, Collection<Player> players) {
+
+		String absFolderPath = null;
+		String absFilePath = null;
+
+		try {
+			CompetitionEntity comp = team.getCompetition();
+
+			String folder = Const.COMPETITION_FILESYSTEM + Const.COMPETITION_FOLDER_NAMING + comp.getId();
+			absFolderPath = fileService.getFileStorageLocation(folder).toString();
+			String fileName = Const.COMPETITION_TEAM_PLAYERS_NAMING + team.getId()
+					+ Const.FILE_EXTENDED;
+			absFilePath = absFolderPath + "\\" + fileName;
+			absFilePath = fileService.saveObjectToFile(players, absFilePath);
+
+			System.out.println("TeamAPI: saveTeamConfig: absFileName: \n[" + absFilePath + "]");
+		} catch (Exception e) {
+		}
+
+		return absFilePath;
+	}
+
+	@SuppressWarnings("unchecked")
+	public Collection<Player> getTeamPlayerFromFile(Long competitionId, Long teamId) {
+
+		String absFolderPath = null;
+		String absFilePath = null;
+		ArrayList<Player> players = new ArrayList<>();
+
+		try {
+
+			String folder = Const.COMPETITION_FILESYSTEM + Const.COMPETITION_FOLDER_NAMING + competitionId;
+			absFolderPath = fileService.getFileStorageLocation(folder).toString();
+			String fileName = Const.COMPETITION_TEAM_PLAYERS_NAMING + teamId
+					+ Const.FILE_EXTENDED;
+			absFilePath = absFolderPath + "\\" + fileName;
+			players = (ArrayList<Player>) fileService.getObjectFromFile(absFilePath);
+
+		} catch (Exception e) {
+		}
+
+		return players;
+	}
+	
+	@Override
+	public Collection<TeamEntity> findByCompetitionIdAndStatus(Long competitionId, String status) {
+		Collection<TeamEntity> foundEntities = null;
+		try {
+			foundEntities = teamRepository.findByCompetitionIdAndStatus(competitionId, status);
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntities;
+	}
+	
+	@Override
+	public Long getMaxSeedNoByCompetitionId(Long competitionId) {
+		Long maxSeedNo = 0l;
+		try {
+			maxSeedNo = teamRepository.getMaxSeedNoByCompetitionId(competitionId);
+			if (maxSeedNo == null) {
+				return 0l;
+			}
+		} catch (Exception e) {
+		}
+		
+		return maxSeedNo;
+	}
+	
+	@Override
+	public Long countByCompetitionIdAndStatus(Long competitionId, String status) {
+		Long totalTeam = 0l;
+		try {
+			totalTeam = teamRepository.countByCompetitionIdAndStatus(competitionId, status);
+			if (totalTeam == null) {
+				return 0l;
+			}
+		} catch (Exception e) {
+		}
+		
+		return totalTeam;
 	}
 
 }

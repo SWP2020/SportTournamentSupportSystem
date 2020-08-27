@@ -17,8 +17,8 @@ public class ApiConverter {
 			entity.setDescription(dto.getDescription());
 			if (dto.getMethod() != null)
 				entity.setMethod(dto.getMethod());
-			entity.setStatus(dto.getStatus());
-			entity.setUrl(dto.getUrl());
+			
+			
 			System.out.println("ApiConverter: toEntity: no exception");
 		} catch (Exception e) {
 			System.out.println("ApiConverter: toEntity: has exception");

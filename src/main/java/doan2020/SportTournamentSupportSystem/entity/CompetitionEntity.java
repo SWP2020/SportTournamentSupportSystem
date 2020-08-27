@@ -1,65 +1,53 @@
 
 package doan2020.SportTournamentSupportSystem.entity;
 
+import java.util.Collection;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.EntityListeners;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import java.util.Date;
+import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import com.sun.istack.NotNull;
-import javax.persistence.GeneratedValue;
-import javax.persistence.ManyToOne;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.CascadeType;
-import java.util.Collection;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Table(name = "competitions")
-@EntityListeners(AuditingEntityListener.class)
 public class CompetitionEntity {
 
 	@Id
-	@NotNull
+	@Column(nullable = false)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@Column(nullable = false)
 	private String name;
 
+	@ColumnDefault("'Chưa có mô tả.'")
 	private String description;
+	
+	@ColumnDefault("0")
+	@Column(nullable = false)
+	private boolean hasGroupStage;
 
-	private boolean groupStage;
-
-	private String createdBy;
-
-	private Date createdDate;
-
-	private String modifiedBy;
-
-	private Date modifiedDate;
-
+	@ColumnDefault("'unknown'")
 	private String status;
 
-	private String url;
+	private String url = "/?";
 
 	@ManyToOne
-	@JoinColumn(name = "tournamentId")
+	@JoinColumn(name = "tournamentId", nullable = false)
 	private TournamentEntity tournament;
 
 	@ManyToOne
-	@JoinColumn(name = "sportId")
+	@JoinColumn(name = "sportId", nullable = false)
 	private SportEntity sport;
-
-	@ManyToOne
-	@JoinColumn(name = "mainFormatId")
-	private CompetitionFormatEntity mainFormat;
-
-	@ManyToOne
-	@JoinColumn(name = "groupStageFormatId")
-	private CompetitionFormatEntity groupStageFormat;
 
 	@OneToMany(mappedBy = "competition", cascade = CascadeType.ALL)
 	private Collection<MatchEntity> matches;
@@ -68,10 +56,10 @@ public class CompetitionEntity {
 	private Collection<TeamEntity> teams;
 
 	@OneToOne(mappedBy = "competition")
-	private CompetitionSettingEntity competition_setting;
+	private GroupStageSettingEntity groupStageSetting;
 
-	@OneToMany(mappedBy = "competition", cascade = CascadeType.ALL)
-	private Collection<RegisterFormEntity> register_forms;
+	@OneToOne(mappedBy = "competition")
+	private FinalStageSettingEntity finalStageSetting;
 
 	public Long getId() {
 		return id;
@@ -91,46 +79,6 @@ public class CompetitionEntity {
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	public boolean getGroupStage() {
-		return groupStage;
-	}
-
-	public void setGroupStage(boolean groupStage) {
-		this.groupStage = groupStage;
-	}
-
-	public String getCreatedBy() {
-		return createdBy;
-	}
-
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
-
-	public Date getCreatedDate() {
-		return createdDate;
-	}
-
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
-
-	public String getModifiedBy() {
-		return modifiedBy;
-	}
-
-	public void setModifiedBy(String modifiedBy) {
-		this.modifiedBy = modifiedBy;
-	}
-
-	public Date getModifiedDate() {
-		return modifiedDate;
-	}
-
-	public void setModifiedDate(Date modifiedDate) {
-		this.modifiedDate = modifiedDate;
 	}
 
 	public String getStatus() {
@@ -165,22 +113,6 @@ public class CompetitionEntity {
 		this.sport = sport;
 	}
 
-	public CompetitionFormatEntity getMainFormat() {
-		return mainFormat;
-	}
-
-	public void setMainFormat(CompetitionFormatEntity mainFormat) {
-		this.mainFormat = mainFormat;
-	}
-
-	public CompetitionFormatEntity getGroupStageFormat() {
-		return groupStageFormat;
-	}
-
-	public void setGroupStageFormat(CompetitionFormatEntity groupStageFormat) {
-		this.groupStageFormat = groupStageFormat;
-	}
-
 	public Collection<MatchEntity> getMatches() {
 		return matches;
 	}
@@ -197,20 +129,28 @@ public class CompetitionEntity {
 		this.teams = teams;
 	}
 
-	public CompetitionSettingEntity getCompetitionSetting() {
-		return competition_setting;
+	public GroupStageSettingEntity getGroupStageSetting() {
+		return groupStageSetting;
 	}
 
-	public void setCompetitionSetting(CompetitionSettingEntity competition_setting) {
-		this.competition_setting = competition_setting;
+	public void setGroupStageSetting(GroupStageSettingEntity groupStageSetting) {
+		this.groupStageSetting = groupStageSetting;
 	}
 
-	public Collection<RegisterFormEntity> getRegisterForms() {
-		return register_forms;
+	public FinalStageSettingEntity getFinalStageSetting() {
+		return finalStageSetting;
 	}
 
-	public void setRegisterForms(Collection<RegisterFormEntity> register_forms) {
-		this.register_forms = register_forms;
+	public void setFinalStageSetting(FinalStageSettingEntity finalStageSetting) {
+		this.finalStageSetting = finalStageSetting;
+	}
+
+	public boolean isHasGroupStage() {
+		return hasGroupStage;
+	}
+
+	public void setHasGroupStage(boolean hasGroupStage) {
+		this.hasGroupStage = hasGroupStage;
 	}
 
 }
