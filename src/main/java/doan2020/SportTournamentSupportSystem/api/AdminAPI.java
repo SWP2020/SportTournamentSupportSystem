@@ -263,6 +263,76 @@ public class AdminAPI {
 		System.out.println("AdminAPI: getBySearchString: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
+	
+	@GetMapping("/searchUserWithStatus")
+	public ResponseEntity<Response> searchUserWithStatus(
+			@RequestParam(value = "page", required = false) Integer page,
+			@RequestParam(value = "limit", required = false) Integer limit,
+			@RequestParam(value = "searchString") String searchString, @RequestParam(value = "status") String status) {
+		System.out.println("UsersAPI: searchUserWithStatus: start");
+		
+		HttpStatus httpStatus = HttpStatus.OK;
+		Response response = new Response();
+		Map<String, Object> config = new HashMap<String, Object>();
+		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> error = new HashMap<String, Object>();
+		
+		List<UserDTO> dtos = new ArrayList<UserDTO>();
+		List<UserEntity> entities = new ArrayList<UserEntity>();
+		
+		if (limit == null || limit <= 0)
+			limit = 10;
+		
+		if (page == null || page <= 0)
+			page = 1;
+		
+		if (searchString == null) {// searchString null
+			result.put("Users", dtos);
+			config.put("Global", 0);
+			error.put("MessageCode", 1);
+			error.put("Message", "Required param searchString");
+		} else {//searchString not null
+//			Sort sortable = Sort.by("id").ascending();
+			try {
+				Pageable pageable = PageRequest.of(page - 1, limit);
+				entities = (List<UserEntity>) userService.findBySearchStringAndStatus(pageable, searchString, status);
+				
+				Long totalPage = 0l;
+
+				Long totalEntity = userService.countBySearchStringAndStatus(searchString, status);
+
+				totalPage = totalEntity / limit;
+				if (totalEntity % limit != 0)
+					totalPage++;
+				
+				for (UserEntity entity: entities) {
+					UserDTO dto = userConverter.toDTO(entity);
+					dtos.add(dto);
+				}
+				
+				result.put("TotalPage", totalPage);
+				result.put("Users", dtos);
+				config.put("Global", 0);
+				error.put("MessageCode", 0);
+				error.put("Message", "Found");
+				System.out.println("UsersAPI: searchUserWithStatus: no exception");
+			} catch (Exception e) {
+				System.out.println("UsersAPI: searchUserWithStatus: has exception");
+				result.put("TotalPage", null);
+				result.put("Users", dtos);
+				config.put("Global", 0);
+				error.put("MessageCode", 0);
+				error.put("Message", "Server error");
+			}
+			
+		}
+
+		response.setConfig(config);
+		response.setResult(result);
+		response.setError(error);
+		System.out.println("UsersAPI: searchUserWithStatus: finish");
+		return new ResponseEntity<Response>(response, httpStatus);
+	}
 
 	@GetMapping("/viewTournament")
 	public ResponseEntity<Response> viewTournament(

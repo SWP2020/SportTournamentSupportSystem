@@ -252,5 +252,36 @@ public class UserService implements IUserService {
 
 		return entity;
 	}
+	
+	@Override
+	public Collection<UserEntity> findBySearchStringAndStatus(Pageable pageable, String searchString, String status) {
+		List<UserEntity> findUsers = null;
+		try {
+
+			findUsers = (List) userRepository.findBySearchStringAndStatus(searchString, status);
+
+			int start = (int) pageable.getOffset();
+			int end = (start + pageable.getPageSize()) > findUsers.size() ? findUsers.size()
+					: (start + pageable.getPageSize());
+			Page<UserEntity> pages = new PageImpl<UserEntity>(findUsers.subList(start, end), pageable,
+					findUsers.size());
+			findUsers = pages.getContent();
+
+		} catch (Exception e) {
+			return null;
+		}
+		return findUsers;
+	}
+	
+	@Override
+	public Long countBySearchStringAndStatus(String searchString, String status) {
+		List<UserEntity> findUsers = null;
+		try {
+			findUsers = (List<UserEntity>) userRepository.findBySearchStringAndStatus(searchString, status);
+		} catch (Exception e) {
+			return 0l;
+		}
+		return new Long(findUsers.size());
+	}
 
 }

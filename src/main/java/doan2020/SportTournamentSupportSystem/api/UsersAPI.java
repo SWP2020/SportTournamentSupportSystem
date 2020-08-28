@@ -185,7 +185,7 @@ public class UsersAPI {
 		List<UserEntity> entities = new ArrayList<UserEntity>();
 		
 		if (limit == null || limit <= 0)
-			limit = 3;
+			limit = 10;
 		
 		if (page == null || page <= 0)
 			page = 1;
@@ -237,4 +237,5 @@ public class UsersAPI {
 		System.out.println("UsersAPI: getBySearchString: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
+	
 }
