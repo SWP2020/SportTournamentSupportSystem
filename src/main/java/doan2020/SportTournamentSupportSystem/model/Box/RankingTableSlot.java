@@ -1,10 +1,10 @@
-package doan2020.SportTournamentSupportSystem.model.LogicBox;
+package doan2020.SportTournamentSupportSystem.model.Box;
 
 import java.io.Serializable;
 import java.util.Comparator;
 
 import doan2020.SportTournamentSupportSystem.model.Entity.Team;
-import doan2020.SportTournamentSupportSystem.model.Entity.BoxDescription;
+import doan2020.SportTournamentSupportSystem.model.Naming.BoxDescription;
 
 public class RankingTableSlot implements Serializable, Comparator<RankingTableSlot>{
 

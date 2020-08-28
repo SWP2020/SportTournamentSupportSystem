@@ -4,11 +4,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import doan2020.SportTournamentSupportSystem.entity.TeamEntity;
-import doan2020.SportTournamentSupportSystem.model.ContainerCollection.RankingTable;
-import doan2020.SportTournamentSupportSystem.model.ContainerCollection.SeedList;
+import doan2020.SportTournamentSupportSystem.model.BoxCollection.RankingTable;
+import doan2020.SportTournamentSupportSystem.model.BoxCollection.SeedList;
 import doan2020.SportTournamentSupportSystem.model.Entity.Match;
-import doan2020.SportTournamentSupportSystem.model.Entity.BoxDescription;
-import doan2020.SportTournamentSupportSystem.model.LogicBox.RankingTableSlot;
+import doan2020.SportTournamentSupportSystem.model.Naming.BoxDescription;
 
 abstract public class ScheduleStruct implements Serializable{
 	/**

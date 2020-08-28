@@ -1,14 +1,12 @@
-package doan2020.SportTournamentSupportSystem.model.ContainerCollection;
+package doan2020.SportTournamentSupportSystem.model.BoxCollection;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import org.springframework.context.annotation.Description;
-
 import doan2020.SportTournamentSupportSystem.entity.TeamEntity;
+import doan2020.SportTournamentSupportSystem.model.Box.Seed;
 import doan2020.SportTournamentSupportSystem.model.Entity.Team;
-import doan2020.SportTournamentSupportSystem.model.Entity.BoxDescription;
-import doan2020.SportTournamentSupportSystem.model.LogicBox.Seed;
+import doan2020.SportTournamentSupportSystem.model.Naming.BoxDescription;
 
 public class SeedList extends ArrayList<Seed> implements Serializable {
 
@@ -21,15 +19,11 @@ public class SeedList extends ArrayList<Seed> implements Serializable {
 	}
 
 	public SeedList(int totalTeam) {
-		System.out.println("HERE ========================================================= START: ");
 		for (int i = 1; i <= totalTeam; i++) {
 			Seed s = new Seed(i);
-			System.out.println(s.getDescription().getDescription());
 			this.add(s);
 		}
 		this.totalSeed = totalTeam;
-		System.out.println("HERE ========================================================= HERE: ");
-		System.out.println(this.toString());
 	}
 
 	public SeedList(int totalTeam, int firstSeed) {
@@ -87,6 +81,10 @@ public class SeedList extends ArrayList<Seed> implements Serializable {
 			s += "\n[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[" + seed.getDescription().getDescription();
 		}
 		return s;
+	}
+
+	public int getTotalSeed() {
+		return totalSeed;
 	}
 	
 	

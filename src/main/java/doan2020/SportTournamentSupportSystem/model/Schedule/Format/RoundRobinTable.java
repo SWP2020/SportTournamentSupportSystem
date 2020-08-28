@@ -5,9 +5,9 @@ import java.util.ArrayList;
 
 import doan2020.SportTournamentSupportSystem.config.Const;
 import doan2020.SportTournamentSupportSystem.model.Entity.Match;
-import doan2020.SportTournamentSupportSystem.model.Entity.BoxDescription;
-import doan2020.SportTournamentSupportSystem.model.LogicBox.MatchSlot;
+import doan2020.SportTournamentSupportSystem.model.Naming.BoxDescription;
 import doan2020.SportTournamentSupportSystem.model.Schedule.ScheduleStruct;
+import doan2020.SportTournamentSupportSystem.model.Box.MatchSlot;
 
 public class RoundRobinTable extends ScheduleStruct implements Serializable {
 
@@ -15,7 +15,7 @@ public class RoundRobinTable extends ScheduleStruct implements Serializable {
 
 	private Long id;
 	private String name = "RoundRobinTable";
-	private String matchNaming = Const.ROUND_ROBIN_MATCH_NAMING; 
+	private String matchNaming = Const.ROUND_ROBIN_MATCH_NAMING;
 
 	private int totalMatch;
 	private boolean homeMatch = false;
@@ -35,7 +35,7 @@ public class RoundRobinTable extends ScheduleStruct implements Serializable {
 		}
 		this.homeMatch = homeMatch;
 		this.totalTeam = totalTeam;
-		this.totalRound = totalTeam - ((totalTeam + 1) % 2);
+		this.totalRound = calTotalRound(totalTeam, homeMatch);
 		this.matches = this.createMatches(this.totalTeam, homeMatch);
 		this.setTotalMatch(this.matches.size());
 	}
@@ -45,7 +45,7 @@ public class RoundRobinTable extends ScheduleStruct implements Serializable {
 		this.id = -1l;
 		this.homeMatch = homeMatch;
 		this.totalTeam = totalTeam;
-		this.totalRound = totalTeam - ((totalTeam + 1) % 2);
+		this.totalRound = calTotalRound(totalTeam, homeMatch);
 		this.matches = this.createMatches(this.totalTeam, homeMatch);
 		this.setTotalMatch(this.matches.size());
 	}
@@ -55,13 +55,34 @@ public class RoundRobinTable extends ScheduleStruct implements Serializable {
 		this.id = -1l;
 		this.homeMatch = false;
 		this.totalTeam = totalTeam;
-		this.totalRound = totalTeam - ((totalTeam + 1) % 2);
+		this.totalRound = calTotalRound(totalTeam, false);
 		this.matches = this.createMatches(this.totalTeam, homeMatch);
 		this.setTotalMatch(this.matches.size());
 	}
 
 	private ArrayList<Match> createMatches(int totalTeam, boolean homeMatch) {
 		ArrayList<Match> matches = new ArrayList<>();
+
+		if (totalTeam < 1) {
+			return matches;
+		}
+
+		if (totalTeam == 1) {
+			Match info = new Match();
+			info.setMatchNo(1);
+			info.setName(this.matchNaming + info.getMatchNo());
+			info.setRoundNo(1);
+			info.setTeam1(new MatchSlot());
+			info.setTeam2(null);
+			info.setWinner(info.getTeam1());
+			info.setLoser(new MatchSlot());
+			info.setLocation(null);
+			info.setTime(null);
+			info.setStatus(-1);
+			info.getTeam1().setDescription(new BoxDescription((long) 1));
+			matches.add(info);
+			return matches;
+		}
 
 		if (homeMatch) {
 			matches.addAll(createMatches(totalTeam, false));
@@ -82,7 +103,7 @@ public class RoundRobinTable extends ScheduleStruct implements Serializable {
 				Match info = new Match();
 				info.setMatchNo(totalMatch);
 				info.setName(this.matchNaming + info.getMatchNo());
-				info.setRoundNo(round);
+				info.setRoundNo(homeMatch?this.totalRound / 2 + round:round);
 				info.setTeam1(new MatchSlot());
 				info.setTeam2(new MatchSlot());
 				info.setWinner(new MatchSlot());
@@ -99,6 +120,21 @@ public class RoundRobinTable extends ScheduleStruct implements Serializable {
 				}
 				matches.add(info);
 
+			} else {
+				totalMatch++;
+				Match info = new Match();
+				info.setMatchNo(totalMatch);
+				info.setName(this.matchNaming + info.getMatchNo());
+				info.setRoundNo(homeMatch?this.totalRound / 2 + round:round);
+				info.setTeam1(new MatchSlot());
+				info.setTeam2(null);
+				info.setWinner(info.getTeam1());
+				info.setLoser(new MatchSlot());
+				info.setLocation(null);
+				info.setTime(null);
+				info.setStatus(0);
+				info.getTeam1().setDescription(new BoxDescription((long) freeSeed));
+				matches.add(info);
 			}
 
 			for (int i = 1; i <= coupleTotal; i++) {
@@ -109,7 +145,7 @@ public class RoundRobinTable extends ScheduleStruct implements Serializable {
 				Match info = new Match();
 				info.setMatchNo(totalMatch);
 				info.setName(this.matchNaming + info.getMatchNo());
-				info.setRoundNo(round);
+				info.setRoundNo(homeMatch?this.totalRound / 2 + round:round);
 				info.setTeam1(new MatchSlot());
 				info.setTeam2(new MatchSlot());
 				info.setWinner(new MatchSlot());
@@ -146,14 +182,30 @@ public class RoundRobinTable extends ScheduleStruct implements Serializable {
 
 	@Override
 	protected void applyDescriptions() {
-		
-		for (Match match : this.matches) {
-			BoxDescription description1 = match.getTeam1().getDescription();
-			match.getTeam1().setDescription(this.seedList.get(description1.getUnitIndex() - 1).getDescription());
 
-			BoxDescription description2 = match.getTeam2().getDescription();
-			match.getTeam2().setDescription(this.seedList.get(description2.getUnitIndex() - 1).getDescription());
+		for (Match match : this.matches) {
+			if (match.getTeam1() != null) {
+				BoxDescription description1 = match.getTeam1().getDescription();
+				match.getTeam1().setDescription(this.seedList.get(description1.getUnitIndex() - 1).getDescription());
+			}
+			if (match.getTeam2() != null) {
+				BoxDescription description2 = match.getTeam2().getDescription();
+				match.getTeam2().setDescription(this.seedList.get(description2.getUnitIndex() - 1).getDescription());
+			}
 		}
+	}
+
+	protected int calTotalRound(int totalTeam, boolean hasHomeMatch) {
+		if (totalTeam < 1) {
+			return 0;
+		}
+		if (totalTeam == 1) {
+			return 1;
+		}
+		int totalRound = totalTeam - ((totalTeam + 1) % 2);
+		if (hasHomeMatch)
+			totalRound *= 2;
+		return totalRound;
 	}
 
 	public boolean isHomeMatch() {
