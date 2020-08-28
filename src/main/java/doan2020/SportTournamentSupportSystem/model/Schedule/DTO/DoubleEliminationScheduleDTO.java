@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import doan2020.SportTournamentSupportSystem.config.Const;
 import doan2020.SportTournamentSupportSystem.model.Entity.Match;
 import doan2020.SportTournamentSupportSystem.model.Struct.BTree;
+import doan2020.SportTournamentSupportSystem.model.Struct.DoubleBTree;
 
 public class DoubleEliminationScheduleDTO extends FinalStageScheduleDTO{
 
@@ -13,7 +14,7 @@ public class DoubleEliminationScheduleDTO extends FinalStageScheduleDTO{
 	protected int totalWinRound;
 	protected int totalLoseRound;
 	protected BTree<Match> winBranch;
-	protected BTree<Match> loseBranch;
+	protected DoubleBTree<Match> loseBranch;
 	protected Match summaryFinal;
 	protected Match optionFinal;
 	
@@ -27,10 +28,10 @@ public class DoubleEliminationScheduleDTO extends FinalStageScheduleDTO{
 	public void setWinBranch(BTree<Match> winBranch) {
 		this.winBranch = winBranch;
 	}
-	public BTree<Match> getLoseBranch() {
+	public DoubleBTree<Match> getLoseBranch() {
 		return loseBranch;
 	}
-	public void setLoseBranch(BTree<Match> loseBranch) {
+	public void setLoseBranch(DoubleBTree<Match> loseBranch) {
 		this.loseBranch = loseBranch;
 	}
 	public Match getSummaryFinal() {

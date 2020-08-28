@@ -59,6 +59,20 @@ public class RoundRobinTable extends ScheduleStruct implements Serializable {
 		this.matches = this.createMatches(this.totalTeam, homeMatch);
 		this.setTotalMatch(this.matches.size());
 	}
+	
+	public RoundRobinTable(Long id, ArrayList<Match> matches, int totalTeam, boolean homeMatch) {
+		super(totalTeam, id.intValue());
+		this.id = id;
+		if (id >= 0) {
+			this.matchNaming = Const.TABLE_NAMING.charAt(this.id.intValue()) + "-";
+			this.name = "Table " + Const.TABLE_NAMING.charAt(this.id.intValue());
+		}
+		this.homeMatch = homeMatch;
+		this.totalTeam = totalTeam;
+		this.totalRound = calTotalRound(totalTeam, homeMatch);
+		this.matches = matches;
+		this.setTotalMatch(this.matches.size());
+	}
 
 	private ArrayList<Match> createMatches(int totalTeam, boolean homeMatch) {
 		ArrayList<Match> matches = new ArrayList<>();

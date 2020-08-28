@@ -39,15 +39,13 @@ public class DoubleEliminationTree extends SingleEliminationTree implements Seri
 		this.bracket.setName("WinBranch");
 		
 		this.firstRoundTotalLoseMatch = this.calFirstRoundTotalLoseMatch(totalTeam);
-		System.out.println("======================================== FIRST ROUND TOTAL LOSE MATCH: " + this.firstRoundTotalLoseMatch);
 		this.firstRoundCurrentLoseMatch = 0;
 		this.totalLoseBranchRound = calTotalLoseBranchRound(this.totalTeam);
 		System.out.println("DoubleEliminationTree: Contructor: etc number OK");
 		
-		if (totalTeam > 2)
-			this.loseBranch = new DoubleBTree<Match>(this.buildLoseBranch(null, 1, this.totalTeam - 1, 1));
-		else 
-			this.loseBranch = new DoubleBTree<>();
+
+		this.loseBranch = new DoubleBTree<Match>(this.buildLoseBranch(null, 1, this.totalTeam - 1, 1));
+
 		this.loseBranch.setName("LoseBranch");
 		
 		System.out.println("DoubleEliminationTree: Contructor: loseTree OK");

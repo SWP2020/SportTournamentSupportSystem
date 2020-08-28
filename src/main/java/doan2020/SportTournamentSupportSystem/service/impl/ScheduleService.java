@@ -25,6 +25,7 @@ import doan2020.SportTournamentSupportSystem.model.Schedule.Format.RoundRobinTab
 import doan2020.SportTournamentSupportSystem.model.Schedule.Format.SingleEliminationTree;
 import doan2020.SportTournamentSupportSystem.service.ICompetitionService;
 import doan2020.SportTournamentSupportSystem.service.IFileStorageService;
+import doan2020.SportTournamentSupportSystem.service.IMatchService;
 import doan2020.SportTournamentSupportSystem.service.IScheduleService;
 import doan2020.SportTournamentSupportSystem.service.ITeamService;
 import doan2020.SportTournamentSupportSystem.validator.Validator;
@@ -40,9 +41,12 @@ public class ScheduleService implements IScheduleService {
 
 	@Autowired
 	private ITeamService teamService;
-	
+
 	@Autowired
 	private Validator validator;
+	
+	@Autowired
+	private IMatchService matchService;
 
 	@SuppressWarnings("unchecked")
 	public ScheduleDTO getSchedule(Long competitionId) {
@@ -86,11 +90,15 @@ public class ScheduleService implements IScheduleService {
 	public void saveScheduleToDatabase(Long competitionId) {
 		CompetitionEntity thisComp = competitionService.findOneById(competitionId);
 		ScheduleDTO schedule = getSchedule(competitionId);
-		FinalStageScheduleDTO finalStageSchedule = schedule.getFinalStageSchedule();
-		String finalStageFormat = finalStageSchedule.getFormatName();
-
-		if (thisComp.isHasGroupStage()) {
+		String finalStageFormat = schedule.getFinalStageSchedule().getFormatName();
+		ArrayList<TeamEntity> teams = new ArrayList<>();
+		
+		if (!schedule.isHasGroupStage()) {
+			teams.addAll(teamService.findByCompetitionIdAndStatus(competitionId, Const.TEAM_STATUS_JOINED));
+			
+		} else {
 			GroupStageScheduleDTO groupStageSchedule = schedule.getGroupStageSchedule();
+			String groupStageFormat = groupStageSchedule.getFormatName();
 			ArrayList<FinalStageScheduleDTO> tables = groupStageSchedule.getTables();
 			ArrayList<TeamEntity> realTeams = new ArrayList<>();
 
@@ -109,13 +117,31 @@ public class ScheduleService implements IScheduleService {
 					seed++;
 				}
 
-				for (Match match : table.getMatches()) {
-					MatchEntity realMatch = new MatchEntity();
-//					realMatch.set
-//					match.setId();
+				if (groupStageFormat.contains(Const.SINGLE_ELIMINATION_FORMAT)) {
+					saveFinalScheduleToDatabase((SingleEliminationScheduleDTO) table, tableTeams, thisComp);
+				}
+				if (groupStageFormat.contains(Const.DOUBLE_ELIMINATION_FORMAT)) {
+					saveFinalScheduleToDatabase((DoubleEliminationScheduleDTO) table, tableTeams, thisComp);
+				}
+				if (groupStageFormat.contains(Const.ROUND_ROBIN_FORMAT)) {
+					saveFinalScheduleToDatabase((RoundRobinScheduleDTO) table, tableTeams, thisComp);
 				}
 			}
-
+			
+			// 
+		}
+		
+		if (finalStageFormat.contains(Const.SINGLE_ELIMINATION_FORMAT)) {
+			SingleEliminationScheduleDTO finalStageSchedule = (SingleEliminationScheduleDTO) schedule.getFinalStageSchedule();
+			saveFinalScheduleToDatabase(finalStageSchedule, teams, thisComp);
+		}
+		if (finalStageFormat.contains(Const.DOUBLE_ELIMINATION_FORMAT)) {
+			DoubleEliminationScheduleDTO finalStageSchedule = (DoubleEliminationScheduleDTO) schedule.getFinalStageSchedule();
+			saveFinalScheduleToDatabase(finalStageSchedule, teams, thisComp);
+		}
+		if (finalStageFormat.contains(Const.ROUND_ROBIN_FORMAT)) {
+			RoundRobinScheduleDTO finalStageSchedule = (RoundRobinScheduleDTO) schedule.getFinalStageSchedule();
+			saveFinalScheduleToDatabase(finalStageSchedule, teams, thisComp);
 		}
 
 	}
@@ -129,21 +155,126 @@ public class ScheduleService implements IScheduleService {
 			realMatch.setName(match.getName());
 			realMatch.setLocation(match.getLocation());
 			realMatch.setTime(validator.formatStringToDate(match.getTime()));
-//			realmatch.setStatus
-			if (match.getTeam1() != null)
+			
+			if (match.getStatus() == -1) {
+				realMatch.setStatus("finished");
+			}
+			if (match.getStatus() == 0) {
+				realMatch.setStatus("ready");
+			}
+			if (match.getStatus() > 0) {
+				realMatch.setStatus("pending");
+			}
+			
+			try {
 				realMatch.setTeam1(teamService.findOneById(match.getTeam1().getTeam().getId()));
-			if (match.getTeam2() != null)
 				realMatch.setTeam2(teamService.findOneById(match.getTeam2().getTeam().getId()));
-//			match.setId();
+			} catch (Exception e) {
+			}
+			
+			realMatch = matchService.create(realMatch);
+			match.setId(realMatch.getId());
+		}
+		if (tree.getTotalTeam() >= 4) {
+			Match match = schedule.getMatch34();
+			MatchEntity realMatch = new MatchEntity();
+			realMatch.setCompetition(competition);;
+			realMatch.setName(match.getName());
+			realMatch.setLocation(match.getLocation());
+			realMatch.setTime(validator.formatStringToDate(match.getTime()));
+
+			realMatch.setStatus("pending");
+
+			realMatch = matchService.create(realMatch);
+			match.setId(realMatch.getId());
 		}
 	}
 
-	private void saveFinalScheduleToDatabase(DoubleEliminationScheduleDTO schedule) {
+	private void saveFinalScheduleToDatabase(DoubleEliminationScheduleDTO schedule, ArrayList<TeamEntity> teams, CompetitionEntity competition) {
+		DoubleEliminationTree tree = new DoubleEliminationTree(schedule.getWinBranch(), schedule.getLoseBranch(), schedule.getTotalTeam());
+		tree.applyTeams(teams);
+		for (Match match : tree.getMatches()) {
+			MatchEntity realMatch = new MatchEntity();
+			realMatch.setCompetition(competition);;
+			realMatch.setName(match.getName());
+			realMatch.setLocation(match.getLocation());
+			realMatch.setTime(validator.formatStringToDate(match.getTime()));
+			
+			if (match.getStatus() == -1) {
+				realMatch.setStatus("finished");
+			}
+			if (match.getStatus() == 0) {
+				realMatch.setStatus("ready");
+			}
+			if (match.getStatus() > 0) {
+				realMatch.setStatus("pending");
+			}
+			
+			try {
+				realMatch.setTeam1(teamService.findOneById(match.getTeam1().getTeam().getId()));
+				realMatch.setTeam2(teamService.findOneById(match.getTeam2().getTeam().getId()));
+			} catch (Exception e) {
+			}
+				
+			realMatch = matchService.create(realMatch);
+			match.setId(realMatch.getId());
+		}
+		if (tree.getTotalTeam() >= 3) {
+			Match finalMatch = tree.getSummaryFinal();
+			MatchEntity realFinalMatch = new MatchEntity();
+			realFinalMatch.setCompetition(competition);;
+			realFinalMatch.setName(finalMatch.getName());
+			realFinalMatch.setLocation(finalMatch.getLocation());
+			realFinalMatch.setTime(validator.formatStringToDate(finalMatch.getTime()));
 
+			realFinalMatch.setStatus("pending");
+
+			realFinalMatch = matchService.create(realFinalMatch);
+			finalMatch.setId(realFinalMatch.getId());
+			
+			Match optionMatch = tree.getSummaryFinal();
+			MatchEntity realOptionMatch = new MatchEntity();
+			realOptionMatch.setCompetition(competition);;
+			realOptionMatch.setName(optionMatch.getName());
+			realOptionMatch.setLocation(optionMatch.getLocation());
+			realOptionMatch.setTime(validator.formatStringToDate(optionMatch.getTime()));
+
+			realOptionMatch.setStatus("pending");
+
+			realOptionMatch = matchService.create(realOptionMatch);
+			optionMatch.setId(realOptionMatch.getId());
+		}
 	}
 
-	private void saveFinalScheduleToDatabase(RoundRobinScheduleDTO schedule) {
-
+	private void saveFinalScheduleToDatabase(RoundRobinScheduleDTO schedule, ArrayList<TeamEntity> teams, CompetitionEntity competition) {
+		RoundRobinTable table = new RoundRobinTable((long)schedule.getTableId(), schedule.getMatches(), schedule.getTotalTeam(), schedule.isHasHomeMatch());
+		table.applyTeams(teams);
+		for (Match match : table.getMatches()) {
+			MatchEntity realMatch = new MatchEntity();
+			realMatch.setCompetition(competition);;
+			realMatch.setName(match.getName());
+			realMatch.setLocation(match.getLocation());
+			realMatch.setTime(validator.formatStringToDate(match.getTime()));
+			
+			if (match.getStatus() == -1) {
+				realMatch.setStatus("finished");
+			}
+			if (match.getStatus() == 0) {
+				realMatch.setStatus("ready");
+			}
+			if (match.getStatus() > 0) {
+				realMatch.setStatus("pending");
+			}
+			
+			try {
+				realMatch.setTeam1(teamService.findOneById(match.getTeam1().getTeam().getId()));
+				realMatch.setTeam2(teamService.findOneById(match.getTeam2().getTeam().getId()));
+			} catch (Exception e) {
+			}
+				
+			realMatch = matchService.create(realMatch);
+			match.setId(realMatch.getId());
+		}
 	}
 
 	public FinalStageScheduleDTO finalStageScheduling(int totalTeam, String formatName, boolean hasHomeMatch,
