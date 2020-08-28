@@ -12,7 +12,7 @@ public class Validator {
 
 	public String formatDateToString(Date date) {
 		try {
-			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			String strDate = formatter.format(date);
 			return strDate;
 		} catch (Exception e) {
@@ -22,7 +22,12 @@ public class Validator {
 	
 	public Date formatStringToDate(String date) {
 		try {
-			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+			SimpleDateFormat formatter;
+			try{
+				formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			} catch (Exception e) {
+				formatter = new SimpleDateFormat("yyyy-MM-dd");
+			}
 			Date dateExpected = formatter.parse(date);
 			return dateExpected;
 		} catch (Exception e) {

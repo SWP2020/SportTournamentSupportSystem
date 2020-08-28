@@ -17,8 +17,6 @@ public class DoubleBTree<E> extends BTree<E> implements Serializable{
 	}
 
 
-
-
 	public Node<E> getByIdAndDegree(int index, int degree) {
 		
 		if (index < 1) {
@@ -50,10 +48,26 @@ public class DoubleBTree<E> extends BTree<E> implements Serializable{
 				return parent.getRight();
 			}
 		}
-		
-		
-		
-		
 	}
+
+	@Override
+	public String toString() {
+		return "{" + this.toString(this.root) + "}";
+	}
+	
+	public String toString(Node<E> node) {
+		if (node == null) {
+			return "null";
+		}
+		
+		String s = "id: " + node.getId() + ",\n";
+		s += "data: {" + node.getData().toString() + "},\n";
+		s += "left: {" + this.toString(node.getLeft()) + "}\n";
+		s += "right: {" + this.toString(node.getRight()) + "}\n";
+		
+		return s;
+	}
+	
+	
 
 }
