@@ -20,9 +20,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import doan2020.SportTournamentSupportSystem.config.Const;
+import doan2020.SportTournamentSupportSystem.converter.CompetitionConverter;
 import doan2020.SportTournamentSupportSystem.converter.PermissionConverter;
 import doan2020.SportTournamentSupportSystem.converter.SportConverter;
 import doan2020.SportTournamentSupportSystem.converter.TournamentConverter;
+import doan2020.SportTournamentSupportSystem.dto.CompetitionDTO;
 import doan2020.SportTournamentSupportSystem.dto.PermissionDTO;
 import doan2020.SportTournamentSupportSystem.dto.TournamentDTO;
 import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
@@ -33,7 +35,7 @@ import doan2020.SportTournamentSupportSystem.response.Response;
 import doan2020.SportTournamentSupportSystem.service.ICompetitionService;
 import doan2020.SportTournamentSupportSystem.service.IFileStorageService;
 import doan2020.SportTournamentSupportSystem.service.IPermissionService;
-import doan2020.SportTournamentSupportSystem.service.ISportService;
+import doan2020.SportTournamentSupportSystem.service.ITeamService;
 import doan2020.SportTournamentSupportSystem.service.ITournamentService;
 import doan2020.SportTournamentSupportSystem.service.impl.JwtService;
 import doan2020.SportTournamentSupportSystem.service.impl.ScheduleService;
@@ -53,10 +55,13 @@ public class TournamentAPI {
 	private SportConverter sportConverter;
 
 	@Autowired
-	private ISportService sportService;
+	private ITeamService teamService;
 
 	@Autowired
 	private ICompetitionService competitionService;
+
+	@Autowired
+	private CompetitionConverter competitionConverter;
 
 	@Autowired
 	private TournamentConverter converter;
@@ -69,7 +74,7 @@ public class TournamentAPI {
 
 	@Autowired
 	private PermissionConverter permissionConverter;
-	
+
 	private ScheduleService scheduleService;
 
 	@Autowired
@@ -348,8 +353,7 @@ public class TournamentAPI {
 		System.out.println("TournamentAPI: uploadBackground: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
-	
-	
+
 	@PostMapping("/start")
 	public ResponseEntity<Response> startTournament(@RequestParam Long id) {
 		System.out.println("TournamentAPI: startTournament: start");
@@ -358,10 +362,10 @@ public class TournamentAPI {
 		Map<String, Object> config = new HashMap<String, Object>();
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
-		
+
 		TournamentEntity thisTournament = new TournamentEntity();
 		TournamentDTO thisTournamentDTO = new TournamentDTO();
-		
+
 		try {
 			if (id == null) {// id null
 				result.put("Tournament", null);
@@ -369,7 +373,7 @@ public class TournamentAPI {
 				error.put("MessageCode", 1);
 				error.put("Message", "Required param id");
 			} else {// id not null
-				
+
 				thisTournament = service.findOneById(id);
 				if (thisTournament == null) {
 					result.put("Tournament", null);
@@ -377,23 +381,54 @@ public class TournamentAPI {
 					error.put("MessageCode", 1);
 					error.put("Message", "Tournament is not exist");
 				} else {
+					int code = 1;
+					String message = "Unknown error";
+					if (thisTournament.getStatus().contains(Const.TOURNAMENT_STATUS_REGISTRATION_OPENING)) {
+						message = "Close registration before start tournament";
+					}
+					if (thisTournament.getStatus().contains(Const.TOURNAMENT_STATUS_PROCESSING)) {
+						message = "Tournament is processing";
+					}
+					if (thisTournament.getStatus().contains(Const.TOURNAMENT_STATUS_FINISHED)) {
+						message = "Tournament has finished";
+					}
+					if (thisTournament.getStatus().contains(Const.TOURNAMENT_STATUS_STOPPED)) {
+						message = "Tournament is stopped by Admin";
+					}
+					if (thisTournament.getStatus().contains(Const.TOURNAMENT_STATUS_INITIALIZING)) {
+						thisTournament = service.updateStatus(thisTournament, Const.TOURNAMENT_STATUS_PROCESSING);
+						thisTournamentDTO = converter.toDTO(thisTournament);
 
-					thisTournament = service.updateStatus(thisTournament, Const.TOURNAMENT_STATUS_PROCESSING);
+						Collection<CompetitionEntity> comps = thisTournament.getCompetitions();
 
-					thisTournamentDTO = converter.toDTO(thisTournament);
-					
-					Collection<CompetitionEntity> comps = thisTournament.getCompetitions();
-					
-					for (CompetitionEntity comp: comps) {
-						competitionService.updateStatus(comp, Const.TOURNAMENT_STATUS_PROCESSING);
-						scheduleService.saveScheduleToDatabase(comp.getId());
+						message = "Start success";
+						code = 0;
+
+						ArrayList<CompetitionDTO> notReadyCompetitions = new ArrayList<>();
+
+						for (CompetitionEntity comp : comps) {
+							int totalTeam = teamService
+									.countByCompetitionIdAndStatus(comp.getId(), Const.TEAM_STATUS_JOINED).intValue();
+							if (totalTeam <= 0)
+								notReadyCompetitions.add(competitionConverter.toDTO(comp));
+						}
+
+						if (notReadyCompetitions.size() > 0) {
+							code = 1;
+							message = "All commpetitions need ready";
+							result.put("NotReadyCompetitions", notReadyCompetitions);
+						} else {
+							for (CompetitionEntity comp : comps)
+								scheduleService.saveScheduleToDatabase(comp.getId());
+						}
+
 					}
 					result.put("Tournament", thisTournamentDTO);
 					config.put("Global", 0);
-					error.put("MessageCode", 0);
-					error.put("Message", "Success");
+					error.put("MessageCode", code);
+					error.put("Message", message);
 				}
-				
+
 			}
 			System.out.println("TournamentAPI: startTournament: no exception");
 		} catch (Exception e) {
@@ -403,14 +438,14 @@ public class TournamentAPI {
 			error.put("MessageCode", 1);
 			error.put("Message", "Server error");
 		}
-		
+
 		response.setError(error);
 		response.setResult(result);
 		response.setConfig(config);
 		System.out.println("TournamentAPI: startTournament: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
-	
+
 	@PostMapping("/finish")
 	public ResponseEntity<Response> finishTournament(@RequestParam Long id) {
 		System.out.println("TournamentAPI: finishTournament: start");
@@ -419,10 +454,10 @@ public class TournamentAPI {
 		Map<String, Object> config = new HashMap<String, Object>();
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
-		
+
 		TournamentEntity thisTournament = new TournamentEntity();
 		TournamentDTO thisTournamentDTO = new TournamentDTO();
-		
+
 		try {
 			if (id == null) {// id null
 				result.put("Tournament", null);
@@ -430,7 +465,7 @@ public class TournamentAPI {
 				error.put("MessageCode", 1);
 				error.put("Message", "Required param id");
 			} else {// id not null
-				
+
 				thisTournament = service.findOneById(id);
 				if (thisTournament == null) {
 					result.put("Tournament", null);
@@ -442,22 +477,21 @@ public class TournamentAPI {
 					thisTournament = service.updateStatus(thisTournament, Const.TOURNAMENT_STATUS_FINISHED);
 
 					thisTournamentDTO = converter.toDTO(thisTournament);
-					
+
 					Collection<CompetitionEntity> comps = thisTournament.getCompetitions();
 					ArrayList<HashMap<String, Object>> tests = new ArrayList<>();
-					for (CompetitionEntity comp: comps) {
-						CompetitionEntity competitionEntity = competitionService.updateStatus(comp, Const.TOURNAMENT_STATUS_FINISHED);
-		
-						
+					for (CompetitionEntity comp : comps) {
+						CompetitionEntity competitionEntity = competitionService.updateStatus(comp,
+								Const.TOURNAMENT_STATUS_FINISHED);
+
 					}
 
-					
 					result.put("Tournament", thisTournamentDTO);
 					config.put("Global", 0);
 					error.put("MessageCode", 0);
 					error.put("Message", "Success");
 				}
-				
+
 			}
 			System.out.println("TournamentAPI: finishTournament: no exception");
 		} catch (Exception e) {
@@ -467,13 +501,12 @@ public class TournamentAPI {
 			error.put("MessageCode", 1);
 			error.put("Message", "Server error");
 		}
-		
+
 		response.setError(error);
 		response.setResult(result);
 		response.setConfig(config);
 		System.out.println("TournamentAPI: finishTournament: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
-	
-	
+
 }

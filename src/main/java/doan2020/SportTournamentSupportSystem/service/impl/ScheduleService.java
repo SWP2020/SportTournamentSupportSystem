@@ -157,13 +157,13 @@ public class ScheduleService implements IScheduleService {
 			realMatch.setTime(validator.formatStringToDate(match.getTime()));
 			
 			if (match.getStatus() == -1) {
-				realMatch.setStatus("finished");
+				realMatch.setStatus(Const.MATCH_STATUS_FINISHED);
 			}
 			if (match.getStatus() == 0) {
-				realMatch.setStatus("ready");
+				realMatch.setStatus(Const.MATCH_STATUS_READY);
 			}
 			if (match.getStatus() > 0) {
-				realMatch.setStatus("pending");
+				realMatch.setStatus(Const.MATCH_STATUS_PENDING);
 			}
 			
 			try {
@@ -183,7 +183,7 @@ public class ScheduleService implements IScheduleService {
 			realMatch.setLocation(match.getLocation());
 			realMatch.setTime(validator.formatStringToDate(match.getTime()));
 
-			realMatch.setStatus("pending");
+			realMatch.setStatus(Const.MATCH_STATUS_PENDING);
 
 			realMatch = matchService.create(realMatch);
 			match.setId(realMatch.getId());
@@ -201,13 +201,13 @@ public class ScheduleService implements IScheduleService {
 			realMatch.setTime(validator.formatStringToDate(match.getTime()));
 			
 			if (match.getStatus() == -1) {
-				realMatch.setStatus("finished");
+				realMatch.setStatus(Const.MATCH_STATUS_FINISHED);
 			}
 			if (match.getStatus() == 0) {
-				realMatch.setStatus("ready");
+				realMatch.setStatus(Const.MATCH_STATUS_READY);
 			}
 			if (match.getStatus() > 0) {
-				realMatch.setStatus("pending");
+				realMatch.setStatus(Const.MATCH_STATUS_PENDING);
 			}
 			
 			try {
@@ -227,7 +227,7 @@ public class ScheduleService implements IScheduleService {
 			realFinalMatch.setLocation(finalMatch.getLocation());
 			realFinalMatch.setTime(validator.formatStringToDate(finalMatch.getTime()));
 
-			realFinalMatch.setStatus("pending");
+			realFinalMatch.setStatus(Const.MATCH_STATUS_PENDING);
 
 			realFinalMatch = matchService.create(realFinalMatch);
 			finalMatch.setId(realFinalMatch.getId());
@@ -239,7 +239,7 @@ public class ScheduleService implements IScheduleService {
 			realOptionMatch.setLocation(optionMatch.getLocation());
 			realOptionMatch.setTime(validator.formatStringToDate(optionMatch.getTime()));
 
-			realOptionMatch.setStatus("pending");
+			realOptionMatch.setStatus(Const.MATCH_STATUS_PENDING);
 
 			realOptionMatch = matchService.create(realOptionMatch);
 			optionMatch.setId(realOptionMatch.getId());
@@ -257,13 +257,13 @@ public class ScheduleService implements IScheduleService {
 			realMatch.setTime(validator.formatStringToDate(match.getTime()));
 			
 			if (match.getStatus() == -1) {
-				realMatch.setStatus("finished");
+				realMatch.setStatus(Const.MATCH_STATUS_FINISHED);
 			}
 			if (match.getStatus() == 0) {
-				realMatch.setStatus("ready");
+				realMatch.setStatus(Const.MATCH_STATUS_READY);
 			}
 			if (match.getStatus() > 0) {
-				realMatch.setStatus("pending");
+				realMatch.setStatus(Const.MATCH_STATUS_PENDING);
 			}
 			
 			try {

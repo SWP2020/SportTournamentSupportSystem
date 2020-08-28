@@ -25,12 +25,17 @@ import doan2020.SportTournamentSupportSystem.converter.PermissionConverter;
 import doan2020.SportTournamentSupportSystem.dto.CompetitionDTO;
 import doan2020.SportTournamentSupportSystem.dto.PermissionDTO;
 import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
+import doan2020.SportTournamentSupportSystem.entity.FinalStageSettingEntity;
+import doan2020.SportTournamentSupportSystem.entity.GroupStageSettingEntity;
 import doan2020.SportTournamentSupportSystem.entity.PermissionEntity;
 import doan2020.SportTournamentSupportSystem.entity.UserEntity;
 import doan2020.SportTournamentSupportSystem.model.Ranks;
 import doan2020.SportTournamentSupportSystem.response.Response;
 import doan2020.SportTournamentSupportSystem.service.ICompetitionService;
+import doan2020.SportTournamentSupportSystem.service.IFinalStageSettingService;
+import doan2020.SportTournamentSupportSystem.service.IGroupStageSettingService;
 import doan2020.SportTournamentSupportSystem.service.IPermissionService;
+import doan2020.SportTournamentSupportSystem.service.ITeamService;
 import doan2020.SportTournamentSupportSystem.service.IUserService;
 import doan2020.SportTournamentSupportSystem.service.impl.JwtService;
 
@@ -41,18 +46,24 @@ public class CompetitionAPI {
 
 	@Autowired
 	private ICompetitionService competitionService;
-	
+
 	@Autowired
 	private CompetitionConverter competitionConverter;
-	
+
 	@Autowired
 	private IUserService userService;
-	
+
 	@Autowired
 	private IPermissionService permissionService;
-	
+
 	@Autowired
 	private PermissionConverter permissionConverter;
+
+	@Autowired
+	private IFinalStageSettingService fssService;
+
+	@Autowired
+	private IGroupStageSettingService gssService;
 
 	@Autowired
 	private JwtService jwtService;
@@ -261,17 +272,24 @@ public class CompetitionAPI {
 				error.put("MessageCode", 1);
 				error.put("Message", "Required Id");
 			} else {// id is exist
-				competitionEntity = competitionService.delete(id);
+				CompetitionEntity thisCompetitionEntity = competitionService.findOneById(id);
+				Long tournamentId = thisCompetitionEntity.getTournament().getId();
+				try {
+					FinalStageSettingEntity fsse = fssService.findByCompetitionId(id);
+					GroupStageSettingEntity gsse = gssService.findByCompetitionId(id);
 
-				CompetitionDTO deleteCompetition = competitionConverter.toDTO(competitionEntity);
-				result.put("Competition", deleteCompetition);
+					fssService.delete(fsse.getId());
+					gssService.delete(gsse.getId());
+				} catch (Exception e) {
+				}
+
+				competitionService.delete(id);
 				config.put("Global", 0);
 				error.put("MessageCode", 0);
-				error.put("Message", "Delete Competition successfull");
-				System.out.println("Competition API - deleteCompetition - cp2");
+				error.put("Message", "Delete success");
 			}
 
-			System.out.println("Competition API - deleteCompetition - has no exception");
+			System.out.println("Competition API - deleteCompetition - no exception");
 		} catch (Exception e) {
 			System.out.println("Competition API - deleteCompetition - has exception");
 			result.put("Competition", null);
@@ -285,10 +303,10 @@ public class CompetitionAPI {
 		System.out.println("Competition API - deleteCompetition - pass");
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
-	
+
 	@GetMapping("/rank")
-	public ResponseEntity<Response> getRanks(
-			@RequestHeader(value = Const.TOKEN_HEADER, required = false) String jwt, @RequestParam("id") Long id) {
+	public ResponseEntity<Response> getRanks(@RequestHeader(value = Const.TOKEN_HEADER, required = false) String jwt,
+			@RequestParam("id") Long id) {
 		System.out.println("Competition API - GetCompetiton - start");
 		System.out.println(id);
 		HttpStatus httpStatus = null;
@@ -317,7 +335,6 @@ public class CompetitionAPI {
 					error.put("MessageCode", 1);
 					error.put("Message", "Not found");
 				} else {// competition is exist
-
 
 					error.put("MessageCode", 0);
 					error.put("Message", "Found");

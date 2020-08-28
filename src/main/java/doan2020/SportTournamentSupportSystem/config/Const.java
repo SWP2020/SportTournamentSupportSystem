@@ -20,11 +20,8 @@ public final class Const {
 	public final static String TOKEN_HEADER = "Authorization";
 	
 	public final static String VIEWER = "viewer"; // Viewer
-	
 	public final static String MONITOR = "monitor";
-	
 	public final static String MANAGER = "manager";
-	
 	public final static String OWNER = "owner";
 	
 
@@ -105,5 +102,10 @@ public final class Const {
 	public static final String REPORT_VIOLATION = "violation"; // report tournament to admin
 	public static final String REPORT_FRAUD = "fraud"; // report fraud to tournament manager
 	public static final String REPORT_SYSTEM_ERROR = "syserror"; // report system error to admin
+	
+//	match status
+	public static final String MATCH_STATUS_PENDING = "pending";
+	public static final String MATCH_STATUS_READY = "ready";
+	public static final String MATCH_STATUS_FINISHED = "finished";
 	
 }
