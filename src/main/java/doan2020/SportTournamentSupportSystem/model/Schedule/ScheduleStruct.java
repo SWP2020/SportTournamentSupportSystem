@@ -42,6 +42,7 @@ abstract public class ScheduleStruct implements Serializable{
 			return;
 		}
 		this.seedList.applyTeams(teams);
+		this.rankingTable.applyTeams(teams);
 
 	}
 	
@@ -84,8 +85,8 @@ abstract public class ScheduleStruct implements Serializable{
 		return totalRound;
 	}
 
-	public ArrayList<Match> getMatches() {
-		return matches;
+	public ArrayList<Match> getMatches(){
+		return this.matches;
 	}
 
 	public int getTableId() {

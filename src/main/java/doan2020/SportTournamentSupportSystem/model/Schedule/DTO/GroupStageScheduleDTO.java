@@ -14,6 +14,7 @@ public class GroupStageScheduleDTO implements Serializable{
 	protected int advanceTeamPerTable;
 	protected int totalTable;
 	protected int totalTeamInFinalTable;
+	protected String status;
 	
 	ArrayList<FinalStageScheduleDTO> tables;
 
@@ -79,6 +80,14 @@ public class GroupStageScheduleDTO implements Serializable{
 
 	public void setTables(ArrayList<FinalStageScheduleDTO> tables) {
 		this.tables = tables;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 	
 	

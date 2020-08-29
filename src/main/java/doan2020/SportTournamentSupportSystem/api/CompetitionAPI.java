@@ -28,6 +28,7 @@ import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
 import doan2020.SportTournamentSupportSystem.entity.FinalStageSettingEntity;
 import doan2020.SportTournamentSupportSystem.entity.GroupStageSettingEntity;
 import doan2020.SportTournamentSupportSystem.entity.PermissionEntity;
+import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
 import doan2020.SportTournamentSupportSystem.entity.UserEntity;
 import doan2020.SportTournamentSupportSystem.model.Ranks;
 import doan2020.SportTournamentSupportSystem.response.Response;
@@ -171,13 +172,23 @@ public class CompetitionAPI {
 				error.put("Message", "create new Competition fail");
 			} else {// convert ok
 				System.out.println("Competition API - createCompetition - cp2");
-				competitionService.create(competitionEntity);
-				CompetitionDTO createCompetition = competitionConverter.toDTO(competitionEntity);
-				result.put("Competition", createCompetition);
-				config.put("Global", 0);
-				error.put("MessageCode", 0);
-				error.put("Message", "create new Competition successfull");
-				System.out.println("Competition API - createCompetition - cp3");
+
+				TournamentEntity tour = competitionEntity.getTournament();
+				if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_INITIALIZING)) {
+
+					competitionService.create(competitionEntity);
+					CompetitionDTO createCompetition = competitionConverter.toDTO(competitionEntity);
+					result.put("Competition", createCompetition);
+					config.put("Global", 0);
+					error.put("MessageCode", 0);
+					error.put("Message", "create new Competition successfull");
+					System.out.println("Competition API - createCompetition - cp3");
+				} else {
+					result.put("Competition", null);
+					config.put("Global", 0);
+					error.put("MessageCode", 1);
+					error.put("Message", "Tournament has started");
+				}
 			}
 			System.out.println("Competition API - createCompetition - no exception");
 		} catch (Exception e) {
@@ -227,13 +238,21 @@ public class CompetitionAPI {
 					error.put("Message", "edit new Competition fail");
 				} else {// convert ok
 					System.out.println("Competition API - editCompetition - cp3");
-					CompetitionEntity updateEntity = competitionService.update(id, competitionEntity);
-					CompetitionDTO updateCompetition = competitionConverter.toDTO(updateEntity);
-					result.put("Competition", updateCompetition);
-					config.put("Global", 0);
-					error.put("MessageCode", 0);
-					error.put("Message", "edit new Competition successfull");
-					System.out.println("Competition API - editCompetition - cp4");
+					TournamentEntity tour = competitionEntity.getTournament();
+					if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_INITIALIZING)) {
+						CompetitionEntity updateEntity = competitionService.update(id, competitionEntity);
+						CompetitionDTO updateCompetition = competitionConverter.toDTO(updateEntity);
+						result.put("Competition", updateCompetition);
+						config.put("Global", 0);
+						error.put("MessageCode", 0);
+						error.put("Message", "edit new Competition successfull");
+						System.out.println("Competition API - editCompetition - cp4");
+					} else {
+						result.put("Competition", null);
+						config.put("Global", 0);
+						error.put("MessageCode", 1);
+						error.put("Message", "Tournament has started");
+					}
 				}
 			}
 			System.out.println("Competition API - editCompetition - no exception");
@@ -272,21 +291,29 @@ public class CompetitionAPI {
 				error.put("MessageCode", 1);
 				error.put("Message", "Required Id");
 			} else {// id is exist
+
 				CompetitionEntity thisCompetitionEntity = competitionService.findOneById(id);
-				Long tournamentId = thisCompetitionEntity.getTournament().getId();
-				try {
-					FinalStageSettingEntity fsse = fssService.findByCompetitionId(id);
-					GroupStageSettingEntity gsse = gssService.findByCompetitionId(id);
+				TournamentEntity tour = thisCompetitionEntity.getTournament();
+				if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_INITIALIZING)) {
+					try {
+						FinalStageSettingEntity fsse = fssService.findByCompetitionId(id);
+						GroupStageSettingEntity gsse = gssService.findByCompetitionId(id);
 
-					fssService.delete(fsse.getId());
-					gssService.delete(gsse.getId());
-				} catch (Exception e) {
+						fssService.delete(fsse.getId());
+						gssService.delete(gsse.getId());
+					} catch (Exception e) {
+					}
+
+					competitionService.delete(id);
+					config.put("Global", 0);
+					error.put("MessageCode", 0);
+					error.put("Message", "Delete success");
+				} else {
+					result.put("Competition", null);
+					config.put("Global", 0);
+					error.put("MessageCode", 1);
+					error.put("Message", "Tournament has started");
 				}
-
-				competitionService.delete(id);
-				config.put("Global", 0);
-				error.put("MessageCode", 0);
-				error.put("Message", "Delete success");
 			}
 
 			System.out.println("Competition API - deleteCompetition - no exception");

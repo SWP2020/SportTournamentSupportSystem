@@ -13,6 +13,8 @@ public interface IScheduleService {
 	public ScheduleDTO getSchedule(Long competitionId);
 
 	public String saveSchedule(ScheduleDTO schedule, Long competitionId);
+	
+	public void createMatchesInDatabase(Long competitionId);
 
 	public FinalStageScheduleDTO finalStageScheduling(int totalTeam, String formatName, boolean hasHomeMatch,
 			int tableId, ArrayList<BoxDescription> descriptions, int firstSeed);

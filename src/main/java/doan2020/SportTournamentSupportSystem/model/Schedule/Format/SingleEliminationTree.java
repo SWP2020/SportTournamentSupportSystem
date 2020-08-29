@@ -1,5 +1,7 @@
 package doan2020.SportTournamentSupportSystem.model.Schedule.Format;
 
+import java.util.ArrayList;
+
 import doan2020.SportTournamentSupportSystem.config.Const;
 import doan2020.SportTournamentSupportSystem.model.Box.MatchSlot;
 import doan2020.SportTournamentSupportSystem.model.BoxCollection.SeedList;
@@ -319,7 +321,11 @@ public class SingleEliminationTree extends ScheduleStruct {
 	@Override
 	protected void applyDescriptions() {
 		applyDescriptionsDownTree(this.getBracket().getRoot());
-
+	}
+	
+	
+	public ArrayList<Match> finishMatchById(Long matchId){
+		return null;
 	}
 
 	// ----------- support logic code

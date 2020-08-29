@@ -105,7 +105,12 @@ public final class Const {
 	
 //	match status
 	public static final String MATCH_STATUS_PENDING = "pending";
-	public static final String MATCH_STATUS_READY = "ready";
+	public static final String MATCH_STATUS_UNKNOWN = "unknown";
+	public static final String MATCH_STATUS_PLAYING = "playing";
 	public static final String MATCH_STATUS_FINISHED = "finished";
 	
+//	Stage status
+	public static final String STAGE_INITIALIZING = "initializing";
+	public static final String STAGE_PROCESSING = "processing";
+	public static final String STAGE_FINISHED = "finished";
 }

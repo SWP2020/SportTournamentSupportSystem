@@ -45,8 +45,6 @@ public class SeedList extends ArrayList<Seed> implements Serializable {
 			t.setFullName(teams.get(seedNo).getFullName());
 			t.setTotalLose(0);
 			t.setTotalWin(0);
-			t.setDifference(0.0);
-			t.setScore(0);
 			seed.setTeam(t);
 			seedNo++;
 		}

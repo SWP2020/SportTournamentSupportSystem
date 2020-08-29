@@ -19,6 +19,7 @@ import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
 import doan2020.SportTournamentSupportSystem.entity.FinalStageSettingEntity;
 import doan2020.SportTournamentSupportSystem.entity.FormatEntity;
 import doan2020.SportTournamentSupportSystem.entity.GroupStageSettingEntity;
+import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
 import doan2020.SportTournamentSupportSystem.model.BoxCollection.RankingTable;
 import doan2020.SportTournamentSupportSystem.model.Naming.BoxDescription;
 import doan2020.SportTournamentSupportSystem.model.Schedule.DTO.FinalStageScheduleDTO;
@@ -71,20 +72,37 @@ public class ScheduleAPI {
 					System.out.println("ScheduleAPI: getScheduleByCompetitionId: try to get schedule");
 					schedule = scheduleService.getSchedule(competitionId);
 					// Check for changes in team numbers
-					int dbTeamNumber = thisCompetition.getTeams().size();
-					int cfTeamNumber = (int) schedule.getTotalTeam();
+					int dbTeamNumber = teamService
+							.countByCompetitionIdAndStatus(competitionId, Const.TEAM_STATUS_JOINED).intValue();
+					int cfTeamNumber = schedule.getTotalTeam();
 
-//					if (dbTeamNumber != cfTeamNumber)
+					boolean checkTeamNumber = (dbTeamNumber == cfTeamNumber);
+
+					String dbFinalStageFormat = thisCompetition.getFinalStageSetting().getFormat().getName();
+					String cfFinalStageFormat = schedule.getFinalStageSchedule().getFormatName();
+
+					boolean checkFinalStageFormat = (dbFinalStageFormat.contains(cfFinalStageFormat));
+					boolean checkGroupStageFormat = true;
+					if (thisCompetition.isHasGroupStage()) {
+						String dbGroupStageFormat = thisCompetition.getGroupStageSetting().getFormat().getName();
+						String cfGroupStageFormat = schedule.getGroupStageSchedule().getFormatName();
+						checkGroupStageFormat = (dbGroupStageFormat.contains(cfGroupStageFormat));
+					}
+
+					if (checkFinalStageFormat && checkGroupStageFormat && checkTeamNumber) {
+						result.put("Schedule", schedule);
+						config.put("Global", 0);
+						error.put("MessageCode", 0);
+						error.put("Message", "Successful");
+					} else {
 						return schedulingByCompetitionId(competitionId);
+					}
 				} catch (Exception e) {
 					System.out.println("ScheduleAPI: getScheduleByCompetition: schedule not yet created");
 					return schedulingByCompetitionId(competitionId);
 				}
 
-//				result.put("Schedule", schedule);
-//				config.put("Global", 0);
-//				error.put("MessageCode", 0);
-//				error.put("Message", "Successful");
+//				
 
 			}
 			System.out.println("ScheduleAPI: getScheduleByCompetitionId: no exception");
@@ -112,130 +130,140 @@ public class ScheduleAPI {
 		Map<String, Object> config = new HashMap<String, Object>();
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
-		
+
 		ScheduleDTO schedule = new ScheduleDTO();
 		GroupStageScheduleDTO groupStageSchedule = new GroupStageScheduleDTO();
 		FinalStageScheduleDTO finalStageSchedule;
 
-
 		try {
 			CompetitionEntity thisCompetition = competitionService.findOneById(competitionId);
 
-			if (thisCompetition == null) {
-				result.put("Schedule", null);
-				config.put("Global", 0);
-				error.put("MessageCode", 1);
-				error.put("Message", "Competition not found");
-			} else {
+			TournamentEntity tour = thisCompetition.getTournament();
+			if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_INITIALIZING)) {
 
-				int totalTeamBeforeGroupStage;
-				int totalTeamAfterGroupStage;
-
-				FormatEntity finalFormat;
-				FormatEntity groupFormat;
-
-				ArrayList<BoxDescription> descriptions = new ArrayList<>();
-
-				totalTeamBeforeGroupStage = teamService
-						.countByCompetitionIdAndStatus(competitionId, Const.TEAM_STATUS_JOINED).intValue();
-
-				System.out.println("ScheduleAPI: createFinalStageScheduleByCompetitionId: totalTeamBeforeGroupStage: "
-						+ totalTeamBeforeGroupStage);
-
-				boolean hasGroupStage = thisCompetition.isHasGroupStage();
-				FinalStageSettingEntity finalStageSetting = thisCompetition.getFinalStageSetting();
-
-				if (finalStageSetting == null) {
+				if (thisCompetition == null) {
 					result.put("Schedule", null);
 					config.put("Global", 0);
 					error.put("MessageCode", 1);
-					error.put("Message", "Missing final stage setting");
+					error.put("Message", "Competition not found");
 				} else {
 
-					// group
-					if (hasGroupStage) {
+					int totalTeamBeforeGroupStage;
+					int totalTeamAfterGroupStage;
 
-						GroupStageSettingEntity groupStageSetting = thisCompetition.getGroupStageSetting();
-						groupFormat = groupStageSetting.getFormat();
-						boolean hasHomeMatch = groupStageSetting.isHasHomeMatch();
-						int maxTeamPerTable = groupStageSetting.getMaxTeamPerTable();
-						int advanceTeamPerTable = groupStageSetting.getAdvanceTeamPerTable();
-						int totalTable = (int) (totalTeamBeforeGroupStage / maxTeamPerTable);
+					FormatEntity finalFormat;
+					FormatEntity groupFormat;
 
-						int totalTeamInFinalTable;
+					ArrayList<BoxDescription> descriptions = new ArrayList<>();
 
-						if (totalTable != 0) {
-							totalTeamInFinalTable = totalTeamBeforeGroupStage % totalTable;
-						} else {
-							totalTeamInFinalTable = totalTeamBeforeGroupStage;
-						}
-
-						if (totalTeamInFinalTable == 0) {
-							totalTeamInFinalTable = maxTeamPerTable;
-						} else {
-							totalTable++;
-						}
-
-						System.out.println("ScheduleAPI: createFinalStageScheduleByCompetitionId: maxTeamPerTable: "
-								+ maxTeamPerTable);
-						System.out.println(
-								"ScheduleAPI: createFinalStageScheduleByCompetitionId: totalTable: " + totalTable);
-
-						// schedule for group stage
-						String formatName = groupFormat.getName();
-						groupStageSchedule = scheduleService.groupStageScheduling(totalTeamBeforeGroupStage, formatName,
-								hasHomeMatch, maxTeamPerTable, advanceTeamPerTable, totalTable, totalTeamInFinalTable);
-						System.out.println("ScheduleAPI: createFinalStageScheduleByCompetitionId: CP6 ");
-						totalTeamAfterGroupStage = (totalTable - 1) * advanceTeamPerTable
-								+ (int) Math.min(totalTeamInFinalTable, advanceTeamPerTable);
-
-						// create descriptions
-						ArrayList<RankingTable> rankingTables = new ArrayList<>();
-
-						ArrayList<FinalStageScheduleDTO> tables = groupStageSchedule.getTables();
-						for (FinalStageScheduleDTO tb : tables) {
-							RankingTable rankingTable = tb.getRankingTable();
-							rankingTables.add(rankingTable);
-						}
-
-						for (int i = 0; i < advanceTeamPerTable; i++) {
-							for (RankingTable tb : rankingTables) {
-								if (tb.size() > i) {
-									descriptions.add(tb.get(i).getDescription());
-								}
-							}
-						}
-
-					} else {
-
-						totalTeamAfterGroupStage = totalTeamBeforeGroupStage;
-					}
+					totalTeamBeforeGroupStage = teamService
+							.countByCompetitionIdAndStatus(competitionId, Const.TEAM_STATUS_JOINED).intValue();
 
 					System.out
-							.println("ScheduleAPI: createFinalStageScheduleByCompetitionId: totalTeamAfterGroupStage: "
-									+ totalTeamAfterGroupStage);
+							.println("ScheduleAPI: createFinalStageScheduleByCompetitionId: totalTeamBeforeGroupStage: "
+									+ totalTeamBeforeGroupStage);
 
-					// final
+					boolean hasGroupStage = thisCompetition.isHasGroupStage();
+					FinalStageSettingEntity finalStageSetting = thisCompetition.getFinalStageSetting();
 
-					finalFormat = finalStageSetting.getFormat();
-					boolean hasHomeMatch = finalStageSetting.isHasHomeMatch();
-					String formatName = finalFormat.getName();
-					finalStageSchedule = scheduleService.finalStageScheduling(totalTeamAfterGroupStage, formatName,
-							hasHomeMatch, -1, descriptions, 1);
+					if (finalStageSetting == null) {
+						result.put("Schedule", null);
+						config.put("Global", 0);
+						error.put("MessageCode", 1);
+						error.put("Message", "Missing final stage setting");
+					} else {
 
-					schedule.setTotalTeam(totalTeamBeforeGroupStage);
-					schedule.setHasGroupStage(hasGroupStage);
-					schedule.setFinalStageSchedule(finalStageSchedule);
-					schedule.setGroupStageSchedule(groupStageSchedule);
+						// group
+						if (hasGroupStage) {
 
-					result.put("Schedule", schedule);
-					config.put("Global", 0);
-					error.put("MessageCode", 0);
-					error.put("Message", "Success");
+							GroupStageSettingEntity groupStageSetting = thisCompetition.getGroupStageSetting();
+							groupFormat = groupStageSetting.getFormat();
+							boolean hasHomeMatch = groupStageSetting.isHasHomeMatch();
+							int maxTeamPerTable = groupStageSetting.getMaxTeamPerTable();
+							int advanceTeamPerTable = groupStageSetting.getAdvanceTeamPerTable();
+							int totalTable = (int) (totalTeamBeforeGroupStage / maxTeamPerTable);
 
-					// save file
-					scheduleService.saveSchedule(schedule, competitionId);
+							int totalTeamInFinalTable;
+
+							if (totalTable != 0) {
+								totalTeamInFinalTable = totalTeamBeforeGroupStage % totalTable;
+							} else {
+								totalTeamInFinalTable = totalTeamBeforeGroupStage;
+							}
+
+							if (totalTeamInFinalTable == 0) {
+								totalTeamInFinalTable = maxTeamPerTable;
+							} else {
+								totalTable++;
+							}
+
+							System.out.println("ScheduleAPI: createFinalStageScheduleByCompetitionId: maxTeamPerTable: "
+									+ maxTeamPerTable);
+							System.out.println(
+									"ScheduleAPI: createFinalStageScheduleByCompetitionId: totalTable: " + totalTable);
+
+							// schedule for group stage
+							String formatName = groupFormat.getName();
+							groupStageSchedule = scheduleService.groupStageScheduling(totalTeamBeforeGroupStage,
+									formatName, hasHomeMatch, maxTeamPerTable, advanceTeamPerTable, totalTable,
+									totalTeamInFinalTable);
+							System.out.println("ScheduleAPI: createFinalStageScheduleByCompetitionId: CP6 ");
+							totalTeamAfterGroupStage = (totalTable - 1) * advanceTeamPerTable
+									+ (int) Math.min(totalTeamInFinalTable, advanceTeamPerTable);
+
+							// create descriptions
+							ArrayList<RankingTable> rankingTables = new ArrayList<>();
+
+							ArrayList<FinalStageScheduleDTO> tables = groupStageSchedule.getTables();
+							for (FinalStageScheduleDTO tb : tables) {
+								RankingTable rankingTable = tb.getRankingTable();
+								rankingTables.add(rankingTable);
+							}
+
+							for (int i = 0; i < advanceTeamPerTable; i++) {
+								for (RankingTable tb : rankingTables) {
+									if (tb.size() > i) {
+										descriptions.add(tb.get(i).getDescription());
+									}
+								}
+							}
+
+						} else {
+
+							totalTeamAfterGroupStage = totalTeamBeforeGroupStage;
+						}
+
+						System.out.println(
+								"ScheduleAPI: createFinalStageScheduleByCompetitionId: totalTeamAfterGroupStage: "
+										+ totalTeamAfterGroupStage);
+
+						// final
+
+						finalFormat = finalStageSetting.getFormat();
+						boolean hasHomeMatch = finalStageSetting.isHasHomeMatch();
+						String formatName = finalFormat.getName();
+						finalStageSchedule = scheduleService.finalStageScheduling(totalTeamAfterGroupStage, formatName,
+								hasHomeMatch, -1, descriptions, 1);
+
+						schedule.setTotalTeam(totalTeamBeforeGroupStage);
+						schedule.setHasGroupStage(hasGroupStage);
+						schedule.setFinalStageSchedule(finalStageSchedule);
+						schedule.setGroupStageSchedule(groupStageSchedule);
+
+						result.put("Schedule", schedule);
+						config.put("Global", 0);
+						error.put("MessageCode", 0);
+						error.put("Message", "Success");
+
+						// save file
+						scheduleService.saveSchedule(schedule, competitionId);
+					}
 				}
+			} else {
+				result.put("Competition", null);
+				config.put("Global", 0);
+				error.put("MessageCode", 1);
+				error.put("Message", "Tournament has started");
 			}
 			System.out.println("ScheduleAPI: createFinalStageScheduleByCompetitionId: no exception");
 		} catch (Exception e) {

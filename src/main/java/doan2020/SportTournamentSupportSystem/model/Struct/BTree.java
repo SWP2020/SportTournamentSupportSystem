@@ -127,7 +127,7 @@ public class BTree<E> implements Serializable{
 	}
 	
 	
-	protected ArrayList<E> toArrayList(Node<E> node){
+	private ArrayList<E> toArrayList(Node<E> node){
 		ArrayList<E> list = new ArrayList<>();
 		
 		if (node == null)

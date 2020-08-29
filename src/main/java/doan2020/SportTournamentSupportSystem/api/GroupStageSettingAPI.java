@@ -15,10 +15,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import doan2020.SportTournamentSupportSystem.config.Const;
 import doan2020.SportTournamentSupportSystem.converter.GroupStageSettingConverter;
 import doan2020.SportTournamentSupportSystem.dto.GroupStageSettingDTO;
 import doan2020.SportTournamentSupportSystem.dto.GroupStageSettingDTO;
 import doan2020.SportTournamentSupportSystem.entity.GroupStageSettingEntity;
+import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
 import doan2020.SportTournamentSupportSystem.entity.GroupStageSettingEntity;
 import doan2020.SportTournamentSupportSystem.response.Response;
 import doan2020.SportTournamentSupportSystem.service.IGroupStageSettingService;
@@ -27,16 +29,16 @@ import doan2020.SportTournamentSupportSystem.service.IGroupStageSettingService;
 @CrossOrigin
 @RequestMapping("/groupStageSetting")
 public class GroupStageSettingAPI {
-	
+
 	@Autowired
 	private GroupStageSettingConverter converter;
-	
+
 	@Autowired
 	private IGroupStageSettingService service;
-	
-	
+
 	@GetMapping("/getByCompetitionId")
-	public ResponseEntity<Response> getGroupStageSetting(@RequestParam(value = "competitionId", required = false) Long competitionId) {
+	public ResponseEntity<Response> getGroupStageSetting(
+			@RequestParam(value = "competitionId", required = false) Long competitionId) {
 		System.out.println("GroupStageSettingAPI: getGroupStageSetting: no exception");
 		HttpStatus httpStatus = HttpStatus.OK;
 		Response response = new Response();
@@ -52,22 +54,23 @@ public class GroupStageSettingAPI {
 				error.put("MessageCode", 1);
 				error.put("Message", "Required param competitionId");
 			} else { // id not null
-				
+
 				groupStageSettingEntity = service.findByCompetitionId(competitionId);
-				
+
 				if (groupStageSettingEntity == null) { // not found
 					result.put("GroupStageSetting", null);
 					config.put("Global", 0);
 					error.put("MessageCode", 1);
 					error.put("Message", "Not found");
 				} else { // found
-					
+
 					groupStageSettingDTO = converter.toDTO(groupStageSettingEntity);
-					
+
 					result.put("GroupStageSetting", groupStageSettingDTO);
 					config.put("Global", 0);
 					error.put("MessageCode", 0);
 					error.put("Message", "Found");
+
 				}
 			}
 			System.out.println("GroupStageSettingAPI: getGroupStageSetting: no exception");
@@ -85,7 +88,7 @@ public class GroupStageSettingAPI {
 		System.out.println("GroupStageSettingAPI: getGroupStageSetting: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
-	
+
 	@PostMapping
 	public ResponseEntity<Response> createGroupStageSetting(@RequestBody GroupStageSettingDTO newGroupStageSetting) {
 		System.out.println("GroupStageSettingAPI: createGroupStageSetting: start");
@@ -95,18 +98,26 @@ public class GroupStageSettingAPI {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
 		GroupStageSettingEntity groupStageSettingEntity = new GroupStageSettingEntity();
-		
+
 		try {
 			groupStageSettingEntity = converter.toEntity(newGroupStageSetting);
-			groupStageSettingEntity = service.create(groupStageSettingEntity);
-			
-			GroupStageSettingDTO dto = converter.toDTO(groupStageSettingEntity);
+			TournamentEntity tour = groupStageSettingEntity.getCompetition().getTournament();
+			if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_INITIALIZING)) {
+				groupStageSettingEntity = service.create(groupStageSettingEntity);
 
-			result.put("GroupStageSetting", dto);
-			config.put("Global", 0);
-			error.put("MessageCode", 0);
-			error.put("Message", "GroupStageSetting create successfuly");
-			System.out.println("GroupStageSettingAPI: createGroupStageSetting: no exception");
+				GroupStageSettingDTO dto = converter.toDTO(groupStageSettingEntity);
+
+				result.put("GroupStageSetting", dto);
+				config.put("Global", 0);
+				error.put("MessageCode", 0);
+				error.put("Message", "GroupStageSetting create successfuly");
+				System.out.println("GroupStageSettingAPI: createGroupStageSetting: no exception");
+			} else {
+				result.put("Competition", null);
+				config.put("Global", 0);
+				error.put("MessageCode", 1);
+				error.put("Message", "Tournament has started");
+			}
 		} catch (Exception e) {
 			System.out.println("GroupStageSettingAPI: createGroupStageSetting: has exception");
 			result.put("GroupStageSetting", null);
@@ -122,35 +133,38 @@ public class GroupStageSettingAPI {
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
 
-
 	@PutMapping
-	public ResponseEntity<Response> editGroupStageSetting(
-			@RequestBody GroupStageSettingDTO groupStageSetting,
+	public ResponseEntity<Response> editGroupStageSetting(@RequestBody GroupStageSettingDTO groupStageSetting,
 			@RequestParam Long id) {
 		System.out.println("GroupStageSettingAPI: editGroupStageSetting: start");
-		
+
 		HttpStatus httpStatus = HttpStatus.OK;
 		Response response = new Response();
 		Map<String, Object> config = new HashMap<String, Object>();
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
 		GroupStageSettingEntity groupStageSettingEntity = new GroupStageSettingEntity();
-		
+
 		try {
 			groupStageSettingEntity = converter.toEntity(groupStageSetting);
-			System.out.println("GroupStageSettingAPI: editGroupStageSetting: groupStageSetting: " + groupStageSetting.isHasHomeMatch());
+			TournamentEntity tour = groupStageSettingEntity.getCompetition().getTournament();
+			if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_INITIALIZING)) {
+				groupStageSettingEntity = service.update(id, groupStageSettingEntity);
 
-			System.out.println("GroupStageSettingAPI: editGroupStageSetting: groupStageSettingEntity: " + groupStageSettingEntity.isHasHomeMatch());
-			groupStageSettingEntity = service.update(id, groupStageSettingEntity);
-			System.out.println("GroupStageSettingAPI: editGroupStageSetting: groupStageSettingEntity: " + groupStageSettingEntity.isHasHomeMatch());
-			
-			GroupStageSettingDTO dto = converter.toDTO(groupStageSettingEntity);
-			System.out.println("GroupStageSettingAPI: editGroupStageSetting: dto: " + dto.isHasHomeMatch());
-			result.put("GroupStageSetting", dto);
-			config.put("Global", 0);
-			error.put("MessageCode", 0);
-			error.put("Message", "GroupStageSetting update successfuly");
-			System.out.println("GroupStageSettingAPI: editGroupStageSetting: no exception");
+				GroupStageSettingDTO dto = converter.toDTO(groupStageSettingEntity);
+				System.out.println("GroupStageSettingAPI: editGroupStageSetting: dto: " + dto.isHasHomeMatch());
+				result.put("GroupStageSetting", dto);
+				config.put("Global", 0);
+				error.put("MessageCode", 0);
+				error.put("Message", "GroupStageSetting update successfuly");
+
+				System.out.println("GroupStageSettingAPI: editGroupStageSetting: no exception");
+			} else {
+				result.put("Competition", null);
+				config.put("Global", 0);
+				error.put("MessageCode", 1);
+				error.put("Message", "Tournament has started");
+			}
 		} catch (Exception e) {
 			System.out.println("GroupStageSettingAPI: editGroupStageSetting: has exception");
 			result.put("GroupStageSetting", null);
@@ -165,5 +179,5 @@ public class GroupStageSettingAPI {
 		System.out.println("GroupStageSettingAPI: editGroupStageSetting: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
-	
+
 }

@@ -18,6 +18,7 @@ abstract public class FinalStageScheduleDTO implements Serializable {
 	protected int firstSeed;
 	protected RankingTable rankingTable;
 	protected ArrayList<Match> matches;
+	protected String status;
 	
 	protected ArrayList<String> roundsNaming;
 
@@ -90,6 +91,14 @@ abstract public class FinalStageScheduleDTO implements Serializable {
 			setRoundsNaming();
 		}
 		return roundsNaming;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 	public abstract void setRoundsNaming();

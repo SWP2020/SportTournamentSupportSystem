@@ -1,6 +1,7 @@
 package doan2020.SportTournamentSupportSystem.model.Schedule.Format;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import doan2020.SportTournamentSupportSystem.config.Const;
 import doan2020.SportTournamentSupportSystem.model.Box.MatchSlot;
@@ -315,6 +316,7 @@ public class DoubleEliminationTree extends SingleEliminationTree implements Seri
 	protected void setOptionFinal() {
 		this.optionFinal = new Match();
 		this.optionFinal.setMatchNo(2);
+		this.optionFinal.setRoundNo(2);
 		this.optionFinal.setName(Const.SUMMARY_FINAL + 2);
 
 		MatchSlot winner = new MatchSlot();
@@ -330,7 +332,7 @@ public class DoubleEliminationTree extends SingleEliminationTree implements Seri
 		this.optionFinal.setTeam2(this.getSummaryFinal().getLoser());
 
 		
-		this.optionFinal.setRoundNo(2);
+		
 	}
 	
 	public Match getSummaryFinal() {
@@ -441,6 +443,7 @@ public class DoubleEliminationTree extends SingleEliminationTree implements Seri
 		return matchNo;
 
 	}
+	
 
 
 	
