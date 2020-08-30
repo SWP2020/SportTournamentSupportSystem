@@ -13,6 +13,6 @@ public interface IScheduleService {
 	
 	public void createMatchesInDatabase(CompetitionEntity competition);
 	
-	public ScheduleDTO updateMatchWinner(MatchEntity match, Long winnerId);
+	public ScheduleDTO finishMatch(MatchEntity match);
 
 }

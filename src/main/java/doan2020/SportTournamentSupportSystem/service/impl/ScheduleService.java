@@ -16,6 +16,7 @@ import doan2020.SportTournamentSupportSystem.entity.TeamEntity;
 import doan2020.SportTournamentSupportSystem.model.BoxCollection.RankingTable;
 import doan2020.SportTournamentSupportSystem.model.Entity.Match;
 import doan2020.SportTournamentSupportSystem.model.Naming.BoxDescription;
+import doan2020.SportTournamentSupportSystem.model.Schedule.RevertMapping;
 import doan2020.SportTournamentSupportSystem.model.Schedule.DTO.DoubleEliminationScheduleDTO;
 import doan2020.SportTournamentSupportSystem.model.Schedule.DTO.FinalStageScheduleDTO;
 import doan2020.SportTournamentSupportSystem.model.Schedule.DTO.GroupStageScheduleDTO;
@@ -58,8 +59,8 @@ public class ScheduleService implements IScheduleService {
 		try {
 			schedule = getScheduleFromFile(competitionId);
 			// Check for changes in team numbers
-			int dbTeamNumber = teamService
-					.countByCompetitionIdAndStatus(competitionId, Const.TEAM_STATUS_JOINED).intValue();
+			int dbTeamNumber = teamService.countByCompetitionIdAndStatus(competitionId, Const.TEAM_STATUS_JOINED)
+					.intValue();
 			int cfTeamNumber = schedule.getTotalTeam();
 
 			boolean checkTeamNumber = (dbTeamNumber == cfTeamNumber);
@@ -230,14 +231,24 @@ public class ScheduleService implements IScheduleService {
 			} catch (Exception e) {
 			}
 
+			int nodeId = tree.getBracket().findNodeByData(match).getId();
+
 			realMatch = matchService.create(realMatch);
 			match.setId(realMatch.getId());
+
+			RevertMapping map = new RevertMapping();
+			map.setRealMatchId(match.getId());
+			map.setLocation(0);
+			map.setScheduleType(1);
+			map.setTableId(schedule.getTableId());
+			map.setNodeId(nodeId);
+			schedule.getMapping().put(match.getId(), map);
 		}
 		if (tree.getTotalTeam() >= 4) {
 			Match match = schedule.getMatch34();
 			MatchEntity realMatch = new MatchEntity();
 			realMatch.setCompetition(competition);
-			;
+
 			realMatch.setName(match.getName());
 			realMatch.setLocation(match.getLocation());
 			realMatch.setTime(validator.formatStringToDate(match.getTime()));
@@ -246,6 +257,13 @@ public class ScheduleService implements IScheduleService {
 
 			realMatch = matchService.create(realMatch);
 			match.setId(realMatch.getId());
+			RevertMapping map = new RevertMapping();
+			map.setRealMatchId(match.getId());
+			map.setLocation(3);
+			map.setScheduleType(1);
+			map.setTableId(schedule.getTableId());
+			map.setNodeId(-1);
+			schedule.getMapping().put(match.getId(), map);
 		}
 		schedule.setBracket(tree.getBracket());
 
@@ -283,8 +301,26 @@ public class ScheduleService implements IScheduleService {
 			} catch (Exception e) {
 			}
 
+			int nodeId;
+			RevertMapping map = new RevertMapping();
+
+			if (match.getName().contains(Const.LOSE_BRANCH_NAMING)) {
+				nodeId = tree.getLoseBranch().findNodeByData(match).getId();
+				map.setLocation(2);
+			} else {
+				nodeId = tree.getWinBranch().findNodeByData(match).getId();
+				map.setLocation(1);
+			}
+
 			realMatch = matchService.create(realMatch);
 			match.setId(realMatch.getId());
+
+			map.setRealMatchId(match.getId());
+
+			map.setScheduleType(2);
+			map.setTableId(schedule.getTableId());
+			map.setNodeId(nodeId);
+			schedule.getMapping().put(match.getId(), map);
 		}
 		if (tree.getTotalTeam() >= 3) {
 			Match finalMatch = tree.getSummaryFinal();
@@ -299,6 +335,14 @@ public class ScheduleService implements IScheduleService {
 
 			realFinalMatch = matchService.create(realFinalMatch);
 			finalMatch.setId(realFinalMatch.getId());
+			
+			RevertMapping map = new RevertMapping();
+			map.setRealMatchId(finalMatch.getId());
+			map.setLocation(4);
+			map.setScheduleType(2);
+			map.setTableId(schedule.getTableId());
+			map.setNodeId(-1);
+			schedule.getMapping().put(finalMatch.getId(), map);
 
 			Match optionMatch = tree.getOptionFinal();
 			MatchEntity realOptionMatch = new MatchEntity();
@@ -312,6 +356,14 @@ public class ScheduleService implements IScheduleService {
 
 			realOptionMatch = matchService.create(realOptionMatch);
 			optionMatch.setId(realOptionMatch.getId());
+			
+			RevertMapping map2 = new RevertMapping();
+			map2.setRealMatchId(optionMatch.getId());
+			map2.setLocation(5);
+			map2.setScheduleType(2);
+			map2.setTableId(schedule.getTableId());
+			map2.setNodeId(-1);
+			schedule.getMapping().put(optionMatch.getId(), map2);
 		}
 		schedule.setWinBranch(tree.getWinBranch());
 		schedule.setLoseBranch(tree.getLoseBranch());
@@ -351,6 +403,14 @@ public class ScheduleService implements IScheduleService {
 
 			realMatch = matchService.create(realMatch);
 			match.setId(realMatch.getId());
+			
+			RevertMapping map = new RevertMapping();
+			map.setRealMatchId(match.getId());
+			map.setLocation(0);
+			map.setScheduleType(3);
+			map.setTableId(schedule.getTableId());
+			map.setNodeId(match.getMatchNo());
+			schedule.getMapping().put(match.getId(), map);
 		}
 
 		schedule.setMatches(table.getMatches());
@@ -360,7 +420,8 @@ public class ScheduleService implements IScheduleService {
 	// ----------------------------------------------------------------------
 
 	/*
-	 * --------------------------------------------------------------------------------create
+	 * -----------------------------------------------------------------------------
+	 * ---create
 	 */
 	@Override
 	public ScheduleDTO createSchedule(CompetitionEntity thisCompetition) {
@@ -628,44 +689,24 @@ public class ScheduleService implements IScheduleService {
 		return dto;
 	}
 
-	
-	//--------------------
-	
+	// --------------------
+
 	/*
 	 * --------------------------------------------------------------------- update
 	 * result for a match after finished synchronize db and schedule
 	 */
-	public void finishMatch(MatchEntity realMatch) {
-		if (!realMatch.getStatus().contains(Const.MATCH_STATUS_FINISHED)) {
-			return;
-		}
-		CompetitionEntity thisCompetition = realMatch.getCompetition();
-		Long competitionId = thisCompetition.getId();
-
-		ScheduleDTO schedule = getSchedule(thisCompetition);
-		if (schedule.isHasGroupStage()
-				&& schedule.getGroupStageSchedule().getStatus().contains(Const.STAGE_PROCESSING)) {
-			GroupStageScheduleDTO gssDTO = schedule.getGroupStageSchedule();
-		} else {
-
-		}
-	}
 
 	@Override
-	public ScheduleDTO updateMatchWinner(MatchEntity match, Long winnerId) {
-		
+	public ScheduleDTO finishMatch(MatchEntity match) {
+
 		CompetitionEntity thisCompetition = match.getCompetition();
 		Long competitionId = thisCompetition.getId();
 		ScheduleDTO schedule = getScheduleFromFile(competitionId);
-		
-		match.setWinnner(teamService.findOneById(winnerId));
-		match = matchService.update(match.getId(), match);
-		
-		
-		
-		
+
+//		if ()
+
 		return schedule;
 	}
-	
+
 	// ----------------------------------------------------------------------
 }

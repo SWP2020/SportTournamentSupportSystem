@@ -57,12 +57,12 @@ public class ResultsAPI {
 			} else {// matchId not null
 
 				resultEntites = service.findByMatchId(matchId);
-				if (resultEntites.isEmpty()) { // not found
-					result.put("Results", null);
+				if (resultEntites == null) {
+					result.put("Results", resultDTOs);
 					config.put("Global", 0);
-					error.put("MessageCode", 1);
-					error.put("Message", "Not found");
-				} else { // found
+					error.put("MessageCode", 0);
+					error.put("Message", "Found");
+				} else {
 
 					for (ResultEntity entity : resultEntites) {
 						ResultDTO dto = converter.toDTO(entity);

@@ -216,9 +216,11 @@ public class TournamentAPI {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
 		TournamentEntity tournamentEntity = new TournamentEntity();
+		TournamentEntity newEntity = new TournamentEntity();
 
 		try {
-			tournamentEntity = converter.toEntity(tournament);
+			tournamentEntity = service.findOneById(id);
+			newEntity = converter.toEntity(tournament);
 			if (tournamentEntity == null) {
 				result.put("Tournament", null);
 				config.put("Global", 0);
@@ -241,9 +243,9 @@ public class TournamentAPI {
 
 				if (tournamentEntity.getStatus().contains(Const.TOURNAMENT_STATUS_INITIALIZING)) {
 
-					tournamentEntity = service.update(id, tournamentEntity);
+					newEntity = service.update(id, newEntity);
 
-					TournamentDTO dto = converter.toDTO(tournamentEntity);
+					TournamentDTO dto = converter.toDTO(newEntity);
 
 					message = Const.RESPONSE_SUCCESS;
 					result.put("Tournament", dto);

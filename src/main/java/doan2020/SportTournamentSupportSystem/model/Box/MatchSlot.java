@@ -14,6 +14,7 @@ public class MatchSlot implements Serializable{
 	
 	private Team team;
 	private Integer score = 0;
+	private Double difference = 0.0;
 	private BoxDescription description;
 	
 	
@@ -34,6 +35,12 @@ public class MatchSlot implements Serializable{
 	}
 	public void setScore(Integer score) {
 		this.score = score;
+	}
+	public Double getDifference() {
+		return difference;
+	}
+	public void setDifference(Double difference) {
+		this.difference = difference;
 	}
 	
 	
