@@ -16,8 +16,8 @@ public class FormatConverter {
 				entity.setName(dto.getName());
 
 			entity.setDescription(dto.getDescription());
-			entity.setStatus(dto.getStatus());
-			entity.setUrl(dto.getUrl());
+			
+			
 			System.out.println("CompetitionFormatConverter: toEntity: no exception");
 		}catch (Exception e) {
 			System.out.println("CompetitionFormatConverter: toEntity: has exception");

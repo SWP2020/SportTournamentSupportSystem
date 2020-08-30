@@ -47,8 +47,8 @@ public class TournamentConverter{
 			entity.setOpeningTime(closingTime);
 			
 			entity.setDonor(dto.getDonor());
-			entity.setStatus(dto.getStatus());
-			entity.setUrl(dto.getUrl());
+			
+			
 			entity.setAvatar(dto.getAvatar());
 			entity.setBackground(dto.getBackground());
 			Date closeRegistrationTime = validator.formatStringToDate(dto.getClosingTime());

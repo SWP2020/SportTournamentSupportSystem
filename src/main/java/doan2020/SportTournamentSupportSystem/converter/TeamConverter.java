@@ -41,11 +41,11 @@ public class TeamConverter{
 				UserEntity creator = userService.findOneById(creatorId);
 				entity.setCreator(creator);
 			}
+			if (dto.getSeedNo() != null)
+				entity.setSeedNo(dto.getSeedNo());
 			
-			entity.setSeedNo(dto.getSeedNo());
 			
-			entity.setStatus(dto.getStatus());
-			entity.setUrl(dto.getUrl());
+			
 			System.out.println("TeamConverter: toEntity: no exception");
 		}catch (Exception e) {
 			System.out.println("TeamConverter: toEntity: has exception");
@@ -56,7 +56,7 @@ public class TeamConverter{
 	}
 
 	public TeamDTO toDTO(TeamEntity entity){
-		System.out.println("TeamConverter: toDTO: finish");
+		System.out.println("TeamConverter: toDTO: start");
 		TeamDTO dto = new TeamDTO();
 		try {
 			dto.setId(entity.getId());
@@ -64,13 +64,19 @@ public class TeamConverter{
 			dto.setShortName(entity.getShortName());
 			dto.setDescription(entity.getDescription());
 			
+			System.out.println("TeamConverter: toDTO: name OK");
+			
 			UserEntity creator = entity.getCreator();
 			Long creatorId = creator.getId();
 			dto.setCreatorId(creatorId);
 			
+			System.out.println("TeamConverter: toDTO: creator OK");
+			
 			CompetitionEntity competition = entity.getCompetition();
 			Long competitionId = competition.getId();
 			dto.setCompetitionId(competitionId);
+			
+			System.out.println("TeamConverter: toDTO: competition OK");
 			
 			dto.setSeedNo(entity.getSeedNo());
 			

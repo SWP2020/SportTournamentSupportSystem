@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import BracketBoard from 'components/BracketBoard';
 import './styles.css';
 
 interface IHomeProps extends React.ClassAttributes<Home> {

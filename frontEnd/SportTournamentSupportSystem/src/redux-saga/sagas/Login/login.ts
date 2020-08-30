@@ -1,5 +1,4 @@
 import { call, takeLatest, put } from 'redux-saga/effects';
-import * as dateFns from 'date-fns';
 import { cookies } from 'utils/cookies';
 import { query, METHOD } from 'utils/socketApi';
 import { IRequest, IParams, IBigRequest } from 'interfaces/common';
@@ -27,10 +26,10 @@ function* doLogin(request: IRequest<IBigRequest>) {
           type: request.response.success,
           payload: data.User,
         });
-        yield cookies.set(COOKIES_TYPE.AUTH_TOKEN, data);
+        yield cookies.set(COOKIES_TYPE.AUTH_TOKEN, data, { path: '/' });
         yield history.push("/");
       } else if (response.data.error.Message === 'User is not active') {
-        throw new Error('Tài khoản này chưa được kích hoạt, xin hãy vào email của bạn để kích hoạt tài khoản');
+        throw new Error('Tài khoản này chưa được kích hoạt, xin hãy vào email của bạn để kích hoạt tài khoản. Nếu không thể kích hoạt, bấm VÀO ĐÂY để gửi lại mã');
       } else {
         yield cookies.remove(COOKIES_TYPE.AUTH_TOKEN);
         yield put({

@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import ReduxBlockUi from 'react-block-ui/redux';
 import { Link } from 'react-router-dom';
+import 'react-block-ui/style.css';
 import TextInput from 'components/TextInput';
 import { IBigRequest } from 'interfaces/common';
 import { IState } from 'redux-saga/reducers';
@@ -98,42 +99,38 @@ class Login extends React.Component<ILoginProps, ILoginState> {
         block={LOGIN}
         unblock={[LOGIN_SUCCESS, LOGIN_FAILED]}
       >
-        <div className="Container-login">
-          <div className="Container-login-middle">
-            <h2>Đăng nhập</h2>
-            <p className="Long-introduction">Chào mừng! Vui lòng nhập thông tin đăng nhập của bạn hoặc đăng nhập bằng tài khoản mạng xã hội</p>
-            <p>Đăng nhập với</p>
-            <div className="Alternate-login-container">
-              <div className="Alternate-login-option1 Alternate-login-option"><p className="Alternate-login-option-text">FACEBOOK</p></div>
-              <div className="Alternate-login-option2 Alternate-login-option"><p className="Alternate-login-option-text">GOOGLE</p></div>
-            </div>
-            <p>Hoặc</p>
+        <div className="Container-login-container">
+          <div className="Container-login">
+            <div className="Container-login-middle">
+              <h2>Đăng nhập</h2>
+              <p className="Long-introduction">Chào mừng! Vui lòng nhập thông tin đăng nhập của bạn!</p>
 
-            <TextInput label={'Tên đăng nhập'} onChangeText={this.onChangeUserName} error={this.state.usernameError} errorContent={this.state.usernameErrorContent} onHandleSubmit={this.handleLogin} />
-            <TextInput label={'Mật khẩu'} type={'password'} onChangeText={this.onChangePassword} error={this.state.passwordError} errorContent={this.state.passwordErrorContent} onHandleSubmit={this.handleLogin} />
-            <div className="Login-option-container">
-              <div className="Login-option-container-item">
-                <label className="Checkbox-label">
-                  <input
-                    type="checkbox"
-                    checked={this.state.rememberMe}
-                    onChange={() => this.onChangeRememberMe}
-                  />
+              <TextInput label={'Tên đăng nhập'} onChangeText={this.onChangeUserName} error={this.state.usernameError} errorContent={this.state.usernameErrorContent} onHandleSubmit={this.handleLogin} />
+              <TextInput label={'Mật khẩu'} type={'password'} onChangeText={this.onChangePassword} error={this.state.passwordError} errorContent={this.state.passwordErrorContent} onHandleSubmit={this.handleLogin} />
+              <div className="Login-option-container">
+                <div className="Login-option-container-item">
+                  <label className="Checkbox-label">
+                    <input
+                      type="checkbox"
+                      checked={this.state.rememberMe}
+                      onChange={() => this.onChangeRememberMe}
+                    />
             Nhớ tài khoản trên thiết bị này
           </label>
+                </div>
+                <div className="Login-option-container-item Login-option-container-item1">
+                  <Link to={'/forgotPassword'} style={{ textDecoration: 'none' }}>
+                    <p className="Forgot-password2">Quên mật khẩu</p>
+                  </Link>
+                </div>
               </div>
-              <div className="Login-option-container-item Login-option-container-item1">
-                <Link to={'/forgotPassword'}>
-                  <p className="Forgot-password">Quên mật khẩu</p>
-                </Link>
+              <div className="Button-login-container">
+                <div className="Button-login" onClick={this.handleLogin}>
+                  <h4 className="Button-login-text">Đăng nhập</h4>
+                </div>
               </div>
-            </div>
-            <div className="Button-login-container">
-              <div className="Button-login" onClick={this.handleLogin}>
-                <h4 className="Button-login-text">Đăng nhập</h4>
-              </div>
-            </div>
 
+            </div>
           </div>
         </div>
       </ReduxBlockUi>

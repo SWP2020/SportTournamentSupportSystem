@@ -26,6 +26,7 @@ import doan2020.SportTournamentSupportSystem.dto.TeamDTO;
 import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
 import doan2020.SportTournamentSupportSystem.entity.PermissionEntity;
 import doan2020.SportTournamentSupportSystem.entity.TeamEntity;
+import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
 import doan2020.SportTournamentSupportSystem.entity.UserEntity;
 import doan2020.SportTournamentSupportSystem.model.Entity.Player;
 import doan2020.SportTournamentSupportSystem.response.Response;
@@ -34,6 +35,7 @@ import doan2020.SportTournamentSupportSystem.service.IPermissionService;
 import doan2020.SportTournamentSupportSystem.service.ITeamService;
 import doan2020.SportTournamentSupportSystem.service.IUserService;
 import doan2020.SportTournamentSupportSystem.service.impl.JwtService;
+import doan2020.SportTournamentSupportSystem.service.impl.TeamService;
 
 @RestController
 @CrossOrigin
@@ -93,11 +95,12 @@ public class TeamAPI {
 					error.put("MessageCode", 1);
 					error.put("Message", "Team is not exist");
 				} else {// competition is exist
-					
+
 					dto = converter.toDTO(teamEntity);
-					ArrayList<Player> players = (ArrayList<Player>) service.getTeamPlayerFromFile(teamEntity.getCompetition().getId(), id);
+					ArrayList<Player> players = (ArrayList<Player>) service
+							.getTeamPlayerFromFile(teamEntity.getCompetition().getId(), id);
 					dto.setPlayers(players);
-					
+
 					Long curentUserId = -1l;
 
 					try {
@@ -117,7 +120,7 @@ public class TeamAPI {
 
 						permissionDTO = permissionConverter.toDTO(permissionEntity);
 					}
-					
+
 					result.put("Team", dto);
 					config.put("Global", permissionDTO);
 					error.put("MessageCode", 0);
@@ -146,8 +149,7 @@ public class TeamAPI {
 	 */
 	@PostMapping()
 	@CrossOrigin
-	public ResponseEntity<Response> createTeam(
-			@RequestBody TeamDTO dto) {
+	public ResponseEntity<Response> createTeam(@RequestBody TeamDTO dto) {
 		System.out.println("Team API - createTeam - start");
 		HttpStatus httpStatus = null;
 		httpStatus = HttpStatus.OK;
@@ -161,6 +163,10 @@ public class TeamAPI {
 
 		try {
 			teamEntity = converter.toEntity(dto);
+
+			System.out.println("Team API: createTeam: CP1");
+			System.out.println(dto.toString());
+
 			players = new ArrayList<>();
 
 			if (teamEntity == null) {
@@ -169,21 +175,45 @@ public class TeamAPI {
 				error.put("MessageCode", 1);
 				error.put("Message", "Team info invalid");
 			} else {
-				
-				teamEntity.setStatus(Const.TEAM_STATUS_JOINED);
-				teamEntity = service.create(teamEntity);
-				teamDTO = converter.toDTO(teamEntity);
-				teamDTO.setPlayers(players);
-				
-				result.put("Team", teamDTO);
-				config.put("Global", 0);
-				error.put("MessageCode", 0);
-				error.put("Message", "Successful");
 
-				// save file
+				TournamentEntity tour = teamEntity.getCompetition().getTournament();
+				if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_INITIALIZING)) {
 
-				service.saveTeamPlayersToFile(teamEntity, players);
+					teamEntity.setStatus(Const.TEAM_STATUS_JOINED);
+					teamEntity = service.create(teamEntity);
 
+					System.out.println(teamEntity.toString());
+
+					teamDTO = converter.toDTO(teamEntity);
+					teamDTO.setPlayers(players);
+
+					result.put("Team", teamDTO);
+					config.put("Global", 0);
+					error.put("MessageCode", 0);
+					error.put("Message", "Successful");
+
+					// save file
+
+					service.saveTeamPlayersToFile(teamEntity, players);
+				} else {
+					String message = "Unknown error";
+					if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_REGISTRATION_OPENING)) {
+						message = Const.TOURNAMENT_MESSAGE_REGISTRATION_OPENING;
+					}
+					if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_PROCESSING)) {
+						message = Const.TOURNAMENT_MESSAGE_PROCESSING;
+					}
+					if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_FINISHED)) {
+						message = Const.TOURNAMENT_MESSAGE_FINISHED;
+					}
+					if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_STOPPED)) {
+						message = Const.TOURNAMENT_MESSAGE_STOPPED;
+					}
+					result.put("Competition", null);
+					config.put("Global", 0);
+					error.put("MessageCode", 1);
+					error.put("Message", message);
+				}
 			}
 
 			System.out.println("Team API - createTeam - no exception");
@@ -206,8 +236,7 @@ public class TeamAPI {
 	 * 
 	 */
 	@PutMapping
-	public ResponseEntity<Response> editTeam(@RequestParam("id") Long id,
-			@RequestBody TeamDTO teamDTO) {
+	public ResponseEntity<Response> editTeam(@RequestParam("id") Long id, @RequestBody TeamDTO teamDTO) {
 		System.out.println("Team API - editTeam - start");
 		HttpStatus httpStatus = null;
 		httpStatus = HttpStatus.OK;
@@ -228,27 +257,50 @@ public class TeamAPI {
 				error.put("MessageCode", 1);
 				error.put("Message", "Team info invalid");
 			} else {
-				
-				teamEntity = service.update(id, teamEntity);
-				players = teamDTO.getPlayers();
-				
-				if (players != null) {
+
+				TournamentEntity tour = teamEntity.getCompetition().getTournament();
+				if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_INITIALIZING)) {
+
+					teamEntity = service.update(id, teamEntity);
+					players = teamDTO.getPlayers();
+
+					if (players != null) {
+						service.saveTeamPlayersToFile(teamEntity, players);
+					} else {
+						players = (ArrayList<Player>) service.getTeamPlayerFromFile(teamEntity.getCompetition().getId(),
+								id);
+					}
+
+					dto = converter.toDTO(teamEntity);
+					dto.setPlayers(players);
+
+					result.put("Team", dto);
+					config.put("Global", 0);
+					error.put("MessageCode", 0);
+					error.put("Message", "Successful");
+
+					// save file
+
 					service.saveTeamPlayersToFile(teamEntity, players);
 				} else {
-					players = (ArrayList<Player>) service.getTeamPlayerFromFile(teamEntity.getCompetition().getId(), id);
+					String message = "Unknown error";
+					if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_REGISTRATION_OPENING)) {
+						message = Const.TOURNAMENT_MESSAGE_REGISTRATION_OPENING;
+					}
+					if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_PROCESSING)) {
+						message = Const.TOURNAMENT_MESSAGE_PROCESSING;
+					}
+					if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_FINISHED)) {
+						message = Const.TOURNAMENT_MESSAGE_FINISHED;
+					}
+					if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_STOPPED)) {
+						message = Const.TOURNAMENT_MESSAGE_STOPPED;
+					}
+					result.put("Competition", null);
+					config.put("Global", 0);
+					error.put("MessageCode", 1);
+					error.put("Message", message);
 				}
-				
-				dto = converter.toDTO(teamEntity);
-				dto.setPlayers(players);
-				
-				result.put("Team", dto);
-				config.put("Global", 0);
-				error.put("MessageCode", 0);
-				error.put("Message", "Successful");
-
-				// save file
-
-				service.saveTeamPlayersToFile(teamEntity, players);
 
 			}
 
@@ -289,13 +341,35 @@ public class TeamAPI {
 				error.put("MessageCode", 1);
 				error.put("Message", "Required Id");
 			} else {// id is exist
-				teamEntity = service.delete(id);
-				resDTO = converter.toDTO(teamEntity);
-				result.put("Team", resDTO);
-				config.put("Global", 0);
-				error.put("MessageCode", 0);
-				error.put("Message", "Delete Team successfull");
-				System.out.println("Team API - deleteTeam - cp2");
+				TournamentEntity tour = service.findOneById(id).getCompetition().getTournament();
+				if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_INITIALIZING)) {
+
+					teamEntity = service.delete(id);
+					resDTO = converter.toDTO(teamEntity);
+					result.put("Team", resDTO);
+					config.put("Global", 0);
+					error.put("MessageCode", 0);
+					error.put("Message", "Delete Team successfull");
+					System.out.println("Team API - deleteTeam - cp2");
+				} else {
+					String message = "Unknown error";
+					if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_REGISTRATION_OPENING)) {
+						message = Const.TOURNAMENT_MESSAGE_REGISTRATION_OPENING;
+					}
+					if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_PROCESSING)) {
+						message = Const.TOURNAMENT_MESSAGE_PROCESSING;
+					}
+					if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_FINISHED)) {
+						message = Const.TOURNAMENT_MESSAGE_FINISHED;
+					}
+					if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_STOPPED)) {
+						message = Const.TOURNAMENT_MESSAGE_STOPPED;
+					}
+					result.put("Competition", null);
+					config.put("Global", 0);
+					error.put("MessageCode", 1);
+					error.put("Message", message);
+				}
 			}
 
 			System.out.println("Team API - deleteTeam - has no exception");
@@ -328,28 +402,48 @@ public class TeamAPI {
 
 		try {
 			teamEntity = converter.toEntity(teamDTO);
-			teamEntity.setStatus(Const.TEAM_STATUS_PENDING);
-			teamEntity = service.create(teamEntity);
 
-				
 			if (teamEntity == null) {
 				result.put("Team", teamDTO);
 				config.put("Global", 0);
 				error.put("MessageCode", 1);
 				error.put("Message", "Team info invalid");
 			} else {
+
+			}
+			TournamentEntity tour = teamEntity.getCompetition().getTournament();
+			if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_INITIALIZING)) {
+
+				teamEntity.setStatus(Const.TEAM_STATUS_PENDING);
+				teamEntity = service.create(teamEntity);
 				dto = converter.toDTO(teamEntity);
 				dto.setPlayers(players);
-				
+
 				result.put("Team", dto);
 				config.put("Global", 0);
 				error.put("MessageCode", 0);
 				error.put("Message", "Successful");
-
 				// save file
 
 				service.saveTeamPlayersToFile(teamEntity, players);
-
+			} else {
+				String message = "Unknown error";
+				if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_REGISTRATION_OPENING)) {
+					message = Const.TOURNAMENT_MESSAGE_REGISTRATION_OPENING;
+				}
+				if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_PROCESSING)) {
+					message = Const.TOURNAMENT_MESSAGE_PROCESSING;
+				}
+				if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_FINISHED)) {
+					message = Const.TOURNAMENT_MESSAGE_FINISHED;
+				}
+				if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_STOPPED)) {
+					message = Const.TOURNAMENT_MESSAGE_STOPPED;
+				}
+				result.put("Competition", null);
+				config.put("Global", 0);
+				error.put("MessageCode", 1);
+				error.put("Message", message);
 			}
 
 			System.out.println("Team API - createTeamByRegister - no exception");
@@ -366,7 +460,7 @@ public class TeamAPI {
 		System.out.println("Team API - createTeamByRegister - finish");
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
-	
+
 	@PutMapping("/approve")
 	public ResponseEntity<Response> approveTeam(@RequestParam("id") Long id) {
 		System.out.println("Team API - editTeam - start");
@@ -381,7 +475,7 @@ public class TeamAPI {
 		ArrayList<Player> players = null;
 
 		try {
-			
+
 			teamEntity = service.findOneById(id);
 
 			if (teamEntity == null) {
@@ -390,26 +484,47 @@ public class TeamAPI {
 				error.put("MessageCode", 1);
 				error.put("Message", "Team not exist");
 			} else {
-				
-				teamEntity.setStatus(Const.TEAM_STATUS_JOINED);
-				Long competitionId = teamEntity.getCompetition().getId();
-				Long maxSeedNo = service.getMaxSeedNoByCompetitionId(competitionId);
-				teamEntity.setSeedNo(maxSeedNo + 1);
-				teamEntity = service.update(id, teamEntity);
-				
-				players = (ArrayList<Player>) service.getTeamPlayerFromFile(teamEntity.getCompetition().getId(), id);
-				
-				teamDTO = converter.toDTO(teamEntity);
-				teamDTO.setPlayers(players);
-				
-				result.put("Team", teamDTO);
-				config.put("Global", 0);
-				error.put("MessageCode", 0);
-				error.put("Message", "Successful");
+				TournamentEntity tour = teamEntity.getCompetition().getTournament();
+				if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_INITIALIZING)) {
+					teamEntity.setStatus(Const.TEAM_STATUS_JOINED);
+					Long competitionId = teamEntity.getCompetition().getId();
+					Long maxSeedNo = service.getMaxSeedNoByCompetitionId(competitionId);
+					teamEntity.setSeedNo(maxSeedNo + 1);
+					teamEntity = service.update(id, teamEntity);
 
-				// save file
+					players = (ArrayList<Player>) service.getTeamPlayerFromFile(teamEntity.getCompetition().getId(),
+							id);
 
-				service.saveTeamPlayersToFile(teamEntity, players);
+					teamDTO = converter.toDTO(teamEntity);
+					teamDTO.setPlayers(players);
+
+					result.put("Team", teamDTO);
+					config.put("Global", 0);
+					error.put("MessageCode", 0);
+					error.put("Message", "Successful");
+
+					// save file
+
+					service.saveTeamPlayersToFile(teamEntity, players);
+				} else {
+					String message = "Unknown error";
+					if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_REGISTRATION_OPENING)) {
+						message = Const.TOURNAMENT_MESSAGE_REGISTRATION_OPENING;
+					}
+					if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_PROCESSING)) {
+						message = Const.TOURNAMENT_MESSAGE_PROCESSING;
+					}
+					if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_FINISHED)) {
+						message = Const.TOURNAMENT_MESSAGE_FINISHED;
+					}
+					if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_STOPPED)) {
+						message = Const.TOURNAMENT_MESSAGE_STOPPED;
+					}
+					result.put("Competition", null);
+					config.put("Global", 0);
+					error.put("MessageCode", 1);
+					error.put("Message", message);
+				}
 
 			}
 
@@ -427,7 +542,7 @@ public class TeamAPI {
 		System.out.println("Team API - editTeam - finish");
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
-	
+
 	@PutMapping("/reject")
 	public ResponseEntity<Response> rejectTeam(@RequestParam("id") Long id) {
 		System.out.println("Team API - editTeam - start");
@@ -442,7 +557,7 @@ public class TeamAPI {
 		ArrayList<Player> players = null;
 
 		try {
-			
+
 			teamEntity = service.findOneById(id);
 
 			if (teamEntity == null) {
@@ -451,15 +566,15 @@ public class TeamAPI {
 				error.put("MessageCode", 1);
 				error.put("Message", "Team not exist");
 			} else {
-				
+
 				teamEntity.setStatus(Const.TEAM_STATUS_REJECTED);
 				teamEntity = service.update(id, teamEntity);
-				
+
 				players = (ArrayList<Player>) service.getTeamPlayerFromFile(teamEntity.getCompetition().getId(), id);
-				
+
 				teamDTO = converter.toDTO(teamEntity);
 				teamDTO.setPlayers(players);
-				
+
 				result.put("Team", teamDTO);
 				config.put("Global", 0);
 				error.put("MessageCode", 0);

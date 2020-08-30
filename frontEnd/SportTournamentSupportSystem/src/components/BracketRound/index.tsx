@@ -10,6 +10,7 @@ interface IBracketRoundProps extends React.ClassAttributes<BracketRound> {
   totalRound: number;
   index: number;
   competitionId: number;
+  roundRobin?: boolean;
 }
 
 interface IBracketRoundState {
@@ -25,25 +26,48 @@ class BracketRound extends React.Component<IBracketRoundProps, IBracketRoundStat
   }
 
   render() {
-    return (
-      <div className={`BracketRound-eachRound ${this.state.roundHover === true ? 'BracketRound-reachRound-bolder' : 'BracketRound-eachRound-noBold'}`} style={{ ...this.props.info.listLoseMatches != null && { width: '250px', height: '500px' } }}>
-        <div className={`BracketRound-title-round-container ${this.props.roundNo > 1 && 'BracketRound-title-round-container-border'}`} onMouseOver={() => { this.setState({ roundHover: true, }); }} onMouseOut={() => { this.setState({ roundHover: false, }); }}>
-          <p className="BracketRound-title-round-text">{this.props.info.roundName}</p>
+    if (this.props.roundRobin === true) {
+      return (
+        <div className={`BracketRound-eachRound ${this.state.roundHover === true ? 'BracketRound-reachRound-bolder' : 'BracketRound-eachRound-noBold'}`} style={{ ...this.props.info.listLoseMatches != null && { width: '250px' } }}>
+          <div className={`BracketRound-title-round-container ${this.props.roundNo > 1 && 'BracketRound-title-round-container-border'}`} onMouseOver={() => { this.setState({ roundHover: true, }); }} onMouseOut={() => { this.setState({ roundHover: false, }); }}>
+            <p className="BracketRound-title-round-text">{this.props.info.roundName}</p>
+          </div>
+          {this.props.info.listMatches != null &&
+            (this.props.info.listMatches as unknown as IParams[]).map((item, index) => {
+              return (
+                <BracketMatch
+                  competitionId={this.props.competitionId}
+                  info={item}
+                  key={index}
+                  totalRound={this.props.totalRound}
+                  roundRobin={true}
+                />
+              );
+            })
+          }
         </div>
-        {this.props.info.listMatches != null ?
-          (this.props.info.listMatches as IParams[]).map((item, index) => {
-            return (<BracketMatch competitionId={this.props.competitionId} info={item} key={index} totalRound={this.props.totalRound} />);
-          }) : (this.props.info.listWinMatches != null ? (this.props.info.listWinMatches as IParams[]).map((item, index) => {
-            return (<BracketMatch competitionId={this.props.competitionId} info={item} key={index} totalRound={this.props.totalRound} />);
-          }) : (this.props.info.listLoseMatches as IParams[]).map((item, index) => {
-            return (<BracketMatch competitionId={this.props.competitionId} info={item} key={index} totalRound={this.props.totalRound} lowerBracket={true} />);
-          }))
-        }
-        {this.props.info.listLoseMatches != null && <svg style={{ position: 'absolute', marginTop: '20px', width: '1px', height: '500px', backgroundColor: 'red', }}>
-          <path d="M 228 1 L 236 1 L 236 108"></path>
-        </svg>}
-      </div>
-    );
+      );
+    } else {
+      return (
+        <div className={`BracketRound-eachRound ${this.state.roundHover === true ? 'BracketRound-reachRound-bolder' : 'BracketRound-eachRound-noBold'}`} style={{ ...this.props.info.listLoseMatches != null && { width: '250px', height: '350px' } }}>
+          <div className={`BracketRound-title-round-container ${this.props.roundNo > 1 && 'BracketRound-title-round-container-border'}`} onMouseOver={() => { this.setState({ roundHover: true, }); }} onMouseOut={() => { this.setState({ roundHover: false, }); }}>
+            <p className="BracketRound-title-round-text">{this.props.info.roundName}</p>
+          </div>
+          {this.props.info.listMatches != null ?
+            (this.props.info.listMatches as unknown as IParams[]).map((item, index) => {
+              return (<BracketMatch competitionId={this.props.competitionId} info={item} key={index} totalRound={this.props.totalRound} />);
+            }) : (this.props.info.listWinMatches != null ? (this.props.info.listWinMatches as unknown as IParams[]).map((item, index) => {
+              return (<BracketMatch competitionId={this.props.competitionId} info={item} key={index} totalRound={this.props.totalRound} />);
+            }) : (this.props.info.listLoseMatches as unknown as IParams[]).map((item, index) => {
+              return (<BracketMatch competitionId={this.props.competitionId} info={item} key={index} totalRound={this.props.totalRound} lowerBracket={true} />);
+            }))
+          }
+          {this.props.info.listLoseMatches != null && <svg style={{ position: 'absolute', marginTop: '20px', width: '1px', height: '350px', backgroundColor: 'red', }}>
+            <path d="M 228 1 L 236 1 L 236 108"></path>
+          </svg>}
+        </div>
+      );
+    }
   }
 }
 

@@ -58,7 +58,7 @@ public class UserService implements IUserService {
 //			updatedEntity.setAvatar(newEntity.getAvatar());
 //			updatedEntity.setBackground(newEntity.getBackground());
 			updatedEntity.setRole(newEntity.getRole());
-			updatedEntity.setStatus(newEntity.getStatus());
+			if (newEntity.getStatus() != null) {updatedEntity.setStatus(newEntity.getStatus());}
 			updatedEntity.setUrl(newEntity.getUrl());
 			updatedEntity = userRepository.save(updatedEntity);
 		} catch (Exception e) {

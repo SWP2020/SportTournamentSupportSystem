@@ -1,7 +1,5 @@
 package doan2020.SportTournamentSupportSystem.service.impl;
 
-import java.util.Collection;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,9 +30,12 @@ public class GroupStageSettingService implements IGroupStageSettingService{
 		try {
 			updatedEntity = groupStageSettingRepository.findOneById(id);
 
+			updatedEntity.setCompetition(newEntity.getCompetition());
 			updatedEntity.setFormat(newEntity.getFormat());
 			updatedEntity.setHasHomeMatch(newEntity.isHasHomeMatch());
-			updatedEntity.setStatus(newEntity.getStatus());
+			updatedEntity.setAdvanceTeamPerTable(newEntity.getAdvanceTeamPerTable());
+			updatedEntity.setMaxTeamPerTable(newEntity.getMaxTeamPerTable());
+			if (newEntity.getStatus() != null) {updatedEntity.setStatus(newEntity.getStatus());}
 			updatedEntity.setUrl(newEntity.getUrl());
 			updatedEntity = groupStageSettingRepository.save(updatedEntity);
 		} catch (Exception e) {
@@ -63,6 +64,17 @@ public class GroupStageSettingService implements IGroupStageSettingService{
 		GroupStageSettingEntity foundEntity = null;
 		try {
 			foundEntity = groupStageSettingRepository.findOneById(id);
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntity;
+	}
+	
+	@Override
+	public GroupStageSettingEntity findByCompetitionId(Long competitionId) {
+		GroupStageSettingEntity foundEntity = null;
+		try {
+			foundEntity = groupStageSettingRepository.findByCompetitionId(competitionId);
 		} catch (Exception e) {
 			return null;
 		}

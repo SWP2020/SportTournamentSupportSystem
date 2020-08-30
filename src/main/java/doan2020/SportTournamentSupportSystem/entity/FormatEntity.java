@@ -32,9 +32,10 @@ public class FormatEntity {
 	@ColumnDefault("'Chưa có mô tả.'")
 	private String description;
 
+	@ColumnDefault("'unknown'")
 	private String status;
 
-	private String url;
+	private String url = "/?";
 
 	@OneToMany(mappedBy = "format", cascade = CascadeType.ALL)
 	private Collection<FinalStageSettingEntity> finalStageSettings;

@@ -81,7 +81,7 @@ class AllUsers extends React.Component<IAllUsersProps, IAllUsersState> {
         <p className="AllUsers-header-text">Danh sách người dùng</p>
         {this.props.globalSearchString !== '' && <p className="AllUsers-search-text">Kết quả tìm kiếm cho: "{this.props.globalSearchString}"</p>}
         <div className="AllUsers-container">
-          {this.props.listUsers && this.props.listUsers.Users ? ((this.props.listUsers.Users as IParams[]).length > 0 ? (this.props.listUsers.Users as IParams[]).map(
+          {this.props.listUsers && this.props.listUsers.Users ? ((this.props.listUsers.Users as unknown as IParams[]).length > 0 ? (this.props.listUsers.Users as unknown as IParams[]).map(
             (item, index) => <UserOverview info={item} index={index} key={index} />) : <p>Không tìm thấy kết quả nào!</p>) :
             <Skeleton />
           }

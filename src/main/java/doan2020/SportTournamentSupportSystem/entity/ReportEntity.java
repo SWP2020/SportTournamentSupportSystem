@@ -32,9 +32,10 @@ public class ReportEntity {
 	@ColumnDefault("'Không có nội dung'")
 	private String content;
 
+	@ColumnDefault("'unknown'")
 	private String status;
 
-	private String url;
+	private String url = "/?";
 
 	@Column(nullable = false)
 	private String type = Const.REPORT_SYSTEM_ERROR;

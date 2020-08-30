@@ -50,9 +50,10 @@ public class TournamentEntity {
 	@ColumnDefault("'Không có nhà tài trợ'")
 	private String donor;
 
+	@ColumnDefault("'unknown'")
 	private String status;
 
-	private String url;
+	private String url = "/?";
 
 	private String avatar;
 

@@ -1,13 +1,10 @@
 
 package doan2020.SportTournamentSupportSystem.service;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 import org.springframework.data.domain.Pageable;
 
-import doan2020.SportTournamentSupportSystem.config.Const;
-import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
 import doan2020.SportTournamentSupportSystem.entity.TeamEntity;
 import doan2020.SportTournamentSupportSystem.model.Entity.Player;
 
@@ -38,4 +35,6 @@ public interface ITeamService {
 	public Collection<TeamEntity> findByCompetitionIdAndStatus(Long competitionId, String status);
 	
 	public Long getMaxSeedNoByCompetitionId(Long competitionId);
+	
+	public Long countByCompetitionIdAndStatus(Long competitionId, String status);
 }

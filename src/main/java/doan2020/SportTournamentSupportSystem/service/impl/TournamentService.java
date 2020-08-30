@@ -63,7 +63,7 @@ public class TournamentService implements ITournamentService {
 			updatedEntity.setClosingLocation(newEntity.getClosingLocation());
 			updatedEntity.setClosingTime(newEntity.getClosingTime());
 			updatedEntity.setDonor(newEntity.getDonor());
-			updatedEntity.setStatus(newEntity.getStatus());
+			if (newEntity.getStatus() != null) {updatedEntity.setStatus(newEntity.getStatus());}
 			updatedEntity.setUrl(newEntity.getUrl());
 			updatedEntity.setCloseRegistrationTime(newEntity.getCloseRegistrationTime());
 			updatedEntity.setOpenRegistrationTime(newEntity.getOpenRegistrationTime());

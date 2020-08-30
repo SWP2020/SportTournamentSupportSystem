@@ -80,7 +80,7 @@ class AllTournaments extends React.Component<IAllTournamentsProps, IAllTournamen
         <p className="AllTournaments-header-text">Tất cả các giải đấu</p>
         {this.props.globalSearchString !== '' && <p className="AllTournaments-search-text">Kết quả tìm kiếm cho: "{this.props.globalSearchString}"</p>}
         <div className="AllTournaments-container">
-          {this.props.listTournament && this.props.listTournament.Tournaments ? ((this.props.listTournament.Tournaments as IParams[]).length > 0 ? (this.props.listTournament.Tournaments as IParams[]).map(
+          {this.props.listTournament && this.props.listTournament.Tournaments ? ((this.props.listTournament.Tournaments as unknown as IParams[]).length > 0 ? (this.props.listTournament.Tournaments as unknown as IParams[]).map(
             (item, index) => <TournamentOverview info={item} index={index} key={index} />) : <p>Không tìm thấy kết quả nào!</p>) :
             <Skeleton />
           }

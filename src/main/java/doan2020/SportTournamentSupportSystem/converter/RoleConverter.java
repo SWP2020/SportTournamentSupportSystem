@@ -17,8 +17,8 @@ public class RoleConverter {
 
 			entity.setDescription(dto.getDescription());
 			
-			entity.setStatus(dto.getStatus());
-			entity.setUrl(dto.getUrl());
+			
+			
 			System.out.println("RoleConverter: toEntity: no exception");
 		}catch (Exception e) {
 			System.out.println("RoleConverter: toEntity: has exception");

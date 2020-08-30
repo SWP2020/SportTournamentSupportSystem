@@ -38,7 +38,7 @@ public class ReportService implements IReportService {
 			updatedEntity.setSubject(newEntity.getSubject());
 			updatedEntity.setContent(newEntity.getContent());
 			updatedEntity.setTournament(newEntity.getTournament());
-			updatedEntity.setStatus(newEntity.getStatus());
+			if (newEntity.getStatus() != null) {updatedEntity.setStatus(newEntity.getStatus());}
 			updatedEntity.setUrl(newEntity.getUrl());
 			updatedEntity = reportRepository.save(updatedEntity);
 		} catch (Exception e) {

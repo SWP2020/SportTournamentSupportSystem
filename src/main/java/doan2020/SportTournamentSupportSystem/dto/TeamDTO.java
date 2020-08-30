@@ -124,5 +124,14 @@ public class TeamDTO{
 	public void setPlayers(ArrayList<Player> players) {
 		this.players = players;
 	}
+
+	@Override
+	public String toString() {
+		return "TeamDTO [id=" + id + ", fullName=" + fullName + ", shortName=" + shortName + ", description="
+				+ description + ", seedNo=" + seedNo + ", status=" + status + ", url=" + url + ", creatorId="
+				+ creatorId + ", competitionId=" + competitionId + ", players=" + players + "]";
+	}
+	
+	
 	
 }

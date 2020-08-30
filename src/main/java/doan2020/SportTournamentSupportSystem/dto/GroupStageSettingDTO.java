@@ -2,13 +2,19 @@ package doan2020.SportTournamentSupportSystem.dto;
 
 public class GroupStageSettingDTO {
 	private Long id;
+	
+	private Long competitionId;
 
-	private int maxTeamPerTable;
+	private Integer maxTeamPerTable;
 
-	private int advanceTeamPerTable;
+	private Integer advanceTeamPerTable;
 	
 	private boolean hasHomeMatch;
 	private Long formatId;
+	
+	private String status;
+
+	private String url;
 
 	public GroupStageSettingDTO() {
 		// TODO Auto-generated constructor stub
@@ -22,19 +28,19 @@ public class GroupStageSettingDTO {
 		this.id = id;
 	}
 
-	public int getMaxTeamPerTable() {
+	public Integer getMaxTeamPerTable() {
 		return maxTeamPerTable;
 	}
 
-	public void setMaxTeamPerTable(int maxTeamPerTable) {
+	public void setMaxTeamPerTable(Integer maxTeamPerTable) {
 		this.maxTeamPerTable = maxTeamPerTable;
 	}
 
-	public int getAdvanceTeamPerTable() {
+	public Integer getAdvanceTeamPerTable() {
 		return advanceTeamPerTable;
 	}
 
-	public void setAdvanceTeamPerTable(int advanceTeamPerTable) {
+	public void setAdvanceTeamPerTable(Integer advanceTeamPerTable) {
 		this.advanceTeamPerTable = advanceTeamPerTable;
 	}
 
@@ -54,6 +60,30 @@ public class GroupStageSettingDTO {
 
 	public void setFormatId(Long formatId) {
 		this.formatId = formatId;
+	}
+
+	public Long getCompetitionId() {
+		return competitionId;
+	}
+
+	public void setCompetitionId(Long competitionId) {
+		this.competitionId = competitionId;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
 	}
 	
 	

@@ -1,7 +1,5 @@
 package doan2020.SportTournamentSupportSystem.api;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,15 +16,12 @@ import org.springframework.web.bind.annotation.RestController;
 import doan2020.SportTournamentSupportSystem.config.Const;
 import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
 import doan2020.SportTournamentSupportSystem.entity.FinalStageSettingEntity;
-import doan2020.SportTournamentSupportSystem.entity.FormatEntity;
-import doan2020.SportTournamentSupportSystem.entity.MatchEntity;
-import doan2020.SportTournamentSupportSystem.entity.TeamEntity;
-import doan2020.SportTournamentSupportSystem.model.ScheduleStruct.EliminationTree;
-import doan2020.SportTournamentSupportSystem.model.ScheduleStruct.RoundRobinTable;
+import doan2020.SportTournamentSupportSystem.entity.GroupStageSettingEntity;
+import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
+import doan2020.SportTournamentSupportSystem.model.Schedule.DTO.ScheduleDTO;
 import doan2020.SportTournamentSupportSystem.response.Response;
 import doan2020.SportTournamentSupportSystem.service.ICompetitionService;
-import doan2020.SportTournamentSupportSystem.service.IFileStorageService;
-import doan2020.SportTournamentSupportSystem.service.impl.ScheduleService;
+import doan2020.SportTournamentSupportSystem.service.IScheduleService;
 
 @RestController
 @CrossOrigin
@@ -37,62 +32,40 @@ public class ScheduleAPI {
 	private ICompetitionService competitionService;
 
 	@Autowired
-	private IFileStorageService fileService;
-	
-	private ScheduleService scheduleService;
+	private IScheduleService scheduleService;
 
 	/*
 	 * Get schedule for a competition
 	 */
 
 	@GetMapping()
-	public ResponseEntity<Response> getFinalStageScheduleByCompetition(
+	public ResponseEntity<Response> getScheduleByCompetitionId(
 			@RequestParam(value = "competitionId", required = false) Long competitionId) {
-		System.out.println("ScheduleAPI: getScheduleByCompetition: start");
+		System.out.println("ScheduleAPI: getScheduleByCompetitionId: start");
 		Response response = new Response();
 		HttpStatus httpStatus = HttpStatus.OK;
 		Map<String, Object> config = new HashMap<String, Object>();
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
 
-		Collection<MatchEntity> matches = new ArrayList<>();
-		ArrayList<TeamEntity> teams = new ArrayList<>();
-
 		try {
 
-			System.out.println("ScheduleAPI: getScheduleByCompetition: competitionId: " + competitionId);
 			CompetitionEntity thisCompetition = competitionService.findOneById(competitionId);
-			System.out.println("ScheduleAPI: getScheduleByCompetition: thisCompetition: " + thisCompetition);
 			if (thisCompetition == null) {
 				result.put("Schedule", null);
 				config.put("Global", 0);
 				error.put("MessageCode", 1);
 				error.put("Message", "Competition not found");
 			} else {
-				HashMap<String, Object> schedule;
-				try {
-					System.out.println("ScheduleAPI: getScheduleByCompetition: try to get schedule");
-					schedule = scheduleService.getSchedule(competitionId);
-					// Check for changes in team numbers
-					int dbTeamNumber = thisCompetition.getTeams().size();
-					int cfTeamNumber = (int) schedule.get("TotalTeam");
-
-					if (dbTeamNumber != cfTeamNumber)
-						return createFinalStageScheduleByCompetitionId(competitionId);
-				} catch (Exception e) {
-					System.out.println("ScheduleAPI: getScheduleByCompetition: schedule not yet created");
-					return createFinalStageScheduleByCompetitionId(competitionId);
-				}
-
+				ScheduleDTO schedule = scheduleService.getSchedule(thisCompetition);
 				result.put("Schedule", schedule);
 				config.put("Global", 0);
 				error.put("MessageCode", 0);
-				error.put("Message", "Successful");
-
+				error.put("Message", "Success");
 			}
-			System.out.println("ScheduleAPI: getScheduleByCompetition: no exception");
+			System.out.println("ScheduleAPI: getScheduleByCompetitionId: no exception");
 		} catch (Exception e) {
-			System.out.println("ScheduleAPI: getScheduleByCompetition: has exception");
+			System.out.println("ScheduleAPI: getScheduleByCompetitionId: has exception");
 			result.put("Schedule", null);
 			config.put("Global", 0);
 			error.put("MessageCode", 1);
@@ -102,12 +75,12 @@ public class ScheduleAPI {
 		response.setConfig(config);
 		response.setResult(result);
 		response.setError(error);
-		System.out.println("ScheduleAPI: getScheduleByCompetition: finish");
+		System.out.println("ScheduleAPI: getScheduleByCompetitionId: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
 
 	@PostMapping()
-	public ResponseEntity<Response> createFinalStageScheduleByCompetitionId(
+	public ResponseEntity<Response> schedulingByCompetitionId(
 			@RequestParam(value = "competitionId", required = false) Long competitionId) {
 		System.out.println("ScheduleAPI: createFinalStageScheduleByCompetitionId: start");
 		Response response = new Response();
@@ -116,12 +89,9 @@ public class ScheduleAPI {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
 
-		Collection<MatchEntity> matches = new ArrayList<>();
-		ArrayList<TeamEntity> teams = new ArrayList<>();
-		HashMap<String, Object> schedule = new HashMap<>();
-		
-		EliminationTree tree = new EliminationTree();
-		RoundRobinTable table = new RoundRobinTable();
+		ScheduleDTO schedule = new ScheduleDTO();
+
+		boolean err = false;
 
 		try {
 			CompetitionEntity thisCompetition = competitionService.findOneById(competitionId);
@@ -132,102 +102,61 @@ public class ScheduleAPI {
 				error.put("MessageCode", 1);
 				error.put("Message", "Competition not found");
 			} else {
+				TournamentEntity tour = thisCompetition.getTournament();
+				if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_INITIALIZING)) {
 
-				for (TeamEntity team : thisCompetition.getTeams()) {
-					if (team.getStatus() == Const.TEAM_STATUS_JOINED)
-						teams.add(team);
-				}
+					boolean hasGroupStage = thisCompetition.isHasGroupStage();
+					FinalStageSettingEntity fsse = thisCompetition.getFinalStageSetting();
+					GroupStageSettingEntity gsse = thisCompetition.getGroupStageSetting();
 
-				schedule.put("TotalTeam", teams.size());
+					if (fsse == null) {
+						error.put("Message", "Missing final stage setting");
+						err = true;
+					}
 
-				FormatEntity format;
-				String formatName;
+					if (hasGroupStage && gsse == null) {
+						error.put("Message", "Missing group stage setting");
+						err = true;
+					}
 
-				try {
-					format = thisCompetition.getFinalStageSetting().getFormat();
-					formatName = format.getName();
-				} catch (Exception e) {
-					format = null;
-					formatName = Const.ANOTHER_FORMAT;
+					if (!err) {
+						schedule = scheduleService.createSchedule(thisCompetition);
 
-				}
+						result.put("Schedule", schedule);
+						config.put("Global", 0);
+						error.put("MessageCode", 0);
+						error.put("Message", "Success");
 
-				System.out.println("ScheduleAPI: createFinalStageScheduleByCompetitionId: format: " + formatName);
-				schedule.put("Format", formatName);
-
-				boolean err = false;
-
-				if (formatName == Const.SINGLE_ELIMINATION_FORMAT) {
-					System.out.println("ScheduleAPI: createFinalStageScheduleByCompetitionId: case: SINGLE_ELIMINATION_FORMAT");
-					if (teams.size() < 2) {
-						System.out.println(
-								"ScheduleAPI: createFinalStageScheduleByCompetitionId: case: SINGLE_ELIMINATION_FORMAT: Not enough teams");
+					} else {
+						result.put("Schedule", null);
 						config.put("Global", 0);
 						error.put("MessageCode", 1);
-						error.put("Message", "Not enough teams");
-						err = true;
-					} else {
-						tree = new EliminationTree(teams.size(), format.getId());
-						schedule.put("Bracket", tree.getWinBranch());
 					}
-				}
-
-				if (formatName == Const.DOUBLE_ELIMINATION_FORMAT) {
-					System.out.println("ScheduleAPI: createFinalStageScheduleByCompetitionId: case: DOUBLE_ELIMINATION_FORMAT");
-					if (teams.size() < 3) {
-						System.out.println(
-								"ScheduleAPI: createFinalStageScheduleByCompetitionId: case: DOUBLE_ELIMINATION_FORMAT: Not enough teams");
-						config.put("Global", 0);
-						error.put("MessageCode", 1);
-						error.put("Message", "Not enough teams");
-						err = true;
-					} else {
-						tree = new EliminationTree(teams.size(), format.getId());
-						System.out.println("ScheduleAPI: createFinalStageScheduleByCompetitionId: build tree complete");
-						schedule.put("WinBranch", tree.getWinBranch());
-						schedule.put("LoseBranch", tree.getLoseBranch());
-						System.out.println("ScheduleAPI: createFinalStageScheduleByCompetitionId: set schedule complete");
+				} else {
+					String message = "Unknown error";
+					if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_REGISTRATION_OPENING)) {
+						message = Const.TOURNAMENT_MESSAGE_REGISTRATION_OPENING;
 					}
-				}
-				
-				if (formatName == Const.ROUND_ROBIN_FORMAT) {
-					System.out.println("ScheduleAPI: createFinalStageScheduleByCompetitionId: case: ROUND_ROBIN_FORMAT");
-					if (teams.size() < 2) {
-						config.put("Global", 0);
-						error.put("MessageCode", 1);
-						error.put("Message", "Not enough teams");
-						err = true;
-					} else {
-						
-						table = new RoundRobinTable(teams.size());
-						schedule.put("Table", table.getMatches());
+					if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_PROCESSING)) {
+						message = Const.TOURNAMENT_MESSAGE_PROCESSING;
 					}
-					
-				}
-
-				if (formatName == Const.ANOTHER_FORMAT) {
-					System.out.println("ScheduleAPI: createFinalStageScheduleByCompetitionId: format not support ");
+					if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_FINISHED)) {
+						message = Const.TOURNAMENT_MESSAGE_FINISHED;
+					}
+					if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_STOPPED)) {
+						message = Const.TOURNAMENT_MESSAGE_STOPPED;
+					}
+					result.put("Competition", null);
 					config.put("Global", 0);
 					error.put("MessageCode", 1);
-					error.put("Message", "Not support format");
-					err = true;
+					error.put("Message", message);
 				}
-
-				result.put("Schedule", schedule);
-
-				if (!err) {
-					config.put("Global", 0);
-					error.put("MessageCode", 0);
-					error.put("Message", "Successful");
-
-				}
-				// save file
-				scheduleService.saveSchedule(schedule, competitionId);
-
 			}
+
 			System.out.println("ScheduleAPI: createFinalStageScheduleByCompetitionId: no exception");
 		} catch (Exception e) {
 			System.out.println("ScheduleAPI: createFinalStageScheduleByCompetitionId: has exception");
+			System.out.println(e);
 			result.put("Schedule", null);
 			config.put("Global", 0);
 			error.put("MessageCode", 1);
@@ -239,13 +168,6 @@ public class ScheduleAPI {
 		response.setError(error);
 		System.out.println("ScheduleAPI: createFinalStageScheduleByCompetitionId: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
-	}
-	
-	
-	private HashMap<String, Object> finalStageScheduling(int totalTeam, String formatName, FinalStageSettingEntity setting){
-		HashMap<String, Object> schedule = null;
-		
-		return schedule;
 	}
 
 }

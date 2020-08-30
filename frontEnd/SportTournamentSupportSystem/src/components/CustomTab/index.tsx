@@ -26,10 +26,14 @@ class CustomTab extends React.Component<ICustomTabProps, IModalState> {
 
   render() {
     return (
-      <Tabs defaultIndex={this.props.selectedIndex} onSelect={() => {
-        this.props.onEditBracketMode(false);
-        this.props.deleteListSelectingTeam();
-      }}>
+      <Tabs
+        defaultIndex={this.props.selectedIndex}
+        onSelect={() => {
+          this.props.onEditBracketMode(false);
+          this.props.deleteListSelectingTeam();
+        }}
+        className={'Tabs-color'}
+      >
         <TabList>
           {this.props.tabList.map((item, index) => {
             return (<Tab key={index}>{item}</Tab>);

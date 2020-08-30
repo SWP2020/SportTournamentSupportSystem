@@ -14,7 +14,6 @@ import { editUserInfo } from './sagas/EditUserInfo';
 import { editTournamentInfo } from './sagas/EditTournamentInfo';
 import { queryListCompetitionOfTournament } from './sagas/QueryListCompetitionOfTournament';
 import { addACompetition } from './sagas/AddACompetition';
-import { editCompetitionInfo } from './sagas/EditCompetitionInfo';
 import { isEmailExisted } from './sagas/IsEmailExisted';
 import { queryListTournaments } from './sagas/QueryListTournament';
 import { queryListPlayerOfTeam } from './sagas/QueryListPlayerOfTeam';
@@ -32,6 +31,23 @@ import { updateBackgroundTournament } from './sagas/UpdateBackgroundTournament';
 import { addListTeamSelecting } from './sagas/AddListTeamSelecting';
 import { swapTwoTeamInBracket } from './sagas/SwapTwoTeamInBracket';
 import { deleteListSelectingTeam } from './sagas/DeleteListSelectingTeam';
+import { queryCompetitionInfo } from './sagas/QueryCompetitionInfo';
+import { queryAllSports } from './sagas/QueryAllSports';
+import { querySportInfo } from './sagas/QuerySportInfo';
+import { editTeam } from './sagas/EditTeam';
+import { queryFinalStageSetting } from './sagas/QueryFinalStageSetting';
+import { queryGroupStageSetting } from './sagas/QueryGroupStageSetting';
+import { queryAllFormat } from './sagas/QueryAllFormat';
+import { editCompetition } from './sagas/EditCompetition';
+import { editFinalStageSetting } from './sagas/EditFinalStageSetting';
+import { editGroupStageSetting } from './sagas/EditGroupStageSetting';
+import { createAFinalStageSetting } from './sagas/CreateAFinalStageSetting';
+import { createAGroupStageSetting } from './sagas/CreateAGroupStageSetting';
+import { updateSchedule } from './sagas/UpdateSchedule';
+import { queryBracketRankInfo } from './sagas/BracketRank';
+import { deleteCompetition } from './sagas/DeleteCompetition';
+import { startTournament } from './sagas/StartTournament';
+import { getMatchResult } from './sagas/GetMatchResult';
 
 export default function* () {
   yield all([
@@ -52,7 +68,6 @@ export default function* () {
     editTournamentInfo(),
     queryListCompetitionOfTournament(),
     addACompetition(),
-    editCompetitionInfo(),
     queryListPlayerOfTeam(),
     activeAccount(),
     searchTournament(),
@@ -68,5 +83,22 @@ export default function* () {
     addListTeamSelecting(),
     swapTwoTeamInBracket(),
     deleteListSelectingTeam(),
+    queryCompetitionInfo(),
+    queryAllSports(),
+    querySportInfo(),
+    editTeam(),
+    queryFinalStageSetting(),
+    queryGroupStageSetting(),
+    queryAllFormat(),
+    editCompetition(),
+    editFinalStageSetting(),
+    editGroupStageSetting(),
+    createAFinalStageSetting(),
+    createAGroupStageSetting(),
+    updateSchedule(),
+    queryBracketRankInfo(),
+    deleteCompetition(),
+    startTournament(),
+    getMatchResult(),
   ]);
 }

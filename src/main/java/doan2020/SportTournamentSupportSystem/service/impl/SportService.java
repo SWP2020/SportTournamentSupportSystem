@@ -37,7 +37,7 @@ public class SportService implements ISportService {
 			updatedEntity.setFullName(newEntity.getFullName());
 			updatedEntity.setShortName(newEntity.getShortName());
 			updatedEntity.setDescription(newEntity.getDescription());
-			updatedEntity.setStatus(newEntity.getStatus());
+			if (newEntity.getStatus() != null) {updatedEntity.setStatus(newEntity.getStatus());}
 			updatedEntity.setUrl(newEntity.getUrl());
 			updatedEntity = sportRepository.save(updatedEntity);
 		} catch (Exception e) {

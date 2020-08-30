@@ -109,8 +109,6 @@ class UserInfoTeams extends React.Component<IUserInfoTeamsProps, IUserInfoTeamsS
         description: '',
         creatorId: this.props.currentUserInfo != null && this.props.currentUserInfo.id,
         competitionId: this.props.id,
-        status: 'joined',
-        url: '',
       },
     };
     this.props.addATeamToCompetition(params);
@@ -128,9 +126,9 @@ class UserInfoTeams extends React.Component<IUserInfoTeamsProps, IUserInfoTeamsS
   render() {
     return (
       <div className="UserInfoTeams-container">
-        {this.props.listTeam ? (this.props.listTeam.length > 0 ?
+        {this.props.listTeam != null ? (this.props.listTeam.length > 0 ?
           this.props.listTeam.map(
-            (item, index) => <UserInfoTeamsItem competitionInfo={this.props.competitionInfo} tournamentInfo={this.props.tournamentInfo} info={item} index={index} key={index} />
+            (item, index) => <UserInfoTeamsItem listTeam={this.props.listTeam as IParams[]} competitionInfo={this.props.competitionInfo} tournamentInfo={this.props.tournamentInfo} info={item} index={index} key={index} />
           ) : <p>Không tìm thấy đội nào!</p>) :
           <Skeleton />
         }

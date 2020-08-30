@@ -132,9 +132,9 @@ class SignUp extends React.Component<ISignUpProps, ISignUpState> {
   private validateUsername = () => {
     let usernameError = false;
     let usernameErrorContent = '';
-    if (this.state.username.trim() === '') {
+    if (this.state.username.trim() === '' || !config.regex.username.test(this.state.username)) {
       usernameError = true;
-      usernameErrorContent = 'Tên đăng nhập không được trống';
+      usernameErrorContent = 'Tên đăng nhập không được trống, và phải chứa từ 8 đến 32 kí tự';
     } else {
       const params = {
         path: '',
@@ -221,12 +221,12 @@ class SignUp extends React.Component<ISignUpProps, ISignUpState> {
       usernameErrorContent = 'Tên đăng nhập không được trống, và phải chứa từ 8 đến 32 kí tự';
     }
     if (this.state.firstName.trim() === '') {
-      usernameError = true;
-      usernameErrorContent = 'Tên không được trống';
+      firstNameError = true;
+      firstNameErrorContent = 'Tên không được trống';
     }
     if (this.state.lastName.trim() === '') {
-      usernameError = true;
-      usernameErrorContent = 'Họ không được trống';
+      lastNameError = true;
+      lastNameErrorContent = 'Họ không được trống';
     }
     if (this.state.email.trim() === '' || !config.regex.email.test(this.state.email)) {
       emailError = true;
@@ -294,13 +294,7 @@ class SignUp extends React.Component<ISignUpProps, ISignUpState> {
           <div className="Container-login">
             <div className="Container-login-middle">
               <h2>Đăng ký</h2>
-              <p className="Long-introduction">Bắt đầu dễ dàng bằng cách đăng ký để quản lý các giải đấu và sự kiện</p>
-              <p>Đăng ký với</p>
-              <div className="Alternate-login-container">
-                <div className="Alternate-login-option1 Alternate-login-option"><p className="Alternate-login-option-text">FACEBOOK</p></div>
-                <div className="Alternate-login-option2 Alternate-login-option"><p className="Alternate-login-option-text">GOOGLE</p></div>
-              </div>
-              <p>Hoặc</p>
+              <p className="Long-introduction">Bắt đầu dễ dàng bằng cách đăng ký để quản lý các giải đấu</p>
 
               <TextInput onHandleSubmit={this.handleSignUp} label={'Tên đăng nhập'} onChangeText={this.onChangeUserName} error={this.state.usernameError} errorContent={this.state.usernameErrorContent} onBlur={this.onBlurUserName} />
               <TextInput onHandleSubmit={this.handleSignUp} label={'Họ'} onChangeText={this.onChangeFirstName} error={this.state.firstNameError} errorContent={this.state.firstNameErrorContent} />

@@ -10,13 +10,15 @@ import { TournamentInfo, ListSportsByTournament, ListCompetitionsBySportAndTourn
 import { IsUsernameExisted } from './global-reducers/IsUsernameExisted-reducer';
 import { ListTournamentOfUser } from 'components/UserInfoTournament/reducers';
 import { ListTeam } from 'components/Teams/reducers';
-import { AllCompetitionByTournamentId } from 'components/CompetitionsSetting/reducers';
+import { AllCompetitionByTournamentId, NewCompetition } from 'components/CompetitionsSetting/reducers';
 import { IsEmailExisted } from './global-reducers/IsEmailExisted-reducer';
 import { ListTournament } from 'components/AllTournaments/reducers';
-import { ListPlayerOfTeam } from 'components/UserInfoTeamsItem/reducers';
 import { ActiveAccountStatus } from 'screens/ActiveAccount/reducers';
 import { GlobalSearchString } from './global-reducers/GlobalSearchString-reducer';
 import { ListUsers } from 'components/AllUsers/reducers';
+import { CompetitionInfo, AllSports, SportInfo, GroupStageSetting, FinalStageSetting, AllFormats } from 'screens/CompetitionInfo/reducers';
+import { BracketRankInfo } from 'components/BracketRank/reducers';
+import { MatchResult } from 'components/BracketMatch/reducers';
 
 export const appReducer = combineReducers({
   currentPage: CurrentPage,
@@ -34,7 +36,6 @@ export const appReducer = combineReducers({
   listTournament: ListTournament,
   listTeam: ListTeam,
   allCompetitionByTournamentId: AllCompetitionByTournamentId,
-  listPlayerOfTeam: ListPlayerOfTeam,
   activeAccountStatus: ActiveAccountStatus,
   globalSearchString: GlobalSearchString,
   listSportsByTournament: ListSportsByTournament,
@@ -42,6 +43,15 @@ export const appReducer = combineReducers({
   listCompetitionsBySportAndTournament: ListCompetitionsBySportAndTournament,
   editBracketMode: EditBracketMode,
   listTeamSelecting: ListTeamSelecting,
+  competitionInfo: CompetitionInfo,
+  allSports: AllSports,
+  sportInfo: SportInfo,
+  groupStageSetting: GroupStageSetting,
+  finalStageSetting: FinalStageSetting,
+  allFormats: AllFormats,
+  newCompetition: NewCompetition,
+  bracketRankInfo: BracketRankInfo,
+  matchResult: MatchResult,
 });
 
 export type IState = ReturnType<typeof appReducer>;

@@ -19,8 +19,8 @@ public class SportConverter {
 			
 			entity.setDescription(dto.getDescription());
 			
-			entity.setStatus(dto.getStatus());
-			entity.setUrl(dto.getUrl());
+			
+			
 			System.out.println("SportConverter: toEntity: no exception");
 		}catch (Exception e) {
 			System.out.println("SportConverter: toEntity: has exception");

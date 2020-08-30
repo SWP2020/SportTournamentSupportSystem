@@ -30,8 +30,8 @@ public class ResultConverter {
 			entity.setTeam1Score(dto.getTeam1Score());
 			entity.setTeam2Score(dto.getTeam2Score());
 
-			entity.setStatus(dto.getStatus());
-			entity.setUrl(dto.getUrl());
+			
+			
 			System.out.println("ResultConverter: toEntity: no exception");
 		}catch (Exception e) {
 			System.out.println("ResultConverter: toEntity: has exception");

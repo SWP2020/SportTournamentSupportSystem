@@ -1,12 +1,12 @@
 import { IBigRequest } from "interfaces/common";
-import { EDIT_COMPETITION_INFO } from "redux-saga/actions";
-import { EDIT_COMPETITION_INFO_SUCCESS, EDIT_COMPETITION_INFO_FAILED } from "./reducers";
+import { DELETE_COMPETITION } from "redux-saga/actions";
+import { DELETE_COMPETITION_SUCCESS, DELETE_COMPETITION_FAILED } from "./reducers";
 
-export const editCompetitionInfo = (data: IBigRequest) => ({
-  type: EDIT_COMPETITION_INFO,
+export const deleteCompetition = (data: IBigRequest) => ({
+  type: DELETE_COMPETITION,
   response: {
-    success: EDIT_COMPETITION_INFO_SUCCESS,
-    failed: EDIT_COMPETITION_INFO_FAILED,
+    success: DELETE_COMPETITION_SUCCESS,
+    failed: DELETE_COMPETITION_FAILED,
   },
   data: {
     path: data.path,

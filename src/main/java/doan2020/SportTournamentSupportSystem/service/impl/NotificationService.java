@@ -36,7 +36,7 @@ public class NotificationService implements INotificationService {
 
 			updatedEntity.setTitle(newEntity.getTitle());
 			updatedEntity.setContent(newEntity.getContent());
-			updatedEntity.setStatus(newEntity.getStatus());
+			if (newEntity.getStatus() != null) {updatedEntity.setStatus(newEntity.getStatus());}
 			updatedEntity.setUrl(newEntity.getUrl());
 			updatedEntity = notificationRepository.save(updatedEntity);
 		} catch (Exception e) {
