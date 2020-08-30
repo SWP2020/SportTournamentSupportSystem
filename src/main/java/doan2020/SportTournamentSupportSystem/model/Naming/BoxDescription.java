@@ -1,4 +1,4 @@
-package doan2020.SportTournamentSupportSystem.model.Entity;
+package doan2020.SportTournamentSupportSystem.model.Naming;
 
 import java.io.Serializable;
 

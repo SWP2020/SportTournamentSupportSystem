@@ -1,10 +1,10 @@
-package doan2020.SportTournamentSupportSystem.model.LogicBox;
+package doan2020.SportTournamentSupportSystem.model.Box;
 
 import java.io.Serializable;
 import java.util.Comparator;
 
 import doan2020.SportTournamentSupportSystem.model.Entity.Team;
-import doan2020.SportTournamentSupportSystem.model.Entity.BoxDescription;
+import doan2020.SportTournamentSupportSystem.model.Naming.BoxDescription;
 
 public class RankingTableSlot implements Serializable, Comparator<RankingTableSlot>{
 
@@ -12,6 +12,8 @@ public class RankingTableSlot implements Serializable, Comparator<RankingTableSl
 	
 	private Team team;
 	private BoxDescription description;
+	private Double difference = 0.0;
+	private Integer score = 0;
 
 	public RankingTableSlot(Team team) {
 		this.team = team;
@@ -27,14 +29,28 @@ public class RankingTableSlot implements Serializable, Comparator<RankingTableSl
 		this.team = team;
 	}
 	
+	public Double getDifference() {
+		return difference;
+	}
+
+	public void setDifference(Double difference) {
+		this.difference = difference;
+	}
+
+	public Integer getScore() {
+		return score;
+	}
+
+	public void setScore(Integer score) {
+		this.score = score;
+	}
+
 	@Override
 	public int compare(RankingTableSlot o1, RankingTableSlot o2) {
-		Team team1 = o1.getTeam();
-		Team team2 = o2.getTeam();
-		Integer score1 = team1.getScore();
-		Integer score2 = team2.getScore();
-		Double diff1 = team1.getDifference();
-		Double diff2 = team2.getDifference();
+		Integer score1 = o1.getScore();
+		Integer score2 = o2.getScore();
+		Double diff1 = o1.getDifference();
+		Double diff2 = o2.getDifference();
 		if (score1 == score2) {
 			return (int)Math.ceil(diff1 - diff2);
 		} else {

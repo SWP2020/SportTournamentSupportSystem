@@ -1,14 +1,14 @@
-package doan2020.SportTournamentSupportSystem.model.ContainerCollection;
+package doan2020.SportTournamentSupportSystem.model.BoxCollection;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import org.hibernate.mapping.Collection;
-
+import doan2020.SportTournamentSupportSystem.entity.TeamEntity;
+import doan2020.SportTournamentSupportSystem.model.Box.RankingTableSlot;
+import doan2020.SportTournamentSupportSystem.model.Box.Seed;
 import doan2020.SportTournamentSupportSystem.model.Entity.Team;
-import doan2020.SportTournamentSupportSystem.model.Entity.BoxDescription;
-import doan2020.SportTournamentSupportSystem.model.LogicBox.RankingTableSlot;
+import doan2020.SportTournamentSupportSystem.model.Naming.BoxDescription;
 
 public class RankingTable extends ArrayList<RankingTableSlot> implements Serializable{
 
@@ -48,6 +48,24 @@ public class RankingTable extends ArrayList<RankingTableSlot> implements Seriali
 			RankingTableSlot slot = new RankingTableSlot();
 			slot.setDescription(description);
 			this.add(slot);
+		}
+	}
+	
+	public void applyTeams(ArrayList<TeamEntity> teams) {
+		java.util.Collections.sort(teams, new TeamEntity());
+		int seedNo = 0;
+		for (RankingTableSlot slot : this) {
+			Team t = new Team();
+			t.setId(teams.get(seedNo).getId());
+			t.setShortName(teams.get(seedNo).getShortName());
+			t.setFullName(teams.get(seedNo).getFullName());
+			t.setTotalLose(0);
+			t.setTotalWin(0);
+			
+			slot.setTeam(t);
+			slot.setDifference(0.0);
+			slot.setScore(0);
+			seedNo++;
 		}
 	}
 	

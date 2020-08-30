@@ -1,9 +1,9 @@
-package doan2020.SportTournamentSupportSystem.model.LogicBox;
+package doan2020.SportTournamentSupportSystem.model.Box;
 
 import java.io.Serializable;
 
 import doan2020.SportTournamentSupportSystem.model.Entity.Team;
-import doan2020.SportTournamentSupportSystem.model.Entity.BoxDescription;
+import doan2020.SportTournamentSupportSystem.model.Naming.BoxDescription;
 
 public class Seed implements Serializable{
 	/**

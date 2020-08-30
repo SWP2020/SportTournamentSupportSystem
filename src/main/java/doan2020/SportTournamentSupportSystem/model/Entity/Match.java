@@ -4,8 +4,9 @@ import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
+import doan2020.SportTournamentSupportSystem.config.Const;
 import doan2020.SportTournamentSupportSystem.entity.MatchEntity;
-import doan2020.SportTournamentSupportSystem.model.LogicBox.MatchSlot;
+import doan2020.SportTournamentSupportSystem.model.Box.MatchSlot;
 
 public class Match implements Serializable {
 	
@@ -22,14 +23,15 @@ public class Match implements Serializable {
 	private MatchSlot winner;
 	private MatchSlot loser;
 	
-	private String location;
-	private String time;
+	private String location = Const.DEFAULT_PLACE;
+	private String time = Const.DEFAULT_DATE_STRING;
 	
 	@JsonBackReference
 	private MatchEntity realMatch;
 	
 	/*
 	 * status:
+	 * -1: chỉ có 1 đội
 	 * 0: có sẵn 2 đội (round 1 win branch hoặc vòng bảng)
 	 * 1: 2 đội lấy từ 2 trận thắng của left và right ( round 2+ )
 	 * 2: có sẵn đội 1, đội 2 lấy từ trận thắng của right (round 2 win branch)
@@ -106,6 +108,13 @@ public class Match implements Serializable {
 	}
 	public void setLoser(MatchSlot loser) {
 		this.loser = loser;
+	}
+	@Override
+	public String toString() {
+		return "id: " + id + ", matchNo: " + matchNo + ", roundNo: " + roundNo + ", name: \'" + name + "\', team1: {"
+				+ team1.toString() + "}, team2: {" + team2.toString() + "}, winner: {" + winner.toString() 
+				+ "}, loser: {" + loser + "}, location: \'" + location
+				+ "\', time: " + time + ", status: \'" + status + "\'";
 	}
 	
 	

@@ -2,22 +2,23 @@
 package doan2020.SportTournamentSupportSystem.service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
-import doan2020.SportTournamentSupportSystem.config.Const;
-import doan2020.SportTournamentSupportSystem.model.Entity.BoxDescription;
-import doan2020.SportTournamentSupportSystem.model.Schedule.Format.RoundRobinTable;
-import doan2020.SportTournamentSupportSystem.model.Schedule.Format.SingleEliminationTree;
+import doan2020.SportTournamentSupportSystem.model.Naming.BoxDescription;
+import doan2020.SportTournamentSupportSystem.model.Schedule.DTO.FinalStageScheduleDTO;
+import doan2020.SportTournamentSupportSystem.model.Schedule.DTO.GroupStageScheduleDTO;
+import doan2020.SportTournamentSupportSystem.model.Schedule.DTO.ScheduleDTO;
 
 public interface IScheduleService {
 
-	public HashMap<String, Object> getSchedule(Long competitionId);
+	public ScheduleDTO getSchedule(Long competitionId);
 
-	public String saveSchedule(HashMap<String, Object> schedule, Long competitionId);
+	public String saveSchedule(ScheduleDTO schedule, Long competitionId);
+	
+	public void createMatchesInDatabase(Long competitionId);
 
-	public HashMap<String, Object> finalStageScheduling(int totalTeam, String formatName, boolean hasHomeMatch,
+	public FinalStageScheduleDTO finalStageScheduling(int totalTeam, String formatName, boolean hasHomeMatch,
 			int tableId, ArrayList<BoxDescription> descriptions, int firstSeed);
 
-	public HashMap<String, Object> groupStageScheduling(int totalTeam, String formatName, boolean hasHomeMatch,
+	public GroupStageScheduleDTO groupStageScheduling(int totalTeam, String formatName, boolean hasHomeMatch,
 			int maxTeamPerTable, int advanceTeamPerTable, int totalTable, int totalTeamInFinalTable);
 }
