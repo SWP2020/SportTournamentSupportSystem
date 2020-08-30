@@ -113,10 +113,23 @@ public class GroupStageSettingAPI {
 				error.put("Message", "GroupStageSetting create successfuly");
 				System.out.println("GroupStageSettingAPI: createGroupStageSetting: no exception");
 			} else {
+				String message = "Unknown error";
+				if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_REGISTRATION_OPENING)) {
+					message = Const.TOURNAMENT_MESSAGE_REGISTRATION_OPENING;
+				}
+				if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_PROCESSING)) {
+					message = Const.TOURNAMENT_MESSAGE_PROCESSING;
+				}
+				if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_FINISHED)) {
+					message = Const.TOURNAMENT_MESSAGE_FINISHED;
+				}
+				if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_STOPPED)) {
+					message = Const.TOURNAMENT_MESSAGE_STOPPED;
+				}
 				result.put("Competition", null);
 				config.put("Global", 0);
 				error.put("MessageCode", 1);
-				error.put("Message", "Tournament has started");
+				error.put("Message", message);
 			}
 		} catch (Exception e) {
 			System.out.println("GroupStageSettingAPI: createGroupStageSetting: has exception");
@@ -160,10 +173,23 @@ public class GroupStageSettingAPI {
 
 				System.out.println("GroupStageSettingAPI: editGroupStageSetting: no exception");
 			} else {
+				String message = "Unknown error";
+				if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_REGISTRATION_OPENING)) {
+					message = Const.TOURNAMENT_MESSAGE_REGISTRATION_OPENING;
+				}
+				if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_PROCESSING)) {
+					message = Const.TOURNAMENT_MESSAGE_PROCESSING;
+				}
+				if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_FINISHED)) {
+					message = Const.TOURNAMENT_MESSAGE_FINISHED;
+				}
+				if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_STOPPED)) {
+					message = Const.TOURNAMENT_MESSAGE_STOPPED;
+				}
 				result.put("Competition", null);
 				config.put("Global", 0);
 				error.put("MessageCode", 1);
-				error.put("Message", "Tournament has started");
+				error.put("Message", message);
 			}
 		} catch (Exception e) {
 			System.out.println("GroupStageSettingAPI: editGroupStageSetting: has exception");

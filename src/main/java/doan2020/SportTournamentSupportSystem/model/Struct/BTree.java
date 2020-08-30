@@ -133,10 +133,11 @@ public class BTree<E> implements Serializable{
 		if (node == null)
 			return list;
 		
-		list.addAll(toArrayList(node.getLeft()));
-		list.addAll(toArrayList(node.getRight()));
 		list.add(node.getData());
 		
+		list.addAll(toArrayList(node.getLeft()));
+		list.addAll(toArrayList(node.getRight()));
+
 		return list;
 	}
 	

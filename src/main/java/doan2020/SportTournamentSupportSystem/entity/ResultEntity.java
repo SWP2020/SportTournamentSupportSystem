@@ -1,6 +1,8 @@
 
 package doan2020.SportTournamentSupportSystem.entity;
 
+import java.util.Comparator;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -17,7 +19,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Entity
 @Table(name = "results")
 @EntityListeners(AuditingEntityListener.class)
-public class ResultEntity {
+public class ResultEntity implements Comparator<ResultEntity>{
 
 	@Id
 	@Column(nullable = false)
@@ -93,6 +95,11 @@ public class ResultEntity {
 
 	public void setTeam2Score(int team2Score) {
 		this.team2Score = team2Score;
+	}
+	
+	@Override
+	public int compare(ResultEntity o1, ResultEntity o2) {
+		return o1.getSetNo() - o2.getSetNo();
 	}
 
 }

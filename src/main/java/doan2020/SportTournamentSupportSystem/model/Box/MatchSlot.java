@@ -13,6 +13,7 @@ public class MatchSlot implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	private Team team;
+	private Integer score = 0;
 	private BoxDescription description;
 	
 	
@@ -27,6 +28,12 @@ public class MatchSlot implements Serializable{
 	}
 	public void setDescription(BoxDescription description) {
 		this.description = description;
+	}
+	public Integer getScore() {
+		return score;
+	}
+	public void setScore(Integer score) {
+		this.score = score;
 	}
 	
 	
