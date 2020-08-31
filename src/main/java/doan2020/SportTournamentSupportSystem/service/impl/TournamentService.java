@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import doan2020.SportTournamentSupportSystem.config.Const;
 import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
-import doan2020.SportTournamentSupportSystem.entity.TeamEntity;
 import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
 import doan2020.SportTournamentSupportSystem.repository.CompetitionRepository;
 import doan2020.SportTournamentSupportSystem.repository.TournamentRepository;
