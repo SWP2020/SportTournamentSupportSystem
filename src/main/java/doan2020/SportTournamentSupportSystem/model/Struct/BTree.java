@@ -133,7 +133,7 @@ public class BTree<E> implements Serializable{
 		return list;
 	}
 	
-	public Node<E> findNodeByData(E data) {		
+	public Node<E> findNodeByData(E data) {
 		return findNodeByData(this.getRoot(), data);
 	}
 	

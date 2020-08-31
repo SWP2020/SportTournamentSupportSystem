@@ -6,7 +6,7 @@ import doan2020.SportTournamentSupportSystem.config.Const;
 import doan2020.SportTournamentSupportSystem.model.Box.MatchSlot;
 import doan2020.SportTournamentSupportSystem.model.BoxCollection.SeedList;
 import doan2020.SportTournamentSupportSystem.model.Entity.Match;
-import doan2020.SportTournamentSupportSystem.model.Naming.BoxDescription;
+import doan2020.SportTournamentSupportSystem.model.Indexing.BoxDescription;
 import doan2020.SportTournamentSupportSystem.model.Schedule.ScheduleStruct;
 import doan2020.SportTournamentSupportSystem.model.Struct.BTree;
 import doan2020.SportTournamentSupportSystem.model.Struct.Node;

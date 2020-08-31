@@ -3,7 +3,7 @@ package doan2020.SportTournamentSupportSystem.model.Schedule.DTO;
 import java.io.Serializable;
 import java.util.HashMap;
 
-import doan2020.SportTournamentSupportSystem.model.Schedule.RevertMapping;
+import doan2020.SportTournamentSupportSystem.model.Indexing.RevertMapping;
 
 public class ScheduleDTO implements Serializable{
 

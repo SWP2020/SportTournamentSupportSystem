@@ -1,5 +1,6 @@
 package doan2020.SportTournamentSupportSystem.api;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,6 +20,7 @@ import doan2020.SportTournamentSupportSystem.config.Const;
 import doan2020.SportTournamentSupportSystem.converter.MatchConverter;
 import doan2020.SportTournamentSupportSystem.dto.MatchDTO;
 import doan2020.SportTournamentSupportSystem.entity.MatchEntity;
+import doan2020.SportTournamentSupportSystem.entity.ResultEntity;
 import doan2020.SportTournamentSupportSystem.response.Response;
 import doan2020.SportTournamentSupportSystem.service.IMatchService;
 import doan2020.SportTournamentSupportSystem.service.IScheduleService;
@@ -32,7 +34,7 @@ public class MatchAPI {
 
 	@Autowired
 	private IMatchService service;
-	
+
 	@Autowired
 	private IScheduleService scheduleService;
 
@@ -180,7 +182,7 @@ public class MatchAPI {
 		System.out.println("MatchAPI: editMatch: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
-	
+
 	@PostMapping("/finish")
 	@CrossOrigin
 	public ResponseEntity<Response> finishMatch(@RequestParam Long id) {
@@ -192,7 +194,6 @@ public class MatchAPI {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
 		MatchEntity matchEntity = new MatchEntity();
-
 
 		try {
 			matchEntity = service.findOneById(id);
@@ -206,6 +207,8 @@ public class MatchAPI {
 
 				matchEntity.setStatus(Const.MATCH_STATUS_FINISHED);
 				matchEntity = service.update(id, matchEntity);
+
+				
 				scheduleService.finishMatch(matchEntity);
 
 				MatchDTO dto = converter.toDTO(matchEntity);

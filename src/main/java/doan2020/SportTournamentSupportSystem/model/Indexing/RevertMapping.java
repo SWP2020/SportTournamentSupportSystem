@@ -1,4 +1,4 @@
-package doan2020.SportTournamentSupportSystem.model.Schedule;
+package doan2020.SportTournamentSupportSystem.model.Indexing;
 
 import java.io.Serializable;
 
@@ -9,10 +9,29 @@ public class RevertMapping implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	private Long realMatchId;
-	private int scheduleType; // 1 - se, 2 - de, 3 - rr
-	private int location; // 0 - se, rr, 1 - winBranch, 2 - loseBranch, 3 - match34, 4 - summaryFinalMatch, 5 - optionFinalMatch
+	
+	/* 
+	 * 1 - se
+	 * 2 - de
+	 * 3 - rr
+	 */
+	private int scheduleType; 
+	
+	/* 
+	 * -1 - rr
+	 * 0 - se bracket
+	 * 1 - winBranch
+	 * 2 - loseBranch
+	 * 3 - match34
+	 * 4 - summaryFinalMatch, 
+	 * 5 - optionFinalMatch
+	 */
+	private int location; 
+	
 	private int tableId; // -1: final stage, 0-x
 	private int nodeId;
+	private int degree;
+	
 	public Long getRealMatchId() {
 		return realMatchId;
 	}
@@ -42,6 +61,12 @@ public class RevertMapping implements Serializable {
 	}
 	public void setNodeId(int nodeId) {
 		this.nodeId = nodeId;
+	}
+	public int getDegree() {
+		return degree;
+	}
+	public void setDegree(int degree) {
+		this.degree = degree;
 	}
 	
 	

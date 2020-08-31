@@ -6,7 +6,7 @@ import java.util.HashMap;
 
 import doan2020.SportTournamentSupportSystem.model.BoxCollection.RankingTable;
 import doan2020.SportTournamentSupportSystem.model.Entity.Match;
-import doan2020.SportTournamentSupportSystem.model.Schedule.RevertMapping;
+import doan2020.SportTournamentSupportSystem.model.Indexing.RevertMapping;
 
 abstract public class FinalStageScheduleDTO implements Serializable {
 

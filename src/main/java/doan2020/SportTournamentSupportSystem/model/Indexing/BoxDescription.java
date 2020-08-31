@@ -1,4 +1,4 @@
-package doan2020.SportTournamentSupportSystem.model.Naming;
+package doan2020.SportTournamentSupportSystem.model.Indexing;
 
 import java.io.Serializable;
 
