@@ -2,6 +2,7 @@ import React, { ReactNode } from 'react';
 import { connect } from 'react-redux';
 import { Styles } from 'react-modal';
 import Skeleton from 'react-loading-skeleton';
+import ReduxBlockUi from 'react-block-ui/redux';
 import { RouteComponentProps } from 'react-router-dom';
 import * as H from 'history';
 import { StaticContext } from 'react-router';
@@ -17,7 +18,7 @@ import {
   querySportInfo,
   queryFinalStageSetting,
   queryGroupStageSetting,
-  updateSchedule
+  updateSchedule,
 } from './actions';
 import './styles.css';
 import CustomModal from 'components/CustomModal';
@@ -31,11 +32,13 @@ import BracketBoard from 'components/BracketBoard';
 import Teams from 'components/Teams';
 import BracketSchedule from 'components/BracketSchedule';
 import BracketRank from 'components/BracketRank';
-import { queryTournamentInfo } from 'screens/TournamentInfo/actions';
+import { queryTournamentInfo, reportViolation } from 'screens/TournamentInfo/actions';
+import { cookies } from 'utils/cookies';
+import { REPORT_VIOLATION } from 'redux-saga/actions';
+import { REPORT_VIOLATION_SUCCESS, REPORT_VIOLATION_FAILED } from 'screens/TournamentInfo/reducers';
+import { COOKIES_TYPE } from 'global';
 import config from 'config';
 import { formatTournamentStatus } from 'utils/common';
-import { cookies } from 'utils/cookies';
-import { COOKIES_TYPE } from 'global';
 
 interface ICompetitionInfoProps extends React.ClassAttributes<CompetitionInfo> {
   routerInfo: RouteComponentProps<any, StaticContext, H.LocationState>;
@@ -56,6 +59,7 @@ interface ICompetitionInfoProps extends React.ClassAttributes<CompetitionInfo> {
   editCompetition(params: IBigRequest): void;
   editFinalStageSetting(params: IBigRequest): void;
   editGroupStageSetting(params: IBigRequest): void;
+  reportViolation(params: IBigRequest): void;
   queryAllCompetitionsByTournamentId(params: IBigRequest): void;
   updateSchedule(params: IBigRequest): void;
   queryAllSports(): void;
@@ -79,6 +83,7 @@ interface ICompetitionInfoState {
   playerAgeInForm: number;
   teamShortNameInForm: string;
   teamShortNameInFormError: boolean;
+  showReportModal: boolean;
   teamShortNameInFormErrorContent: string;
   listPlayerInForm: IParams[];
   playerGenderInForm: ValueType<OptionTypeBase>;
@@ -96,6 +101,12 @@ interface ICompetitionInfoState {
   amountOfTeamsGoOnInAGroup: number;
   amountOfTeamsGoOnInAGroupError: boolean;
   amountOfTeamsGoOnInAGroupErrorContent: string;
+  subjectForm: string;
+  detailReportForm: string;
+  subjectFormError: boolean;
+  subjectFormErrorContent: string;
+  detailReportFormError: boolean;
+  detailReportFormErrorContent: string;
 }
 
 const customStyles: Styles = {
@@ -104,6 +115,21 @@ const customStyles: Styles = {
     left: '15%',
     right: '15%',
     bottom: '5%',
+    backgroundColor: '#2b303d',
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  overlay: {
+    zIndex: 100001,
+  },
+};
+
+const customStyles2: Styles = {
+  content: {
+    top: '15%',
+    left: '15%',
+    right: '15%',
+    bottom: '15%',
     backgroundColor: '#2b303d',
     display: 'flex',
     flexDirection: 'column',
@@ -130,6 +156,7 @@ class CompetitionInfo extends React.Component<ICompetitionInfoProps, ICompetitio
     super(props);
     this.state = {
       showJoinModal: false,
+      showReportModal: false,
       teamNameInForm: '',
       playerEmailInForm: '',
       teamNameInFormError: false,
@@ -161,6 +188,12 @@ class CompetitionInfo extends React.Component<ICompetitionInfoProps, ICompetitio
       amountOfTeamsGoOnInAGroup: 1,
       amountOfTeamsGoOnInAGroupError: false,
       amountOfTeamsGoOnInAGroupErrorContent: '',
+      subjectForm: '',
+      detailReportForm: '',
+      subjectFormError: false,
+      subjectFormErrorContent: '',
+      detailReportFormError: false,
+      detailReportFormErrorContent: '',
       listPlayerInForm: [
         {
           name: 'Phan Trọng Nhân',
@@ -657,242 +690,341 @@ class CompetitionInfo extends React.Component<ICompetitionInfoProps, ICompetitio
     }
   }
 
+  private handleReportCheat = () => {
+    this.setState({
+      showReportModal: true,
+    });
+  };
+
+  private handleCloseReportModal = () => {
+    const confirm = window.confirm('Bạn có chắc chắn muốn hủy form báo cáo?');
+    if (confirm === true) {
+      this.setState({
+        showReportModal: false,
+        subjectForm: '',
+        subjectFormError: false,
+        subjectFormErrorContent: '',
+        detailReportForm: '',
+        detailReportFormError: false,
+        detailReportFormErrorContent: '',
+      });
+    }
+  };
+
+  private validateReportForm = () => {
+    let subjectFormError = false;
+    let subjectFormErrorContent = '';
+    let detailReportFormError = false;
+    let detailReportFormErrorContent = '';
+    if (this.state.subjectForm.trim() === '') {
+      subjectFormError = true;
+      subjectFormErrorContent = 'Tiêu đề báo cáo không được trống';
+    }
+    if (this.state.detailReportForm.trim() === '') {
+      detailReportFormError = true;
+      detailReportFormErrorContent = 'Nội dung báo cáo không được trống';
+    }
+
+    return {
+      subjectFormError,
+      subjectFormErrorContent,
+      detailReportFormError,
+      detailReportFormErrorContent,
+    };
+  }
+
+  private handleConfirmReportModal = () => {
+    const {
+      subjectFormError,
+      subjectFormErrorContent,
+      detailReportFormError,
+      detailReportFormErrorContent,
+    } = this.validateReportForm();
+    this.setState({
+      subjectFormError,
+      subjectFormErrorContent,
+      detailReportFormError,
+      detailReportFormErrorContent,
+    });
+    if (subjectFormError === true || detailReportFormError === true) {
+      return;
+    }
+    const params = {
+      path: '',
+      param: {
+      },
+      data: {
+        tournamentId: (this.props.tournamentInfo!.Tournament as IParams).id,
+        content: this.state.detailReportForm.trim(),
+        subject: this.state.subjectForm.trim(),
+        type: 'fraud',
+      },
+    }
+    this.props.reportViolation(params);
+    this.setState({
+      showReportModal: false,
+      detailReportForm: '',
+      detailReportFormError: false,
+      detailReportFormErrorContent: '',
+      subjectForm: '',
+      subjectFormError: false,
+      subjectFormErrorContent: '',
+    });
+  };
+
+  private onChangeSubjectForm = (value: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({
+      subjectForm: value.target.value,
+    });
+  }
+
+  private onChangeDetailReportForm = (value: React.ChangeEvent<HTMLTextAreaElement>) => {
+    this.setState({
+      detailReportForm: value.target.value,
+    });
+  }
+
   render() {
     return (
-      <div className="CompetitionInfo-Container">
-        <div className="CompetitionInfo-content-container">
-          <div className="CompetitionInfo-content-info-container">
-            <div className="CompetitionInfo-content-info-basic-info-container">
-              <div className="CompetitionInfo-content-info-basic-info-container-container">
-                <div className="CompetitionInfo-content-info-basic-info-container-singleRow">
-                  {this.state.onEditMode === false ?
-                    <p className="CompetitionInfo-name-text">{this.props.competitionInfo != null && this.props.competitionInfo.Competition ? (this.props.competitionInfo.Competition as unknown as IParams).name : <Skeleton width={400} height={30} />}</p> :
-                    <TextInput style={{ width: 300 }} label={'Tên cuộc thi'} value={this.state.competitionFullName} onChangeText={this.onChangeCompetitionFullName} error={this.state.competitionFullNameError} errorContent={this.state.competitionFullNameErrorContent} />
-                  }
-                </div>
-                <div className="CompetitionInfo-content-info-basic-info-container-singleRow">
-                  {
-                    this.state.onEditMode === false && <div className="CompetitionInfo-info-item">
-                      <p>
-                        {this.props.tournamentInfo != null && this.props.tournamentInfo.Tournament ? `Trạng thái: ${formatTournamentStatus((this.props.tournamentInfo.Tournament as unknown as IParams).status as string)}` : <Skeleton width={200} height={20} />}
-                      </p>
-                    </div>
-                  }
-                  <div className="CompetitionInfo-info-item">
-                    {
-                      this.state.onEditMode === false ? <p>{this.props.sportInfo != null ? `Bộ môn thi đấu: ${this.props.sportInfo.fullName}` : <Skeleton width={200} height={20} />}</p> :
-                        (sportOptions.length > 0 &&
-                          <Select
-                            options={sportOptions}
-                            className="Select"
-                            defaultValue={this.state.selectedSport}
-                            value={this.state.selectedSport}
-                            onChange={this.onChangeSport}
-                            maxMenuHeight={140}
-                          />)
+      <ReduxBlockUi
+        tag="div"
+        block={REPORT_VIOLATION}
+        unblock={[REPORT_VIOLATION_SUCCESS, REPORT_VIOLATION_FAILED]}
+      >
+        <div className="CompetitionInfo-Container">
+          <div className="CompetitionInfo-content-container">
+            <div className="CompetitionInfo-content-info-container">
+              <div className="CompetitionInfo-content-info-basic-info-container">
+                <div className="CompetitionInfo-content-info-basic-info-container-container">
+                  <div className="CompetitionInfo-content-info-basic-info-container-singleRow">
+                    {this.state.onEditMode === false ?
+                      <p className="CompetitionInfo-name-text">{this.props.competitionInfo != null && this.props.competitionInfo.Competition ? (this.props.competitionInfo.Competition as unknown as IParams).name : <Skeleton width={400} height={30} />}</p> :
+                      <TextInput style={{ width: 300 }} label={'Tên cuộc thi'} value={this.state.competitionFullName} onChangeText={this.onChangeCompetitionFullName} error={this.state.competitionFullNameError} errorContent={this.state.competitionFullNameErrorContent} />
                     }
                   </div>
-                </div>
-                {this.state.onEditMode === false && <div className="CompetitionInfo-content-info-basic-info-container-singleRow">
-                  <div className="CompetitionInfo-info-item">
-                    <p>{this.props.tournamentInfo != null && this.props.tournamentInfo.Tournament ? `Thuộc giải: ${(this.props.tournamentInfo.Tournament as unknown as IParams).fullName}` : <Skeleton width={250} height={20} />}</p>
-                  </div>
-                </div>}
-                {
-                  this.state.onEditMode === true ?
-                    <div className="CompetitionInfo-content-info-basic-info-container-singleRow">
-                      <div className="CompetitionInfo-info-item">
-                        <p>Cách tổ chức giải:</p>
-                        <input type="radio" name="competitionType" onClick={this.OnChoose1} checked={this.state.onePhase} readOnly />
-                        <label onClick={this.OnChoose1}>1 giai đoạn</label>
-                        <input type="radio" name="competitionType" onClick={this.OnChoose2} checked={this.state.twoPhase} readOnly />
-                        <label onClick={this.OnChoose2}>2 giai đoạn</label>
-                      </div>
-                    </div> :
-                    <div className="CompetitionInfo-content-info-basic-info-container-singleRow">
-                      <div className="CompetitionInfo-info-item">
-                        <p>{this.props.competitionInfo != null && this.props.competitionInfo.Competition ? `Cách tổ chức giải: ${(this.props.competitionInfo.Competition as unknown as IParams).hasGroupStage === true ? '2 giai đoạn' : '1 giai đoạn'}` : <Skeleton width={250} height={20} />}</p>
-                      </div>
-                    </div>
-                }
-                {
-                  this.state.onEditMode === true ?
-                    <div className="CompetitionInfo-content-info-basic-info-container-singleRow">
-                      <div className="CompetitionInfo-info-item">
-                        <p>{`Thể thức${this.state.onePhase === true ? '' : ' vòng bảng'}`}</p>
-                        <Select
-                          options={competitionFormatOptions}
-                          className="Select"
-                          defaultValue={this.state.selectedCompetitionFormatPhase1}
-                          value={this.state.selectedCompetitionFormatPhase1}
-                          onChange={this.onChangeCompetitionFormatPhase1}
-                          menuPlacement={'top'}
-                        />
-                      </div>
-                    </div> :
-                    <div className="CompetitionInfo-content-info-basic-info-container-singleRow">
-                      <div className="CompetitionInfo-info-item">
+                  <div className="CompetitionInfo-content-info-basic-info-container-singleRow">
+                    {
+                      this.state.onEditMode === false && <div className="CompetitionInfo-info-item">
                         <p>
-                          {
-                            this.props.competitionInfo != null && this.props.competitionInfo.Competition ?
-                              `${(this.props.competitionInfo.Competition as IParams).hasGroupStage === true ?
-                                'Thể thức vòng bảng: ' : 'Thể thức: '}
-                            ${
-                              this.props.groupStageSetting != null &&
-                                this.props.allFormats != null &&
-                                this.props.finalStageSetting != null &&
-                                this.props.allFormats.length > 0 &&
-                                this.props.allFormats.find(element => element.id === this.props.finalStageSetting!.formatId) != null &&
-                                this.props.allFormats.find(element => element.id === this.props.groupStageSetting!.formatId) != null ?
-                                ((this.props.competitionInfo.Competition as IParams).hasGroupStage !== true ? this.props.allFormats.find(element => element.id === this.props.finalStageSetting!.formatId)!.description :
-                                  this.props.allFormats.find(element => element.id === this.props.groupStageSetting!.formatId)!.description) : 'chưa có'
-                              }` : <Skeleton width={300} height={20} />}
+                          {this.props.tournamentInfo != null && this.props.tournamentInfo.Tournament ? `Trạng thái: ${formatTournamentStatus((this.props.tournamentInfo.Tournament as unknown as IParams).status as string)}` : <Skeleton width={200} height={20} />}
                         </p>
                       </div>
+                    }
+                    <div className="CompetitionInfo-info-item">
+                      {
+                        this.state.onEditMode === false ? <p>{this.props.sportInfo != null ? `Bộ môn thi đấu: ${this.props.sportInfo.fullName}` : <Skeleton width={200} height={20} />}</p> :
+                          (sportOptions.length > 0 &&
+                            <Select
+                              options={sportOptions}
+                              className="Select"
+                              defaultValue={this.state.selectedSport}
+                              value={this.state.selectedSport}
+                              onChange={this.onChangeSport}
+                              maxMenuHeight={140}
+                            />)
+                      }
                     </div>
-                }
-                {
-                  this.state.onEditMode === true ?
-                    (this.state.selectedCompetitionFormatPhase1 != null &&
-                      (this.state.selectedCompetitionFormatPhase1 as IParams).value !== 2 &&
+                  </div>
+                  {this.state.onEditMode === false && <div className="CompetitionInfo-content-info-basic-info-container-singleRow">
+                    <div className="CompetitionInfo-info-item">
+                      <p>{this.props.tournamentInfo != null && this.props.tournamentInfo.Tournament ? `Thuộc giải: ${(this.props.tournamentInfo.Tournament as unknown as IParams).fullName}` : <Skeleton width={250} height={20} />}</p>
+                    </div>
+                  </div>}
+                  {
+                    this.state.onEditMode === true ?
+                      <div className="CompetitionInfo-content-info-basic-info-container-singleRow">
+                        <div className="CompetitionInfo-info-item">
+                          <p>Cách tổ chức giải:</p>
+                          <input type="radio" name="competitionType" onClick={this.OnChoose1} checked={this.state.onePhase} readOnly />
+                          <label onClick={this.OnChoose1}>1 giai đoạn</label>
+                          <input type="radio" name="competitionType" onClick={this.OnChoose2} checked={this.state.twoPhase} readOnly />
+                          <label onClick={this.OnChoose2}>2 giai đoạn</label>
+                        </div>
+                      </div> :
+                      <div className="CompetitionInfo-content-info-basic-info-container-singleRow">
+                        <div className="CompetitionInfo-info-item">
+                          <p>{this.props.competitionInfo != null && this.props.competitionInfo.Competition ? `Cách tổ chức giải: ${(this.props.competitionInfo.Competition as unknown as IParams).hasGroupStage === true ? '2 giai đoạn' : '1 giai đoạn'}` : <Skeleton width={250} height={20} />}</p>
+                        </div>
+                      </div>
+                  }
+                  {
+                    this.state.onEditMode === true ?
+                      <div className="CompetitionInfo-content-info-basic-info-container-singleRow">
+                        <div className="CompetitionInfo-info-item">
+                          <p>{`Thể thức${this.state.onePhase === true ? '' : ' vòng bảng'}`}</p>
+                          <Select
+                            options={competitionFormatOptions}
+                            className="Select"
+                            defaultValue={this.state.selectedCompetitionFormatPhase1}
+                            value={this.state.selectedCompetitionFormatPhase1}
+                            onChange={this.onChangeCompetitionFormatPhase1}
+                            menuPlacement={'top'}
+                          />
+                        </div>
+                      </div> :
+                      <div className="CompetitionInfo-content-info-basic-info-container-singleRow">
+                        <div className="CompetitionInfo-info-item">
+                          <p>
+                            {
+                              this.props.competitionInfo != null && this.props.competitionInfo.Competition ?
+                                `${(this.props.competitionInfo.Competition as IParams).hasGroupStage === true ?
+                                  'Thể thức vòng bảng: ' : 'Thể thức: '}
+                            ${
+                                this.props.groupStageSetting != null &&
+                                  this.props.allFormats != null &&
+                                  this.props.finalStageSetting != null &&
+                                  this.props.allFormats.length > 0 &&
+                                  this.props.allFormats.find(element => element.id === this.props.finalStageSetting!.formatId) != null &&
+                                  this.props.allFormats.find(element => element.id === this.props.groupStageSetting!.formatId) != null ?
+                                  ((this.props.competitionInfo.Competition as IParams).hasGroupStage !== true ? this.props.allFormats.find(element => element.id === this.props.finalStageSetting!.formatId)!.description :
+                                    this.props.allFormats.find(element => element.id === this.props.groupStageSetting!.formatId)!.description) : 'chưa có'
+                                }` : <Skeleton width={300} height={20} />}
+                          </p>
+                        </div>
+                      </div>
+                  }
+                  {
+                    this.state.onEditMode === true ?
+                      (this.state.selectedCompetitionFormatPhase1 != null &&
+                        (this.state.selectedCompetitionFormatPhase1 as IParams).value !== 2 &&
+                        <div className="CompetitionInfo-content-info-basic-info-container-singleRow">
+                          <div className="CompetitionInfo-info-item">
+                            <label className="Checkbox-label">
+                              <input
+                                type="checkbox"
+                                checked={this.state.homeWayPhase1}
+                                onChange={this.onChangeHomeWayPhase1}
+                              />
+                              {`${(this.state.selectedCompetitionFormatPhase1 as IParams).value === 3 ? `${this.state.twoPhase === true ? 'Chơi lượt đi lượt về vòng bảng' : 'Chơi lượt đi lượt về'}` : `${this.state.twoPhase === true ? 'Có trận tranh hạng 3 vòng bảng' : 'Có trận tranh hạng 3'}`}`}
+                            </label>
+                          </div>
+                        </div>) :
+                      (this.props.competitionInfo != null && this.props.competitionInfo.Competition && ((this.props.competitionInfo.Competition as unknown as IParams).hasGroupStage === true ?
+                        this.props.groupStageSetting != null && this.props.groupStageSetting.formatId !== 2 && <div className="CompetitionInfo-content-info-basic-info-container-singleRow">
+                          <div className="CompetitionInfo-info-item">
+                            <p>
+                              {
+                                this.props.groupStageSetting.hasHomeMatch === true ?
+                                  (this.props.groupStageSetting.formatId === 1 ? 'Có trận tranh hạng 3 vòng bảng' : 'Có chơi lượt đi lượt về vòng bảng') :
+                                  (this.props.groupStageSetting.formatId === 1 ? 'Không có trận tranh hạng 3 vòng bảng' : 'Không chơi lượt đi lượt về vòng bảng')
+                              }
+                            </p>
+                          </div>
+                        </div> : (this.props.finalStageSetting != null && this.props.finalStageSetting.formatId !== 2 && <div className="CompetitionInfo-content-info-basic-info-container-singleRow">
+                          <div className="CompetitionInfo-info-item">
+                            <p>
+                              {
+                                this.props.finalStageSetting.hasHomeMatch === true ?
+                                  (this.props.finalStageSetting.formatId === 1 ? 'Có trận tranh hạng 3' : 'Có chơi lượt đi lượt về') :
+                                  (this.props.finalStageSetting.formatId === 1 ? 'Không có trận tranh hạng 3' : 'Không chơi lượt đi lượt về')
+                              }
+                            </p>
+                          </div>
+                        </div>)))
+                  }
+                  {this.state.onEditMode === true ? (this.state.twoPhase === true &&
+                    <div className="CompetitionInfo-content-info-basic-info-container-singleRow">
+                      <div className="CompetitionInfo-info-item">
+                        <TextInput
+                          style={{ width: 250 }}
+                          label={'Số đội trong 1 bảng (lớn hơn 1)'}
+                          value={this.state.amountOfTeamsInAGroup as unknown as string}
+                          onChangeText={this.onChangeAmountOfTeamsInAGroup}
+                          error={this.state.amountOfTeamsInAGroupError}
+                          errorContent={this.state.amountOfTeamsInAGroupErrorContent}
+                          onBlur={this.onBlurAmountOfTeamsInAGroup}
+                        />
+                      </div>
+                      <div className="CompetitionInfo-info-item">
+                        <TextInput
+                          style={{ width: 300 }}
+                          label={'Số đội đi tiếp trong 1 bảng (lớn hơn 0)'}
+                          value={this.state.amountOfTeamsGoOnInAGroup as unknown as string}
+                          onChangeText={this.onChangeAmountOfTeamsGoOnInAGroup}
+                          error={this.state.amountOfTeamsGoOnInAGroupError}
+                          errorContent={this.state.amountOfTeamsGoOnInAGroupErrorContent}
+                          onBlur={this.onBlurAmountOfTeamsGoOnInAGroup}
+                        />
+                      </div>
+                    </div>) :
+                    (this.props.competitionInfo != null &&
+                      this.props.competitionInfo.Competition &&
+                      (this.props.competitionInfo.Competition as IParams).hasGroupStage === true &&
+                      <div className="CompetitionInfo-content-info-basic-info-container-singleRow">
+                        <div className="CompetitionInfo-info-item">
+                          <p>Số đội trong 1 bảng: {this.props.groupStageSetting != null ? this.props.groupStageSetting.maxTeamPerTable as number : 2}</p>
+                        </div>
+                        <div className="CompetitionInfo-info-item">
+                          <p>Số đội đi tiếp trong 1 bảng: {this.props.groupStageSetting != null ? this.props.groupStageSetting.advanceTeamPerTable as number : 1}</p>
+                        </div>
+                      </div>)
+                  }
+                  {this.state.onEditMode === true ? (
+                    <div className="CompetitionInfo-content-info-basic-info-container-singleRow">
+                      <div className="CompetitionInfo-info-item">
+                        {this.state.twoPhase === true && <p>Thể thức vòng chung kết</p>}
+                        {this.state.twoPhase === true && <Select
+                          options={competitionFormatOptions}
+                          className="Select"
+                          defaultValue={this.state.selectedCompetitionFormatPhase2}
+                          value={this.state.selectedCompetitionFormatPhase2}
+                          onChange={this.onChangeCompetitionFormatPhase2}
+                          menuPlacement={'top'}
+                        />}
+                      </div>
+                    </div>) :
+                    (this.props.competitionInfo != null && this.props.competitionInfo.Competition != null && (this.props.competitionInfo.Competition as IParams).hasGroupStage === true &&
+                      <div className="CompetitionInfo-content-info-basic-info-container-singleRow">
+                        <div className="CompetitionInfo-info-item">
+                          <p>Thể thức vòng chung kết: {
+                            this.props.allFormats != null &&
+                            this.props.finalStageSetting != null &&
+                            this.props.allFormats.length > 0 &&
+                            this.props.allFormats.find(element => element.id === this.props.finalStageSetting!.formatId) != null &&
+                            this.props.allFormats.find(element => element.id === this.props.finalStageSetting!.formatId)!.description
+                          }
+                          </p>
+                        </div>
+                      </div>)
+                  }
+                  {this.state.onEditMode === false ?
+                    this.props.competitionInfo != null && this.props.competitionInfo.Competition != null && (this.props.competitionInfo.Competition as IParams).hasGroupStage === true && this.props.finalStageSetting != null && this.props.finalStageSetting.formatId !== 2 && (this.props.finalStageSetting.formatId === 3 ?
+                      <div className="CompetitionInfo-content-info-basic-info-container-singleRow">
+                        <div className="CompetitionInfo-info-item">
+                          <p>{this.props.finalStageSetting.hasHomeMatch === true ? 'Chơi lượt đi lượt về vòng chung kết' : 'Không chơi lượt đi lượt về vòng chung kết'}</p>
+                        </div>
+                      </div> : <div className="CompetitionInfo-content-info-basic-info-container-singleRow">
+                        <div className="CompetitionInfo-info-item">
+                          <p>{this.props.finalStageSetting.hasHomeMatch === true ? 'Có trận tranh hạng 3 vòng chung kết' : 'Không có trận tranh hạng 3 vòng chung kết'}</p>
+                        </div>
+                      </div>)
+                    : (this.state.twoPhase === true && (this.state.selectedCompetitionFormatPhase2 as IParams).value !== 2 && ((this.state.selectedCompetitionFormatPhase2 as IParams).value === 3 ?
                       <div className="CompetitionInfo-content-info-basic-info-container-singleRow">
                         <div className="CompetitionInfo-info-item">
                           <label className="Checkbox-label">
                             <input
                               type="checkbox"
-                              checked={this.state.homeWayPhase1}
-                              onChange={this.onChangeHomeWayPhase1}
+                              checked={this.state.homeWayPhase2}
+                              onChange={this.onChangeHomeWayPhase2}
                             />
-                            {`${(this.state.selectedCompetitionFormatPhase1 as IParams).value === 3 ? `${this.state.twoPhase === true ? 'Chơi lượt đi lượt về vòng bảng' : 'Chơi lượt đi lượt về'}` : `${this.state.twoPhase === true ? 'Có trận tranh hạng 3 vòng bảng' : 'Có trận tranh hạng 3'}`}`}
-                          </label>
-                        </div>
-                      </div>) :
-                    (this.props.competitionInfo != null && this.props.competitionInfo.Competition && ((this.props.competitionInfo.Competition as unknown as IParams).hasGroupStage === true ?
-                      this.props.groupStageSetting != null && this.props.groupStageSetting.formatId !== 2 && <div className="CompetitionInfo-content-info-basic-info-container-singleRow">
-                        <div className="CompetitionInfo-info-item">
-                          <p>
-                            {
-                              this.props.groupStageSetting.hasHomeMatch === true ?
-                                (this.props.groupStageSetting.formatId === 1 ? 'Có trận tranh hạng 3 vòng bảng' : 'Có chơi lượt đi lượt về vòng bảng') :
-                                (this.props.groupStageSetting.formatId === 1 ? 'Không có trận tranh hạng 3 vòng bảng' : 'Không chơi lượt đi lượt về vòng bảng')
-                            }
-                          </p>
-                        </div>
-                      </div> : (this.props.finalStageSetting != null && this.props.finalStageSetting.formatId !== 2 && <div className="CompetitionInfo-content-info-basic-info-container-singleRow">
-                        <div className="CompetitionInfo-info-item">
-                          <p>
-                            {
-                              this.props.finalStageSetting.hasHomeMatch === true ?
-                                (this.props.finalStageSetting.formatId === 1 ? 'Có trận tranh hạng 3' : 'Có chơi lượt đi lượt về') :
-                                (this.props.finalStageSetting.formatId === 1 ? 'Không có trận tranh hạng 3' : 'Không chơi lượt đi lượt về')
-                            }
-                          </p>
-                        </div>
-                      </div>)))
-                }
-                {this.state.onEditMode === true ? (this.state.twoPhase === true &&
-                  <div className="CompetitionInfo-content-info-basic-info-container-singleRow">
-                    <div className="CompetitionInfo-info-item">
-                      <TextInput
-                        style={{ width: 250 }}
-                        label={'Số đội trong 1 bảng (lớn hơn 1)'}
-                        value={this.state.amountOfTeamsInAGroup as unknown as string}
-                        onChangeText={this.onChangeAmountOfTeamsInAGroup}
-                        error={this.state.amountOfTeamsInAGroupError}
-                        errorContent={this.state.amountOfTeamsInAGroupErrorContent}
-                        onBlur={this.onBlurAmountOfTeamsInAGroup}
-                      />
-                    </div>
-                    <div className="CompetitionInfo-info-item">
-                      <TextInput
-                        style={{ width: 300 }}
-                        label={'Số đội đi tiếp trong 1 bảng (lớn hơn 0)'}
-                        value={this.state.amountOfTeamsGoOnInAGroup as unknown as string}
-                        onChangeText={this.onChangeAmountOfTeamsGoOnInAGroup}
-                        error={this.state.amountOfTeamsGoOnInAGroupError}
-                        errorContent={this.state.amountOfTeamsGoOnInAGroupErrorContent}
-                        onBlur={this.onBlurAmountOfTeamsGoOnInAGroup}
-                      />
-                    </div>
-                  </div>) :
-                  (this.props.competitionInfo != null &&
-                    this.props.competitionInfo.Competition &&
-                    (this.props.competitionInfo.Competition as IParams).hasGroupStage === true &&
-                    <div className="CompetitionInfo-content-info-basic-info-container-singleRow">
-                      <div className="CompetitionInfo-info-item">
-                        <p>Số đội trong 1 bảng: {this.props.groupStageSetting != null ? this.props.groupStageSetting.maxTeamPerTable as number : 2}</p>
-                      </div>
-                      <div className="CompetitionInfo-info-item">
-                        <p>Số đội đi tiếp trong 1 bảng: {this.props.groupStageSetting != null ? this.props.groupStageSetting.advanceTeamPerTable as number : 1}</p>
-                      </div>
-                    </div>)
-                }
-                {this.state.onEditMode === true ? (
-                  <div className="CompetitionInfo-content-info-basic-info-container-singleRow">
-                    <div className="CompetitionInfo-info-item">
-                      {this.state.twoPhase === true && <p>Thể thức vòng chung kết</p>}
-                      {this.state.twoPhase === true && <Select
-                        options={competitionFormatOptions}
-                        className="Select"
-                        defaultValue={this.state.selectedCompetitionFormatPhase2}
-                        value={this.state.selectedCompetitionFormatPhase2}
-                        onChange={this.onChangeCompetitionFormatPhase2}
-                        menuPlacement={'top'}
-                      />}
-                    </div>
-                  </div>) :
-                  (this.props.competitionInfo != null && this.props.competitionInfo.Competition != null && (this.props.competitionInfo.Competition as IParams).hasGroupStage === true &&
-                    <div className="CompetitionInfo-content-info-basic-info-container-singleRow">
-                      <div className="CompetitionInfo-info-item">
-                        <p>Thể thức vòng chung kết: {
-                          this.props.allFormats != null &&
-                          this.props.finalStageSetting != null &&
-                          this.props.allFormats.length > 0 &&
-                          this.props.allFormats.find(element => element.id === this.props.finalStageSetting!.formatId) != null &&
-                          this.props.allFormats.find(element => element.id === this.props.finalStageSetting!.formatId)!.description
-                        }
-                        </p>
-                      </div>
-                    </div>)
-                }
-                {this.state.onEditMode === false ?
-                  this.props.competitionInfo != null && this.props.competitionInfo.Competition != null && (this.props.competitionInfo.Competition as IParams).hasGroupStage === true && this.props.finalStageSetting != null && this.props.finalStageSetting.formatId !== 2 && (this.props.finalStageSetting.formatId === 3 ?
-                    <div className="CompetitionInfo-content-info-basic-info-container-singleRow">
-                      <div className="CompetitionInfo-info-item">
-                        <p>{this.props.finalStageSetting.hasHomeMatch === true ? 'Chơi lượt đi lượt về vòng chung kết' : 'Không chơi lượt đi lượt về vòng chung kết'}</p>
-                      </div>
-                    </div> : <div className="CompetitionInfo-content-info-basic-info-container-singleRow">
-                      <div className="CompetitionInfo-info-item">
-                        <p>{this.props.finalStageSetting.hasHomeMatch === true ? 'Có trận tranh hạng 3 vòng chung kết' : 'Không có trận tranh hạng 3 vòng chung kết'}</p>
-                      </div>
-                    </div>)
-                  : (this.state.twoPhase === true && (this.state.selectedCompetitionFormatPhase2 as IParams).value !== 2 && ((this.state.selectedCompetitionFormatPhase2 as IParams).value === 3 ?
-                    <div className="CompetitionInfo-content-info-basic-info-container-singleRow">
-                      <div className="CompetitionInfo-info-item">
-                        <label className="Checkbox-label">
-                          <input
-                            type="checkbox"
-                            checked={this.state.homeWayPhase2}
-                            onChange={this.onChangeHomeWayPhase2}
-                          />
                       Chơi lượt đi lượt về vòng chung kết
                     </label>
-                      </div>
-                    </div> : <div className="CompetitionInfo-content-info-basic-info-container-singleRow">
-                      <div className="CompetitionInfo-info-item">
-                        <label className="Checkbox-label">
-                          <input
-                            type="checkbox"
-                            checked={this.state.homeWayPhase2}
-                            onChange={this.onChangeHomeWayPhase2}
-                          />
+                        </div>
+                      </div> : <div className="CompetitionInfo-content-info-basic-info-container-singleRow">
+                        <div className="CompetitionInfo-info-item">
+                          <label className="Checkbox-label">
+                            <input
+                              type="checkbox"
+                              checked={this.state.homeWayPhase2}
+                              onChange={this.onChangeHomeWayPhase2}
+                            />
                       Có trận tranh hạng 3 vòng chung kết
                     </label>
-                      </div>
-                    </div>))}
+                        </div>
+                      </div>))}
+                </div>
               </div>
-            </div>
-            {/* {(this.state.onEditMode === false
+              {/* {(this.state.onEditMode === false
               ?
               <div className="CompetitionInfo-login-container">
                 <div
@@ -909,95 +1041,132 @@ class CompetitionInfo extends React.Component<ICompetitionInfoProps, ICompetitio
                   <h4 className="CompetitionInfo-login-text">Lưu chỉnh sửa</h4>
                 </div>
               </div>)} */}
-            {this.props.competitionInfo != null && this.props.competitionInfo.Competition != null && this.props.competitionInfo.Config != null && cookies.get(COOKIES_TYPE.AUTH_TOKEN) != null && ((this.props.competitionInfo.Config as unknown as IParams).canEdit !== true ?
-              ((this.props.competitionInfo.Competition as unknown as IParams).status === 'opening' &&
-                <div className="CompetitionInfo-login-container">
-                  <div
-                    className="CompetitionInfo-login"
-                    onClick={this.handleJoinTournament}
-                  >
-                    <h4 className="CompetitionInfo-login-text">Tham gia cuộc thi</h4>
-                  </div>
-                </div>) :
-              (((this.props.competitionInfo.Competition as unknown as IParams).status === 'opening' || (this.props.competitionInfo.Competition as unknown as IParams).status === 'initializing')
-                && (this.state.onEditMode === false
-                  ?
+              {this.props.competitionInfo != null && this.props.competitionInfo.Competition != null && this.props.competitionInfo.Config != null && cookies.get(COOKIES_TYPE.AUTH_TOKEN) != null && ((this.props.competitionInfo.Config as unknown as IParams).canEdit !== true ?
+                ((this.props.competitionInfo.Competition as unknown as IParams).status === 'opening' &&
                   <div className="CompetitionInfo-login-container">
                     <div
                       className="CompetitionInfo-login"
-                      onClick={this.handleOpenEditCompetitionInfo}
+                      onClick={this.handleJoinTournament}
                     >
-                      <h4 className="CompetitionInfo-login-text">Chỉnh sửa thông tin</h4>
+                      <h4 className="CompetitionInfo-login-text">Tham gia cuộc thi</h4>
                     </div>
-                  </div> : <div className="CompetitionInfo-login-container">
-                    <div
-                      className="CompetitionInfo-login"
-                      onClick={this.handleCloseEditCompetitionInfo}
-                    >
-                      <h4 className="CompetitionInfo-login-text">Lưu chỉnh sửa</h4>
-                    </div>
-                  </div>)))
-            }
-            <div className="CompetitionInfo-content-info-advanced-info-container">
-              <CustomTab tabList={this.tabList} componentList={this.componentList} selectedIndex={0}></CustomTab>
+                  </div>) :
+                (((this.props.competitionInfo.Competition as unknown as IParams).status === 'opening' || (this.props.competitionInfo.Competition as unknown as IParams).status === 'initializing')
+                  && (this.state.onEditMode === false
+                    ?
+                    <div className="CompetitionInfo-login-container">
+                      <div
+                        className="CompetitionInfo-login"
+                        onClick={this.handleOpenEditCompetitionInfo}
+                      >
+                        <h4 className="CompetitionInfo-login-text">Chỉnh sửa thông tin</h4>
+                      </div>
+                    </div> : <div className="CompetitionInfo-login-container">
+                      <div
+                        className="CompetitionInfo-login"
+                        onClick={this.handleCloseEditCompetitionInfo}
+                      >
+                        <h4 className="CompetitionInfo-login-text">Lưu chỉnh sửa</h4>
+                      </div>
+                    </div>)))
+              }
+              {this.props.tournamentInfo != null &&
+                this.props.competitionInfo != null &&
+                this.props.competitionInfo.Config != null &&
+                this.props.tournamentInfo.Tournament != null &&
+                this.props.competitionInfo.Competition != null &&
+                (this.props.competitionInfo.Config as IParams).canEdit !== true &&
+                (this.props.tournamentInfo.Tournament as IParams).status !== 'finished' &&
+                <div className="CompetitionInfo-login-container">
+                  <div
+                    className="CompetitionInfo-login"
+                    onClick={this.handleReportCheat}
+                  >
+                    <h4 className="CompetitionInfo-login-text">Báo cáo gian lận</h4>
+                  </div>
+                </div>
+              }
+              <div className="CompetitionInfo-content-info-advanced-info-container">
+                <CustomTab tabList={this.tabList} componentList={this.componentList} selectedIndex={0}></CustomTab>
+              </div>
             </div>
           </div>
+          <CustomModal
+            customStyles={customStyles2}
+            handleCloseModal={this.handleCloseReportModal}
+            showModal={this.state.showReportModal}
+            handleConfirmModal={this.handleConfirmReportModal}
+          >
+            <div className={'Report-modal-container'}>
+              <div className={'Report-modal-header-container'}>
+                <h1>Form Báo cáo</h1>
+              </div>
+              <div className={'Report-modal-subject-input-container'}>
+                <p>Tiêu đề: </p>
+                <input style={{ width: '200px', height: '25px', marginLeft: '20px' }} type={'text'} onChange={this.onChangeSubjectForm} value={this.state.subjectForm} />
+              </div>
+              <p>Nội dung báo cáo: </p>
+              <textarea rows={7} cols={60} value={this.state.detailReportForm} onChange={this.onChangeDetailReportForm}></textarea>
+              {this.state.subjectFormError === true && <p style={{ color: 'red' }}>{this.state.subjectFormErrorContent}</p>}
+              {this.state.detailReportFormError === true && <p style={{ color: 'red' }}>{this.state.detailReportFormErrorContent}</p>}
+            </div>
+          </CustomModal>
+          <CustomModal
+            customStyles={customStyles}
+            handleCloseModal={this.handleCloseModal}
+            showModal={this.state.showJoinModal}
+            handleConfirmModal={this.handleConfirmModal}
+          >
+            <div className={'TournamentInfo-join-tournament-form-competition-header'}>
+              <h3>Form đăng ký dự thi</h3>
+            </div>
+            <TextInput label={'Tên đội'} value={this.state.teamNameInForm} onChangeText={this.onChangeTeamNameInForm} error={this.state.teamNameInFormError} errorContent={this.state.teamNameInFormErrorContent} />
+            <TextInput label={'Tên ngắn đội'} value={this.state.teamShortNameInForm} onChangeText={this.onChangeTeamShortNameInForm} error={this.state.teamShortNameInFormError} errorContent={this.state.teamShortNameInFormErrorContent} />
+            <div className="TournamentInfo-join-tournament-container">
+              <div className="TournamentInfo-join-tournament-item1">
+                <p>Tên</p>
+              </div>
+              <div className="TournamentInfo-join-tournament-item2">
+                <p>Giới tính</p>
+              </div>
+              <div className="TournamentInfo-join-tournament-item2">
+                <p>Tuổi</p>
+              </div>
+              <div className="TournamentInfo-join-tournament-item1">
+                <p>Email</p>
+              </div>
+              <div className="TournamentInfo-join-tournament-setting">
+              </div>
+            </div>
+            {this.state.listPlayerInForm.map((item, index) => <Player onDelete={this.onDeletePlayer} info={item} freeToEdit={true} key={index} index={index} />)}
+            <div className="TournamentInfo-join-tournament-container">
+              <div className="TournamentInfo-join-tournament-item1">
+                <input type={'text'} onChange={this.onChangePlayerNameInForm} value={this.state.playerNameInForm} />
+              </div>
+              <div className="TournamentInfo-join-tournament-item2">
+                <Select
+                  options={genderOptions}
+                  className="Select"
+                  defaultValue={this.state.playerGenderInForm}
+                  value={this.state.playerGenderInForm}
+                  onChange={this.onChangePlayerGenderInForm}
+                />
+              </div>
+              <div className="TournamentInfo-join-tournament-item2">
+                <input style={{ width: '70px' }} type={'text'} onChange={this.onChangePlayerAgeInForm} value={this.state.playerAgeInForm} />
+              </div>
+              <div className="TournamentInfo-join-tournament-item1">
+                <input type={'text'} onChange={this.onChangePlayerEmailInForm} value={this.state.playerEmailInForm} />
+              </div>
+              <div className="TournamentInfo-join-tournament-setting">
+                <IoMdAddCircleOutline color={'white'} size={25} style={{ marginLeft: '3px', marginRight: '3px' }} onClick={this.addPlayer} />
+              </div>
+            </div>
+            {this.state.playerNameInFormError === true && <p style={{ color: 'red' }}>{this.state.playerNameInFormErrorContent}</p>}
+            {this.state.playerEmailInFormError === true && <p style={{ color: 'red' }}>{this.state.playerEmailInFormErrorContent}</p>}
+          </CustomModal>
         </div>
-        <CustomModal
-          customStyles={customStyles}
-          handleCloseModal={this.handleCloseModal}
-          showModal={this.state.showJoinModal}
-          handleConfirmModal={this.handleConfirmModal}
-        >
-          <div className={'TournamentInfo-join-tournament-form-competition-header'}>
-            <h3>Form đăng ký dự thi</h3>
-          </div>
-          <TextInput label={'Tên đội'} value={this.state.teamNameInForm} onChangeText={this.onChangeTeamNameInForm} error={this.state.teamNameInFormError} errorContent={this.state.teamNameInFormErrorContent} />
-          <TextInput label={'Tên ngắn đội'} value={this.state.teamShortNameInForm} onChangeText={this.onChangeTeamShortNameInForm} error={this.state.teamShortNameInFormError} errorContent={this.state.teamShortNameInFormErrorContent} />
-          <div className="TournamentInfo-join-tournament-container">
-            <div className="TournamentInfo-join-tournament-item1">
-              <p>Tên</p>
-            </div>
-            <div className="TournamentInfo-join-tournament-item2">
-              <p>Giới tính</p>
-            </div>
-            <div className="TournamentInfo-join-tournament-item2">
-              <p>Tuổi</p>
-            </div>
-            <div className="TournamentInfo-join-tournament-item1">
-              <p>Email</p>
-            </div>
-            <div className="TournamentInfo-join-tournament-setting">
-            </div>
-          </div>
-          {this.state.listPlayerInForm.map((item, index) => <Player onDelete={this.onDeletePlayer} info={item} freeToEdit={true} key={index} index={index} />)}
-          <div className="TournamentInfo-join-tournament-container">
-            <div className="TournamentInfo-join-tournament-item1">
-              <input type={'text'} onChange={this.onChangePlayerNameInForm} value={this.state.playerNameInForm} />
-            </div>
-            <div className="TournamentInfo-join-tournament-item2">
-              <Select
-                options={genderOptions}
-                className="Select"
-                defaultValue={this.state.playerGenderInForm}
-                value={this.state.playerGenderInForm}
-                onChange={this.onChangePlayerGenderInForm}
-              />
-            </div>
-            <div className="TournamentInfo-join-tournament-item2">
-              <input style={{ width: '70px' }} type={'text'} onChange={this.onChangePlayerAgeInForm} value={this.state.playerAgeInForm} />
-            </div>
-            <div className="TournamentInfo-join-tournament-item1">
-              <input type={'text'} onChange={this.onChangePlayerEmailInForm} value={this.state.playerEmailInForm} />
-            </div>
-            <div className="TournamentInfo-join-tournament-setting">
-              <IoMdAddCircleOutline color={'white'} size={25} style={{ marginLeft: '3px', marginRight: '3px' }} onClick={this.addPlayer} />
-            </div>
-          </div>
-          {this.state.playerNameInFormError === true && <p style={{ color: 'red' }}>{this.state.playerNameInFormErrorContent}</p>}
-          {this.state.playerEmailInFormError === true && <p style={{ color: 'red' }}>{this.state.playerEmailInFormErrorContent}</p>}
-        </CustomModal>
-      </div>
+      </ReduxBlockUi>
     );
   }
 }
@@ -1030,5 +1199,6 @@ export default connect(
     queryGroupStageSetting,
     queryAllCompetitionsByTournamentId,
     updateSchedule,
+    reportViolation,
   }
 )(CompetitionInfo);

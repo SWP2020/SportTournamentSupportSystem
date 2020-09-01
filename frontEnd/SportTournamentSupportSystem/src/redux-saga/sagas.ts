@@ -48,6 +48,10 @@ import { queryBracketRankInfo } from './sagas/BracketRank';
 import { deleteCompetition } from './sagas/DeleteCompetition';
 import { startTournament } from './sagas/StartTournament';
 import { getMatchResult } from './sagas/GetMatchResult';
+import { updateMatchResult } from './sagas/UpdateMatchResult';
+import { queryTournamentReport } from './sagas/QueryTournamentReport';
+import { reportViolation } from './sagas/ReportViolation';
+import { queryAllReports } from './sagas/QueryAllReports';
 
 export default function* () {
   yield all([
@@ -100,5 +104,9 @@ export default function* () {
     deleteCompetition(),
     startTournament(),
     getMatchResult(),
+    updateMatchResult(),
+    queryTournamentReport(),
+    reportViolation(),
+    queryAllReports(),
   ]);
 }

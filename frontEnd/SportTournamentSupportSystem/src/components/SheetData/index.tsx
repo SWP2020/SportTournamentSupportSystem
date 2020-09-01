@@ -7,77 +7,6 @@ import { IParams } from 'interfaces/common';
 const STYLE = {
   // backgroundColor: 'red',
 };
-// const STYLE_BOTTOM_LEFT_GRID = {
-//   borderRight: '2px solid #d0e9fa',
-// };
-
-// const STYLE_BOTTOM_LEFT_GRID_KBSV = {
-//   borderRight: '2px solid rgb(219, 199, 174)',
-//   backgroundColor: 'white',
-// };
-
-// const STYLE_BOTTOM_LEFT_GRID_BOARD_MODE = {
-//   borderRight: '2px solid #565c61',
-//   backgroundColor: '#38444F',
-// };
-
-// const STYLE_BOTTOM_LEFT_GRID_BOARD_MODE_KBSV = {
-//   borderRight: '2px solid #565c61',
-//   backgroundColor: '#282624',
-// };
-// const STYLE_BOTTOM_RIGHT_GRID = {
-//   backgroundColor: 'white',
-// };
-// const STYLE_BOTTOM_RIGHT_GRID_BOARD_MODE = {
-//   backgroundColor: '#38444F',
-// };
-
-// const STYLE_BOTTOM_RIGHT_GRID_BOARD_MODE_KBSV = {
-//   backgroundColor: '#282624',
-// };
-// const STYLE_TOP_LEFT_GRID = {
-//   borderBottom: '1px solid rgba(128,128,128,0.27)',
-//   borderRight: '2px solid #d0e9fa',
-//   backgroundColor: '#ededed',
-// };
-
-// const STYLE_TOP_LEFT_GRID_KBSV = {
-//   borderBottom: '1px solid rgba(128,128,128,0.27)',
-//   borderRight: '2px solid rgb(219, 199, 174)',
-//   backgroundColor: 'rgba(250, 193, 28, 0.2)',
-// };
-
-// const STYLE_TOP_LEFT_GRID_BOARD_MODE = {
-//   borderBottom: '1px solid #818181',
-//   borderRight: '2px solid #565c61',
-//   backgroundColor: '#ededed',
-// };
-
-// const STYLE_TOP_LEFT_GRID_BOARD_MODE_KBSV = {
-//   borderBottom: '1px solid #818181',
-//   borderRight: '2px solid #565c61',
-//   backgroundColor: '#282624',
-// };
-
-// const STYLE_TOP_RIGHT_GRID = {
-//   borderBottom: '1px solid rgba(128,128,128,0.27)',
-//   backgroundColor: 'rgba(241, 243, 246, 1)',
-// };
-
-// const STYLE_TOP_RIGHT_GRID_KBSV = {
-//   borderBottom: '1px solid rgba(128,128,128,0.27)',
-//   backgroundColor: 'rgb(250, 193, 28, .1)',
-// };
-
-// const STYLE_TOP_RIGHT_GRID_BOARD_MODE = {
-//   borderBottom: '1px solid #818181',
-//   backgroundColor: 'rgba(241, 243, 246, 1)',
-// };
-
-// const STYLE_TOP_RIGHT_GRID_BOARD_MODE_KBSV = {
-//   borderBottom: '1px solid #818181',
-//   backgroundColor: '#282624',
-// };
 
 interface ISheetDataColumn {
   label: string | React.ReactElement;
@@ -133,18 +62,18 @@ export class SheetData extends React.Component<ISheetDataProps, ISheetDataState>
   private list: IParams[] = [{}];
   private lock = false;
   // private virtualList: MultiGrid;
-  private config: ISheetDataConfig;
+  // private config: ISheetDataConfig;
   private loadMore = true;
 
   constructor(props: ISheetDataProps) {
     super(props);
     this.state = {};
-    this.config = JSON.parse(JSON.stringify(this.props.config));
-    this.config.totalWidth = this.config.header.reduce((a: number, b: ISheetDataColumn) => a + b.width, 0);
-    this.config.totalFixedWidth = this.config.header.reduce(
-      (a: number, b: ISheetDataColumn, index: number) => a + (index < this.config.fixedColumnCount ? b.width : 0),
-      0
-    );
+    // this.config = JSON.parse(JSON.stringify(this.props.config));
+    // this.config.totalWidth = this.config.header.reduce((a: number, b: ISheetDataColumn) => a + b.width, 0);
+    // this.config.totalFixedWidth = this.config.header.reduce(
+    //   (a: number, b: ISheetDataColumn, index: number) => a + (index < this.config.fixedColumnCount ? b.width : 0),
+    //   0
+    // );
   }
 
   componentDidMount = () => {
@@ -158,12 +87,12 @@ export class SheetData extends React.Component<ISheetDataProps, ISheetDataState>
 
   shouldComponentUpdate(nextProps: ISheetDataProps) {
     if (this.props.config !== nextProps.config) {
-      this.config = JSON.parse(JSON.stringify(nextProps.config));
-      this.config.totalWidth = this.config.header.reduce((a: number, b: ISheetDataColumn) => a + b.width, 0);
-      this.config.totalFixedWidth = this.config.header.reduce(
-        (a: number, b: ISheetDataColumn, index: number) => a + (index < this.config.fixedColumnCount ? b.width : 0),
-        0
-      );
+      // this.config = JSON.parse(JSON.stringify(nextProps.config));
+      // this.config.totalWidth = this.config.header.reduce((a: number, b: ISheetDataColumn) => a + b.width, 0);
+      // this.config.totalFixedWidth = this.config.header.reduce(
+      //   (a: number, b: ISheetDataColumn, index: number) => a + (index < this.config.fixedColumnCount ? b.width : 0),
+      //   0
+      // );
     }
 
     return true;
@@ -212,14 +141,14 @@ export class SheetData extends React.Component<ISheetDataProps, ISheetDataState>
   };
 
   private getColumnWidth = ({ index }: Index) => {
-    return this.config.header[index].width;
+    return this.props.config.header[index].width;
   };
 
   private getRowHeight = ({ index }: Index) => {
     if (index === 0) {
       return 40;
     } else {
-      return this.config.rowHeight;
+      return this.props.config.rowHeight;
     }
   };
 

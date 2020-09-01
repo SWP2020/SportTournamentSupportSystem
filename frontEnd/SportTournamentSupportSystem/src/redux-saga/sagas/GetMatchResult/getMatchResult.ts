@@ -19,7 +19,7 @@ function* doGetMatchResult(request: IRequest<IBigRequest>) {
     if (response.data.error.MessageCode === 0) {
       yield put({
         type: request.response.success,
-        payload: data,
+        payload: data.Results,
       });
     } else {
       throw new Error(response.data.error.Message);
