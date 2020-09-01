@@ -8,7 +8,7 @@ import doan2020.SportTournamentSupportSystem.entity.TeamEntity;
 import doan2020.SportTournamentSupportSystem.model.Box.RankingTableSlot;
 import doan2020.SportTournamentSupportSystem.model.Box.Seed;
 import doan2020.SportTournamentSupportSystem.model.Entity.Team;
-import doan2020.SportTournamentSupportSystem.model.Naming.BoxDescription;
+import doan2020.SportTournamentSupportSystem.model.Indexing.BoxDescription;
 
 public class RankingTable extends ArrayList<RankingTableSlot> implements Serializable{
 

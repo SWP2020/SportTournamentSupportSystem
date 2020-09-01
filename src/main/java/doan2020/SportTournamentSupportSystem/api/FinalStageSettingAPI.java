@@ -113,10 +113,23 @@ public class FinalStageSettingAPI {
 				error.put("Message", "FinalStageSetting create successfuly");
 				System.out.println("FinalStageSettingAPI: createFinalStageSetting: no exception");
 			} else {
+				String message = "Unknown error";
+				if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_REGISTRATION_OPENING)) {
+					message = Const.TOURNAMENT_MESSAGE_REGISTRATION_OPENING;
+				}
+				if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_PROCESSING)) {
+					message = Const.TOURNAMENT_MESSAGE_PROCESSING;
+				}
+				if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_FINISHED)) {
+					message = Const.TOURNAMENT_MESSAGE_FINISHED;
+				}
+				if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_STOPPED)) {
+					message = Const.TOURNAMENT_MESSAGE_STOPPED;
+				}
 				result.put("Competition", null);
 				config.put("Global", 0);
 				error.put("MessageCode", 1);
-				error.put("Message", "Tournament has started");
+				error.put("Message", message);
 			}
 		} catch (Exception e) {
 			System.out.println("FinalStageSettingAPI: createFinalStageSetting: has exception");
@@ -162,10 +175,23 @@ public class FinalStageSettingAPI {
 				error.put("Message", "FinalStageSetting update successfuly");
 				System.out.println("FinalStageSettingAPI: editFinalStageSetting: no exception");
 			} else {
+				String message = "Unknown error";
+				if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_REGISTRATION_OPENING)) {
+					message = Const.TOURNAMENT_MESSAGE_REGISTRATION_OPENING;
+				}
+				if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_PROCESSING)) {
+					message = Const.TOURNAMENT_MESSAGE_PROCESSING;
+				}
+				if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_FINISHED)) {
+					message = Const.TOURNAMENT_MESSAGE_FINISHED;
+				}
+				if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_STOPPED)) {
+					message = Const.TOURNAMENT_MESSAGE_STOPPED;
+				}
 				result.put("Competition", null);
 				config.put("Global", 0);
 				error.put("MessageCode", 1);
-				error.put("Message", "Tournament has started");
+				error.put("Message", message);
 			}
 		} catch (Exception e) {
 			System.out.println("FinalStageSettingAPI: editFinalStageSetting: has exception");

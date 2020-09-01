@@ -11,14 +11,6 @@ public class BTree<E> implements Serializable{
 	protected Integer totalNode;
 	
 	protected Node<E> root;
-
-	
-	
-	
-	
-	
-	
-	
 	
 	public BTree(Node<E> root) {
 		this.root = root;
@@ -133,11 +125,38 @@ public class BTree<E> implements Serializable{
 		if (node == null)
 			return list;
 		
-		list.addAll(toArrayList(node.getLeft()));
-		list.addAll(toArrayList(node.getRight()));
 		list.add(node.getData());
 		
+		list.addAll(toArrayList(node.getLeft()));
+		list.addAll(toArrayList(node.getRight()));
+
 		return list;
+	}
+	
+	public Node<E> findNodeByData(E data) {
+		return findNodeByData(this.getRoot(), data);
+	}
+	
+	protected Node<E> findNodeByData(Node<E> node, E data) {
+	
+		if (node == null) {
+			return null;
+		}
+		
+		if (node.getData().equals(data)) {
+			return node;
+		}
+		
+		Node<E> findLeft = findNodeByData(node.getLeft(), data);
+		Node<E> findRight = findNodeByData(node.getRight(), data);
+		
+		if (findLeft != null)
+			return findLeft;
+		
+		if (findRight != null)
+			return findRight;
+		
+		return node;
 	}
 	
 }

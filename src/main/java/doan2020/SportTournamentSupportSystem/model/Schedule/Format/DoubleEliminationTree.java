@@ -7,7 +7,7 @@ import doan2020.SportTournamentSupportSystem.config.Const;
 import doan2020.SportTournamentSupportSystem.model.Box.MatchSlot;
 import doan2020.SportTournamentSupportSystem.model.BoxCollection.SeedList;
 import doan2020.SportTournamentSupportSystem.model.Entity.Match;
-import doan2020.SportTournamentSupportSystem.model.Naming.BoxDescription;
+import doan2020.SportTournamentSupportSystem.model.Indexing.BoxDescription;
 import doan2020.SportTournamentSupportSystem.model.Struct.BTree;
 import doan2020.SportTournamentSupportSystem.model.Struct.DoubleBTree;
 import doan2020.SportTournamentSupportSystem.model.Struct.Node;
@@ -56,16 +56,20 @@ public class DoubleEliminationTree extends SingleEliminationTree implements Seri
 		this.optionFinal = getOptionFinal();
 		System.out.println("DoubleEliminationTree: Contructor: get option final OK");
 		
+		System.out.println("WIN BRANCH TOTAL MATCH: " + this.bracket.toArrayList().size());
+		System.out.println("WIN BRANCH TOTAL MATCH: " + this.matches.size());
+		
 		this.matches.addAll(this.loseBranch.toArrayList());
 		System.out.println("DoubleEliminationTree: Contructor: finish");
 	}
 
 	public DoubleEliminationTree(BTree<Match> winBranch, DoubleBTree<Match> loseBranch, int totalTeam) {
 		super(winBranch, totalTeam, Const.WIN_BRANCH_NAMING);
+		System.out.println("DoubleEliminationTree: Contructor: winTree OK");
 		this.bracket.setName("WinBranch");
 		
 		this.firstRoundTotalLoseMatch = this.calFirstRoundTotalLoseMatch(totalTeam);
-		System.out.println("======================================== FIRST ROUND TOTAL LOSE MATCH: " + this.firstRoundTotalLoseMatch);
+		System.out.println("FIRST ROUND TOTAL LOSE MATCH: " + this.firstRoundTotalLoseMatch);
 		this.firstRoundCurrentLoseMatch = 0;
 		this.totalLoseBranchRound = calTotalLoseBranchRound(this.totalTeam);
 		
@@ -75,7 +79,11 @@ public class DoubleEliminationTree extends SingleEliminationTree implements Seri
 		this.summaryFinal = getSummaryFinal();
 		this.optionFinal = getOptionFinal();
 		
+		System.out.println("WIN BRANCH TOTAL MATCH: " + this.bracket.toArrayList().size());
+		System.out.println("WIN BRANCH TOTAL MATCH: " + this.matches.size());
+		
 		this.matches.addAll(this.loseBranch.toArrayList());
+		System.out.println("DoubleEliminationTree: Contructor: finish");
 		
 	}
 

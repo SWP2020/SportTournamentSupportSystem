@@ -117,4 +117,26 @@ public class ReportService implements IReportService {
 		return count;
 	}
 
+	@Override
+	public Collection<ReportEntity> findByType(Pageable pageable, String type) {
+		Collection<ReportEntity> foundEntitys = null;
+		try {
+			foundEntitys = reportRepository.findByType(pageable, type).getContent();
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntitys;
+	}
+	
+	@Override
+	public Collection<ReportEntity> findByType(String type) {
+		Collection<ReportEntity> foundEntitys = null;
+		try {
+			foundEntitys = reportRepository.findByType(type);
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntitys;
+	}
+
 }

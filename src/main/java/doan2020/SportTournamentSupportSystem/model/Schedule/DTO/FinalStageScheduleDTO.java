@@ -2,9 +2,11 @@ package doan2020.SportTournamentSupportSystem.model.Schedule.DTO;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import doan2020.SportTournamentSupportSystem.model.BoxCollection.RankingTable;
 import doan2020.SportTournamentSupportSystem.model.Entity.Match;
+import doan2020.SportTournamentSupportSystem.model.Indexing.RevertMapping;
 
 abstract public class FinalStageScheduleDTO implements Serializable {
 
@@ -19,8 +21,8 @@ abstract public class FinalStageScheduleDTO implements Serializable {
 	protected RankingTable rankingTable;
 	protected ArrayList<Match> matches;
 	protected String status;
-	
 	protected ArrayList<String> roundsNaming;
+	private HashMap<Long, RevertMapping> mapping;
 
 	public int getTotalTeam() {
 		return totalTeam;
@@ -102,5 +104,13 @@ abstract public class FinalStageScheduleDTO implements Serializable {
 	}
 
 	public abstract void setRoundsNaming();
+
+	public HashMap<Long, RevertMapping> getMapping() {
+		return mapping;
+	}
+
+	public void setMapping(HashMap<Long, RevertMapping> mapping) {
+		this.mapping = mapping;
+	}
 
 }

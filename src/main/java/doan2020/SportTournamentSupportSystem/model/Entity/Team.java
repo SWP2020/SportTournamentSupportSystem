@@ -44,6 +44,11 @@ public class Team implements Serializable{
 	public void setTotalLose(Integer totalLose) {
 		this.totalLose = totalLose;
 	}
+	@Override
+	public String toString() {
+		return "Team [id=" + id + ", fullName=" + fullName + ", shortName=" + shortName + ", totalWin=" + totalWin
+				+ ", totalLose=" + totalLose + "]";
+	}
 	
 	
 	

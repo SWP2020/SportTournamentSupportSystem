@@ -59,7 +59,22 @@ public final class Const {
 	public final static String TOURNAMENT_STATUS_PROCESSING = "processing";
 	public final static String TOURNAMENT_STATUS_STOPPED = "stopped";
 	public final static String TOURNAMENT_STATUS_FINISHED = "finished";
-  
+	
+//	tournament message
+	public final static String TOURNAMENT_MESSAGE_INITIALIZING = "Giải đấu đang được khởi tạo";
+	public final static String TOURNAMENT_MESSAGE_REGISTRATION_OPENING = "Giải đấu đang mở đăng ký";
+	public final static String TOURNAMENT_MESSAGE_PROCESSING = "Giải đấu đang tiến hành";
+	public final static String TOURNAMENT_MESSAGE_STOPPED = "Giải đấu đã bị dừng lại bởi Quản trị viên";
+	public final static String TOURNAMENT_MESSAGE_FINISHED = "Giải đấu đã kết thúc";
+	public final static String TOURNAMENT_MESSAGE_NOT_READY = "Tất cả các cuộc thi cần phải sẵn sàng";
+	public final static String TOURNAMENT_MESSAGE_NO_COMPETITION = "Giải đấu đang không có cuộc thi nào";
+	
+//	Response message
+	public final static String RESPONSE_SUCCESS = "Success";
+	public final static String RESPONSE_NOT_FOUND = "Not found";
+	public final static String RESPONSE_INVALID_INFO = "Invalid info";
+	public final static String RESPONSE_SERVER_ERROR = "Server error";
+	
 //	Constant for naming match
 	
 	public final static String ROUND_ROBIN_AWAY = " lượt về";
@@ -80,7 +95,6 @@ public final class Const {
 	public final static String SEMIFINAL = "Bán kết";
 	public final static String QUARTERFINAL = "Tứ kết";
 	public final static String THIRD_PLACE = "Tranh hạng 3";
-	
 	
 	public final static String TABLE_NAMING = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	public final static String SINGLE_BRACKET_NAMING = "M-";
