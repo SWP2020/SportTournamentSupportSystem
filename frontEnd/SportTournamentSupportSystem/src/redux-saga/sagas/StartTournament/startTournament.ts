@@ -31,6 +31,9 @@ function* doStartTournament(request: IRequest<IBigRequest>) {
     }
   } catch (error) {
     yield put({
+      type: request.response.failed,
+    });
+    yield put({
       type: COMMON_SHOW_NOTIFICATION,
       data: {
         type: 'error',

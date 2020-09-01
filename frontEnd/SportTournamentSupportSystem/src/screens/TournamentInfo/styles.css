@@ -209,3 +209,9 @@
 .TournamentInfo-join-tournament-setting :hover {
   cursor: pointer;
 }
+
+.Report-modal-subject-input-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}

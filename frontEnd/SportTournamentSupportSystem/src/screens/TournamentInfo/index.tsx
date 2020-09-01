@@ -18,6 +18,7 @@ import TournamentListTeam from 'components/TournamentListTeam';
 import TournamentSetting from 'components/TournamentSetting';
 import CompetitionsSetting from 'components/CompetitionsSetting';
 import Player from 'components/Player';
+import TournamentReport from 'components/TournamentReport';
 import TextInput from 'components/TextInput';
 import { IBigRequest, IParams } from 'interfaces/common';
 import { COOKIES_TYPE } from 'global';
@@ -27,9 +28,9 @@ import { formatDateToDisplay } from 'utils/datetime';
 import config from 'config';
 import { onEditBracketMode, deleteListSelectingTeam } from 'components/BracketTeam/actions';
 import { queryAllCompetitionsByTournamentId } from 'components/CompetitionsSetting/actions';
-import { updateBackgroundTournament, updateAvatarTournament, queryTournamentInfo, querySportsByTournament, finishTournament, queryCompetitionsBySportAndTournament, startTournament } from './actions';
-import { START_TOURNAMENT, FINISH_TOURNAMENT } from 'redux-saga/actions';
-import { START_TOURNAMENT_SUCCESS, START_TOURNAMENT_FAILED, FINISH_TOURNAMENT_SUCCESS, FINISH_TOURNAMENT_FAILED } from './reducers';
+import { reportViolation, updateBackgroundTournament, updateAvatarTournament, queryTournamentInfo, querySportsByTournament, finishTournament, queryCompetitionsBySportAndTournament, startTournament } from './actions';
+import { START_TOURNAMENT, FINISH_TOURNAMENT, REPORT_VIOLATION } from 'redux-saga/actions';
+import { START_TOURNAMENT_SUCCESS, START_TOURNAMENT_FAILED, FINISH_TOURNAMENT_SUCCESS, FINISH_TOURNAMENT_FAILED, REPORT_VIOLATION_SUCCESS, REPORT_VIOLATION_FAILED } from './reducers';
 import './styles.css';
 
 interface ITournamentInfoProps extends React.ClassAttributes<TournamentInfo> {
@@ -49,6 +50,7 @@ interface ITournamentInfoProps extends React.ClassAttributes<TournamentInfo> {
   onEditBracketMode(status: boolean): void;
   deleteListSelectingTeam(): void;
   queryAllCompetitionsByTournamentId(param: IBigRequest): void;
+  reportViolation(param: IBigRequest): void;
 }
 
 interface ITournamentInfoState {
@@ -56,6 +58,7 @@ interface ITournamentInfoState {
   selectedCompetitionInFormError: boolean;
   selectedCompetitionInFormErrorContent: string;
   showJoinModal: boolean;
+  showReportModal: boolean;
   teamNameInForm: string;
   teamNameInFormError: boolean;
   teamNameInFormErrorContent: string;
@@ -69,6 +72,12 @@ interface ITournamentInfoState {
   teamShortNameInForm: string;
   teamShortNameInFormError: boolean;
   teamShortNameInFormErrorContent: string;
+  subjectForm: string;
+  detailReportForm: string;
+  subjectFormError: boolean;
+  subjectFormErrorContent: string;
+  detailReportFormError: boolean;
+  detailReportFormErrorContent: string;
   listPlayerInForm: IParams[];
   playerGenderInForm: ValueType<OptionTypeBase>;
 }
@@ -82,6 +91,21 @@ const customStyles: Styles = {
     left: '15%',
     right: '15%',
     bottom: '5%',
+    backgroundColor: '#2b303d',
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  overlay: {
+    zIndex: 100001,
+  },
+};
+
+const customStyles2: Styles = {
+  content: {
+    top: '15%',
+    left: '15%',
+    right: '15%',
+    bottom: '15%',
     backgroundColor: '#2b303d',
     display: 'flex',
     flexDirection: 'column',
@@ -105,8 +129,15 @@ class TournamentInfo extends React.Component<ITournamentInfoProps, ITournamentIn
     this.state = {
       selectedCompetitionInForm: null,
       showJoinModal: false,
+      showReportModal: false,
       teamNameInForm: '',
       playerEmailInForm: '',
+      subjectForm: '',
+      detailReportForm: '',
+      subjectFormError: false,
+      subjectFormErrorContent: '',
+      detailReportFormError: false,
+      detailReportFormErrorContent: '',
       teamNameInFormError: false,
       teamNameInFormErrorContent: '',
       playerNameInForm: '',
@@ -161,12 +192,14 @@ class TournamentInfo extends React.Component<ITournamentInfoProps, ITournamentIn
           this.tabList = [
             'Các cuộc thi trong giải',
             'Các đội tham gia giải',
-            'Cài đặt'
+            'Cài đặt',
+            'Báo cáo giải'
           ];
           this.componentList = [
             <CompetitionsSetting tournamentInfo={nextProps.tournamentInfo.Tournament as unknown as IParams} tournamentId={Number(this.props.routerInfo.match.params.tournamentId)} onChangeCompetitionSetting={this.onChangeCompetitionSetting} />,
             <TournamentListTeam id={Number(this.props.routerInfo.match.params.tournamentId)} />,
-            <TournamentSetting tournamentId={Number(this.props.routerInfo.match.params.tournamentId)} tournamentInfo={nextProps.tournamentInfo.Tournament as unknown as IParams} />
+            <TournamentSetting tournamentId={Number(this.props.routerInfo.match.params.tournamentId)} tournamentInfo={nextProps.tournamentInfo.Tournament as unknown as IParams} />,
+            <TournamentReport tournamentId={Number(this.props.routerInfo.match.params.tournamentId)} tournamentInfo={nextProps.tournamentInfo.Tournament as unknown as IParams} />
           ];
         } else {
           this.tabList = [
@@ -313,11 +346,32 @@ class TournamentInfo extends React.Component<ITournamentInfoProps, ITournamentIn
     });
   };
 
+  private handleReportViolate = () => {
+    this.setState({
+      showReportModal: true,
+    });
+  };
+
   private handleCloseModal = () => {
     const confirm = window.confirm('Bạn có chắc chắn muốn hủy form đăng ký?');
     if (confirm === true) {
       this.setState({
         showJoinModal: false,
+      });
+    }
+  };
+
+  private handleCloseReportModal = () => {
+    const confirm = window.confirm('Bạn có chắc chắn muốn hủy form báo cáo?');
+    if (confirm === true) {
+      this.setState({
+        showReportModal: false,
+        subjectForm: '',
+        subjectFormError: false,
+        subjectFormErrorContent: '',
+        detailReportForm: '',
+        detailReportFormError: false,
+        detailReportFormErrorContent: '',
       });
     }
   };
@@ -349,6 +403,28 @@ class TournamentInfo extends React.Component<ITournamentInfoProps, ITournamentIn
       teamNameInFormErrorContent,
       teamShortNameInFormError,
       teamShortNameInFormErrorContent
+    };
+  }
+
+  private validateReportForm = () => {
+    let subjectFormError = false;
+    let subjectFormErrorContent = '';
+    let detailReportFormError = false;
+    let detailReportFormErrorContent = '';
+    if (this.state.subjectForm.trim() === '') {
+      subjectFormError = true;
+      subjectFormErrorContent = 'Tiêu đề báo cáo không được trống';
+    }
+    if (this.state.detailReportForm.trim() === '') {
+      detailReportFormError = true;
+      detailReportFormErrorContent = 'Nội dung báo cáo không được trống';
+    }
+
+    return {
+      subjectFormError,
+      subjectFormErrorContent,
+      detailReportFormError,
+      detailReportFormErrorContent,
     };
   }
 
@@ -407,6 +483,45 @@ class TournamentInfo extends React.Component<ITournamentInfoProps, ITournamentIn
       },
     }
     // this.props.registTeam(params);
+  };
+
+  private handleConfirmReportModal = () => {
+    const {
+      subjectFormError,
+      subjectFormErrorContent,
+      detailReportFormError,
+      detailReportFormErrorContent,
+    } = this.validateReportForm();
+    this.setState({
+      subjectFormError,
+      subjectFormErrorContent,
+      detailReportFormError,
+      detailReportFormErrorContent,
+    });
+    if (subjectFormError === true || detailReportFormError === true) {
+      return;
+    }
+    const params = {
+      path: '',
+      param: {
+      },
+      data: {
+        tournamentId: (this.props.tournamentInfo!.Tournament as IParams).id,
+        content: this.state.detailReportForm.trim(),
+        subject: this.state.subjectForm.trim(),
+        type: 'violation',
+      },
+    }
+    this.props.reportViolation(params);
+    this.setState({
+      showReportModal: false,
+      detailReportForm: '',
+      detailReportFormError: false,
+      detailReportFormErrorContent: '',
+      subjectForm: '',
+      subjectFormError: false,
+      subjectFormErrorContent: '',
+    });
   };
 
   private handleFinishTournament = () => {
@@ -503,6 +618,18 @@ class TournamentInfo extends React.Component<ITournamentInfoProps, ITournamentIn
     });
   }
 
+  private onChangeSubjectForm = (value: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({
+      subjectForm: value.target.value,
+    });
+  }
+
+  private onChangeDetailReportForm = (value: React.ChangeEvent<HTMLTextAreaElement>) => {
+    this.setState({
+      detailReportForm: value.target.value,
+    });
+  }
+
   render() {
     return (
       <ReduxBlockUi
@@ -514,6 +641,11 @@ class TournamentInfo extends React.Component<ITournamentInfoProps, ITournamentIn
           tag="div"
           block={FINISH_TOURNAMENT}
           unblock={[FINISH_TOURNAMENT_SUCCESS, FINISH_TOURNAMENT_FAILED]}
+        >
+        <ReduxBlockUi
+          tag="div"
+          block={REPORT_VIOLATION}
+          unblock={[REPORT_VIOLATION_SUCCESS, REPORT_VIOLATION_FAILED]}
         >
           <div className="TournamentInfo-Container">
             <div className="TournamentInfo-background-image-container">
@@ -598,6 +730,16 @@ class TournamentInfo extends React.Component<ITournamentInfoProps, ITournamentIn
                           </div>
                         </div>))
                 }
+                  {this.props.tournamentInfo != null && this.props.tournamentInfo.Config != null && this.props.tournamentInfo.Tournament != null && (this.props.tournamentInfo.Config as IParams).canEdit !== true && (this.props.tournamentInfo.Tournament as IParams).status !== 'finished' &&
+                  <div className="TournamentInfo-login-container">
+                    <div
+                      className="TournamentInfo-login"
+                      onClick={this.handleReportViolate}
+                    >
+                      <h4 className="TournamentInfo-login-text">Báo cáo vi phạm</h4>
+                    </div>
+                  </div>
+                }
                 {/* {this.props.tournamentInfo != null && (this.props.tournamentInfo as IParams).Config != null &&
               (((this.props.tournamentInfo as unknown as IParams).Config as unknown as IParams).canEdit === true ?
                 (this.props.tournamentInfo.Tournament != null && (
@@ -636,6 +778,26 @@ class TournamentInfo extends React.Component<ITournamentInfoProps, ITournamentIn
                 }
               </div>
             </div>
+            <CustomModal
+              customStyles={customStyles2}
+              handleCloseModal={this.handleCloseReportModal}
+              showModal={this.state.showReportModal}
+              handleConfirmModal={this.handleConfirmReportModal}
+            >
+              <div className={'Report-modal-container'}>
+                <div className={'Report-modal-header-container'}>
+                  <h1>Form Báo cáo</h1>
+                </div>
+                <div className={'Report-modal-subject-input-container'}>
+                  <p>Tiêu đề: </p>
+                  <input style={{ width: '200px', height: '25px', marginLeft: '20px' }} type={'text'} onChange={this.onChangeSubjectForm} value={this.state.subjectForm} />
+                </div>
+                <p>Nội dung báo cáo: </p>
+                <textarea rows={7} cols={60} value={this.state.detailReportForm} onChange={this.onChangeDetailReportForm}></textarea>
+                {this.state.subjectFormError === true && <p style={{ color: 'red' }}>{this.state.subjectFormErrorContent}</p>}
+                {this.state.detailReportFormError === true && <p style={{ color: 'red' }}>{this.state.detailReportFormErrorContent}</p>}
+              </div>
+            </CustomModal>
             <CustomModal
               customStyles={customStyles}
               handleCloseModal={this.handleCloseModal}
@@ -705,6 +867,7 @@ class TournamentInfo extends React.Component<ITournamentInfoProps, ITournamentIn
           </div>
         </ReduxBlockUi>
       </ReduxBlockUi>
+      </ReduxBlockUi>
     );
   }
 }
@@ -720,5 +883,5 @@ const mapStateToProps = (state: IState) => {
 
 export default connect(
   mapStateToProps,
-  { queryAllCompetitionsByTournamentId, deleteListSelectingTeam, onEditBracketMode, updateBackgroundTournament, updateAvatarTournament, queryTournamentInfo, querySportsByTournament, queryCompetitionsBySportAndTournament, startTournament, finishTournament }
+  { reportViolation, queryAllCompetitionsByTournamentId, deleteListSelectingTeam, onEditBracketMode, updateBackgroundTournament, updateAvatarTournament, queryTournamentInfo, querySportsByTournament, queryCompetitionsBySportAndTournament, startTournament, finishTournament }
 )(TournamentInfo);

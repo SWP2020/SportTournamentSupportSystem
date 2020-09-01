@@ -14,7 +14,7 @@ import { logOut, searchTournaments, searchUsers } from './actions';
 import './styles.css';
 
 interface IHeaderProps extends React.ClassAttributes<Header> {
-  currentPage: 'competitionInfo' | 'login' | 'signUp' | 'tournaments' | 'tournamentInfo' | 'users' | 'userInfo' | 'home' | 'forgotPassword' | 'newTournament' | 'changePassword' | 'active';
+  currentPage: 'competitionInfo' | 'login' | 'signUp' | 'tournaments' | 'tournamentInfo' | 'reports' | 'users' | 'userInfo' | 'home' | 'forgotPassword' | 'newTournament' | 'changePassword' | 'active';
   currentUserInfo: IParams | null;
 
   logOut(): void;
@@ -130,13 +130,21 @@ class Header extends React.Component<IHeaderProps, IHeaderState> {
       <div className="Header-container">
         <div className="Logo-container">
           <Link to="/" style={{ height: 50 }}>
-            <img style={{ width: '100%', height: '100%' }} src={require('../../assets/logo.png')} alt={'logo'} />
+            <img className={'Header-logo-image'} style={{ width: '100%', height: '100%' }} src={require('../../assets/logo.png')} alt={'logo'} />
           </Link>
         </div>
         <div className={`Option-container ${this.props.currentPage === 'tournaments' ? 'Option-container1' : ''}`}>
-          <Link to="/tournaments" style={{ textDecoration: 'none' }} onClick={() => { this.props.setGlobalSearchString('') }}>
-            <div className="Link"><p className={`Link-text ${this.props.currentPage === 'tournaments' ? 'Link-text-selected' : ''}`}>Các giải đấu</p></div>
+          <Link to={`${currentUserInfo != null && currentUserInfo.roleId === 1 && cookies.get(COOKIES_TYPE.AUTH_TOKEN) != null ? '/admin/tournaments' : '/tournaments'}`} style={{ textDecoration: 'none' }} onClick={() => { this.props.setGlobalSearchString('') }}>
+            <div className="Link"><p className={`Link-text ${this.props.currentPage === 'tournaments' ? 'Link-text-selected' : ''}`}>{`${this.props.currentPage === 'home' ? 'Các giải đấu' : (currentUserInfo != null && currentUserInfo.roleId === 1 && cookies.get(COOKIES_TYPE.AUTH_TOKEN) != null ? 'Quản lý giải đấu' : 'Các giải đấu')}`}</p></div>
           </Link>
+          {this.props.currentPage !== 'login' && currentUserInfo != null && currentUserInfo.roleId === 1 && cookies.get(COOKIES_TYPE.AUTH_TOKEN) != null &&
+          <Link to="/admin/users" style={{ textDecoration: 'none' }} onClick={() => { this.props.setGlobalSearchString('') }}>
+            <div className="Link"><p className={`Link-text ${this.props.currentPage === 'users' ? 'Link-text-selected' : ''}`}>Quản lý người dùng</p></div>
+          </Link>}
+          {this.props.currentPage !== 'login' && currentUserInfo != null && currentUserInfo.roleId === 1 && cookies.get(COOKIES_TYPE.AUTH_TOKEN) != null &&
+          <Link to="/admin/reports" style={{ textDecoration: 'none' }} onClick={() => { this.props.setGlobalSearchString('') }}>
+            <div className="Link"><p className={`Link-text ${this.props.currentPage === 'reports' ? 'Link-text-selected' : ''}`}>Quản lý báo cáo</p></div>
+          </Link>}
           {/* <Link to="/news" style={{ textDecoration: 'none' }}>
             <div className="Link"><p className="Link-text">Tin tức</p></div>
           </Link>
@@ -161,20 +169,24 @@ class Header extends React.Component<IHeaderProps, IHeaderState> {
             <FaSearch className={'Header-icon'} size={25} />
           </div>
         </div>
-        {this.props.currentPage !== 'newTournament' && this.props.currentPage !== 'login' && <Link to="/newTournament" style={{ textDecoration: 'none' }}>
-          <div className="SignUp-Button-container"><p className="Button">Tạo giải ngay</p></div>
-        </Link>}
+        {currentUserInfo != null && cookies.get(COOKIES_TYPE.AUTH_TOKEN) != null ? (this.props.currentPage !== 'newTournament' && this.props.currentPage !== 'login' && currentUserInfo.roleId !== 1 &&
+          <Link to="/newTournament" style={{ textDecoration: 'none' }}>
+            <div className="SignUp-Button-container"><p className="Button">Tạo giải ngay</p></div>
+          </Link>) : (this.props.currentPage !== 'newTournament' && this.props.currentPage !== 'login' &&
+            <Link to="/newTournament" style={{ textDecoration: 'none' }}>
+              <div className="SignUp-Button-container"><p className="Button">Tạo giải ngay</p></div>
+            </Link>)}
         {currentUserInfo != null && cookies.get(COOKIES_TYPE.AUTH_TOKEN) != null ?
           <div className="Right-container Right-container-hover">
             <div className={'UserOption-container'} onClick={this.handleShowUserOption}>
               <div className={'UserOption-avatar-container'}>
                 <img className={'UserOption-avatar-image'} src={require(
                   // `${this.state.errorLoadImage === false ?
-                    '../../assets/7ab1b0125d485c8dd6a4e78832b0a4b2fbed3cf8.png'
-                    // :
-                    // '../../assets/avatar-man-icon-profile-placeholder-260nw-1229862502.jpg'}`
-                    )
-                  } alt={'logo'} onError={this.onImageError} />
+                  '../../assets/7ab1b0125d485c8dd6a4e78832b0a4b2fbed3cf8.png'
+                  // :
+                  // '../../assets/avatar-man-icon-profile-placeholder-260nw-1229862502.jpg'}`
+                )
+                } alt={'logo'} onError={this.onImageError} />
               </div>
               <p className={'UserOption-name-text'}>{`${currentUserInfo.firstName}`}</p>
               {this.state.showUserOption === true ? <FaChevronDown color={'white'} /> : <FaChevronUp color={'white'} />}

@@ -76,6 +76,10 @@
   margin-right: 15px;
 }
 
+.Header-logo-image {
+  object-fit: cover;
+}
+
 .Button {
   color: white;
   font-weight: bold;
