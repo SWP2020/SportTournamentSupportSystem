@@ -138,5 +138,16 @@ public class ReportService implements IReportService {
 		}
 		return foundEntitys;
 	}
+	
+	@Override
+	public Collection<ReportEntity> findByTournamentIdAndType(Pageable pageable, Long tournamentId, String type) {
+		Collection<ReportEntity> foundEntitys = null;
+		try {
+			foundEntitys = reportRepository.findByTournamentIdAndTypeOrderByIdDesc(pageable, tournamentId, type).getContent();
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntitys;
+	}
 
 }

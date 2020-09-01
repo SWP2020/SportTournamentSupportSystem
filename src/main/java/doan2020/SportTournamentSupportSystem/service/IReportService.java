@@ -25,6 +25,8 @@ public interface IReportService {
     
 	public Collection<ReportEntity> findByTournamentId(Pageable pageable,Long tournamentId);
 	
+	public Collection<ReportEntity> findByTournamentIdAndType(Pageable pageable,Long tournamentId, String type);
+	
 	public int countReports();
 	
 	public Collection<ReportEntity> findByType(Pageable pageable,String type);

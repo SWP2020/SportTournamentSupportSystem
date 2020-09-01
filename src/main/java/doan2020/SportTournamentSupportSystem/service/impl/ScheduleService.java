@@ -859,6 +859,7 @@ public class ScheduleService implements IScheduleService {
 		}
 
 		updateMatch(match, thisMatch, results);
+	
 		saveScheduleToFile(schedule, match.getCompetition().getId());
 		
 		return schedule;
