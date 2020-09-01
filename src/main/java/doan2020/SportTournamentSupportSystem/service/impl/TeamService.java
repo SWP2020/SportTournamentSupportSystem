@@ -247,5 +247,30 @@ public class TeamService implements ITeamService {
 		
 		return totalTeam;
 	}
+	
+	@Override
+	public Collection<TeamEntity> findByCompetitionTournamentIdAndStatus(Long tournamentId, String status) {
+		Collection<TeamEntity> foundEntities = null;
+		try {
+			foundEntities = teamRepository.findByCompetitionTournamentIdAndStatus(tournamentId, status);
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntities;
+	}
+	
+	@Override
+	public Long countByCompetitionTournamentIdAndStatus(Long tournamentId, String status) {
+		Long totalTeam = 0l;
+		try {
+			totalTeam = teamRepository.countByCompetitionTournamentIdIdAndStatus(tournamentId, status);
+			if (totalTeam == null) {
+				return 0l;
+			}
+		} catch (Exception e) {
+		}
+		
+		return totalTeam;
+	}
 
 }
