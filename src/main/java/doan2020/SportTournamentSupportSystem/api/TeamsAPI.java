@@ -486,7 +486,9 @@ public class TeamsAPI {
 					error.put("Message", "Not found tournament");
 				} else {
 
-					teams.addAll(service.findByCompetitionTournamentIdAndStatus(tournamentId, Const.TEAM_STATUS_JOINED));
+					teams.addAll(service.findByTournamentIdAndStatus(tournamentId, Const.TEAM_STATUS_JOINED));
+					
+					System.out.println("size: " + teams.size());
 					
 					Collections.sort(teams, new TeamEntity());
 

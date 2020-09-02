@@ -249,13 +249,19 @@ public class TeamService implements ITeamService {
 	}
 	
 	@Override
-	public Collection<TeamEntity> findByCompetitionTournamentIdAndStatus(Long tournamentId, String status) {
+	public Collection<TeamEntity> findByTournamentIdAndStatus(Long tournamentId, String status) {
 		Collection<TeamEntity> foundEntities = null;
 		try {
-			foundEntities = teamRepository.findByCompetitionTournamentIdAndStatus(tournamentId, status);
+			System.out.println("TeamService: findByTournamentIdAndStatus: start");
+			System.out.println("tour: " + tournamentId);
+			System.out.println("status: " + status);
+			foundEntities = teamRepository.findByTournamentIdAndStatus(tournamentId, status);
+			System.out.println("TeamService: findByTournamentIdAndStatus: size " + foundEntities.size());
 		} catch (Exception e) {
+			System.out.println("TeamService: findByTournamentIdAndStatus: has exception");
 			return null;
 		}
+		System.out.println("TeamService: findByTournamentIdAndStatus: finish");
 		return foundEntities;
 	}
 	

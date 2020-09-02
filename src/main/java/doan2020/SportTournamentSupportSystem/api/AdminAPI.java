@@ -399,7 +399,7 @@ public class AdminAPI {
 
 	// Stop tournament
 	@PutMapping("/stopTournament")
-	public ResponseEntity<Response> stopTournament(@RequestParam Long id) {
+	public ResponseEntity<Response> stopTournament(@RequestParam(value="tournamentId") Long id) {
 		System.out.println("AdminAPI: stopTournament: start");
 		Response response = new Response();
 		HttpStatus httpStatus = HttpStatus.OK;
@@ -464,7 +464,7 @@ public class AdminAPI {
 
 	// Continue tournament
 	@PutMapping("/continueTournament")
-	public ResponseEntity<Response> continueTournament(@RequestParam Long id) {
+	public ResponseEntity<Response> continueTournament(@RequestParam(value="tournamentId") Long id) {
 		System.out.println("AdminAPI: continueTournament: start");
 		Response response = new Response();
 		HttpStatus httpStatus = HttpStatus.OK;
@@ -582,7 +582,7 @@ public class AdminAPI {
 
 	// Activate account
 	@PutMapping("/activateAccount")
-	public ResponseEntity<Response> activateAccount(@RequestParam Long id) {
+	public ResponseEntity<Response> activateAccount(@RequestParam(value="userId") Long id) {
 		System.out.println("AdminAPI: activateAccount: start");
 		Response response = new Response();
 		HttpStatus httpStatus = HttpStatus.OK;
@@ -639,7 +639,7 @@ public class AdminAPI {
 
 	// Deactivate account
 	@PutMapping("/deactivateAccount")
-	public ResponseEntity<Response> deactivateAccount(@RequestParam Long id) {
+	public ResponseEntity<Response> deactivateAccount(@RequestParam(value="userId") Long id) {
 		System.out.println("AdminAPI: deactivateAccount: start");
 		Response response = new Response();
 		HttpStatus httpStatus = HttpStatus.OK;

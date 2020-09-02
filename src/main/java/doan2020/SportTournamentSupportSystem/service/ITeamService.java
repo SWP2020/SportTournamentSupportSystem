@@ -34,7 +34,7 @@ public interface ITeamService {
 	
 	public Collection<TeamEntity> findByCompetitionIdAndStatus(Long competitionId, String status);
 	
-	public Collection<TeamEntity> findByCompetitionTournamentIdAndStatus(Long tournamentId, String status);
+	public Collection<TeamEntity> findByTournamentIdAndStatus(Long tournamentId, String status);
 	
 	public Long getMaxSeedNoByCompetitionId(Long competitionId);
 	

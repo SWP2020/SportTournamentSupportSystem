@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import doan2020.SportTournamentSupportSystem.config.Const;
 import doan2020.SportTournamentSupportSystem.entity.ReportEntity;
 import doan2020.SportTournamentSupportSystem.repository.ReportRepository;
 import doan2020.SportTournamentSupportSystem.service.IReportService;
@@ -21,6 +22,7 @@ public class ReportService implements IReportService {
 	public ReportEntity create(ReportEntity reportEntity) {
 		ReportEntity newEntity = null;
 		try {
+			reportEntity.setStatus(Const.REPORT_STATUS_UNREAD);
 			newEntity = reportRepository.save(reportEntity);
 		} catch (Exception e) {
 			return null;
