@@ -553,7 +553,7 @@ public class AdminAPI {
 
 	// Change account role
 	@PutMapping("/changeAccountRole")
-	public ResponseEntity<Response> changeAccountRole(@RequestParam Long id, @RequestParam String roleName) {
+	public ResponseEntity<Response> changeAccountRole(@RequestParam(value="userId") Long id) {
 		System.out.println("AdminAPI: changeAccountRole: start");
 		HttpStatus httpStatus = HttpStatus.OK;
 		Response response = new Response();
@@ -563,11 +563,11 @@ public class AdminAPI {
 		UserEntity userEntity = new UserEntity();
 		UserDTO userDTO = new UserDTO();
 		try {
-			if (id == null || roleName == null) {// id null or roleName null
+			if (id == null) {// id null or roleName null
 				result.put("User", null);
 				config.put("Global", 0);
 				error.put("MessageCode", 1);
-				error.put("Message", "Required param id or roleName");
+				error.put("Message", "Required param userId");
 			} else {// id not null or roleName null
 
 				userEntity = userService.findOneById(id);
@@ -578,7 +578,7 @@ public class AdminAPI {
 					error.put("Message", "User is not exist");
 				} else {
 
-					userEntity = userService.updateRole(userEntity, roleName);
+					userEntity = userService.updateRole(userEntity, Const.ROLE_ADMIN);
 
 					userDTO = userConverter.toDTO(userEntity);
 

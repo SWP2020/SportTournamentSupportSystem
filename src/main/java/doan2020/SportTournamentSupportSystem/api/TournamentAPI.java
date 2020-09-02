@@ -559,6 +559,154 @@ public class TournamentAPI {
 		System.out.println("TournamentAPI: finishTournament: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
+	
+	@PutMapping("/openRegistration")
+	public ResponseEntity<Response> openRegistration(@RequestParam Long id) {
+		System.out.println("TournamentAPI: openRegistration: start");
+		Response response = new Response();
+		HttpStatus httpStatus = HttpStatus.OK;
+		Map<String, Object> config = new HashMap<String, Object>();
+		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> error = new HashMap<String, Object>();
+
+		TournamentEntity thisTournament = new TournamentEntity();
+		TournamentDTO thisTournamentDTO = new TournamentDTO();
+
+		try {
+			if (id == null) {// id null
+				result.put("Tournament", null);
+				config.put("Global", 0);
+				error.put("MessageCode", 1);
+				error.put("Message", "Required param id");
+			} else {// id not null
+
+				thisTournament = service.findOneById(id);
+				if (thisTournament == null) {
+					result.put("Tournament", null);
+					config.put("Global", 0);
+					error.put("MessageCode", 1);
+					error.put("Message", "Tournament is not exist");
+				} else {
+					
+					System.out.println(thisTournament.getStatus());
+
+					String message = "Unknown error";
+					int code = 1;
+					if (thisTournament.getStatus().contains(Const.TOURNAMENT_STATUS_REGISTRATION_OPENING)) {
+						message = Const.TOURNAMENT_MESSAGE_REGISTRATION_OPENING;
+					}
+					if (thisTournament.getStatus().contains(Const.TOURNAMENT_STATUS_PROCESSING)) {
+						message = Const.TOURNAMENT_MESSAGE_PROCESSING;
+					}
+					if (thisTournament.getStatus().contains(Const.TOURNAMENT_STATUS_FINISHED)) {
+						message = Const.TOURNAMENT_MESSAGE_FINISHED;
+					}
+					if (thisTournament.getStatus().contains(Const.TOURNAMENT_STATUS_STOPPED)) {
+						message = Const.TOURNAMENT_MESSAGE_STOPPED;
+					}
+					if (thisTournament.getStatus().contains(Const.TOURNAMENT_STATUS_INITIALIZING)) {
+						thisTournament = service.updateStatus(thisTournament, Const.TOURNAMENT_STATUS_REGISTRATION_OPENING);
+
+						thisTournamentDTO = converter.toDTO(thisTournament);
+						message = "Success";
+						code = 0;
+					}
+
+					result.put("Tournament", thisTournamentDTO);
+					config.put("Global", 0);
+					error.put("MessageCode", code);
+					error.put("Message", message);
+				}
+
+			}
+			System.out.println("TournamentAPI: openRegistration: no exception");
+		} catch (Exception e) {
+			System.out.println("TournamentAPI: openRegistration: has exception");
+			result.put("Tournament", null);
+			config.put("Global", 0);
+			error.put("MessageCode", 1);
+			error.put("Message", "Server error");
+		}
+
+		response.setError(error);
+		response.setResult(result);
+		response.setConfig(config);
+		System.out.println("TournamentAPI: finishTournament: finish");
+		return new ResponseEntity<Response>(response, httpStatus);
+	}
+	
+	@PutMapping("/closeRegistration")
+	public ResponseEntity<Response> closeRegistration(@RequestParam Long id) {
+		System.out.println("TournamentAPI: closeRegistration: start");
+		Response response = new Response();
+		HttpStatus httpStatus = HttpStatus.OK;
+		Map<String, Object> config = new HashMap<String, Object>();
+		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> error = new HashMap<String, Object>();
+
+		TournamentEntity thisTournament = new TournamentEntity();
+		TournamentDTO thisTournamentDTO = new TournamentDTO();
+
+		try {
+			if (id == null) {// id null
+				result.put("Tournament", null);
+				config.put("Global", 0);
+				error.put("MessageCode", 1);
+				error.put("Message", "Required param id");
+			} else {// id not null
+
+				thisTournament = service.findOneById(id);
+				if (thisTournament == null) {
+					result.put("Tournament", null);
+					config.put("Global", 0);
+					error.put("MessageCode", 1);
+					error.put("Message", "Tournament is not exist");
+				} else {
+
+					String message = "Unknown error";
+					int code = 1;
+					if (thisTournament.getStatus().contains(Const.TOURNAMENT_STATUS_INITIALIZING)) {
+						message = Const.TOURNAMENT_MESSAGE_INITIALIZING;
+					}
+					if (thisTournament.getStatus().contains(Const.TOURNAMENT_STATUS_PROCESSING)) {
+						message = Const.TOURNAMENT_MESSAGE_PROCESSING;
+					}
+					if (thisTournament.getStatus().contains(Const.TOURNAMENT_STATUS_FINISHED)) {
+						message = Const.TOURNAMENT_MESSAGE_FINISHED;
+					}
+					if (thisTournament.getStatus().contains(Const.TOURNAMENT_STATUS_STOPPED)) {
+						message = Const.TOURNAMENT_MESSAGE_STOPPED;
+					}
+					if (thisTournament.getStatus().contains(Const.TOURNAMENT_STATUS_REGISTRATION_OPENING)) {
+						thisTournament = service.updateStatus(thisTournament, Const.TOURNAMENT_STATUS_INITIALIZING);
+
+						thisTournamentDTO = converter.toDTO(thisTournament);
+						message = "Success";
+						code = 0;
+					}
+
+					result.put("Tournament", thisTournamentDTO);
+					config.put("Global", 0);
+					error.put("MessageCode", code);
+					error.put("Message", message);
+				}
+
+			}
+			System.out.println("TournamentAPI: closeRegistration: no exception");
+		} catch (Exception e) {
+			System.out.println("TournamentAPI: closeRegistration: has exception");
+			result.put("Tournament", null);
+			config.put("Global", 0);
+			error.put("MessageCode", 1);
+			error.put("Message", "Server error");
+		}
+
+		response.setError(error);
+		response.setResult(result);
+		response.setConfig(config);
+		System.out.println("TournamentAPI: closeRegistration: finish");
+		return new ResponseEntity<Response>(response, httpStatus);
+	}
 
 	@DeleteMapping()
 	public ResponseEntity<Response> deleteTournament(@RequestParam Long id) {
