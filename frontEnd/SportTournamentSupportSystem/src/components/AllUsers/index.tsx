@@ -163,9 +163,13 @@ class AllUsers extends React.Component<IAllUsersProps, IAllUsersState> {
     const params = {
       path: '',
       param: {
-        id,
+        userId: id,
       },
-      data: {},
+      data: {
+        // page: this.state.activePage,
+        // limit: 10,
+        // searchString: this.props.globalSearchString,
+      },
     }
     this.props.deActiveUser(params);
   }
@@ -174,9 +178,13 @@ class AllUsers extends React.Component<IAllUsersProps, IAllUsersState> {
     const params = {
       path: '',
       param: {
-        id,
+        userId: id,
       },
-      data: {},
+      data: {
+        // page: this.state.activePage,
+        // limit: 10,
+        // searchString: this.props.globalSearchString,
+      },
     }
     this.props.activeUser(params);
   }

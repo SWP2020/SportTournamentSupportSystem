@@ -21,6 +21,7 @@ import { BracketRankInfo } from 'components/BracketRank/reducers';
 import { MatchResult } from 'components/BracketMatch/reducers';
 import { ListTournamentReport } from 'components/TournamentReport/reducers';
 import { ListReports } from 'components/AllReports/reducers';
+import { ListPendingTeam } from 'components/PendingTeams/reducers';
 
 export const appReducer = combineReducers({
   currentPage: CurrentPage,
@@ -56,6 +57,7 @@ export const appReducer = combineReducers({
   matchResult: MatchResult,
   listTournamentReport: ListTournamentReport,
   listReports: ListReports,
+  listPendingTeam: ListPendingTeam,
 });
 
 export type IState = ReturnType<typeof appReducer>;

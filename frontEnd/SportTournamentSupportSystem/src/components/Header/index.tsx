@@ -87,10 +87,18 @@ class Header extends React.Component<IHeaderProps, IHeaderState> {
     this.props.setGlobalSearchString(this.state.searchText.trim());
     if ((this.state.selectedSearchOption as IParams).value === 1) {
       this.props.searchTournaments(params);
-      history.push("/tournaments");
+      if (this.props.currentUserInfo != null && this.props.currentUserInfo.roleId === 1) {
+        history.push("/admin/tournaments");
+      } else {
+        history.push("/tournaments");
+      }
     } else {
       this.props.searchUsers(params);
-      history.push("/users");
+      if (this.props.currentUserInfo != null && this.props.currentUserInfo.roleId === 1) {
+        history.push("/admin/users");
+      } else {
+        history.push("/users");
+      }
     }
   }
 
@@ -138,13 +146,13 @@ class Header extends React.Component<IHeaderProps, IHeaderState> {
             <div className="Link"><p className={`Link-text ${this.props.currentPage === 'tournaments' ? 'Link-text-selected' : ''}`}>{`${this.props.currentPage === 'home' ? 'Các giải đấu' : (currentUserInfo != null && currentUserInfo.roleId === 1 && cookies.get(COOKIES_TYPE.AUTH_TOKEN) != null ? 'Quản lý giải đấu' : 'Các giải đấu')}`}</p></div>
           </Link>
           {this.props.currentPage !== 'login' && currentUserInfo != null && currentUserInfo.roleId === 1 && cookies.get(COOKIES_TYPE.AUTH_TOKEN) != null &&
-          <Link to="/admin/users" style={{ textDecoration: 'none' }} onClick={() => { this.props.setGlobalSearchString('') }}>
-            <div className="Link"><p className={`Link-text ${this.props.currentPage === 'users' ? 'Link-text-selected' : ''}`}>Quản lý người dùng</p></div>
-          </Link>}
+            <Link to="/admin/users" style={{ textDecoration: 'none' }} onClick={() => { this.props.setGlobalSearchString('') }}>
+              <div className="Link"><p className={`Link-text ${this.props.currentPage === 'users' ? 'Link-text-selected' : ''}`}>Quản lý người dùng</p></div>
+            </Link>}
           {this.props.currentPage !== 'login' && currentUserInfo != null && currentUserInfo.roleId === 1 && cookies.get(COOKIES_TYPE.AUTH_TOKEN) != null &&
-          <Link to="/admin/reports" style={{ textDecoration: 'none' }} onClick={() => { this.props.setGlobalSearchString('') }}>
-            <div className="Link"><p className={`Link-text ${this.props.currentPage === 'reports' ? 'Link-text-selected' : ''}`}>Quản lý báo cáo</p></div>
-          </Link>}
+            <Link to="/admin/reports" style={{ textDecoration: 'none' }} onClick={() => { this.props.setGlobalSearchString('') }}>
+              <div className="Link"><p className={`Link-text ${this.props.currentPage === 'reports' ? 'Link-text-selected' : ''}`}>Quản lý báo cáo</p></div>
+            </Link>}
           {/* <Link to="/news" style={{ textDecoration: 'none' }}>
             <div className="Link"><p className="Link-text">Tin tức</p></div>
           </Link>

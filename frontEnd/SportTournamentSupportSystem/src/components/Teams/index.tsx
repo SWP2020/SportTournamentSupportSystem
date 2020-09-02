@@ -10,11 +10,12 @@ import './styles.css';
 
 interface IUserInfoTeamsProps extends React.ClassAttributes<UserInfoTeams> {
   id: number;
-  type: 'user' | 'competition';
+  type: 'user' | 'competition' | 'tournament';
   listTeam: IParams[] | null;
   tournamentInfo: IParams | null;
   competitionInfo: IParams | null;
   currentUserInfo: IParams | null;
+  addItem?: boolean;
 
   queryListTeams(param: IBigRequest): void;
   addATeamToCompetition(param: IBigRequest): void;
@@ -50,7 +51,7 @@ class UserInfoTeams extends React.Component<IUserInfoTeamsProps, IUserInfoTeamsS
     const params = {
       path: '',
       param: {
-        ...this.props.type === 'user' ? { userId: this.props.id } : { competitionId: this.props.id },
+        ...this.props.type === 'user' ? { userId: this.props.id } : (this.props.type === 'competition' ? { competitionId: this.props.id } : { tournamentId: this.props.id }),
         limit: 999,
       },
       data: {},
@@ -132,7 +133,7 @@ class UserInfoTeams extends React.Component<IUserInfoTeamsProps, IUserInfoTeamsS
           ) : <p>Không tìm thấy đội nào!</p>) :
           <Skeleton />
         }
-        {this.props.listTeam != null && <div className="UserInfoTeamsAddItem-container2">
+        {this.props.listTeam != null && this.props.addItem !== false && <div className="UserInfoTeamsAddItem-container2">
           <div className="UserInfoTeamsAddItem-container-container">
             <div className="UserInfoTeamsAddItem-container-container-container">
               <TextInput style={{ width: 200 }} label={'Nhập tên đội'} value={this.state.teamNameToAdd} error={this.state.teamNameToAddError} errorContent={this.state.teamNameToAddErrorContent} onChangeText={this.onChangeTeamNameToAdd} />

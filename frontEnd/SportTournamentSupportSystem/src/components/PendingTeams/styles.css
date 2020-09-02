@@ -1,4 +1,4 @@
-.UserInfoTeams-container {
+.PendingTeams-container {
   color: white;
   display: flex;
   padding-top: 25px;
@@ -8,14 +8,14 @@
   width: 80vw;
 }
 
-.UserInfoTeamsAddItem-container {
+.PendingTeamsAddItem-container {
   background-color: #2b2f39;
   border-radius: 7px;
   overflow: hidden;
   width: 100%;
 }
 
-.UserInfoTeamsAddItem-container2 {
+.PendingTeamsAddItem-container2 {
   background-color: black;
   border-radius: 7px;
   overflow: hidden;
@@ -24,26 +24,26 @@
   padding-right: 15px;
 }
 
-.UserInfoTeamsAddItem-container-container {
+.PendingTeamsAddItem-container-container {
   display: flex;
   width: 100%;
   flex-direction: column;
   padding-top: 25px;
 }
 
-.UserInfoTeamsAddItem-container-container-container {
+.PendingTeamsAddItem-container-container-container {
   display: flex;
   flex-direction: row;
 }
 
-.UserInfoTeamsAddItem-order-number-container {
+.PendingTeamsAddItem-order-number-container {
   flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.UserInfoTeamsAddItem-order-number-box {
+.PendingTeamsAddItem-order-number-box {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -52,22 +52,22 @@
   border-radius: 10px;
 }
 
-.UserInfoTeamsAddItem-team-name-container {
+.PendingTeamsAddItem-team-name-container {
   flex: 7;
   padding-left: 50px;
 }
 
-.UserInfoTeamsAddItem-login-container {
+.PendingTeamsAddItem-login-container {
   background-color: #002C69;
   margin-bottom: 25px;
   border-radius: 10px;
 }
 
-.UserInfoTeamsAddItem-login-container :hover {
+.PendingTeamsAddItem-login-container :hover {
   cursor: pointer;
 }
 
-.UserInfoTeamsAddItem-login {
+.PendingTeamsAddItem-login {
   width: 150px;
   height: 50px;
   justify-content: center;
@@ -75,7 +75,7 @@
   display: flex;
 }
 
-.UserInfoTeamsAddItem-login-text {
+.PendingTeamsAddItem-login-text {
   color: white;
   font-weight: bold;
 }

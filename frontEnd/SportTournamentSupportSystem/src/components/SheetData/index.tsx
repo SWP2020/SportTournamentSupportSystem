@@ -61,7 +61,7 @@ export class SheetData extends React.Component<ISheetDataProps, ISheetDataState>
 
   private list: IParams[] = [{}];
   private lock = false;
-  // private virtualList: MultiGrid;
+  private virtualList: MultiGrid | undefined;
   // private config: ISheetDataConfig;
   private loadMore = true;
 
@@ -86,7 +86,7 @@ export class SheetData extends React.Component<ISheetDataProps, ISheetDataState>
   };
 
   shouldComponentUpdate(nextProps: ISheetDataProps) {
-    if (this.props.config !== nextProps.config) {
+    if (this.props.data !== nextProps.data) {
       // this.config = JSON.parse(JSON.stringify(nextProps.config));
       // this.config.totalWidth = this.config.header.reduce((a: number, b: ISheetDataColumn) => a + b.width, 0);
       // this.config.totalFixedWidth = this.config.header.reduce(
@@ -94,18 +94,19 @@ export class SheetData extends React.Component<ISheetDataProps, ISheetDataState>
       //   0
       // );
     }
-
+    
     return true;
   }
-
+  
   componentDidUpdate(prevProps: ISheetDataProps) {
-    // if (this.props.data !== prevProps.data) {
-    //   this.processData();
-    // } else if (this.props.data != null) {
-    // if (this.virtualList != null && this.virtualList.recomputeGridSize != null) {
-    //   this.virtualList.recomputeGridSize();
-    // }
-    // }
+    if (this.props.data !== prevProps.data) {
+      this.processData();
+    } else if (this.props.data != null) {
+      if (this.virtualList != null && this.virtualList.recomputeGridSize != null) {
+        this.virtualList.recomputeGridSize();
+          this.virtualList.forceUpdateGrids();
+      }
+    }
   }
 
   // private processSingleData = () => {
@@ -317,7 +318,7 @@ export class SheetData extends React.Component<ISheetDataProps, ISheetDataState>
 
       // return (
       <MultiGrid
-        // ref={(ref: MultiGrid) => (this.virtualList = ref)}
+        ref={(ref: MultiGrid) => (this.virtualList = ref)}
         fixedColumnCount={config.fixedColumnCount}
         fixedRowCount={config.fixedRowCount}
         cellRenderer={this.cellRenderer}
@@ -409,6 +410,7 @@ export class SheetData extends React.Component<ISheetDataProps, ISheetDataState>
         <AutoSizer>
           {({ height, width }) => (
             <MultiGrid
+              ref={(ref: MultiGrid) => (this.virtualList = ref)}
               width={width}
               height={height}
               rowCount={this.list.length}
