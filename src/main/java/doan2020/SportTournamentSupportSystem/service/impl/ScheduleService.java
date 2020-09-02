@@ -477,6 +477,11 @@ public class ScheduleService implements IScheduleService {
 
 		totalTeamBeforeGroupStage = teamService.countByCompetitionIdAndStatus(competitionId, Const.TEAM_STATUS_JOINED)
 				.intValue();
+		
+		if (totalTeamBeforeGroupStage < 1) {
+			System.out.println("ScheduleService: createSchedule: finish");
+			return null;
+		}
 
 		boolean hasGroupStage = thisCompetition.isHasGroupStage();
 
@@ -571,128 +576,131 @@ public class ScheduleService implements IScheduleService {
 		System.out.println("ScheduleService: finalStageScheduling: formatName: " + formatName);
 		System.out.println("ScheduleService: finalStageScheduling: tableId: " + tableId);
 		// -------------------------------------------------------------
-
-		try {
-			if (formatName.contains(Const.SINGLE_ELIMINATION_FORMAT)) {
-				SingleEliminationScheduleDTO dto = new SingleEliminationScheduleDTO();
-				System.out.println("ScheduleService: finalStageScheduling: -> SingleElimination: Constructor:");
-				SingleEliminationTree tree = new SingleEliminationTree(totalTeam);
-				System.out.println("SingleElimination: Constructor: -> ScheduleService: finalStageScheduling:");
-				System.out.println("ScheduleService: finalStageScheduling: build tree OK");
-				if (tableId < 0) {
-					tree.applyDescriptions(descriptions);
-					System.out.println("ScheduleService: finalStageScheduling: apply description OK");
-				} else {
-					tree.applyDescriptions(firstSeed);
-					System.out.println("ScheduleService: finalStageScheduling: apply description OK");
-				}
-
-				tree.setTableId(tableId);
-				System.out.println("ScheduleService: finalStageScheduling: set table id OK");
-
-				dto.setBracket(tree.getBracket());
-				dto.setHasMatch34(hasHomeMatch);
-				dto.setMatch34(tree.getMatch34());
-
-				dto.setRankingTable(tree.getRankingTable());
-				dto.setMatches(tree.getMatches());
-				dto.setFormatName(formatName);
-				dto.setTotalTeam(totalTeam);
-				dto.setTableId(tableId);
-				if (tableId >= 0)
-					dto.setTableName("" + Const.TABLE_NAMING.charAt(tableId));
-				else
-					dto.setTableName("");
-				dto.setFirstSeed(firstSeed);
-				dto.setTotalRound(tree.getTotalRound());
-				dto.setRoundsNaming();
-				dto.setStatus(Const.STAGE_INITIALIZING);
-				dto.setMapping(new HashMap<Long, RevertMapping>());
-
-				System.out.println("ScheduleService: finalStageScheduling: finish");
-				return dto;
-			}
-
-			if (formatName.contains(Const.DOUBLE_ELIMINATION_FORMAT)) {
-
-				DoubleEliminationScheduleDTO dto = new DoubleEliminationScheduleDTO();
-
-				DoubleEliminationTree tree = new DoubleEliminationTree(totalTeam);
-				if (tableId < 0)
-					tree.applyDescriptions(descriptions);
-				else {
-					tree.applyDescriptions(firstSeed);
-				}
-				tree.setTableId(tableId);
-
-				dto.setWinBranch(tree.getWinBranch());
-				dto.setLoseBranch(tree.getLoseBranch());
-				System.out.println(tree.getLoseBranch().toString());
-				dto.setSummaryFinal(tree.getSummaryFinal());
-				dto.setOptionFinal(tree.getOptionFinal());
-				dto.setTotalWinRound(tree.getTotalRound());
-				dto.setTotalLoseRound(tree.getTotalLoseBranchRound());
-
-				dto.setRankingTable(tree.getRankingTable());
-				dto.setMatches(tree.getMatches());
-				dto.setFormatName(formatName);
-				dto.setTotalTeam(totalTeam);
-				dto.setTableId(tableId);
-				if (tableId >= 0)
-					dto.setTableName("" + Const.TABLE_NAMING.charAt(tableId));
-				else
-					dto.setTableName("");
-				dto.setFirstSeed(firstSeed);
-				dto.setTotalRound(tree.getTotalRound());
-				dto.setRoundsNaming();
-				dto.setStatus(Const.STAGE_INITIALIZING);
-				dto.setMapping(new HashMap<Long, RevertMapping>());
-
-				System.out.println("ScheduleService: finalStageScheduling: finish");
-				return dto;
-			}
-
-			if (formatName.contains(Const.ROUND_ROBIN_FORMAT)) {
-
-				RoundRobinScheduleDTO dto = new RoundRobinScheduleDTO();
-				RoundRobinTable table;
-
-				if (tableId >= 0) {
-					table = new RoundRobinTable((long) tableId, totalTeam, hasHomeMatch);
-					table.applyDescriptions(firstSeed);
-
-				} else {
-					table = new RoundRobinTable(totalTeam, hasHomeMatch);
-					table.applyDescriptions(descriptions);
-				}
-
-				table.setTableId(tableId);
-				dto.setHasHomeMatch(hasHomeMatch);
-
-				dto.setRankingTable(table.getRankingTable());
-				dto.setMatches(table.getMatches());
-				dto.setFormatName(formatName);
-				dto.setTotalTeam(totalTeam);
-				dto.setTableId(tableId);
-				if (tableId >= 0)
-					dto.setTableName("" + Const.TABLE_NAMING.charAt(tableId));
-				else
-					dto.setTableName("");
-				dto.setFirstSeed(firstSeed);
-				dto.setTotalRound(table.getTotalRound());
-				dto.setRoundsNaming();
-				dto.setStatus(Const.STAGE_INITIALIZING);
-				dto.setMapping(new HashMap<Long, RevertMapping>());
-
-				System.out.println("ScheduleService: finalStageScheduling: finish");
-				return dto;
-			}
-		} catch (Exception e) {
-			System.out.println("ScheduleService: finalStageScheduling: has exception");
-			System.out.println(e);
-			System.out.println("-------");
-			System.out.println("ScheduleService: finalStageScheduling: finish");
+		if (totalTeam < 1) {
 			return null;
+		} else {
+			try {
+				if (formatName.contains(Const.SINGLE_ELIMINATION_FORMAT)) {
+					SingleEliminationScheduleDTO dto = new SingleEliminationScheduleDTO();
+					System.out.println("ScheduleService: finalStageScheduling: -> SingleElimination: Constructor:");
+					SingleEliminationTree tree = new SingleEliminationTree(totalTeam);
+					System.out.println("SingleElimination: Constructor: -> ScheduleService: finalStageScheduling:");
+					System.out.println("ScheduleService: finalStageScheduling: build tree OK");
+					if (tableId < 0) {
+						tree.applyDescriptions(descriptions);
+						System.out.println("ScheduleService: finalStageScheduling: apply description OK");
+					} else {
+						tree.applyDescriptions(firstSeed);
+						System.out.println("ScheduleService: finalStageScheduling: apply description OK");
+					}
+
+					tree.setTableId(tableId);
+					System.out.println("ScheduleService: finalStageScheduling: set table id OK");
+
+					dto.setBracket(tree.getBracket());
+					dto.setHasMatch34(hasHomeMatch);
+					dto.setMatch34(tree.getMatch34());
+
+					dto.setRankingTable(tree.getRankingTable());
+					dto.setMatches(tree.getMatches());
+					dto.setFormatName(formatName);
+					dto.setTotalTeam(totalTeam);
+					dto.setTableId(tableId);
+					if (tableId >= 0)
+						dto.setTableName("" + Const.TABLE_NAMING.charAt(tableId));
+					else
+						dto.setTableName("");
+					dto.setFirstSeed(firstSeed);
+					dto.setTotalRound(tree.getTotalRound());
+					dto.setRoundsNaming();
+					dto.setStatus(Const.STAGE_INITIALIZING);
+					dto.setMapping(new HashMap<Long, RevertMapping>());
+
+					System.out.println("ScheduleService: finalStageScheduling: finish");
+					return dto;
+				}
+
+				if (formatName.contains(Const.DOUBLE_ELIMINATION_FORMAT)) {
+
+					DoubleEliminationScheduleDTO dto = new DoubleEliminationScheduleDTO();
+
+					DoubleEliminationTree tree = new DoubleEliminationTree(totalTeam);
+					if (tableId < 0)
+						tree.applyDescriptions(descriptions);
+					else {
+						tree.applyDescriptions(firstSeed);
+					}
+					tree.setTableId(tableId);
+
+					dto.setWinBranch(tree.getWinBranch());
+					dto.setLoseBranch(tree.getLoseBranch());
+					System.out.println(tree.getLoseBranch().toString());
+					dto.setSummaryFinal(tree.getSummaryFinal());
+					dto.setOptionFinal(tree.getOptionFinal());
+					dto.setTotalWinRound(tree.getTotalRound());
+					dto.setTotalLoseRound(tree.getTotalLoseBranchRound());
+
+					dto.setRankingTable(tree.getRankingTable());
+					dto.setMatches(tree.getMatches());
+					dto.setFormatName(formatName);
+					dto.setTotalTeam(totalTeam);
+					dto.setTableId(tableId);
+					if (tableId >= 0)
+						dto.setTableName("" + Const.TABLE_NAMING.charAt(tableId));
+					else
+						dto.setTableName("");
+					dto.setFirstSeed(firstSeed);
+					dto.setTotalRound(tree.getTotalRound());
+					dto.setRoundsNaming();
+					dto.setStatus(Const.STAGE_INITIALIZING);
+					dto.setMapping(new HashMap<Long, RevertMapping>());
+
+					System.out.println("ScheduleService: finalStageScheduling: finish");
+					return dto;
+				}
+
+				if (formatName.contains(Const.ROUND_ROBIN_FORMAT)) {
+
+					RoundRobinScheduleDTO dto = new RoundRobinScheduleDTO();
+					RoundRobinTable table;
+
+					if (tableId >= 0) {
+						table = new RoundRobinTable((long) tableId, totalTeam, hasHomeMatch);
+						table.applyDescriptions(firstSeed);
+
+					} else {
+						table = new RoundRobinTable(totalTeam, hasHomeMatch);
+						table.applyDescriptions(descriptions);
+					}
+
+					table.setTableId(tableId);
+					dto.setHasHomeMatch(hasHomeMatch);
+
+					dto.setRankingTable(table.getRankingTable());
+					dto.setMatches(table.getMatches());
+					dto.setFormatName(formatName);
+					dto.setTotalTeam(totalTeam);
+					dto.setTableId(tableId);
+					if (tableId >= 0)
+						dto.setTableName("" + Const.TABLE_NAMING.charAt(tableId));
+					else
+						dto.setTableName("");
+					dto.setFirstSeed(firstSeed);
+					dto.setTotalRound(table.getTotalRound());
+					dto.setRoundsNaming();
+					dto.setStatus(Const.STAGE_INITIALIZING);
+					dto.setMapping(new HashMap<Long, RevertMapping>());
+
+					System.out.println("ScheduleService: finalStageScheduling: finish");
+					return dto;
+				}
+			} catch (Exception e) {
+				System.out.println("ScheduleService: finalStageScheduling: has exception");
+				System.out.println(e);
+				System.out.println("-------");
+				System.out.println("ScheduleService: finalStageScheduling: finish");
+				return null;
+			}
 		}
 
 		FinalStageScheduleDTO schedule = new UnknownScheduleDTO();
@@ -761,7 +769,7 @@ public class ScheduleService implements IScheduleService {
 
 		ArrayList<ResultEntity> results = new ArrayList<>();
 		results.addAll(match.getResults());
-		
+
 		CompetitionEntity thisCompetition = match.getCompetition();
 		Long competitionId = thisCompetition.getId();
 		ScheduleDTO schedule = getScheduleFromFile(competitionId);
@@ -781,7 +789,6 @@ public class ScheduleService implements IScheduleService {
 				GroupStageScheduleDTO gss = schedule.getGroupStageSchedule();
 				RoundRobinScheduleDTO thisTable = (RoundRobinScheduleDTO) gss.getTables().get(thisMap.getTableId());
 				thisMatch = thisTable.getMatches().get(nodeId);
-				
 
 			} else {
 				RoundRobinScheduleDTO fss = (RoundRobinScheduleDTO) schedule.getFinalStageSchedule();
@@ -792,66 +799,72 @@ public class ScheduleService implements IScheduleService {
 		case 0:
 			if (tableId >= 0) {
 				GroupStageScheduleDTO gss = schedule.getGroupStageSchedule();
-				SingleEliminationScheduleDTO thisTable = (SingleEliminationScheduleDTO)gss.getTables().get(thisMap.getTableId());
+				SingleEliminationScheduleDTO thisTable = (SingleEliminationScheduleDTO) gss.getTables()
+						.get(thisMap.getTableId());
 				thisMatch = thisTable.getBracket().getById(nodeId).getData();
-				
+
 			} else {
-				SingleEliminationScheduleDTO fss = (SingleEliminationScheduleDTO)schedule.getFinalStageSchedule();
+				SingleEliminationScheduleDTO fss = (SingleEliminationScheduleDTO) schedule.getFinalStageSchedule();
 				thisMatch = fss.getBracket().getById(nodeId).getData();
 			}
 			break;
 		case 1:
 			if (tableId >= 0) {
 				GroupStageScheduleDTO gss = schedule.getGroupStageSchedule();
-				DoubleEliminationScheduleDTO thisTable = (DoubleEliminationScheduleDTO)gss.getTables().get(thisMap.getTableId());
+				DoubleEliminationScheduleDTO thisTable = (DoubleEliminationScheduleDTO) gss.getTables()
+						.get(thisMap.getTableId());
 				thisMatch = thisTable.getWinBranch().getById(nodeId).getData();
 
 			} else {
-				DoubleEliminationScheduleDTO fss = (DoubleEliminationScheduleDTO)schedule.getFinalStageSchedule();
+				DoubleEliminationScheduleDTO fss = (DoubleEliminationScheduleDTO) schedule.getFinalStageSchedule();
 				thisMatch = fss.getWinBranch().getById(nodeId).getData();
 			}
 			break;
 		case 2:
 			if (tableId >= 0) {
 				GroupStageScheduleDTO gss = schedule.getGroupStageSchedule();
-				DoubleEliminationScheduleDTO thisTable = (DoubleEliminationScheduleDTO)gss.getTables().get(thisMap.getTableId());
+				DoubleEliminationScheduleDTO thisTable = (DoubleEliminationScheduleDTO) gss.getTables()
+						.get(thisMap.getTableId());
 				thisMatch = thisTable.getLoseBranch().getByIdAndDegree(nodeId, degree).getData();
 
 			} else {
-				DoubleEliminationScheduleDTO fss = (DoubleEliminationScheduleDTO)schedule.getFinalStageSchedule();
+				DoubleEliminationScheduleDTO fss = (DoubleEliminationScheduleDTO) schedule.getFinalStageSchedule();
 				thisMatch = fss.getLoseBranch().getByIdAndDegree(nodeId, degree).getData();
 			}
 			break;
 		case 3:
 			if (tableId >= 0) {
 				GroupStageScheduleDTO gss = schedule.getGroupStageSchedule();
-				SingleEliminationScheduleDTO thisTable = (SingleEliminationScheduleDTO)gss.getTables().get(thisMap.getTableId());
+				SingleEliminationScheduleDTO thisTable = (SingleEliminationScheduleDTO) gss.getTables()
+						.get(thisMap.getTableId());
 				thisMatch = thisTable.getMatch34();
 
 			} else {
-				SingleEliminationScheduleDTO fss = (SingleEliminationScheduleDTO)schedule.getFinalStageSchedule();
+				SingleEliminationScheduleDTO fss = (SingleEliminationScheduleDTO) schedule.getFinalStageSchedule();
 				thisMatch = fss.getMatch34();
 			}
 			break;
 		case 4:
 			if (tableId >= 0) {
 				GroupStageScheduleDTO gss = schedule.getGroupStageSchedule();
-				DoubleEliminationScheduleDTO thisTable = (DoubleEliminationScheduleDTO)gss.getTables().get(thisMap.getTableId());
+				DoubleEliminationScheduleDTO thisTable = (DoubleEliminationScheduleDTO) gss.getTables()
+						.get(thisMap.getTableId());
 				thisMatch = thisTable.getSummaryFinal();
 
 			} else {
-				DoubleEliminationScheduleDTO fss = (DoubleEliminationScheduleDTO)schedule.getFinalStageSchedule();
+				DoubleEliminationScheduleDTO fss = (DoubleEliminationScheduleDTO) schedule.getFinalStageSchedule();
 				thisMatch = fss.getSummaryFinal();
 			}
 			break;
 		case 5:
 			if (tableId >= 0) {
 				GroupStageScheduleDTO gss = schedule.getGroupStageSchedule();
-				DoubleEliminationScheduleDTO thisTable = (DoubleEliminationScheduleDTO)gss.getTables().get(thisMap.getTableId());
+				DoubleEliminationScheduleDTO thisTable = (DoubleEliminationScheduleDTO) gss.getTables()
+						.get(thisMap.getTableId());
 				thisMatch = thisTable.getOptionFinal();
 
 			} else {
-				DoubleEliminationScheduleDTO fss = (DoubleEliminationScheduleDTO)schedule.getFinalStageSchedule();
+				DoubleEliminationScheduleDTO fss = (DoubleEliminationScheduleDTO) schedule.getFinalStageSchedule();
 				thisMatch = fss.getOptionFinal();
 			}
 			break;
@@ -859,13 +872,14 @@ public class ScheduleService implements IScheduleService {
 		}
 
 		updateMatch(match, thisMatch, results);
+
 		saveScheduleToFile(schedule, match.getCompetition().getId());
-		
+
 		return schedule;
 	}
-	
+
 	private void updateMatch(MatchEntity match, Match thisMatch, ArrayList<ResultEntity> results) {
-		
+
 		Integer team1Score = 0;
 		Integer team2Score = 0;
 
@@ -881,7 +895,7 @@ public class ScheduleService implements IScheduleService {
 			if (team2Diff > 0)
 				team2Score++;
 		}
-		
+
 		if (match.getWinnner().getId() == match.getTeam1().getId()) {
 			thisMatch.getWinner().setTeam(thisMatch.getTeam1().getTeam());
 			thisMatch.getLoser().setTeam(thisMatch.getTeam2().getTeam());
@@ -894,7 +908,7 @@ public class ScheduleService implements IScheduleService {
 		thisMatch.getTeam2().setScore(team2Score);
 		thisMatch.getTeam1().setDifference(team1Diff);
 		thisMatch.getTeam2().setDifference(team2Diff);
-		
+
 	}
 
 	// ----------------------------------------------------------------------

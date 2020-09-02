@@ -57,11 +57,20 @@ public class ScheduleAPI {
 				error.put("MessageCode", 1);
 				error.put("Message", "Competition not found");
 			} else {
+				System.out.println("ScheduleAPI: getScheduleByCompetitionId: -> ScheduleService: getSchedule: ");
 				ScheduleDTO schedule = scheduleService.getSchedule(thisCompetition);
-				result.put("Schedule", schedule);
-				config.put("Global", 0);
-				error.put("MessageCode", 0);
-				error.put("Message", "Success");
+				System.out.println("ScheduleService: getSchedule: -> ScheduleAPI: getScheduleByCompetitionId:");
+				if (schedule == null) {
+					result.put("Schedule", null);
+					config.put("Global", 0);
+					error.put("MessageCode", 1);
+					error.put("Message", "Not enough team");
+				} else {
+					result.put("Schedule", schedule);
+					config.put("Global", 0);
+					error.put("MessageCode", 0);
+					error.put("Message", "Success");
+				}
 			}
 			System.out.println("ScheduleAPI: getScheduleByCompetitionId: no exception");
 		} catch (Exception e) {

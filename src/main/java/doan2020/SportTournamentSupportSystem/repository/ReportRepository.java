@@ -16,6 +16,8 @@ public interface ReportRepository extends JpaRepository<ReportEntity, Long>{
     
     Page<ReportEntity> findByTournamentId(Pageable pageable,Long tournamentId);
     
+    Page<ReportEntity> findByTournamentIdAndTypeOrderByIdDesc(Pageable pageable,Long tournamentId, String type);
+    
     Page<ReportEntity> findByType(Pageable pageable,String type);
     
     Collection<ReportEntity> findByType(String type);

@@ -2,7 +2,6 @@ package doan2020.SportTournamentSupportSystem.api;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,27 +26,15 @@ import doan2020.SportTournamentSupportSystem.converter.ReportConverter;
 import doan2020.SportTournamentSupportSystem.converter.TeamConverter;
 import doan2020.SportTournamentSupportSystem.converter.TournamentConverter;
 import doan2020.SportTournamentSupportSystem.converter.UserConverter;
-import doan2020.SportTournamentSupportSystem.dto.CompetitionDTO;
 import doan2020.SportTournamentSupportSystem.dto.PermissionDTO;
 import doan2020.SportTournamentSupportSystem.dto.ReportDTO;
-import doan2020.SportTournamentSupportSystem.dto.TeamDTO;
 import doan2020.SportTournamentSupportSystem.dto.TournamentDTO;
 import doan2020.SportTournamentSupportSystem.dto.UserDTO;
 import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
-import doan2020.SportTournamentSupportSystem.entity.FinalStageSettingEntity;
-import doan2020.SportTournamentSupportSystem.entity.FormatEntity;
-import doan2020.SportTournamentSupportSystem.entity.GroupStageSettingEntity;
-import doan2020.SportTournamentSupportSystem.entity.MatchEntity;
 import doan2020.SportTournamentSupportSystem.entity.PermissionEntity;
 import doan2020.SportTournamentSupportSystem.entity.ReportEntity;
-import doan2020.SportTournamentSupportSystem.entity.TeamEntity;
 import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
 import doan2020.SportTournamentSupportSystem.entity.UserEntity;
-import doan2020.SportTournamentSupportSystem.model.ContainerCollection.RankingTable;
-import doan2020.SportTournamentSupportSystem.model.Entity.BoxDescription;
-import doan2020.SportTournamentSupportSystem.model.Entity.Player;
-import doan2020.SportTournamentSupportSystem.model.Schedule.Format.RoundRobinTable;
-import doan2020.SportTournamentSupportSystem.model.Schedule.Format.SingleEliminationTree;
 import doan2020.SportTournamentSupportSystem.response.Response;
 import doan2020.SportTournamentSupportSystem.service.ICompetitionService;
 import doan2020.SportTournamentSupportSystem.service.IFinalStageSettingService;
@@ -263,40 +249,39 @@ public class AdminAPI {
 		System.out.println("AdminAPI: getBySearchString: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
-	
+
 	@GetMapping("/searchUserWithStatus")
-	public ResponseEntity<Response> searchUserWithStatus(
-			@RequestParam(value = "page", required = false) Integer page,
+	public ResponseEntity<Response> searchUserWithStatus(@RequestParam(value = "page", required = false) Integer page,
 			@RequestParam(value = "limit", required = false) Integer limit,
 			@RequestParam(value = "searchString") String searchString, @RequestParam(value = "status") String status) {
 		System.out.println("UsersAPI: searchUserWithStatus: start");
-		
+
 		HttpStatus httpStatus = HttpStatus.OK;
 		Response response = new Response();
 		Map<String, Object> config = new HashMap<String, Object>();
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
-		
+
 		List<UserDTO> dtos = new ArrayList<UserDTO>();
 		List<UserEntity> entities = new ArrayList<UserEntity>();
-		
+
 		if (limit == null || limit <= 0)
 			limit = 10;
-		
+
 		if (page == null || page <= 0)
 			page = 1;
-		
+
 		if (searchString == null) {// searchString null
 			result.put("Users", dtos);
 			config.put("Global", 0);
 			error.put("MessageCode", 1);
 			error.put("Message", "Required param searchString");
-		} else {//searchString not null
+		} else {// searchString not null
 //			Sort sortable = Sort.by("id").ascending();
 			try {
 				Pageable pageable = PageRequest.of(page - 1, limit);
 				entities = (List<UserEntity>) userService.findBySearchStringAndStatus(pageable, searchString, status);
-				
+
 				Long totalPage = 0l;
 
 				Long totalEntity = userService.countBySearchStringAndStatus(searchString, status);
@@ -304,12 +289,12 @@ public class AdminAPI {
 				totalPage = totalEntity / limit;
 				if (totalEntity % limit != 0)
 					totalPage++;
-				
-				for (UserEntity entity: entities) {
+
+				for (UserEntity entity : entities) {
 					UserDTO dto = userConverter.toDTO(entity);
 					dtos.add(dto);
 				}
-				
+
 				result.put("TotalPage", totalPage);
 				result.put("Users", dtos);
 				config.put("Global", 0);
@@ -324,178 +309,13 @@ public class AdminAPI {
 				error.put("MessageCode", 0);
 				error.put("Message", "Server error");
 			}
-			
+
 		}
 
 		response.setConfig(config);
 		response.setResult(result);
 		response.setError(error);
 		System.out.println("UsersAPI: searchUserWithStatus: finish");
-		return new ResponseEntity<Response>(response, httpStatus);
-	}
-
-	@GetMapping("/viewTournament")
-	public ResponseEntity<Response> viewTournament(
-			@RequestHeader(value = Const.TOKEN_HEADER, required = false) String jwt,
-			@RequestParam(value = "id", required = false) Long id) {
-		System.out.println("AdminAPI: getTournament: start");
-		HttpStatus httpStatus = HttpStatus.OK;
-		Response response = new Response();
-		Map<String, Object> config = new HashMap<String, Object>();
-		Map<String, Object> result = new HashMap<String, Object>();
-		Map<String, Object> error = new HashMap<String, Object>();
-
-		TournamentEntity tournamentEntity = new TournamentEntity();
-		TournamentDTO tournamentDTO = new TournamentDTO();
-		UserEntity user = new UserEntity();
-		PermissionEntity permissionEntity = new PermissionEntity();
-		PermissionDTO permissionDTO = new PermissionDTO();
-		Map<String, Object> otherInformation = new HashMap<String, Object>();
-
-		try {
-			if (id == null) { // id null
-				result.put("Tournament", tournamentDTO);
-				result.put("OtherInformation", otherInformation);
-				config.put("Global", 0);
-				error.put("MessageCode", 1);
-				error.put("Message", "Required param id");
-			} else { // id not null
-
-				tournamentEntity = tournamentService.findOneById(id);
-
-				if (tournamentEntity == null) { // not found
-					result.put("Tournament", tournamentDTO);
-					result.put("OtherInformation", otherInformation);
-					config.put("Global", 0);
-					error.put("MessageCode", 1);
-					error.put("Message", "Not found");
-				} else { // found
-
-					tournamentDTO = tournamentconverter.toDTO(tournamentEntity);
-
-					otherInformation = tournamentService.getOtherInformation(id);
-
-					Long curentUserId = -1l;
-
-					try {
-						String curentUserName = jwtService.getUserNameFromJwtToken(jwt);
-						user = userService.findByUsername(curentUserName);
-						curentUserId = user.getId();
-					} catch (Exception e) {
-
-					}
-
-					if (curentUserId == tournamentEntity.getCreator().getId()) {
-						permissionEntity = permissionService.findOneByName(Const.OWNER);
-
-						permissionDTO = permissionConverter.toDTO(permissionEntity);
-					} else {
-						permissionEntity = permissionService.findOneByName(Const.MONITOR);
-
-						permissionDTO = permissionConverter.toDTO(permissionEntity);
-					}
-
-					result.put("Tournament", tournamentDTO);
-					result.put("OtherInformation", otherInformation);
-					config.put("Global", permissionDTO);
-					error.put("MessageCode", 0);
-					error.put("Message", "Found");
-				}
-			}
-			System.out.println("AdminAPI: getTournament: no exception");
-		} catch (Exception e) {
-			System.out.println("AdminAPI: getTournament: has exception");
-			result.put("Tournament", null);
-			result.put("OtherInformation", otherInformation);
-			config.put("Global", 0);
-			error.put("MessageCode", 1);
-			error.put("Message", "Server error");
-		}
-
-		response.setConfig(config);
-		response.setResult(result);
-		response.setError(error);
-		System.out.println("AdminAPI: getTournament: finish");
-		return new ResponseEntity<Response>(response, httpStatus);
-	}
-
-	/* ----------------Get One Competititon ------------------------ */
-	@GetMapping("/viewCompetition")
-	public ResponseEntity<Response> viewCompetition(
-			@RequestHeader(value = Const.TOKEN_HEADER, required = false) String jwt, @RequestParam("id") Long id) {
-		System.out.println("Competition API - GetCompetiton - start");
-		System.out.println(id);
-		HttpStatus httpStatus = null;
-		httpStatus = HttpStatus.OK;
-		Response response = new Response();
-		Map<String, Object> config = new HashMap<String, Object>();
-		Map<String, Object> result = new HashMap<String, Object>();
-		Map<String, Object> error = new HashMap<String, Object>();
-		CompetitionEntity competitionEntity = new CompetitionEntity();
-		UserEntity user = new UserEntity();
-		PermissionEntity permissionEntity = new PermissionEntity();
-		PermissionDTO permissionDTO = new PermissionDTO();
-		CompetitionDTO dto = new CompetitionDTO();
-		try {
-			if (id == null) {// id not exist
-				System.out.println("Competition API - GetCompetiton - id null");
-				result.put("Competition", null);
-				config.put("Global", 0);
-				error.put("MessageCode", 1);
-				error.put("Message", "Requried id");
-			} else {// id exist
-				System.out.println("Competition API - GetCompetiton - id not null: " + id.toString());
-				competitionEntity = competitionService.findOneById(id);
-				System.out.println("Competition API - GetCompetiton - find OK");
-				if (competitionEntity == null) {// competition is not exist
-					System.out.println("Competition API - GetCompetiton - competitionEntity null");
-					result.put("Competition", null);
-					config.put("Global", 0);
-					error.put("MessageCode", 1);
-					error.put("Message", "Not found");
-				} else {// competition is exist
-
-					Long curentUserId = -1l;
-
-					try {
-						String curentUserName = jwtService.getUserNameFromJwtToken(jwt);
-						user = userService.findByUsername(curentUserName);
-						curentUserId = user.getId();
-					} catch (Exception e) {
-
-					}
-
-					if (curentUserId == competitionEntity.getTournament().getCreator().getId()) {
-						permissionEntity = permissionService.findOneByName(Const.OWNER);
-
-						permissionDTO = permissionConverter.toDTO(permissionEntity);
-					} else {
-						permissionEntity = permissionService.findOneByName(Const.MONITOR);
-
-						permissionDTO = permissionConverter.toDTO(permissionEntity);
-					}
-
-					System.out.println("Competition API - GetCompetiton - competitionEntity not null");
-					dto = competitionConverter.toDTO(competitionEntity);
-					System.out.println("Competition API - GetCompetiton - convert to DTO ok");
-					result.put("competition", dto);
-					config.put("Global", permissionDTO);
-					error.put("MessageCode", 0);
-					error.put("Message", "Found");
-				}
-			}
-			System.out.println("Competition API - GetCompetiton - no exception");
-		} catch (Exception e) {
-			System.out.println("Competition API - GetCompetiton - has exception");
-			result.put("competition", dto);
-			config.put("Global", 0);
-			error.put("MessageCode", 0);
-			error.put("Message", "exception");
-		}
-		response.setError(error);
-		response.setResult(result);
-		response.setConfig(config);
-		System.out.println("Competition API - GetCompetiton - finish");
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
 
@@ -576,417 +396,9 @@ public class AdminAPI {
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
 
-	/*
-	 * Get schedule for a competition
-	 */
-
-	@GetMapping("/viewBracket")
-	public ResponseEntity<Response> viewBracket(
-			@RequestParam(value = "competitionId", required = false) Long competitionId) {
-		System.out.println("ScheduleAPI: getScheduleByCompetitionId: start");
-		Response response = new Response();
-		HttpStatus httpStatus = HttpStatus.OK;
-		Map<String, Object> config = new HashMap<String, Object>();
-		Map<String, Object> result = new HashMap<String, Object>();
-		Map<String, Object> error = new HashMap<String, Object>();
-
-		Collection<MatchEntity> matches = new ArrayList<>();
-		ArrayList<TeamEntity> teams = new ArrayList<>();
-
-		try {
-
-			CompetitionEntity thisCompetition = competitionService.findOneById(competitionId);
-			if (thisCompetition == null) {
-				result.put("Schedule", null);
-				config.put("Global", 0);
-				error.put("MessageCode", 1);
-				error.put("Message", "Competition not found");
-			} else {
-				HashMap<String, Object> schedule;
-				try {
-					System.out.println("ScheduleAPI: getScheduleByCompetitionId: try to get schedule");
-					schedule = scheduleService.getSchedule(competitionId);
-					// Check for changes in team numbers
-					int dbTeamNumber = thisCompetition.getTeams().size();
-					int cfTeamNumber = (int) schedule.get("TotalTeam");
-
-					if (dbTeamNumber != cfTeamNumber)
-						return schedulingByCompetitionId(competitionId);
-				} catch (Exception e) {
-					System.out.println("ScheduleAPI: getScheduleByCompetition: schedule not yet created");
-					return schedulingByCompetitionId(competitionId);
-				}
-
-				result.put("Schedule", schedule);
-				config.put("Global", 0);
-				error.put("MessageCode", 0);
-				error.put("Message", "Successful");
-
-			}
-			System.out.println("ScheduleAPI: getScheduleByCompetitionId: no exception");
-		} catch (Exception e) {
-			System.out.println("ScheduleAPI: getScheduleByCompetitionId: has exception");
-			result.put("Schedule", null);
-			config.put("Global", 0);
-			error.put("MessageCode", 1);
-			error.put("Message", "Server error");
-		}
-
-		response.setConfig(config);
-		response.setResult(result);
-		response.setError(error);
-		System.out.println("ScheduleAPI: getScheduleByCompetitionId: finish");
-		return new ResponseEntity<Response>(response, httpStatus);
-	}
-
-	/*
-	 * Get schedule for a competition
-	 */
-
-	@GetMapping("/viewSchedule")
-	public ResponseEntity<Response> viewSchedule(
-			@RequestParam(value = "competitionId", required = false) Long competitionId) {
-		System.out.println("ScheduleAPI: getScheduleByCompetitionId: start");
-		Response response = new Response();
-		HttpStatus httpStatus = HttpStatus.OK;
-		Map<String, Object> config = new HashMap<String, Object>();
-		Map<String, Object> result = new HashMap<String, Object>();
-		Map<String, Object> error = new HashMap<String, Object>();
-
-		Collection<MatchEntity> matches = new ArrayList<>();
-		ArrayList<TeamEntity> teams = new ArrayList<>();
-
-		try {
-
-			CompetitionEntity thisCompetition = competitionService.findOneById(competitionId);
-			if (thisCompetition == null) {
-				result.put("Schedule", null);
-				config.put("Global", 0);
-				error.put("MessageCode", 1);
-				error.put("Message", "Competition not found");
-			} else {
-				HashMap<String, Object> schedule;
-				try {
-					System.out.println("ScheduleAPI: getScheduleByCompetitionId: try to get schedule");
-					schedule = scheduleService.getSchedule(competitionId);
-					// Check for changes in team numbers
-					int dbTeamNumber = thisCompetition.getTeams().size();
-					int cfTeamNumber = (int) schedule.get("TotalTeam");
-
-					if (dbTeamNumber != cfTeamNumber)
-						return schedulingByCompetitionId(competitionId);
-				} catch (Exception e) {
-					System.out.println("ScheduleAPI: getScheduleByCompetition: schedule not yet created");
-					return schedulingByCompetitionId(competitionId);
-				}
-
-				result.put("Schedule", schedule);
-				config.put("Global", 0);
-				error.put("MessageCode", 0);
-				error.put("Message", "Successful");
-
-			}
-			System.out.println("ScheduleAPI: getScheduleByCompetitionId: no exception");
-		} catch (Exception e) {
-			System.out.println("ScheduleAPI: getScheduleByCompetitionId: has exception");
-			result.put("Schedule", null);
-			config.put("Global", 0);
-			error.put("MessageCode", 1);
-			error.put("Message", "Server error");
-		}
-
-		response.setConfig(config);
-		response.setResult(result);
-		response.setError(error);
-		System.out.println("ScheduleAPI: getScheduleByCompetitionId: finish");
-		return new ResponseEntity<Response>(response, httpStatus);
-	}
-
-	// use to viewbracket and view shedule
-	public ResponseEntity<Response> schedulingByCompetitionId(
-			@RequestParam(value = "competitionId", required = false) Long competitionId) {
-		System.out.println("ScheduleAPI: createFinalStageScheduleByCompetitionId: start");
-		Response response = new Response();
-		HttpStatus httpStatus = HttpStatus.OK;
-		Map<String, Object> config = new HashMap<String, Object>();
-		Map<String, Object> result = new HashMap<String, Object>();
-		Map<String, Object> error = new HashMap<String, Object>();
-
-		Collection<MatchEntity> matches = new ArrayList<>();
-		ArrayList<TeamEntity> teams = new ArrayList<>();
-		HashMap<String, Object> schedule = new HashMap<>();
-		HashMap<String, Object> groupStageSchedule = new HashMap<>();
-		HashMap<String, Object> finalStageSchedule = new HashMap<>();
-
-		SingleEliminationTree tree = new SingleEliminationTree();
-		RoundRobinTable table = new RoundRobinTable();
-
-		try {
-			CompetitionEntity thisCompetition = competitionService.findOneById(competitionId);
-
-			if (thisCompetition == null) {
-				result.put("Schedule", null);
-				config.put("Global", 0);
-				error.put("MessageCode", 1);
-				error.put("Message", "Competition not found");
-			} else {
-
-				int totalTeamBeforeGroupStage;
-				int totalTeamAfterGroupStage;
-
-				FormatEntity finalFormat;
-				FormatEntity groupFormat;
-
-				ArrayList<BoxDescription> descriptions = new ArrayList<>();
-
-				totalTeamBeforeGroupStage = teamService
-						.countByCompetitionIdAndStatus(competitionId, Const.TEAM_STATUS_JOINED).intValue();
-
-				System.out.println("++++++++++++++++++++++++++++++++++++++ totalTeamBeforeGroupStage: "
-						+ totalTeamBeforeGroupStage);
-
-				boolean hasGroupStage = thisCompetition.isHasGroupStage();
-				FinalStageSettingEntity finalStageSetting = thisCompetition.getFinalStageSetting();
-
-				if (finalStageSetting == null) {
-					result.put("Schedule", null);
-					config.put("Global", 0);
-					error.put("MessageCode", 1);
-					error.put("Message", "Missing final stage setting");
-				} else {
-
-					// group
-					if (hasGroupStage) {
-
-						GroupStageSettingEntity groupStageSetting = thisCompetition.getGroupStageSetting();
-						groupFormat = groupStageSetting.getFormat();
-						boolean hasHomeMatch = groupStageSetting.isHasHomeMatch();
-						int maxTeamPerTable = groupStageSetting.getMaxTeamPerTable();
-						int advanceTeamPerTable = groupStageSetting.getAdvanceTeamPerTable();
-						int totalTable = (int) (totalTeamBeforeGroupStage / maxTeamPerTable);
-
-						int totalTeamInFinalTable;
-
-						if (totalTable != 0) {
-							totalTeamInFinalTable = totalTeamBeforeGroupStage % totalTable;
-						} else {
-							totalTeamInFinalTable = totalTeamBeforeGroupStage;
-						}
-
-						if (totalTeamInFinalTable == 0) {
-							totalTeamInFinalTable = maxTeamPerTable;
-						} else {
-							totalTable++;
-						}
-
-						System.out.println("+++++++++++++++++++++++++++ maxTeamPerTable: " + maxTeamPerTable);
-						System.out.println("+++++++++++++++++++++++++++ totalTable: " + totalTable);
-
-						// schedule for group stage
-						String formatName = groupFormat.getName();
-						groupStageSchedule = scheduleService.groupStageScheduling(totalTeamBeforeGroupStage, formatName,
-								hasHomeMatch, maxTeamPerTable, advanceTeamPerTable, totalTable, totalTeamInFinalTable);
-						System.out.println("++++++++++++++++++++++++++++++++++++++ CP6 ");
-						totalTeamAfterGroupStage = (totalTable - 1) * advanceTeamPerTable
-								+ (int) Math.min(totalTeamInFinalTable, advanceTeamPerTable);
-
-						// create descriptions
-						ArrayList<RankingTable> rankingTables = new ArrayList<>();
-						@SuppressWarnings("unchecked")
-						ArrayList<HashMap<String, Object>> tables = (ArrayList<HashMap<String, Object>>) groupStageSchedule
-								.get("Tables");
-						for (HashMap<String, Object> tb : tables) {
-							RankingTable rankingTable = (RankingTable) tb.get("RankingTable");
-							rankingTables.add(rankingTable);
-						}
-
-						for (int i = 0; i < advanceTeamPerTable; i++) {
-
-							for (RankingTable tb : rankingTables) {
-
-								if (tb.size() > i) {
-									descriptions.add(tb.get(i).getDescription());
-
-								}
-							}
-						}
-
-					} else {
-
-						totalTeamAfterGroupStage = totalTeamBeforeGroupStage;
-					}
-
-					System.out.println("++++++++++++++++++++++++++++++++++++++ totalTeamAfterGroupStage: "
-							+ totalTeamAfterGroupStage);
-
-					// final
-
-					finalFormat = finalStageSetting.getFormat();
-					boolean hasHomeMatch = finalStageSetting.isHasHomeMatch();
-					String formatName = finalFormat.getName();
-					finalStageSchedule = scheduleService.finalStageScheduling(totalTeamAfterGroupStage, formatName,
-							hasHomeMatch, -1, descriptions, 1);
-
-				}
-
-				schedule.put("FinalStageSchedule", finalStageSchedule);
-				schedule.put("GroupStageSchedule", groupStageSchedule);
-
-				result.put("Schedule", schedule);
-				config.put("Global", 0);
-				error.put("MessageCode", 0);
-				error.put("Message", "Success");
-
-				// save file
-				scheduleService.saveSchedule(schedule, competitionId);
-
-			}
-			System.out.println("ScheduleAPI: createFinalStageScheduleByCompetitionId: no exception");
-		} catch (Exception e) {
-			System.out.println("ScheduleAPI: createFinalStageScheduleByCompetitionId: has exception");
-			System.out.println(e);
-			result.put("Schedule", null);
-			config.put("Global", 0);
-			error.put("MessageCode", 1);
-			error.put("Message", "Server error");
-		}
-
-		response.setConfig(config);
-		response.setResult(result);
-		response.setError(error);
-		System.out.println("ScheduleAPI: createFinalStageScheduleByCompetitionId: finish");
-		return new ResponseEntity<Response>(response, httpStatus);
-	}
-
-	// View ranking table
-	@GetMapping("/viewRankingTable")
-	public ResponseEntity<Response> viewRankingTable() {
-		return null;
-
-	}
-
-	/*
-	 * Get all participated team by CompetitionId
-	 */
-	@GetMapping("/viewParticipatedTeams")
-	public ResponseEntity<Response> viewParticipatedTeams(@RequestParam(value = "page", required = false) Integer page,
-			@RequestParam(value = "limit", required = false) Integer limit,
-			@RequestParam(value = "competitionId") Long competitionId) {
-		System.out.println("AdminAPI: viewParticipatedTeams: start");
-		HttpStatus httpStatus = HttpStatus.OK;
-		Response response = new Response();
-		Map<String, Object> config = new HashMap<String, Object>();
-		Map<String, Object> result = new HashMap<String, Object>();
-		Map<String, Object> error = new HashMap<String, Object>();
-		List<TeamDTO> teamDTOs = new ArrayList<TeamDTO>();
-		List<TeamEntity> list = new ArrayList<TeamEntity>();
-		try {
-
-			if (limit == null || limit <= 0)
-				limit = 3;
-
-			if (page == null || page <= 0)
-				page = 1;
-
-			if (competitionId == null) {
-				result.put("Total page", 0);
-				result.put("Teams", null);
-				config.put("Global", 0);
-				error.put("MessageCode", 0);
-				error.put("Message", "required competitionId");
-			} else {
-
-				list = (List<TeamEntity>) teamService.findByCompetitionIdAndStatus(competitionId,
-						Const.TEAM_STATUS_JOINED);
-
-				if (list == null) {// list is not exist
-					result.put("Total page", 0);
-					result.put("Teams", null);
-					config.put("Global", 0);
-					error.put("MessageCode", 1);
-					error.put("Message", "List is not exist");
-
-				} else {// list is exist
-					Collections.sort(list, new TeamEntity());
-
-					for (TeamEntity teamEntity : list) {
-						ArrayList<Player> players = (ArrayList<Player>) teamService
-								.getTeamPlayerFromFile(teamEntity.getCompetition().getId(), teamEntity.getId());
-						TeamDTO resDTO = teamConverter.toDTO(teamEntity);
-						resDTO.setPlayers(players);
-						teamDTOs.add(resDTO);
-					}
-
-					CompetitionEntity competitionEntity = competitionService.findOneById(competitionId);
-
-					int total = competitionEntity.getTeams().size();
-					int totalPage = total / limit;
-					if (total % limit != 0) {
-						totalPage++;
-					}
-					result.put("Total page", totalPage);
-					result.put("Teams", teamDTOs);
-					config.put("Global", 0);
-					error.put("MessageCode", 0);
-					error.put("Message", "get Page Teams successfully");
-
-				}
-			}
-			System.out.println("AdminAPI: viewParticipatedTeams: no exception");
-		} catch (Exception e) {
-			System.out.println("AdminAPI: viewParticipatedTeams: has exception");
-			result.put("Teams", teamDTOs);
-			config.put("Global", 0);
-			error.put("MessageCode", 1);
-			error.put("Message", "Server error");
-		}
-
-		response.setConfig(config);
-		response.setResult(result);
-		response.setError(error);
-		System.out.println("AdminAPI: viewParticipatedTeams: finish");
-		return new ResponseEntity<Response>(response, httpStatus);
-	}
-
-	/* ---------------- Edit Profile User ------------------------ */
-	@PutMapping("/editUser")
-	public ResponseEntity<Response> editUser(@RequestParam(value = "id") Long id, @RequestBody UserDTO dto) {
-		System.out.println("AdminAPI: editUser: start");
-		HttpStatus httpStatus = HttpStatus.OK;
-		Response response = new Response();
-		Map<String, Object> config = new HashMap<String, Object>();
-		Map<String, Object> result = new HashMap<String, Object>();
-		Map<String, Object> error = new HashMap<String, Object>();
-		try {
-			UserEntity userEntity = new UserEntity();
-			if (id != null) {
-				userEntity = userConverter.toEntity(dto);
-				userEntity = userService.update(id, userEntity);
-
-				result.put("User", userConverter.toDTO(userEntity));
-				error.put("MessageCode", 0);
-				error.put("Message", "Edit Profile User Successfull");
-			} else {
-				error.put("MessageCode", 1);
-				error.put("Message", "required user id");
-			}
-			System.out.println("AdminAPI: editUser: no exception");
-		} catch (Exception ex) {
-			System.out.println("AdminAPI: editUser: has exception");
-			result.put("User", null);
-			error.put("MessageCode", 1);
-			error.put("Message", "edit  User fail");
-		}
-		response.setError(error);
-		response.setResult(result);
-		response.setConfig(config);
-		System.out.println("AdminAPI: editUser: finish");
-		return new ResponseEntity<Response>(response, httpStatus);
-	}
-
 	// Stop tournament
 	@PutMapping("/stopTournament")
-	public ResponseEntity<Response> stopTournament(@RequestParam Long id) {
+	public ResponseEntity<Response> stopTournament(@RequestParam(value = "tournamentId") Long id) {
 		System.out.println("AdminAPI: stopTournament: start");
 		Response response = new Response();
 		HttpStatus httpStatus = HttpStatus.OK;
@@ -1013,22 +425,35 @@ public class AdminAPI {
 					error.put("Message", "Tournament is not exist");
 				} else {
 
-					thisTournament = tournamentService.updateStatus(thisTournament, Const.TOURNAMENT_STATUS_STOPPED);
-
-					thisTournamentDTO = tournamentconverter.toDTO(thisTournament);
-
-					Collection<CompetitionEntity> comps = thisTournament.getCompetitions();
-					ArrayList<HashMap<String, Object>> tests = new ArrayList<>();
-					for (CompetitionEntity comp : comps) {
-						CompetitionEntity competitionEntity = competitionService.updateStatus(comp,
+					if (thisTournament.getStatus().contains(Const.TOURNAMENT_STATUS_PROCESSING)) {
+						thisTournament = tournamentService.updateStatus(thisTournament,
 								Const.TOURNAMENT_STATUS_STOPPED);
 
-					}
+						thisTournamentDTO = tournamentconverter.toDTO(thisTournament);
 
-					result.put("Tournament", thisTournamentDTO);
-					config.put("Global", 0);
-					error.put("MessageCode", 0);
-					error.put("Message", "Success");
+						result.put("Tournament", thisTournamentDTO);
+						config.put("Global", 0);
+						error.put("MessageCode", 0);
+						error.put("Message", "Success");
+					} else {
+						String message = "Unknown error";
+						if (thisTournament.getStatus().contains(Const.TOURNAMENT_STATUS_REGISTRATION_OPENING)) {
+							message = Const.TOURNAMENT_MESSAGE_REGISTRATION_OPENING;
+						}
+						if (thisTournament.getStatus().contains(Const.TOURNAMENT_STATUS_INITIALIZING)) {
+							message = Const.TOURNAMENT_MESSAGE_INITIALIZING;
+						}
+						if (thisTournament.getStatus().contains(Const.TOURNAMENT_STATUS_FINISHED)) {
+							message = Const.TOURNAMENT_MESSAGE_FINISHED;
+						}
+						if (thisTournament.getStatus().contains(Const.TOURNAMENT_STATUS_STOPPED)) {
+							message = Const.TOURNAMENT_MESSAGE_STOPPED;
+						}
+						result.put("Tournament", null);
+						config.put("Global", 0);
+						error.put("MessageCode", 1);
+						error.put("Message", message);
+					}
 				}
 
 			}
@@ -1051,7 +476,7 @@ public class AdminAPI {
 
 	// Continue tournament
 	@PutMapping("/continueTournament")
-	public ResponseEntity<Response> continueTournament(@RequestParam Long id) {
+	public ResponseEntity<Response> continueTournament(@RequestParam(value = "tournamentId") Long id) {
 		System.out.println("AdminAPI: continueTournament: start");
 		Response response = new Response();
 		HttpStatus httpStatus = HttpStatus.OK;
@@ -1077,23 +502,35 @@ public class AdminAPI {
 					error.put("MessageCode", 1);
 					error.put("Message", "Tournament is not exist");
 				} else {
-
-					thisTournament = tournamentService.updateStatus(thisTournament, Const.TOURNAMENT_STATUS_PROCESSING);
-
-					thisTournamentDTO = tournamentconverter.toDTO(thisTournament);
-
-					Collection<CompetitionEntity> comps = thisTournament.getCompetitions();
-					ArrayList<HashMap<String, Object>> tests = new ArrayList<>();
-					for (CompetitionEntity comp : comps) {
-						CompetitionEntity competitionEntity = competitionService.updateStatus(comp,
+					if (thisTournament.getStatus().contains(Const.TOURNAMENT_STATUS_STOPPED)) {
+						thisTournament = tournamentService.updateStatus(thisTournament,
 								Const.TOURNAMENT_STATUS_PROCESSING);
 
-					}
+						thisTournamentDTO = tournamentconverter.toDTO(thisTournament);
 
-					result.put("Tournament", thisTournamentDTO);
-					config.put("Global", 0);
-					error.put("MessageCode", 0);
-					error.put("Message", "Success");
+						result.put("Tournament", thisTournamentDTO);
+						config.put("Global", 0);
+						error.put("MessageCode", 0);
+						error.put("Message", "Success");
+					} else {
+						String message = "Unknown error";
+						if (thisTournament.getStatus().contains(Const.TOURNAMENT_STATUS_REGISTRATION_OPENING)) {
+							message = Const.TOURNAMENT_MESSAGE_REGISTRATION_OPENING;
+						}
+						if (thisTournament.getStatus().contains(Const.TOURNAMENT_STATUS_INITIALIZING)) {
+							message = Const.TOURNAMENT_MESSAGE_INITIALIZING;
+						}
+						if (thisTournament.getStatus().contains(Const.TOURNAMENT_STATUS_FINISHED)) {
+							message = Const.TOURNAMENT_MESSAGE_FINISHED;
+						}
+						if (thisTournament.getStatus().contains(Const.TOURNAMENT_STATUS_PROCESSING)) {
+							message = Const.TOURNAMENT_MESSAGE_PROCESSING;
+						}
+						result.put("Tournament", null);
+						config.put("Global", 0);
+						error.put("MessageCode", 1);
+						error.put("Message", message);
+					}
 				}
 
 			}
@@ -1169,7 +606,7 @@ public class AdminAPI {
 
 	// Activate account
 	@PutMapping("/activateAccount")
-	public ResponseEntity<Response> activateAccount(@RequestParam Long id) {
+	public ResponseEntity<Response> activateAccount(@RequestParam(value = "userId") Long id) {
 		System.out.println("AdminAPI: activateAccount: start");
 		Response response = new Response();
 		HttpStatus httpStatus = HttpStatus.OK;
@@ -1226,7 +663,7 @@ public class AdminAPI {
 
 	// Deactivate account
 	@PutMapping("/deactivateAccount")
-	public ResponseEntity<Response> deactivateAccount(@RequestParam Long id) {
+	public ResponseEntity<Response> deactivateAccount(@RequestParam(value = "userId") Long id) {
 		System.out.println("AdminAPI: deactivateAccount: start");
 		Response response = new Response();
 		HttpStatus httpStatus = HttpStatus.OK;
@@ -1282,8 +719,8 @@ public class AdminAPI {
 	}
 
 	// View system report
-	@GetMapping("/ViewSystemReport")
-	public ResponseEntity<Response> ViewSystemReports(@RequestParam(value = "page", required = false) Integer page,
+	@GetMapping("/viewSystemReport")
+	public ResponseEntity<Response> viewSystemReports(@RequestParam(value = "page", required = false) Integer page,
 			@RequestParam(value = "limit", required = false) Integer limit) {
 		System.out.println("AdminAPI: ViewSystemReport: start");
 
@@ -1344,8 +781,8 @@ public class AdminAPI {
 	}
 
 	// View violation report
-	@GetMapping("/ViewViolationReport")
-	public ResponseEntity<Response> ViewViolationReports(@RequestParam(value = "page", required = false) Integer page,
+	@GetMapping("/viewViolationReport")
+	public ResponseEntity<Response> viewViolationReports(@RequestParam(value = "page", required = false) Integer page,
 			@RequestParam(value = "limit", required = false) Integer limit) {
 		System.out.println("AdminAPI: ViewViolationReport: start");
 

@@ -98,7 +98,7 @@ abstract public class ScheduleStruct implements Serializable{
 			return;
 		}
 		this.tableId = tableId;
-		this.rankingTable = new RankingTable(this.totalTeam, this.tableId);
+		this.rankingTable.applyDescriptions(tableId);
 	}
 
 	public SeedList getSeedList() {

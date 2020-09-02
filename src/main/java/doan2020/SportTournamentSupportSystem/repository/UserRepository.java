@@ -22,16 +22,17 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
 	Page<UserEntity> findByRoleId(Pageable pageable, Long roleId);
 
-	@Query(value = "SELECT u FROM UserEntity u" + " WHERE u.firstName LIKE CONCAT('%',:str,'%')"
+	@Query(value = "SELECT u FROM UserEntity u" + " WHERE (u.firstName LIKE CONCAT('%',:str,'%')"
 			+ " or u.lastName LIKE CONCAT('%',:str,'%')" + " or u.username LIKE CONCAT('%',:str,'%')"
-			+ " or u.email LIKE CONCAT('%',:str,'%')")
+			+ " or u.email LIKE CONCAT('%',:str,'%'))"
+			+ " and u.role.id = 2")
 	Collection<UserEntity> findBySearchString(@Param("str") String searchString);
 
 	@Query(value = "SELECT u FROM UserEntity u" + " WHERE (u.firstName LIKE CONCAT('%',:str,'%')"
 			+ " or u.lastName LIKE CONCAT('%',:str,'%')" + " or u.username LIKE CONCAT('%',:str,'%')"
 			+ " or u.email LIKE CONCAT('%',:str,'%'))"
-			+"and ((:status = '' and u.status like concat('%',:status,'%'))  \r\n" 
-			+"or (u.status like :status))")
+			+" and u.status = \':status\' "
+			+ " and u.role.id = 2")
 	Collection<UserEntity> findBySearchStringAndStatus(@Param("str") String searchString,
 			@Param("status") String status);
 

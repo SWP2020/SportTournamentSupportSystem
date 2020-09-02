@@ -65,7 +65,7 @@ public class UsersAPI {
 				page = 1;
 
 			Pageable pageable = PageRequest.of(page - 1, limit);
-			findPage = (List<UserEntity>) service.findAll(pageable);
+			findPage = (List<UserEntity>) service.findByRoleId(pageable, 2l);
 			
 			
 			for (UserEntity entity : findPage) {
@@ -73,7 +73,7 @@ public class UsersAPI {
 				findPageDTO.add(dto);
 			}
 			
-			long total = service.countAll();
+			long total = service.countByRoleId(2l);
 			long totalPage = total / limit;
 			if (total % limit != 0) {
 				totalPage++;

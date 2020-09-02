@@ -16,13 +16,14 @@ public class RankingTable extends ArrayList<RankingTableSlot> implements Seriali
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private int totalTeam;
 
 	public RankingTable() {
 		super();
 	}	
 
 	public RankingTable(int totalTeam) {
-		super();
+		this.totalTeam = totalTeam;
 		for(int i=0; i<totalTeam; i++) {
 			BoxDescription description = new BoxDescription(6l, i + 1);
 			RankingTableSlot slot = new RankingTableSlot();
@@ -33,7 +34,7 @@ public class RankingTable extends ArrayList<RankingTableSlot> implements Seriali
 	}
 	
 	public RankingTable(ArrayList<Team> teams) {
-		super();
+		this.totalTeam = teams.size();
 		for (Team team: teams) {
 			RankingTableSlot slot = new RankingTableSlot(team);
 			this.add(slot);
@@ -42,7 +43,7 @@ public class RankingTable extends ArrayList<RankingTableSlot> implements Seriali
 	}
 	
 	public RankingTable(int totalTeam, int tableId) {
-		super();
+		this.totalTeam = totalTeam;
 		for(int i=0; i<totalTeam; i++) {
 			BoxDescription description = new BoxDescription(tableId, (long) (i + 1));
 			RankingTableSlot slot = new RankingTableSlot();
@@ -66,6 +67,14 @@ public class RankingTable extends ArrayList<RankingTableSlot> implements Seriali
 			slot.setDifference(0.0);
 			slot.setScore(0);
 			seedNo++;
+		}
+	}
+	
+	public void applyDescriptions(int tableId) {
+		for(int i=0; i<this.totalTeam; i++) {
+			BoxDescription description = new BoxDescription(tableId, (long) (i + 1));
+			RankingTableSlot slot = this.get(i);
+			slot.setDescription(description);
 		}
 	}
 	

@@ -1,6 +1,7 @@
 
 package doan2020.SportTournamentSupportSystem.service.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -255,17 +256,17 @@ public class UserService implements IUserService {
 	
 	@Override
 	public Collection<UserEntity> findBySearchStringAndStatus(Pageable pageable, String searchString, String status) {
-		List<UserEntity> findUsers = null;
+		ArrayList<UserEntity> findUsers = null;
 		try {
 
-			findUsers = (List) userRepository.findBySearchStringAndStatus(searchString, status);
+			findUsers = (ArrayList<UserEntity>) userRepository.findBySearchStringAndStatus(searchString, status);
 
 			int start = (int) pageable.getOffset();
 			int end = (start + pageable.getPageSize()) > findUsers.size() ? findUsers.size()
 					: (start + pageable.getPageSize());
 			Page<UserEntity> pages = new PageImpl<UserEntity>(findUsers.subList(start, end), pageable,
 					findUsers.size());
-			findUsers = pages.getContent();
+			findUsers = (ArrayList<UserEntity>) pages.getContent();
 
 		} catch (Exception e) {
 			return null;
@@ -282,6 +283,11 @@ public class UserService implements IUserService {
 			return 0l;
 		}
 		return new Long(findUsers.size());
+	}
+	
+	@Override
+	public Long countAllByRoleId(Long roleId) {
+		return (long)userRepository.countByRoleId(roleId);
 	}
 
 }
