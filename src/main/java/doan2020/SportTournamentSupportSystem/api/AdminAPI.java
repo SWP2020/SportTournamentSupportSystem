@@ -249,40 +249,39 @@ public class AdminAPI {
 		System.out.println("AdminAPI: getBySearchString: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
-	
+
 	@GetMapping("/searchUserWithStatus")
-	public ResponseEntity<Response> searchUserWithStatus(
-			@RequestParam(value = "page", required = false) Integer page,
+	public ResponseEntity<Response> searchUserWithStatus(@RequestParam(value = "page", required = false) Integer page,
 			@RequestParam(value = "limit", required = false) Integer limit,
 			@RequestParam(value = "searchString") String searchString, @RequestParam(value = "status") String status) {
 		System.out.println("UsersAPI: searchUserWithStatus: start");
-		
+
 		HttpStatus httpStatus = HttpStatus.OK;
 		Response response = new Response();
 		Map<String, Object> config = new HashMap<String, Object>();
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
-		
+
 		List<UserDTO> dtos = new ArrayList<UserDTO>();
 		List<UserEntity> entities = new ArrayList<UserEntity>();
-		
+
 		if (limit == null || limit <= 0)
 			limit = 10;
-		
+
 		if (page == null || page <= 0)
 			page = 1;
-		
+
 		if (searchString == null) {// searchString null
 			result.put("Users", dtos);
 			config.put("Global", 0);
 			error.put("MessageCode", 1);
 			error.put("Message", "Required param searchString");
-		} else {//searchString not null
+		} else {// searchString not null
 //			Sort sortable = Sort.by("id").ascending();
 			try {
 				Pageable pageable = PageRequest.of(page - 1, limit);
 				entities = (List<UserEntity>) userService.findBySearchStringAndStatus(pageable, searchString, status);
-				
+
 				Long totalPage = 0l;
 
 				Long totalEntity = userService.countBySearchStringAndStatus(searchString, status);
@@ -290,12 +289,12 @@ public class AdminAPI {
 				totalPage = totalEntity / limit;
 				if (totalEntity % limit != 0)
 					totalPage++;
-				
-				for (UserEntity entity: entities) {
+
+				for (UserEntity entity : entities) {
 					UserDTO dto = userConverter.toDTO(entity);
 					dtos.add(dto);
 				}
-				
+
 				result.put("TotalPage", totalPage);
 				result.put("Users", dtos);
 				config.put("Global", 0);
@@ -310,7 +309,7 @@ public class AdminAPI {
 				error.put("MessageCode", 0);
 				error.put("Message", "Server error");
 			}
-			
+
 		}
 
 		response.setConfig(config);
@@ -399,7 +398,7 @@ public class AdminAPI {
 
 	// Stop tournament
 	@PutMapping("/stopTournament")
-	public ResponseEntity<Response> stopTournament(@RequestParam(value="tournamentId") Long id) {
+	public ResponseEntity<Response> stopTournament(@RequestParam(value = "tournamentId") Long id) {
 		System.out.println("AdminAPI: stopTournament: start");
 		Response response = new Response();
 		HttpStatus httpStatus = HttpStatus.OK;
@@ -426,22 +425,35 @@ public class AdminAPI {
 					error.put("Message", "Tournament is not exist");
 				} else {
 
-					thisTournament = tournamentService.updateStatus(thisTournament, Const.TOURNAMENT_STATUS_STOPPED);
-
-					thisTournamentDTO = tournamentconverter.toDTO(thisTournament);
-
-					Collection<CompetitionEntity> comps = thisTournament.getCompetitions();
-					ArrayList<HashMap<String, Object>> tests = new ArrayList<>();
-					for (CompetitionEntity comp : comps) {
-						CompetitionEntity competitionEntity = competitionService.updateStatus(comp,
+					if (thisTournament.getStatus().contains(Const.TOURNAMENT_STATUS_PROCESSING)) {
+						thisTournament = tournamentService.updateStatus(thisTournament,
 								Const.TOURNAMENT_STATUS_STOPPED);
 
-					}
+						thisTournamentDTO = tournamentconverter.toDTO(thisTournament);
 
-					result.put("Tournament", thisTournamentDTO);
-					config.put("Global", 0);
-					error.put("MessageCode", 0);
-					error.put("Message", "Success");
+						result.put("Tournament", thisTournamentDTO);
+						config.put("Global", 0);
+						error.put("MessageCode", 0);
+						error.put("Message", "Success");
+					} else {
+						String message = "Unknown error";
+						if (thisTournament.getStatus().contains(Const.TOURNAMENT_STATUS_REGISTRATION_OPENING)) {
+							message = Const.TOURNAMENT_MESSAGE_REGISTRATION_OPENING;
+						}
+						if (thisTournament.getStatus().contains(Const.TOURNAMENT_STATUS_INITIALIZING)) {
+							message = Const.TOURNAMENT_MESSAGE_INITIALIZING;
+						}
+						if (thisTournament.getStatus().contains(Const.TOURNAMENT_STATUS_FINISHED)) {
+							message = Const.TOURNAMENT_MESSAGE_FINISHED;
+						}
+						if (thisTournament.getStatus().contains(Const.TOURNAMENT_STATUS_STOPPED)) {
+							message = Const.TOURNAMENT_MESSAGE_STOPPED;
+						}
+						result.put("Tournament", null);
+						config.put("Global", 0);
+						error.put("MessageCode", 1);
+						error.put("Message", message);
+					}
 				}
 
 			}
@@ -464,7 +476,7 @@ public class AdminAPI {
 
 	// Continue tournament
 	@PutMapping("/continueTournament")
-	public ResponseEntity<Response> continueTournament(@RequestParam(value="tournamentId") Long id) {
+	public ResponseEntity<Response> continueTournament(@RequestParam(value = "tournamentId") Long id) {
 		System.out.println("AdminAPI: continueTournament: start");
 		Response response = new Response();
 		HttpStatus httpStatus = HttpStatus.OK;
@@ -490,23 +502,35 @@ public class AdminAPI {
 					error.put("MessageCode", 1);
 					error.put("Message", "Tournament is not exist");
 				} else {
-
-					thisTournament = tournamentService.updateStatus(thisTournament, Const.TOURNAMENT_STATUS_PROCESSING);
-
-					thisTournamentDTO = tournamentconverter.toDTO(thisTournament);
-
-					Collection<CompetitionEntity> comps = thisTournament.getCompetitions();
-					ArrayList<HashMap<String, Object>> tests = new ArrayList<>();
-					for (CompetitionEntity comp : comps) {
-						CompetitionEntity competitionEntity = competitionService.updateStatus(comp,
+					if (thisTournament.getStatus().contains(Const.TOURNAMENT_STATUS_STOPPED)) {
+						thisTournament = tournamentService.updateStatus(thisTournament,
 								Const.TOURNAMENT_STATUS_PROCESSING);
 
-					}
+						thisTournamentDTO = tournamentconverter.toDTO(thisTournament);
 
-					result.put("Tournament", thisTournamentDTO);
-					config.put("Global", 0);
-					error.put("MessageCode", 0);
-					error.put("Message", "Success");
+						result.put("Tournament", thisTournamentDTO);
+						config.put("Global", 0);
+						error.put("MessageCode", 0);
+						error.put("Message", "Success");
+					} else {
+						String message = "Unknown error";
+						if (thisTournament.getStatus().contains(Const.TOURNAMENT_STATUS_REGISTRATION_OPENING)) {
+							message = Const.TOURNAMENT_MESSAGE_REGISTRATION_OPENING;
+						}
+						if (thisTournament.getStatus().contains(Const.TOURNAMENT_STATUS_INITIALIZING)) {
+							message = Const.TOURNAMENT_MESSAGE_INITIALIZING;
+						}
+						if (thisTournament.getStatus().contains(Const.TOURNAMENT_STATUS_FINISHED)) {
+							message = Const.TOURNAMENT_MESSAGE_FINISHED;
+						}
+						if (thisTournament.getStatus().contains(Const.TOURNAMENT_STATUS_PROCESSING)) {
+							message = Const.TOURNAMENT_MESSAGE_PROCESSING;
+						}
+						result.put("Tournament", null);
+						config.put("Global", 0);
+						error.put("MessageCode", 1);
+						error.put("Message", message);
+					}
 				}
 
 			}
@@ -582,7 +606,7 @@ public class AdminAPI {
 
 	// Activate account
 	@PutMapping("/activateAccount")
-	public ResponseEntity<Response> activateAccount(@RequestParam(value="userId") Long id) {
+	public ResponseEntity<Response> activateAccount(@RequestParam(value = "userId") Long id) {
 		System.out.println("AdminAPI: activateAccount: start");
 		Response response = new Response();
 		HttpStatus httpStatus = HttpStatus.OK;
@@ -639,7 +663,7 @@ public class AdminAPI {
 
 	// Deactivate account
 	@PutMapping("/deactivateAccount")
-	public ResponseEntity<Response> deactivateAccount(@RequestParam(value="userId") Long id) {
+	public ResponseEntity<Response> deactivateAccount(@RequestParam(value = "userId") Long id) {
 		System.out.println("AdminAPI: deactivateAccount: start");
 		Response response = new Response();
 		HttpStatus httpStatus = HttpStatus.OK;
