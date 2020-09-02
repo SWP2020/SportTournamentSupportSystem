@@ -9,7 +9,7 @@ import { IBigRequest, IParams } from 'interfaces/common';
 import { IState } from 'redux-saga/reducers';
 import { searchUsers } from 'components/Header/actions';
 import { formatGender, formatUserStatus } from 'utils/common';
-import { queryListUsers, deActiveUser, activeUser } from './actions';
+import { queryListUsers, deActiveUser, activeUser, setAdmin } from './actions';
 import './styles.css';
 
 interface IAllUsersProps extends React.ClassAttributes<AllUsers> {
@@ -21,6 +21,7 @@ interface IAllUsersProps extends React.ClassAttributes<AllUsers> {
   searchUsers(param: IBigRequest): void;
   deActiveUser(param: IBigRequest): void;
   activeUser(param: IBigRequest): void;
+  setAdmin(param: IBigRequest): void;
 }
 
 interface IAllUsersState {
@@ -36,11 +37,19 @@ class AllUsers extends React.Component<IAllUsersProps, IAllUsersState> {
       activePage: 1,
     };
     this.configSheetData = {
-      fixedColumnCount: 5,
+      fixedColumnCount: 6,
       fixedRowCount: 1,
       rowHeight: 50,
       fetchCount: 3,
       header: [
+        {
+          label: '',
+          width: 120,
+          style: { justifyContent: 'center' },
+          element: (rowData: IParams, rowIndex: number, style?: React.CSSProperties) => (
+            <div style={style} className={'AllUsers-button-text-hover'}><p className={'AllUsers-button-text'} onClick={() => this.setAdmin(Number(rowData.id))}>Đặt làm admin</p></div>
+          ),
+        },
         {
           label: 'Cài đặt',
           width: 120,
@@ -166,9 +175,6 @@ class AllUsers extends React.Component<IAllUsersProps, IAllUsersState> {
         userId: id,
       },
       data: {
-        // page: this.state.activePage,
-        // limit: 10,
-        // searchString: this.props.globalSearchString,
       },
     }
     this.props.deActiveUser(params);
@@ -181,12 +187,21 @@ class AllUsers extends React.Component<IAllUsersProps, IAllUsersState> {
         userId: id,
       },
       data: {
-        // page: this.state.activePage,
-        // limit: 10,
-        // searchString: this.props.globalSearchString,
       },
     }
     this.props.activeUser(params);
+  }
+
+  private setAdmin = (id: number) => {
+    const params = {
+      path: '',
+      param: {
+        userId: id,
+      },
+      data: {
+      },
+    }
+    this.props.setAdmin(params);
   }
 
   private onChangeSelectedPage = (pageNumber: number) => {
@@ -234,5 +249,5 @@ const mapStateToProps = (state: IState) => {
 
 export default connect(
   mapStateToProps,
-  { queryListUsers, searchUsers, deActiveUser, activeUser }
+  { setAdmin, queryListUsers, searchUsers, deActiveUser, activeUser }
 )(AllUsers);

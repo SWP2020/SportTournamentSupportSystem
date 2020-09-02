@@ -25,7 +25,7 @@ import { formatDateToDisplay } from 'utils/datetime';
 import config from 'config';
 import { onEditBracketMode, deleteListSelectingTeam } from 'components/BracketTeam/actions';
 import { queryAllCompetitionsByTournamentId } from 'components/CompetitionsSetting/actions';
-import { registTeam, reportViolation, updateBackgroundTournament, updateAvatarTournament, queryTournamentInfo, querySportsByTournament, finishTournament, queryCompetitionsBySportAndTournament, startTournament } from './actions';
+import { openRegisterForm, closeRegisterForm, registTeam, reportViolation, updateBackgroundTournament, updateAvatarTournament, queryTournamentInfo, querySportsByTournament, finishTournament, queryCompetitionsBySportAndTournament, startTournament } from './actions';
 import { START_TOURNAMENT, FINISH_TOURNAMENT, REPORT_VIOLATION } from 'redux-saga/actions';
 import { START_TOURNAMENT_SUCCESS, START_TOURNAMENT_FAILED, FINISH_TOURNAMENT_SUCCESS, FINISH_TOURNAMENT_FAILED, REPORT_VIOLATION_SUCCESS, REPORT_VIOLATION_FAILED } from './reducers';
 import './styles.css';
@@ -50,6 +50,8 @@ interface ITournamentInfoProps extends React.ClassAttributes<TournamentInfo> {
   queryAllCompetitionsByTournamentId(param: IBigRequest): void;
   reportViolation(param: IBigRequest): void;
   registTeam(param: IBigRequest): void;
+  openRegisterForm(param: IBigRequest): void;
+  closeRegisterForm(param: IBigRequest): void;
 }
 
 interface ITournamentInfoState {
@@ -330,6 +332,38 @@ class TournamentInfo extends React.Component<ITournamentInfoProps, ITournamentIn
       };
 
       this.props.startTournament(params);
+    }
+  };
+
+  private handleOpenRegistForm = () => {
+    const confirm = window.confirm('Bạn có chắc chắn muốn mở form đăng ký?')
+    if (confirm === true) {
+      const params = {
+        path: '',
+        param: {
+          id: Number(this.props.routerInfo.match.params.tournamentId),
+        },
+        data: {
+        },
+      };
+
+      this.props.openRegisterForm(params);
+    }
+  };
+
+  private handleCloseRegistForm = () => {
+    const confirm = window.confirm('Bạn có chắc chắn muốn đóng form đăng ký?')
+    if (confirm === true) {
+      const params = {
+        path: '',
+        param: {
+          id: Number(this.props.routerInfo.match.params.tournamentId),
+        },
+        data: {
+        },
+      };
+
+      this.props.closeRegisterForm(params);
     }
   };
 
@@ -727,6 +761,25 @@ class TournamentInfo extends React.Component<ITournamentInfoProps, ITournamentIn
                               </div>
                             </div>))
                   }
+                  {this.props.tournamentInfo != null && this.props.tournamentInfo.Config != null && this.props.tournamentInfo.Tournament != null && (this.props.tournamentInfo.Config as IParams).canEdit === true && ((this.props.tournamentInfo.Tournament as IParams).status === 'initializing' ?
+                    <div className="TournamentInfo-login-container">
+                      <div
+                        className="TournamentInfo-login"
+                        onClick={this.handleOpenRegistForm}
+                      >
+                        <h4 className="TournamentInfo-login-text">Mở form đăng ký</h4>
+                      </div>
+                    </div> : ((this.props.tournamentInfo.Tournament as IParams).status === 'opening' &&
+                      <div className="TournamentInfo-login-container">
+                        <div
+                          className="TournamentInfo-login"
+                          onClick={this.handleCloseRegistForm}
+                        >
+                          <h4 className="TournamentInfo-login-text">Đóng form đăng ký</h4>
+                        </div>
+                      </div>
+                    ))
+                  }
                   {this.props.tournamentInfo != null && this.props.tournamentInfo.Config != null && this.props.tournamentInfo.Tournament != null && (this.props.tournamentInfo.Config as IParams).canEdit !== true && (this.props.tournamentInfo.Tournament as IParams).status !== 'finished' &&
                     <div className="TournamentInfo-login-container">
                       <div
@@ -881,5 +934,5 @@ const mapStateToProps = (state: IState) => {
 
 export default connect(
   mapStateToProps,
-  { registTeam, reportViolation, queryAllCompetitionsByTournamentId, deleteListSelectingTeam, onEditBracketMode, updateBackgroundTournament, updateAvatarTournament, queryTournamentInfo, querySportsByTournament, queryCompetitionsBySportAndTournament, startTournament, finishTournament }
+  { openRegisterForm, closeRegisterForm, registTeam, reportViolation, queryAllCompetitionsByTournamentId, deleteListSelectingTeam, onEditBracketMode, updateBackgroundTournament, updateAvatarTournament, queryTournamentInfo, querySportsByTournament, queryCompetitionsBySportAndTournament, startTournament, finishTournament }
 )(TournamentInfo);

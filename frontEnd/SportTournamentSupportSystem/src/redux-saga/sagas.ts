@@ -60,6 +60,9 @@ import { activeUser } from './sagas/ActiveUser';
 import { deActiveUser } from './sagas/DeActiveUser';
 import { stopTournament } from './sagas/StopTournament';
 import { continueTournament } from './sagas/ContinueTournament';
+import { openRegisterForm } from './sagas/OpenRegisterForm';
+import { closeRegisterForm } from './sagas/CloseRegisterForm';
+import { setAdmin } from './sagas/SetAdmin';
 
 export default function* () {
   yield all([
@@ -124,5 +127,8 @@ export default function* () {
     deActiveUser(),
     stopTournament(),
     continueTournament(),
+    openRegisterForm(),
+    closeRegisterForm(),
+    setAdmin(),
   ]);
 }
