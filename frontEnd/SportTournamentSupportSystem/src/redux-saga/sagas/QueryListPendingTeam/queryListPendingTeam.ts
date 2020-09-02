@@ -1,20 +1,20 @@
 import { call, takeLatest, put } from 'redux-saga/effects';
 import { query, METHOD } from 'utils/socketApi';
 import { IRequest, IParams, IBigRequest } from 'interfaces/common';
-import { COMMON_SHOW_NOTIFICATION, QUERY_LIST_TEAM } from 'redux-saga/actions';
+import { COMMON_SHOW_NOTIFICATION, QUERY_LIST_PENDING_TEAM } from 'redux-saga/actions';
 
 
-const queryListTeams = (data: IParams, path: string | number, param: IParams) => {
-  const uri = param.userId != null ? 'teams/getByUserId' : (param.competitionId != null ? 'teams/getByCompetitionId' : 'teams/getByTournamentId');
+const queryListPendingTeam = (data: IParams, path: string | number, param: IParams) => {
+  const uri = 'teams/getPendingTeamsByCompetitionId';
   const datas = { ...data };
   const paths = path;
   const params = { ...param };
   return query(uri, METHOD.GET, datas, params, paths);
 };
 
-function* doQueryListTeams(request: IRequest<IBigRequest>) {
+function* doQueryListPendingTeam(request: IRequest<IBigRequest>) {
   try {
-    const response = yield call(queryListTeams, request.data.data, request.data.path, request.data.param);
+    const response = yield call(queryListPendingTeam, request.data.data, request.data.path, request.data.param);
     const data = response.data.result;
     if (response.data.error.MessageCode === 0) {
       yield put({
@@ -32,7 +32,7 @@ function* doQueryListTeams(request: IRequest<IBigRequest>) {
       type: COMMON_SHOW_NOTIFICATION,
       data: {
         type: 'error',
-        title: 'QueryListTeams',
+        title: 'QueryListPendingTeam',
         content: error,
         time: new Date(),
       },
@@ -40,6 +40,6 @@ function* doQueryListTeams(request: IRequest<IBigRequest>) {
   }
 }
 
-export default function* watchQueryListTeams() {
-  yield takeLatest(QUERY_LIST_TEAM, doQueryListTeams);
+export default function* watchQueryListPendingTeam() {
+  yield takeLatest(QUERY_LIST_PENDING_TEAM, doQueryListPendingTeam);
 }

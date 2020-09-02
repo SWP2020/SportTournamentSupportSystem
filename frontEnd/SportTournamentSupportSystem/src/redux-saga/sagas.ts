@@ -52,6 +52,14 @@ import { updateMatchResult } from './sagas/UpdateMatchResult';
 import { queryTournamentReport } from './sagas/QueryTournamentReport';
 import { reportViolation } from './sagas/ReportViolation';
 import { queryAllReports } from './sagas/QueryAllReports';
+import { registTeam } from './sagas/RegistTeam';
+import { queryListPendingTeam } from './sagas/QueryListPendingTeam';
+import { approveTeam } from './sagas/ApproveTeam';
+import { rejectTeam } from './sagas/RejectTeam';
+import { activeUser } from './sagas/ActiveUser';
+import { deActiveUser } from './sagas/DeActiveUser';
+import { stopTournament } from './sagas/StopTournament';
+import { continueTournament } from './sagas/ContinueTournament';
 
 export default function* () {
   yield all([
@@ -108,5 +116,13 @@ export default function* () {
     queryTournamentReport(),
     reportViolation(),
     queryAllReports(),
+    registTeam(),
+    queryListPendingTeam(),
+    approveTeam(),
+    rejectTeam(),
+    activeUser(),
+    deActiveUser(),
+    stopTournament(),
+    continueTournament(),
   ]);
 }

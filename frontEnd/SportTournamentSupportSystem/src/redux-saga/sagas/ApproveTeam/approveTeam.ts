@@ -1,24 +1,29 @@
 import { call, takeLatest, put } from 'redux-saga/effects';
 import { query, METHOD } from 'utils/socketApi';
 import { IRequest, IParams, IBigRequest } from 'interfaces/common';
-import { COMMON_SHOW_NOTIFICATION, QUERY_LIST_TEAM } from 'redux-saga/actions';
+import { QUERY_LIST_PENDING_TEAM_SUCCESS } from 'components/PendingTeams/reducers';
+import { COMMON_SHOW_NOTIFICATION, APPROVE_TEAM } from 'redux-saga/actions';
 
 
-const queryListTeams = (data: IParams, path: string | number, param: IParams) => {
-  const uri = param.userId != null ? 'teams/getByUserId' : (param.competitionId != null ? 'teams/getByCompetitionId' : 'teams/getByTournamentId');
+const approveTeam = (data: IParams, path: string | number, param: IParams) => {
+  const uri = 'team/approve';
   const datas = { ...data };
   const paths = path;
   const params = { ...param };
-  return query(uri, METHOD.GET, datas, params, paths);
+  return query(uri, METHOD.PUT, datas, params, paths);
 };
 
-function* doQueryListTeams(request: IRequest<IBigRequest>) {
+function* doApproveTeam(request: IRequest<IBigRequest>) {
   try {
-    const response = yield call(queryListTeams, request.data.data, request.data.path, request.data.param);
+    const response = yield call(approveTeam, request.data.data, request.data.path, request.data.param);
     const data = response.data.result;
     if (response.data.error.MessageCode === 0) {
       yield put({
         type: request.response.success,
+        payload: data,
+      });
+      yield put({
+        type: QUERY_LIST_PENDING_TEAM_SUCCESS,
         payload: data.Teams,
       });
     } else {
@@ -32,7 +37,7 @@ function* doQueryListTeams(request: IRequest<IBigRequest>) {
       type: COMMON_SHOW_NOTIFICATION,
       data: {
         type: 'error',
-        title: 'QueryListTeams',
+        title: 'ApproveTeam',
         content: error,
         time: new Date(),
       },
@@ -40,6 +45,6 @@ function* doQueryListTeams(request: IRequest<IBigRequest>) {
   }
 }
 
-export default function* watchQueryListTeams() {
-  yield takeLatest(QUERY_LIST_TEAM, doQueryListTeams);
+export default function* watchApproveTeam() {
+  yield takeLatest(APPROVE_TEAM, doApproveTeam);
 }

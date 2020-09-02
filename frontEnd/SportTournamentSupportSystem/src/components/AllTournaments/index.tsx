@@ -8,7 +8,7 @@ import SheetData, { ISheetDataConfig } from 'components/SheetData';
 import { IBigRequest, IParams } from 'interfaces/common';
 import { IState } from 'redux-saga/reducers';
 import { searchTournaments } from 'components/Header/actions';
-import { queryListTournament } from './actions';
+import { queryListTournament, stopTournament, continueTournament } from './actions';
 import './styles.css';
 import { formatTournamentStatus } from 'utils/common';
 
@@ -19,6 +19,8 @@ interface IAllTournamentsProps extends React.ClassAttributes<AllTournaments> {
 
   queryListTournament(param: IBigRequest): void;
   searchTournaments(param: IBigRequest): void;
+  stopTournament(param: IBigRequest): void;
+  continueTournament(param: IBigRequest): void;
 }
 
 interface IAllTournamentsState {
@@ -44,7 +46,7 @@ class AllTournaments extends React.Component<IAllTournamentsProps, IAllTournamen
           width: 120,
           style: { justifyContent: 'center' },
           element: (rowData: IParams, rowIndex: number, style?: React.CSSProperties) => (
-            <div style={style} className={'AllUsers-button-text-hover'}>{(rowData.Tournament as IParams).status !== 'finished' ? <p className={'AllUsers-button-text'} onClick={() => this.stopTournament(Number((rowData.Tournament as IParams).id))}>Dừng giải</p> : ((rowData.Tournament as IParams).status !== 'stopped' && <p className={'AllUsers-button-text'} onClick={() => this.continueTournament(Number((rowData.Tournament as IParams).id))}>Tiếp tục giải</p>)}</div>
+            <div style={style} className={'AllUsers-button-text-hover'}>{(rowData.Tournament as IParams).status === 'processing' ? <p className={'AllUsers-button-text'} onClick={() => this.stopTournament(Number((rowData.Tournament as IParams).id))}>Dừng giải</p> : ((rowData.Tournament as IParams).status === 'stopped' && <p className={'AllUsers-button-text'} onClick={() => this.continueTournament(Number((rowData.Tournament as IParams).id))}>Tiếp tục giải</p>)}</div>
           ),
         },
         {
@@ -172,25 +174,26 @@ class AllTournaments extends React.Component<IAllTournamentsProps, IAllTournamen
     const params = {
       path: '',
       param: {
-        id,
+        tournamentId: id,
       },
       data: {},
     }
-    // this.props.stopTournament(params);
+    this.props.stopTournament(params);
   }
 
   private continueTournament = (id: number) => {
     const params = {
       path: '',
       param: {
-        id,
+        tournamentId: id,
       },
       data: {},
     }
-    // this.props.continueTournament(params);
+    this.props.continueTournament(params);
   }
 
   private requestData = (page = 1) => {
+    console.log('this.props.type', this.props.type);
     const params = {
       path: '',
       param: {
@@ -246,5 +249,5 @@ const mapStateToProps = (state: IState) => {
 
 export default connect(
   mapStateToProps,
-  { queryListTournament, searchTournaments }
+  { queryListTournament, searchTournaments, stopTournament, continueTournament }
 )(AllTournaments);
