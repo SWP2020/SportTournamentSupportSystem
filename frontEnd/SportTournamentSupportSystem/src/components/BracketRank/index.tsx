@@ -61,6 +61,57 @@ class BracketRank extends React.Component<IBracketRankProps, IBracketRankState> 
         </div>
         <div className="BracketRank-item-container">
           <div className="BracketRank-item-orderNumber-container">
+            <p>2</p>
+          </div>
+          <div className="BracketRank-item-teamName-container">
+            <p>Đội B</p>
+          </div>
+          <div className="BracketRank-item-managerName-container">
+            <p>Phan Trọng Nhân</p>
+          </div>
+          <div className="BracketRank-item-matchHistory-container">
+            <p>LLLL</p>
+          </div>
+          <div className="BracketRank-item-score-container">
+            <p>0</p>
+          </div>
+        </div>
+        <div className="BracketRank-item-container">
+          <div className="BracketRank-item-orderNumber-container">
+            <p>3</p>
+          </div>
+          <div className="BracketRank-item-teamName-container">
+            <p>Đội C</p>
+          </div>
+          <div className="BracketRank-item-managerName-container">
+            <p>Đỗ Văn Công</p>
+          </div>
+          <div className="BracketRank-item-matchHistory-container">
+            <p>LWLW</p>
+          </div>
+          <div className="BracketRank-item-score-container">
+            <p>4</p>
+          </div>
+        </div>
+        <div className="BracketRank-item-container">
+          <div className="BracketRank-item-orderNumber-container">
+            <p>4</p>
+          </div>
+          <div className="BracketRank-item-teamName-container">
+            <p>Hoang</p>
+          </div>
+          <div className="BracketRank-item-managerName-container">
+            <p>Nguyen Van Hoang</p>
+          </div>
+          <div className="BracketRank-item-matchHistory-container">
+            <p>WWWW</p>
+          </div>
+          <div className="BracketRank-item-score-container">
+            <p>8</p>
+          </div>
+        </div>
+        <div className="BracketRank-item-container">
+          <div className="BracketRank-item-orderNumber-container">
             <p>1</p>
           </div>
           <div className="BracketRank-item-teamName-container">

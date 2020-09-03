@@ -59,7 +59,7 @@ class AllTournaments extends React.Component<IAllTournamentsProps, IAllTournamen
         },
         {
           label: 'Tên đầy đủ',
-          width: 150,
+          width: 220,
           style: { justifyContent: 'center' },
           element: (rowData: IParams, rowIndex: number, style?: React.CSSProperties) => (
             <div style={style}>{(rowData.Tournament as IParams).fullName}</div>
@@ -67,7 +67,7 @@ class AllTournaments extends React.Component<IAllTournamentsProps, IAllTournamen
         },
         {
           label: 'Tên ngắn',
-          width: 100,
+          width: 200,
           style: { justifyContent: 'center' },
           element: (rowData: IParams, rowIndex: number, style?: React.CSSProperties) => (
             <div style={style}>{(rowData.Tournament as IParams).shortName}</div>
@@ -99,7 +99,7 @@ class AllTournaments extends React.Component<IAllTournamentsProps, IAllTournamen
         },
         {
           label: 'Nhà tài trợ',
-          width: 110,
+          width: 170,
           style: { justifyContent: 'center' },
           element: (rowData: IParams, rowIndex: number, style?: React.CSSProperties) => (
             <div style={style}>{(rowData.Tournament as IParams).donor}</div>
