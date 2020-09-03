@@ -25,6 +25,7 @@ export const EDIT_TOURNAMENT_INFO = 'EDIT_TOURNAMENT_INFO';
 export const EDIT_USER_INFO = 'EDIT_USER_INFO';
 export const USER_UPDATE_AVATAR = 'USER_UPDATE_AVATAR';
 export const EDIT_TEAM = 'EDIT_TEAM';
+export const DELETE_TEAM = 'DELETE_TEAM';
 export const DEACTIVE_USER = 'DEACTIVE_USER';
 export const ACTIVE_USER = 'ACTIVE_USER';
 export const SET_ADMIN = 'SET_ADMIN';

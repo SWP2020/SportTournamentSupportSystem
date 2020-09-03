@@ -12,7 +12,7 @@ import config from 'config';
 import { IState } from 'redux-saga/reducers';
 import { queryUserInfo } from 'screens/UserInfo/actions';
 import { queryCompetition } from 'screens/CompetitionInfo/actions';
-import { editTeam } from './actions';
+import { editTeam, deleteTeam } from './actions';
 import './styles.css';
 
 interface IUserInfoTeamsItemProps extends React.ClassAttributes<UserInfoTeamsItem> {
@@ -26,6 +26,7 @@ interface IUserInfoTeamsItemProps extends React.ClassAttributes<UserInfoTeamsIte
 
   queryUserInfo(param: IBigRequest): void;
   queryCompetition(param: IBigRequest): void;
+  deleteTeam(param: IBigRequest): void;
   editTeam(param: IBigRequest): void;
 }
 
@@ -138,6 +139,23 @@ class UserInfoTeamsItem extends React.Component<IUserInfoTeamsItemProps, IUserIn
       teamShortName: this.props.info.shortName ? this.props.info.shortName as string : '',
       listPlayerInForm: this.props.info.players as IParams[],
     });
+  }
+
+  private onDeleteTeam = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    event.stopPropagation();
+    const confirm = window.confirm('Bạn có chắc chắn muốn xóa đội này?');
+    if (confirm === true) {
+      const params = {
+        path: '',
+        param: {
+          id: this.props.info.id,
+        },
+        data: {
+          competitionId: this.props.info.competitionId,
+        },
+      }
+      this.props.deleteTeam(params);
+    }
   }
 
   private onChangeTeamFullName = (value: string) => {
@@ -341,7 +359,7 @@ class UserInfoTeamsItem extends React.Component<IUserInfoTeamsItemProps, IUserIn
               <div className="UserInfoTeamsItem-team-setting-container-container" onClick={this.openEditMode}>
                 <FaEdit className="UserInfoTeamsItem-team-setting-icon" />
               </div>
-              <div className="UserInfoTeamsItem-team-setting-container-container">
+              <div className="UserInfoTeamsItem-team-setting-container-container" onClick={this.onDeleteTeam}>
                 <MdDelete className="UserInfoTeamsItem-team-setting-icon" />
               </div>
             </div>
@@ -432,5 +450,5 @@ const mapStateToProps = (state: IState) => {
 
 export default connect(
   mapStateToProps,
-  { queryCompetition, queryUserInfo, editTeam }
+  { queryCompetition, queryUserInfo, editTeam, deleteTeam }
 )(UserInfoTeamsItem);

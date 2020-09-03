@@ -63,6 +63,7 @@ import { continueTournament } from './sagas/ContinueTournament';
 import { openRegisterForm } from './sagas/OpenRegisterForm';
 import { closeRegisterForm } from './sagas/CloseRegisterForm';
 import { setAdmin } from './sagas/SetAdmin';
+import { deleteTeam } from './sagas/DeleteTeam';
 
 export default function* () {
   yield all([
@@ -130,5 +131,6 @@ export default function* () {
     openRegisterForm(),
     closeRegisterForm(),
     setAdmin(),
+    deleteTeam(),
   ]);
 }
