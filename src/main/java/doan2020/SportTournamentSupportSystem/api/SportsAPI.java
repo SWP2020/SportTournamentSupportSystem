@@ -20,78 +20,28 @@ import doan2020.SportTournamentSupportSystem.converter.SportConverter;
 import doan2020.SportTournamentSupportSystem.dto.SportDTO;
 import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
 import doan2020.SportTournamentSupportSystem.entity.SportEntity;
+import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
 import doan2020.SportTournamentSupportSystem.response.Response;
 import doan2020.SportTournamentSupportSystem.service.ICompetitionService;
 import doan2020.SportTournamentSupportSystem.service.ISportService;
+import doan2020.SportTournamentSupportSystem.service.ITournamentService;
 
 @RestController
 @CrossOrigin
 @RequestMapping("/sports")
 public class SportsAPI {
-	
+
 	@Autowired
 	private SportConverter converter;
-	
+
 	@Autowired
 	private ISportService service;
-	
+
 	@Autowired
 	private ICompetitionService competitionService;
-	
-	@GetMapping("/getByScoringUnitId")
-	public ResponseEntity<Response> getByScoringUnitId(@RequestParam(value = "scoringUnitId") Long scoringUnitId) {
-		System.out.println("SportsAPI: getByScoringUnitId: no exception");
-		HttpStatus httpStatus = HttpStatus.OK;
-		Response response = new Response();
-		Map<String, Object> config = new HashMap<String, Object>();
-		Map<String, Object> result = new HashMap<String, Object>();
-		Map<String, Object> error = new HashMap<String, Object>();
-		Collection<SportEntity> sportEntites = new ArrayList<SportEntity>();
-		List<SportDTO> sportDTOs = new ArrayList<SportDTO>();
-		try {
 
-			if (scoringUnitId == null) {// userId null
-				result.put("Sports", sportDTOs);
-				config.put("Global", 0);
-				error.put("MessageCode", 1);
-				error.put("Message", "Required param userId");
-			} else {// userId not null
-
-				sportEntites = service.findByScoringUnitId(scoringUnitId);
-
-				if (sportEntites.isEmpty()) { // not found
-					result.put("Sports", null);
-					config.put("Global", 0);
-					error.put("MessageCode", 1);
-					error.put("Message", "Not found");
-				} else { // found
-
-					for (SportEntity entity : sportEntites) {
-						SportDTO dto = converter.toDTO(entity);
-						sportDTOs.add(dto);
-					}
-
-					result.put("Sports", sportDTOs);
-					config.put("Global", 0);
-					error.put("MessageCode", 0);
-					error.put("Message", "Found");
-				}
-			}
-			System.out.println("SportsAPI: getByScoringUnitId: no exception");
-		} catch (Exception e) {
-			System.out.println("SportsAPI: getByScoringUnitId: has exception");
-			result.put("Sport", null);
-			config.put("Global", 0);
-			error.put("MessageCode", 1);
-			error.put("Message", "Server error");
-		}
-
-		response.setConfig(config);
-		response.setResult(result);
-		response.setError(error);
-		System.out.println("SportsAPI: getByScoringUnitId: finish");
-		return new ResponseEntity<Response>(response, httpStatus);
-	}
+	@Autowired
+	private ITournamentService tournamentService;
 
 	@GetMapping("")
 	public ResponseEntity<Response> getAllSport() {
@@ -140,18 +90,18 @@ public class SportsAPI {
 		System.out.println("SportsAPI: getAllSport: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
-	
+
 	@GetMapping("/getByTournamentId")
 	public ResponseEntity<Response> getByTournamentId(
 			@RequestParam(value = "tournamentId", required = false) Long tournamentId) {
 
-		System.out.println("SportsAPI: getByTournamentId: no exception");
+		System.out.println("SportsAPI: getByTournamentId: start");
 		HttpStatus httpStatus = HttpStatus.OK;
 		Response response = new Response();
 		Map<String, Object> config = new HashMap<String, Object>();
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
-		
+
 		Collection<SportDTO> dtos = new HashSet<SportDTO>();
 
 		try {
@@ -162,29 +112,42 @@ public class SportsAPI {
 				error.put("Message", "Required param tournamentId");
 			} else { // tournamentId not null
 
-				Collection<CompetitionEntity> competitions = competitionService.findByTournamentId(tournamentId);
-				
-				HashSet<Long> sportsId = new HashSet<>();
+				TournamentEntity thisTournament = tournamentService.findOneById(tournamentId);
 
-				for (CompetitionEntity comp : competitions) {
+				if (thisTournament == null) {
+					result.put("Sports", null);
+					config.put("Global", 0);
+					error.put("MessageCode", 0);
+					error.put("Message", "Tournament not found");
+				} else {
+					Collection<CompetitionEntity> competitions = thisTournament.getCompetitions();
+					
+					System.out.println("SportsAPI: getByTournamentId: competitions.size: " + competitions.size());
+					
+					HashSet<Long> sportsId = new HashSet<>();
 
-					sportsId.add(comp.getSport().getId());
+					for (CompetitionEntity comp : competitions) {
+
+						sportsId.add(comp.getSport().getId());
+					}
+
+					for (Long sportId : sportsId) {
+						SportDTO dto = converter.toDTO(service.findOneById(sportId));
+						dtos.add(dto);
+					}
+					
+					System.out.println("SportsAPI: getByTournamentId: sportsId.size: " + sportsId.size());
+
+					result.put("Sports", dtos);
+					config.put("Global", 0);
+					error.put("MessageCode", 0);
+					error.put("Message", "Found");
 				}
-				
-				for (Long sportId : sportsId) {
-					SportDTO dto = converter.toDTO(service.findOneById(sportId));
-					dtos.add(dto);
-				}
-
-				result.put("Sports", dtos);
-				config.put("Global", 0);
-				error.put("MessageCode", 0);
-				error.put("Message", "Found");
 			}
 
 			System.out.println("SportsAPI: getByTournamentId: no exception");
 		} catch (Exception e) {
-			System.out.println("SportsAPI: getgetByTournamentIdSport: has exception");
+			System.out.println("SportsAPI: getByTournamentId: has exception");
 			result.put("Sports", dtos);
 			config.put("Global", 0);
 			error.put("MessageCode", 1);

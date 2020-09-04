@@ -64,8 +64,8 @@ public class UserConverter {
 				entity.setRole(role);
 			}
 			System.out.println("UserConverter: toEntity: CP4");
-			entity.setStatus(dto.getStatus());
-			entity.setUrl(dto.getUrl());
+			
+			
 			System.out.println("UserConverter: toEntity: no exception");
 		} catch (Exception e) {
 			System.out.println("UserConverter: toEntity: has exception");

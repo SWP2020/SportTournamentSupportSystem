@@ -28,40 +28,6 @@ public class RoleService implements IRoleService {
 		return newEntity;
 	}
 
-	@Override
-	public RoleEntity update(Long id, RoleEntity newEntity) {
-		RoleEntity updatedEntity = null;
-		try {
-			updatedEntity = roleRepository.findOneById(id);
-
-			updatedEntity.setName(newEntity.getName());
-			updatedEntity.setDescription(newEntity.getDescription());
-			updatedEntity.setCreatedBy(newEntity.getCreatedBy());
-			updatedEntity.setCreatedDate(newEntity.getCreatedDate());
-			updatedEntity.setModifiedBy(newEntity.getModifiedBy());
-			updatedEntity.setModifiedDate(newEntity.getModifiedDate());
-			updatedEntity.setStatus(newEntity.getStatus());
-			updatedEntity.setUrl(newEntity.getUrl());
-			updatedEntity = roleRepository.save(updatedEntity);
-		} catch (Exception e) {
-			return null;
-		}
-        
-		return updatedEntity;
-	}
-
-	@Override
-	public RoleEntity delete(Long id) {
-		RoleEntity deletedEntity = null;
-		try {
-			deletedEntity = roleRepository.findOneById(id);
-			deletedEntity.setStatus("deleted");
-			deletedEntity = roleRepository.save(deletedEntity);
-		} catch (Exception e) {
-			return null;
-		}
-		return deletedEntity;
-	}
 
 	@Override
 	public RoleEntity findOneById(Long id) {

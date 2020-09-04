@@ -66,7 +66,7 @@ public class testUserService {
 		RoleEntity roleEntity = new RoleEntity();
 		List<UserEntity> entities = new ArrayList<UserEntity>();
 		Date date = new Date();
-		UserEntity userEntity = new UserEntity((long)1, "a", "a", "a", "a", "a", "a", true, date, "a", "a", "a", "a", date, "a", date, "a", "a", roleEntity);
+		UserEntity userEntity = new UserEntity((long)1, "a", "a", "a", "a", "a", "a", true, date, "a", "a", "a", "a", "a", roleEntity);
 //		System.out.println(entities.size());
 		Long id = (long) 1;
 		Mockito.when(userRepository.findOneById(id)).thenReturn(userEntity);

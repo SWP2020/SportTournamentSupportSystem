@@ -40,8 +40,7 @@ public class CompetitionsAPI {
 	private TournamentService tournamentService;
 
 	/*
-	 * ---------------- find all Competition by TournamentId
-	 * ------------------------
+	 * ---------------- find all Competition ------------------------
 	 */
 	@GetMapping("")
 	public ResponseEntity<Response> getAllCompetiton(@RequestParam(value = "page", required = false) Integer page,
@@ -100,13 +99,12 @@ public class CompetitionsAPI {
 
 	/*
 	 * ---------------- find all Competition by TournamentId
-	 * ------------------------
 	 */
 	@GetMapping("/getByTournamentId")
 	public ResponseEntity<Response> getAllCompetitonByTournamentId(
+			@RequestParam("tournamentId") Long tournamentId,
 			@RequestParam(value = "page", required = false) Integer page,
-			@RequestParam(value = "limit", required = false) Integer limit,
-			@RequestParam("tournamentId") Long tournamentId) {
+			@RequestParam(value = "limit", required = false) Integer limit) {
 		System.out.println("CompetitionsAPI: getAllCompetitonByTournamentId: start");
 
 		Response response = new Response();
@@ -135,7 +133,9 @@ public class CompetitionsAPI {
 				System.out.println("CompetitionsAPI: getAllCompetitonByTournamentId: limit: " + limit.toString());
 
 				Pageable pageable = PageRequest.of(page - 1, limit);
+				System.out.println("CompetitionsAPI: getAllCompetitonByTournamentId: CP0");
 				findPage = competitionService.findByTournamentId(pageable, tournamentId);
+				System.out.println("CompetitionsAPI: getAllCompetitonByTournamentId: CP0-1");
 				if (findPage.isEmpty()) {// list is not exist
 					result.put("Total page", 0);
 					result.put("Competitions", findPageDTO);
@@ -144,10 +144,14 @@ public class CompetitionsAPI {
 					error.put("Message", "Page Competitions is not exist");
 
 				} else {
+					
+					System.out.println("CompetitionsAPI: getAllCompetitonByTournamentId: CP1");
 					for (CompetitionEntity entity : findPage) {
 						CompetitionDTO dto = competitionConverter.toDTO(entity);
 						findPageDTO.add(dto);
 					}
+					
+					System.out.println("CompetitionsAPI: getAllCompetitonByTournamentId: CP2");
 
 					int totalPage = 0;
 					TournamentEntity tournamentEntity = tournamentService.findOneById(tournamentId);
@@ -155,6 +159,8 @@ public class CompetitionsAPI {
 					totalPage = totalEntity / limit;
 					if (totalEntity % limit != 0)
 						totalPage++;
+					
+					System.out.println("CompetitionsAPI: getAllCompetitonByTournamentId: CP3");
 
 					result.put("TotalPage", totalPage);
 					result.put("Competitions", findPageDTO);
@@ -165,7 +171,8 @@ public class CompetitionsAPI {
 			System.out.println("CompetitionsAPI: getAllCompetitonByTournamentId: no exception");
 		} catch (Exception e) {
 			System.out.println("CompetitionsAPI: getAllCompetitonByTournamentId: has exception");
-			result.put("Users", findPageDTO);
+			System.out.println(e);
+			result.put("Competitions", findPageDTO);
 			error.put("MessageCode", 1);
 			error.put("Message", "Server error");
 		}

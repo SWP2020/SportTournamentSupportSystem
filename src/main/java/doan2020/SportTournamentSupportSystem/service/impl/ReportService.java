@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import doan2020.SportTournamentSupportSystem.config.Const;
 import doan2020.SportTournamentSupportSystem.entity.ReportEntity;
 import doan2020.SportTournamentSupportSystem.repository.ReportRepository;
 import doan2020.SportTournamentSupportSystem.service.IReportService;
@@ -21,6 +22,7 @@ public class ReportService implements IReportService {
 	public ReportEntity create(ReportEntity reportEntity) {
 		ReportEntity newEntity = null;
 		try {
+			reportEntity.setStatus(Const.REPORT_STATUS_UNREAD);
 			newEntity = reportRepository.save(reportEntity);
 		} catch (Exception e) {
 			return null;
@@ -38,11 +40,7 @@ public class ReportService implements IReportService {
 			updatedEntity.setSubject(newEntity.getSubject());
 			updatedEntity.setContent(newEntity.getContent());
 			updatedEntity.setTournament(newEntity.getTournament());
-			updatedEntity.setCreatedBy(newEntity.getCreatedBy());
-			updatedEntity.setCreatedDate(newEntity.getCreatedDate());
-			updatedEntity.setModifiedBy(newEntity.getModifiedBy());
-			updatedEntity.setModifiedDate(newEntity.getModifiedDate());
-			updatedEntity.setStatus(newEntity.getStatus());
+			if (newEntity.getStatus() != null) {updatedEntity.setStatus(newEntity.getStatus());}
 			updatedEntity.setUrl(newEntity.getUrl());
 			updatedEntity = reportRepository.save(updatedEntity);
 		} catch (Exception e) {
@@ -57,8 +55,9 @@ public class ReportService implements IReportService {
 		ReportEntity deletedEntity = null;
 		try {
 			deletedEntity = reportRepository.findOneById(id);
-			deletedEntity.setStatus("deleted");
-			deletedEntity = reportRepository.save(deletedEntity);
+			reportRepository.delete(deletedEntity);
+//			deletedEntity.setStatus("deleted");
+//			deletedEntity = reportRepository.save(deletedEntity);
 		} catch (Exception e) {
 			return null;
 		}
@@ -118,6 +117,39 @@ public class ReportService implements IReportService {
 			return 0;
 		}
 		return count;
+	}
+
+	@Override
+	public Collection<ReportEntity> findByType(Pageable pageable, String type) {
+		Collection<ReportEntity> foundEntitys = null;
+		try {
+			foundEntitys = reportRepository.findByType(pageable, type).getContent();
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntitys;
+	}
+	
+	@Override
+	public Collection<ReportEntity> findByType(String type) {
+		Collection<ReportEntity> foundEntitys = null;
+		try {
+			foundEntitys = reportRepository.findByType(type);
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntitys;
+	}
+	
+	@Override
+	public Collection<ReportEntity> findByTournamentIdAndType(Pageable pageable, Long tournamentId, String type) {
+		Collection<ReportEntity> foundEntitys = null;
+		try {
+			foundEntitys = reportRepository.findByTournamentIdAndTypeOrderByIdDesc(pageable, tournamentId, type).getContent();
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntitys;
 	}
 
 }

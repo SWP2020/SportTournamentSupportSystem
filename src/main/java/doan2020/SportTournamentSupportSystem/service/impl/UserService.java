@@ -1,6 +1,7 @@
 
 package doan2020.SportTournamentSupportSystem.service.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -10,8 +11,9 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
+import doan2020.SportTournamentSupportSystem.entity.RoleEntity;
 import doan2020.SportTournamentSupportSystem.entity.UserEntity;
+import doan2020.SportTournamentSupportSystem.repository.RoleRepository;
 import doan2020.SportTournamentSupportSystem.repository.UserRepository;
 import doan2020.SportTournamentSupportSystem.service.IUserService;
 
@@ -20,6 +22,9 @@ public class UserService implements IUserService {
 
 	@Autowired
 	private UserRepository userRepository;
+
+	@Autowired
+	private RoleRepository roleRepository;
 
 	@Override
 	public Long countAll() {
@@ -55,14 +60,12 @@ public class UserService implements IUserService {
 			updatedEntity.setGender(newEntity.getGender());
 			updatedEntity.setDob(newEntity.getDob());
 //			updatedEntity.setEmail(newEntity.getEmail());
-			updatedEntity.setAvatar(newEntity.getAvatar());
-			updatedEntity.setBackground(newEntity.getBackground());
+//			updatedEntity.setAvatar(newEntity.getAvatar());
+//			updatedEntity.setBackground(newEntity.getBackground());
 			updatedEntity.setRole(newEntity.getRole());
-			updatedEntity.setCreatedBy(newEntity.getCreatedBy());
-			updatedEntity.setCreatedDate(newEntity.getCreatedDate());
-			updatedEntity.setModifiedBy(newEntity.getModifiedBy());
-			updatedEntity.setModifiedDate(newEntity.getModifiedDate());
-			updatedEntity.setStatus(newEntity.getStatus());
+			if (newEntity.getStatus() != null) {
+				updatedEntity.setStatus(newEntity.getStatus());
+			}
 			updatedEntity.setUrl(newEntity.getUrl());
 			updatedEntity = userRepository.save(updatedEntity);
 		} catch (Exception e) {
@@ -105,8 +108,9 @@ public class UserService implements IUserService {
 		UserEntity deletedEntity = null;
 		try {
 			deletedEntity = userRepository.findOneById(id);
-			deletedEntity.setStatus("deleted");
-			deletedEntity = userRepository.save(deletedEntity);
+			userRepository.delete(deletedEntity);
+//			deletedEntity.setStatus("deleted");
+//			deletedEntity = userRepository.save(deletedEntity);
 		} catch (Exception e) {
 			return null;
 		}
@@ -210,7 +214,6 @@ public class UserService implements IUserService {
 		return count;
 	}
 
-	
 	@Override
 	public Long countBySearchString(String searchString) {
 		List<UserEntity> findUsers = null;
@@ -220,6 +223,71 @@ public class UserService implements IUserService {
 			return 0l;
 		}
 		return new Long(findUsers.size());
+	}
+
+	@Override
+	public UserEntity updateStatus(UserEntity entity, String status) {
+		try {
+
+			entity.setStatus(status);
+			entity = userRepository.save(entity);
+		} catch (Exception e) {
+			return null;
+		}
+
+		return entity;
+	}
+
+	@Override
+	public UserEntity updateRole(UserEntity entity, String roleName) {
+		try {
+
+			RoleEntity roleEntity = roleRepository.findOneByName(roleName);
+			if (roleEntity != null)
+				entity.setRole(roleEntity);
+			
+			entity = userRepository.save(entity);
+		} catch (Exception e) {
+			return null;
+		}
+
+		return entity;
+	}
+	
+	@Override
+	public Collection<UserEntity> findBySearchStringAndStatus(Pageable pageable, String searchString, String status) {
+		ArrayList<UserEntity> findUsers = null;
+		try {
+
+			findUsers = (ArrayList<UserEntity>) userRepository.findBySearchStringAndStatus(searchString, status);
+
+			int start = (int) pageable.getOffset();
+			int end = (start + pageable.getPageSize()) > findUsers.size() ? findUsers.size()
+					: (start + pageable.getPageSize());
+			Page<UserEntity> pages = new PageImpl<UserEntity>(findUsers.subList(start, end), pageable,
+					findUsers.size());
+			findUsers = (ArrayList<UserEntity>) pages.getContent();
+
+		} catch (Exception e) {
+			return null;
+		}
+		return findUsers;
+	}
+	
+	@Override
+	public Long countBySearchStringAndStatus(String searchString, String status) {
+		List<UserEntity> findUsers = null;
+		try {
+			findUsers = (List<UserEntity>) userRepository.findBySearchStringAndStatus(searchString, status);
+		} catch (Exception e) {
+			return 0l;
+		}
+		return new Long(findUsers.size());
+	}
+	
+	@Override
+	public Long countAllByRoleId(Long roleId) {
+		return (long)userRepository.countByRoleId(roleId);
 	}
 
 }

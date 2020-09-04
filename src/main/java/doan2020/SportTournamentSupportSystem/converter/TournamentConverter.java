@@ -47,8 +47,14 @@ public class TournamentConverter{
 			entity.setOpeningTime(closingTime);
 			
 			entity.setDonor(dto.getDonor());
-			entity.setStatus(dto.getStatus());
-			entity.setUrl(dto.getUrl());
+			
+			
+			entity.setAvatar(dto.getAvatar());
+			entity.setBackground(dto.getBackground());
+			Date closeRegistrationTime = validator.formatStringToDate(dto.getClosingTime());
+			entity.setCloseRegistrationTime(closeRegistrationTime);
+			Date openRegistrationTime = validator.formatStringToDate(dto.getClosingTime());
+			entity.setOpenRegistrationTime(openRegistrationTime);
 			System.out.println("TournamentConverter: toEntity: no exception");
 		}catch (Exception e) {
 			System.out.println("TournamentConverter: toEntity: has exception");
@@ -87,8 +93,12 @@ public class TournamentConverter{
 			dto.setDonor(entity.getDonor());
 			dto.setStatus(entity.getStatus());
 			dto.setUrl(entity.getUrl());
-			String createdDate = validator.formatDateToString(entity.getCreatedDate());
-			dto.setCreatedDate(createdDate);
+			dto.setAvatar(entity.getAvatar());
+			dto.setBackground(entity.getBackground());
+			String closeRegistrationTime = validator.formatDateToString(entity.getCloseRegistrationTime());
+			dto.setCloseRegistrationTime(closeRegistrationTime);
+			String openRegistrationTime = validator.formatDateToString(entity.getOpenRegistrationTime());
+			dto.setOpenRegistrationTime(openRegistrationTime);
 			System.out.println("TournamentConverter: toDTO: no exception");
 		} catch (Exception e) {
 			System.out.println("TournamentConverter: toDTO: has exception");

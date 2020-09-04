@@ -9,7 +9,6 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,8 +29,8 @@ import doan2020.SportTournamentSupportSystem.service.impl.UserService;
 @RequestMapping("/login")
 public class LoginAPI {
 
-	@Autowired
-	private BCryptPasswordEncoder passwordEncoder;
+//	@Autowired
+//	private BCryptPasswordEncoder passwordEncoder;
 
 	@Autowired
 	private JwtService jwtService;
@@ -46,7 +45,6 @@ public class LoginAPI {
 	private IVerificationTokenService verificationTokenService;
 
 	@PostMapping
-
 	public ResponseEntity<Response> login(@RequestBody UserDTO user) {
 		System.out.println("LoginAPI: login: start");
 		HttpStatus httpStatus = null;

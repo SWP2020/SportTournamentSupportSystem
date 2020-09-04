@@ -35,20 +35,18 @@ public class MatchService implements IMatchService {
 			updatedEntity = matchRepository.findOneById(id);
 
 			updatedEntity.setName(newEntity.getName());
-			updatedEntity.setNumOfSet(newEntity.getNumOfSet());
-			updatedEntity.setExpectedDate(newEntity.getExpectedDate());
-			updatedEntity.setExpectedPlace(newEntity.getExpectedPlace());
-			updatedEntity.setRealDate(newEntity.getRealDate());
-			updatedEntity.setRealPlace(newEntity.getRealPlace());
 			updatedEntity.setCompetition(newEntity.getCompetition());
-			updatedEntity.setNextMatch(newEntity.getNextMatch());
-			updatedEntity.setRoundNo(newEntity.getRoundNo());
-			updatedEntity.setCreatedBy(newEntity.getCreatedBy());
-			updatedEntity.setCreatedDate(newEntity.getCreatedDate());
-			updatedEntity.setModifiedBy(newEntity.getModifiedBy());
-			updatedEntity.setModifiedDate(newEntity.getModifiedDate());
-			updatedEntity.setStatus(newEntity.getStatus());
+			if (newEntity.getStatus() != null) {updatedEntity.setStatus(newEntity.getStatus());}
 			updatedEntity.setUrl(newEntity.getUrl());
+			updatedEntity.setLocation(newEntity.getLocation());
+			updatedEntity.setTime(newEntity.getTime());
+			updatedEntity.setLoser(newEntity.getLoser());
+			updatedEntity.setResults(newEntity.getResults());
+			updatedEntity.setWinnner(newEntity.getWinnner());
+			updatedEntity.setTeam1(newEntity.getTeam1());
+			updatedEntity.setTeam2(newEntity.getTeam2());
+			updatedEntity.setTeam1Bonus(newEntity.getTeam1Bonus());
+			updatedEntity.setTeam2Bonus(newEntity.getTeam2Bonus());
 			updatedEntity = matchRepository.save(updatedEntity);
 		} catch (Exception e) {
 			return null;
@@ -62,8 +60,9 @@ public class MatchService implements IMatchService {
 		MatchEntity deletedEntity = null;
 		try {
 			deletedEntity = matchRepository.findOneById(id);
-			deletedEntity.setStatus("deleted");
-			deletedEntity = matchRepository.save(deletedEntity);
+			matchRepository.delete(deletedEntity);
+//			deletedEntity.setStatus("deleted");
+//			deletedEntity = matchRepository.save(deletedEntity);
 		} catch (Exception e) {
 			return null;
 		}

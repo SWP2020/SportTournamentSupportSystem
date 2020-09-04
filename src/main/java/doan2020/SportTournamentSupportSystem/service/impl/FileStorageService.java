@@ -1,7 +1,10 @@
 package doan2020.SportTournamentSupportSystem.service.impl;
 
 
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -20,10 +23,10 @@ import doan2020.SportTournamentSupportSystem.service.IFileStorageService;
 @Service
 public class FileStorageService implements IFileStorageService {
 
-	public Path getFileStorageLocation(String endFolderName) throws Exception {
-		Path fileStorageLocation = Paths.get(Const.PATH_RESOURCE + endFolderName).toAbsolutePath().normalize();
-
+	public Path getFileStorageLocation(String endFolderName) {
+		Path fileStorageLocation = null;
 		try {
+			fileStorageLocation = Paths.get(Const.PATH_RESOURCE + endFolderName).toAbsolutePath().normalize();
 			Files.createDirectories(fileStorageLocation);
 		} catch (Exception ex) {
 			return null;
@@ -96,31 +99,49 @@ public class FileStorageService implements IFileStorageService {
 	
 	
 	@Override
-	public String saveObjectToFile(Object o, String filePath) {
+	public String saveObjectToFile(Object o, String filePath) throws Exception{
 		
+		String finalFilePath = null;
 		ObjectOutputStream oos = null;
 		try {
 			oos = new ObjectOutputStream(new FileOutputStream(filePath));
 			CanSaveToFileObject obj = new CanSaveToFileObject(o);
 			oos.writeObject(obj);
+			finalFilePath = filePath;
 		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
+			throw e;
 		} finally {
 			try {
 				oos.close();
 			} catch (Exception e2) {
-				return null;
+				throw e2;
 			}
 		}
 		
-		return filePath;
+		return finalFilePath;
 	}
 	
 	@Override
-	public Object getObjectFromFile(String filePath) {
-		// TODO Auto-generated method stub
-		return null;
+	public Object getObjectFromFile(String filePath) throws Exception{
+		System.out.println("FileStorageService: getObjectFromFile: start");
+		ObjectInputStream ois = null;
+		Object o = null;
+		try {
+			ois = new ObjectInputStream(new FileInputStream(filePath));
+			CanSaveToFileObject obj = (CanSaveToFileObject) ois.readObject();
+			o = obj.getObject();
+		} catch (Exception e) {
+			System.out.println("FileStorageService: getObjectFromFile: finish");
+			throw e;
+		} finally {
+			try {
+				ois.close();
+			} catch (Exception e2) {
+				throw e2;
+			}
+		}
+		System.out.println("FileStorageService: getObjectFromFile: finish");
+		return o;
 	}
 
 }

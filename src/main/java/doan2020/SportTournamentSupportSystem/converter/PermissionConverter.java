@@ -16,8 +16,8 @@ public class PermissionConverter {
 			entity.setDescription(dto.getDescription());
 			entity.setCanEdit(dto.getCanEdit());
 			entity.setCanDelete(dto.getCanDelete());
-			entity.setStatus(dto.getStatus());
-			entity.setUrl(dto.getUrl());
+			
+			
 			System.out.println("PermissionConverter: toEntity: no exception");
 		} catch (Exception e) {
 			System.out.println("PermissionConverter: toEntity: has exception");

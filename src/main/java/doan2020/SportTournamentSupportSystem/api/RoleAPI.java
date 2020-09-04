@@ -130,45 +130,6 @@ public class RoleAPI {
 	 * Edit mot Role
 	 * 
 	 */
-	@PutMapping
-	@CrossOrigin
-	public ResponseEntity<Response> editRole(
-			@RequestBody RoleDTO role,
-			@RequestParam Long id) {
-		System.out.println("RoleAPI: editRole: start");
-		
-		HttpStatus httpStatus = HttpStatus.OK;
-		Response response = new Response();
-		Map<String, Object> config = new HashMap<String, Object>();
-		Map<String, Object> result = new HashMap<String, Object>();
-		Map<String, Object> error = new HashMap<String, Object>();
-		RoleEntity roleEntity = new RoleEntity();
-		
-		try {
-			roleEntity = converter.toEntity(role);
-			
-			roleEntity = service.update(id, roleEntity);
-			
-			RoleDTO dto = converter.toDTO(roleEntity);
-
-			result.put("Role", dto);
-			config.put("Global", 0);
-			error.put("MessageCode", 0);
-			error.put("Message", "Role update successfuly");
-			System.out.println("RoleAPI: editRole: no exception");
-		} catch (Exception e) {
-			System.out.println("RoleAPI: editRole: has exception");
-			result.put("Role", null);
-			config.put("Global", 0);
-			error.put("MessageCode", 1);
-			error.put("Message", "Server error");
-		}
-
-		response.setConfig(config);
-		response.setResult(result);
-		response.setError(error);
-		System.out.println("RoleAPI: editRole: finish");
-		return new ResponseEntity<Response>(response, httpStatus);
-	}
+	
 
 }

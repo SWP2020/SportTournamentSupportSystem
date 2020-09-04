@@ -2,6 +2,7 @@
 package doan2020.SportTournamentSupportSystem.service.impl;
 
 import java.util.Collection;
+import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
 import doan2020.SportTournamentSupportSystem.repository.CompetitionRepository;
+import doan2020.SportTournamentSupportSystem.repository.MatchRepository;
 import doan2020.SportTournamentSupportSystem.service.ICompetitionService;
 
 @Service
@@ -16,6 +18,9 @@ public class CompetitionService implements ICompetitionService {
 
 	@Autowired
 	private CompetitionRepository competitionRepository;
+	
+	@Autowired
+	private MatchRepository matchRepository;
 
 	@Override
 	public CompetitionEntity create(CompetitionEntity competitionEntity) {
@@ -38,15 +43,9 @@ public class CompetitionService implements ICompetitionService {
 			updatedEntity.setDescription(newEntity.getDescription());
 			updatedEntity.setTournament(newEntity.getTournament());
 			updatedEntity.setSport(newEntity.getSport());
-			updatedEntity.setMainFormat(newEntity.getMainFormat());
-			updatedEntity.setGroupStage(newEntity.getGroupStage());
-			updatedEntity.setGroupStageFormat(newEntity.getGroupStageFormat());
-			updatedEntity.setCreatedBy(newEntity.getCreatedBy());
-			updatedEntity.setCreatedDate(newEntity.getCreatedDate());
-			updatedEntity.setModifiedBy(newEntity.getModifiedBy());
-			updatedEntity.setModifiedDate(newEntity.getModifiedDate());
-			updatedEntity.setStatus(newEntity.getStatus());
+			if (newEntity.getStatus() != null) {updatedEntity.setStatus(newEntity.getStatus());}
 			updatedEntity.setUrl(newEntity.getUrl());
+			updatedEntity.setHasGroupStage(newEntity.isHasGroupStage());
 			updatedEntity = competitionRepository.save(updatedEntity);
 		} catch (Exception e) {
 			System.out.println("CompetitionService: update: has exception");
@@ -60,8 +59,9 @@ public class CompetitionService implements ICompetitionService {
 		CompetitionEntity deletedEntity = null;
 		try {
 			deletedEntity = competitionRepository.findOneById(id);
-			deletedEntity.setStatus("deleted");
-			deletedEntity = competitionRepository.save(deletedEntity);
+			competitionRepository.delete(deletedEntity);
+//			deletedEntity.setStatus("deleted");
+//			deletedEntity = competitionRepository.save(deletedEntity);
 		} catch (Exception e) {
 			return null;
 		}
@@ -95,12 +95,15 @@ public class CompetitionService implements ICompetitionService {
 
 	@Override
 	public Collection<CompetitionEntity> findByTournamentId(Pageable pageable, Long tournamentId) {
+		System.out.println("CompetitionService: findByTournamentId: start");
 		Collection<CompetitionEntity> foundEntitys = null;
 		try {
+			System.out.println("CompetitionService: findByTournamentId: CP1");
 			foundEntitys = (Collection<CompetitionEntity>) competitionRepository.findByTournamentId(pageable, tournamentId).getContent();
+			System.out.println("CompetitionService: findByTournamentId: CP2");
 		} catch (Exception e) {
-			return null;
 		}
+		System.out.println("CompetitionService: findByTournamentId: finish");
 		return foundEntitys;
 	}
 
@@ -126,5 +129,18 @@ public class CompetitionService implements ICompetitionService {
 		}
 		return foundEntitys;
 	}
+
+	@Override
+	public CompetitionEntity updateStatus(CompetitionEntity entity, String status) {
+		try {
+			entity.setStatus(status);
+			entity = competitionRepository.save(entity);
+		} catch (Exception e) {
+			return null;
+		}
+		return entity;
+	}
+	
+	
 
 }
