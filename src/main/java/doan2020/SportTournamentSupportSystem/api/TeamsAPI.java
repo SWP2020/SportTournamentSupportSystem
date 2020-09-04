@@ -395,7 +395,8 @@ public class TeamsAPI {
 			} else {
 
 				TournamentEntity tour = team1.getCompetition().getTournament();
-				if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_INITIALIZING)) {
+				if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_INITIALIZING)
+						|| tour.getStatus().contains(Const.TOURNAMENT_STATUS_REGISTRATION_OPENING)) {
 
 					teams = (List<TeamEntity>) service.swap(team1Id, team2Id);
 
@@ -412,9 +413,7 @@ public class TeamsAPI {
 					error.put("Message", "Successful");
 				} else {
 					String message = "Unknown error";
-					if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_REGISTRATION_OPENING)) {
-						message = Const.TOURNAMENT_MESSAGE_REGISTRATION_OPENING;
-					}
+					
 					if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_PROCESSING)) {
 						message = Const.TOURNAMENT_MESSAGE_PROCESSING;
 					}

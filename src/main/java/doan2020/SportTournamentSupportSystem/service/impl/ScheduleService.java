@@ -503,7 +503,7 @@ public class ScheduleService implements IScheduleService {
 			int totalTeamInFinalTable;
 
 			if (totalTable != 0) {
-				totalTeamInFinalTable = totalTeamBeforeGroupStage % totalTable;
+				totalTeamInFinalTable = totalTeamBeforeGroupStage % maxTeamPerTable;
 			} else {
 				totalTeamInFinalTable = totalTeamBeforeGroupStage;
 			}
@@ -513,6 +513,11 @@ public class ScheduleService implements IScheduleService {
 			} else {
 				totalTable++;
 			}
+			
+			System.out.println("totalTeam: " + totalTeamBeforeGroupStage);
+			System.out.println("maxTeamPerTable: " + maxTeamPerTable);
+			System.out.println("total Table: " + totalTable);
+			System.out.println("totalTeamInFinalTable: " + totalTeamInFinalTable);
 
 			// schedule for group stage
 			String formatName = groupFormat.getName();
@@ -720,6 +725,8 @@ public class ScheduleService implements IScheduleService {
 			int maxTeamPerTable, int advanceTeamPerTable, int totalTable, int totalTeamInFinalTable) {
 		System.out.println("ScheduleService: groupStageScheduling: start");
 		GroupStageScheduleDTO dto = new GroupStageScheduleDTO();
+		
+		System.out.println("totalTable: " + totalTable);
 
 		dto.setTotalTeam(totalTeam);
 		dto.setFormatName(formatName);
@@ -736,6 +743,7 @@ public class ScheduleService implements IScheduleService {
 		for (int tableId = 0; tableId < totalTable - 1; tableId++) {
 
 			int firstSeed = tableId * maxTeamPerTable + 1;
+			
 			System.out.println("ScheduleService: groupStageScheduling: -> ScheduleService: finalStageScheduling");
 			FinalStageScheduleDTO table = finalStageScheduling(maxTeamPerTable, formatName, hasHomeMatch, tableId,
 					descriptions, firstSeed);
@@ -744,7 +752,7 @@ public class ScheduleService implements IScheduleService {
 			tables.add(table);
 		}
 
-		int firstSeed = (totalTable - 1) * maxTeamPerTable;
+		int firstSeed = (totalTable - 1) * maxTeamPerTable + 1;
 		System.out.println("ScheduleService: groupStageScheduling: -> ScheduleService: finalStageScheduling");
 		tables.add(finalStageScheduling(totalTeamInFinalTable, formatName, hasHomeMatch, totalTable - 1, descriptions,
 				firstSeed));
