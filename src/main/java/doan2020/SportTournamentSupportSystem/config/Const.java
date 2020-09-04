@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class Const {
 	
-	public final static String DOMAIN = "http://192.168.1.127:3000"; //vuthon8
+	public final static String DOMAIN = "http://192.168.1.131:3000"; //vuthon8
 //	public final static String DOMAIN = "http://192.168.43.15:3000"; //LongSama
 //	public final static String DOMAIN = "http://172.20.10.6:3000"; // Nhan's 11
 	

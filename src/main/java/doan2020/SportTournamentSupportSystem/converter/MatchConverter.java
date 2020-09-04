@@ -10,7 +10,6 @@ import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
 import doan2020.SportTournamentSupportSystem.entity.MatchEntity;
 import doan2020.SportTournamentSupportSystem.entity.TeamEntity;
 import doan2020.SportTournamentSupportSystem.service.ICompetitionService;
-import doan2020.SportTournamentSupportSystem.service.IMatchService;
 import doan2020.SportTournamentSupportSystem.service.ITeamService;
 import doan2020.SportTournamentSupportSystem.validator.Validator;
 
@@ -19,9 +18,6 @@ public class MatchConverter {
 
 	@Autowired
 	private ICompetitionService competitionService;
-
-	@Autowired
-	private IMatchService matchService;
 
 	@Autowired
 	private ITeamService teamService;
@@ -59,15 +55,12 @@ public class MatchConverter {
 				CompetitionEntity competition = competitionService.findOneById(competitionId);
 				entity.setCompetition(competition);
 			}
-            
+
 			if (dto.getWinnerId() != null) {
 				TeamEntity winner = teamService.findOneById(dto.getLoserId());
 				entity.setWinnner(winner);
 			}
 
-			
-			
-			
 			System.out.println("MatchConverter: toEntity: no exception");
 		} catch (Exception e) {
 			System.out.println("MatchConverter: toEntity: has exception");

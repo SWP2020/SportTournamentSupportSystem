@@ -161,7 +161,7 @@ public class MatchAPI {
 				newEntity = service.update(id, newEntity);
 
 				MatchDTO dto = converter.toDTO(newEntity);
-
+				System.out.println(dto);
 				result.put("Match", dto);
 				config.put("Global", 0);
 				error.put("MessageCode", 0);
@@ -205,18 +205,25 @@ public class MatchAPI {
 				error.put("Message", "Match has finished");
 			} else {
 
-				matchEntity.setStatus(Const.MATCH_STATUS_FINISHED);
-				matchEntity = service.update(id, matchEntity);
+				if (matchEntity.getWinnner() == null || matchEntity.getLoser() == null) {
+					result.put("Match", null);
+					config.put("Global", 0);
+					error.put("MessageCode", 1);
+					error.put("Message", "Can't finish without winner and loser");
+				} else {
 
-				
-				scheduleService.finishMatch(matchEntity);
+					matchEntity.setStatus(Const.MATCH_STATUS_FINISHED);
+					matchEntity = service.update(id, matchEntity);
 
-				MatchDTO dto = converter.toDTO(matchEntity);
+					scheduleService.finishMatch(matchEntity);
 
-				result.put("Match", dto);
-				config.put("Global", 0);
-				error.put("MessageCode", 0);
-				error.put("Message", "Match finish successfuly");
+					MatchDTO dto = converter.toDTO(matchEntity);
+
+					result.put("Match", dto);
+					config.put("Global", 0);
+					error.put("MessageCode", 0);
+					error.put("Message", "Match finish successfuly");
+				}
 			}
 			System.out.println("MatchAPI: editMatch: no exception");
 		} catch (Exception e) {

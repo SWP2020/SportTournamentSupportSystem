@@ -35,7 +35,7 @@ public class MatchService implements IMatchService {
 			updatedEntity = matchRepository.findOneById(id);
 
 			updatedEntity.setName(newEntity.getName());
-			updatedEntity.setCompetition(newEntity.getCompetition());
+//			updatedEntity.setCompetition(newEntity.getCompetition());
 			if (newEntity.getStatus() != null) {updatedEntity.setStatus(newEntity.getStatus());}
 			updatedEntity.setUrl(newEntity.getUrl());
 			updatedEntity.setLocation(newEntity.getLocation());
