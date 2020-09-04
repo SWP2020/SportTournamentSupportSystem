@@ -202,7 +202,7 @@ class MatchResult extends React.Component<IMatchResultProps, IMatchResultState> 
       <div
         className="MatchResult-container"
       >
-        <SheetData config={this.configSheetData} data={this.props.teamsInfo as IParams[]}/>
+        {/* <SheetData config={this.configSheetData} data={this.props.teamsInfo as IParams[]}/> */}
       </div >
     );
   }

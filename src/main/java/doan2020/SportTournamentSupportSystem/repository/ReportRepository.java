@@ -1,6 +1,8 @@
 
 package doan2020.SportTournamentSupportSystem.repository;
 
+import java.util.Collection;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,4 +16,9 @@ public interface ReportRepository extends JpaRepository<ReportEntity, Long>{
     
     Page<ReportEntity> findByTournamentId(Pageable pageable,Long tournamentId);
     
+    Page<ReportEntity> findByTournamentIdAndTypeOrderByIdDesc(Pageable pageable,Long tournamentId, String type);
+    
+    Page<ReportEntity> findByType(Pageable pageable,String type);
+    
+    Collection<ReportEntity> findByType(String type);
 }

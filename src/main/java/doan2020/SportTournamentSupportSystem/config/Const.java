@@ -117,6 +117,10 @@ public final class Const {
 	public static final String REPORT_FRAUD = "fraud"; // report fraud to tournament manager
 	public static final String REPORT_SYSTEM_ERROR = "syserror"; // report system error to admin
 	
+//	report status
+	public static final String REPORT_STATUS_UNREAD = "unread";
+	public static final String REPORT_STATUS_READ = "read";
+	
 //	match status
 	public static final String MATCH_STATUS_PENDING = "pending";
 	public static final String MATCH_STATUS_UNKNOWN = "unknown";
@@ -127,4 +131,5 @@ public final class Const {
 	public static final String STAGE_INITIALIZING = "initializing";
 	public static final String STAGE_PROCESSING = "processing";
 	public static final String STAGE_FINISHED = "finished";
+	
 }

@@ -1,7 +1,7 @@
 import { call, takeLatest, put } from 'redux-saga/effects';
 import { query, METHOD } from 'utils/socketApi';
 import { IRequest, IParams, IBigRequest, TypeAny } from 'interfaces/common';
-import { GET_BRACKET_BOARD_INFO } from 'redux-saga/actions';
+import { GET_BRACKET_BOARD_INFO, COMMON_SHOW_NOTIFICATION } from 'redux-saga/actions';
 
 const queryBracketBoardInfo = (data: IParams, path: string | number, param: IParams) => {
   const uri = 'schedule';
@@ -263,6 +263,15 @@ function* doQueryBracketBoardInfo(request: IRequest<IBigRequest>) {
   } catch (error) {
     yield put({
       type: request.response.failed,
+    });
+    yield put({
+      type: COMMON_SHOW_NOTIFICATION,
+      data: {
+        type: 'error',
+        title: 'QueryBracketBoardInfo',
+        content: error,
+        time: new Date(),
+      },
     });
   }
 }

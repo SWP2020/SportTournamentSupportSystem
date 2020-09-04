@@ -9,9 +9,12 @@ interface ICustomModalProps extends React.ClassAttributes<CustomModal> {
   showModal: boolean;
   customStyles: Styles;
   confirmButtonVisible?: boolean;
+  confirmButtonText?: string;
+  cancelButtonText?: string;
 
   handleCloseModal(): void;
   handleConfirmModal(): void;
+  handleCancelModal?(): void;
 }
 
 interface IModalState {
@@ -32,6 +35,12 @@ class CustomModal extends React.Component<ICustomModalProps, IModalState> {
     this.props.handleConfirmModal();
   }
 
+  private handleCancelModal = () => {
+    if (this.props.handleCancelModal) {
+      this.props.handleCancelModal();
+    }
+  }
+
   render() {
     return (
       <Modal
@@ -42,13 +51,19 @@ class CustomModal extends React.Component<ICustomModalProps, IModalState> {
         ariaHideApp={false}
       >
         <div className="Modal-content-container">
-        {this.props.children}
+          {this.props.children}
         </div>
-        {this.props.confirmButtonVisible !== false && <div className="Modal-button-container">
-          <div className="Modal-button" onClick={this.handleConfirmModal}>
-            <p>Confirm</p>
-          </div>
-        </div>}
+        {this.props.confirmButtonVisible !== false &&
+          <div className="Modal-button-container">
+            <div className="Modal-button" onClick={this.handleConfirmModal}>
+              <p>{this.props.confirmButtonText ? this.props.confirmButtonText : 'Xác nhận'}</p>
+            </div>
+            {this.props.handleCancelModal &&
+              <div className="Modal-button2" onClick={this.handleCancelModal}>
+                <p>{this.props.cancelButtonText ? this.props.cancelButtonText : 'Hủy'}</p>
+              </div>
+            }
+          </div>}
       </Modal>
     );
   }

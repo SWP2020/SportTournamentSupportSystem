@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import doan2020.SportTournamentSupportSystem.config.Const;
 import doan2020.SportTournamentSupportSystem.converter.ReportConverter;
 import doan2020.SportTournamentSupportSystem.dto.ReportDTO;
 import doan2020.SportTournamentSupportSystem.entity.ReportEntity;
@@ -199,7 +200,7 @@ public class ReportsAPI {
 //			Sort sortable = Sort.by("id").ascending();
 			try {
 				Pageable pageable = PageRequest.of(page - 1, limit);
-				entities = (List<ReportEntity>) service.findByTournamentId(pageable, tournamentId);
+				entities = (List<ReportEntity>) service.findByTournamentIdAndType(pageable, tournamentId, Const.REPORT_FRAUD);
 				int totalPage = 0;
 				TournamentEntity tournamentEntity = tournamentService.findOneById(tournamentId);
 				int totalEntity = tournamentEntity.getReports().size();

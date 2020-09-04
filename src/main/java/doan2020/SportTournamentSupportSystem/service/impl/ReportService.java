@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import doan2020.SportTournamentSupportSystem.config.Const;
 import doan2020.SportTournamentSupportSystem.entity.ReportEntity;
 import doan2020.SportTournamentSupportSystem.repository.ReportRepository;
 import doan2020.SportTournamentSupportSystem.service.IReportService;
@@ -21,6 +22,7 @@ public class ReportService implements IReportService {
 	public ReportEntity create(ReportEntity reportEntity) {
 		ReportEntity newEntity = null;
 		try {
+			reportEntity.setStatus(Const.REPORT_STATUS_UNREAD);
 			newEntity = reportRepository.save(reportEntity);
 		} catch (Exception e) {
 			return null;
@@ -115,6 +117,39 @@ public class ReportService implements IReportService {
 			return 0;
 		}
 		return count;
+	}
+
+	@Override
+	public Collection<ReportEntity> findByType(Pageable pageable, String type) {
+		Collection<ReportEntity> foundEntitys = null;
+		try {
+			foundEntitys = reportRepository.findByType(pageable, type).getContent();
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntitys;
+	}
+	
+	@Override
+	public Collection<ReportEntity> findByType(String type) {
+		Collection<ReportEntity> foundEntitys = null;
+		try {
+			foundEntitys = reportRepository.findByType(type);
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntitys;
+	}
+	
+	@Override
+	public Collection<ReportEntity> findByTournamentIdAndType(Pageable pageable, Long tournamentId, String type) {
+		Collection<ReportEntity> foundEntitys = null;
+		try {
+			foundEntitys = reportRepository.findByTournamentIdAndTypeOrderByIdDesc(pageable, tournamentId, type).getContent();
+		} catch (Exception e) {
+			return null;
+		}
+		return foundEntitys;
 	}
 
 }

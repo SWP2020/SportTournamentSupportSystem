@@ -5,7 +5,7 @@ import { COMMON_SHOW_NOTIFICATION, QUERY_LIST_TEAM } from 'redux-saga/actions';
 
 
 const queryListTeams = (data: IParams, path: string | number, param: IParams) => {
-  const uri = param.userId != null ? 'teams/getByUserId' : 'teams/getByCompetitionId';
+  const uri = param.userId != null ? 'teams/getByUserId' : (param.competitionId != null ? 'teams/getByCompetitionId' : 'teams/getByTournamentId');
   const datas = { ...data };
   const paths = path;
   const params = { ...param };

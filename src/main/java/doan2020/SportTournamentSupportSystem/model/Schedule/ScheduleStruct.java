@@ -7,7 +7,7 @@ import doan2020.SportTournamentSupportSystem.entity.TeamEntity;
 import doan2020.SportTournamentSupportSystem.model.BoxCollection.RankingTable;
 import doan2020.SportTournamentSupportSystem.model.BoxCollection.SeedList;
 import doan2020.SportTournamentSupportSystem.model.Entity.Match;
-import doan2020.SportTournamentSupportSystem.model.Naming.BoxDescription;
+import doan2020.SportTournamentSupportSystem.model.Indexing.BoxDescription;
 
 abstract public class ScheduleStruct implements Serializable{
 	/**
@@ -98,7 +98,7 @@ abstract public class ScheduleStruct implements Serializable{
 			return;
 		}
 		this.tableId = tableId;
-		this.rankingTable = new RankingTable(this.totalTeam, this.tableId);
+		this.rankingTable.applyDescriptions(tableId);
 	}
 
 	public SeedList getSeedList() {

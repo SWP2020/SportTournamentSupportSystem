@@ -31,6 +31,15 @@ public class ResultDTO{
 		this.url = url;
 		this.matchId = matchId;
 	}
+	
+	public ResultDTO(int setNo, int team1Score, int team2Score, Long matchId) {
+		super();
+
+		this.setNo = setNo;
+		this.team1Score = team1Score;
+		this.team2Score = team2Score;
+		this.matchId = matchId;
+	}
 
 	public Long getId() {
 		return id;

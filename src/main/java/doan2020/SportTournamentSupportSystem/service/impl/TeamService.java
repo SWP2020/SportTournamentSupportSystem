@@ -247,5 +247,36 @@ public class TeamService implements ITeamService {
 		
 		return totalTeam;
 	}
+	
+	@Override
+	public Collection<TeamEntity> findByTournamentIdAndStatus(Long tournamentId, String status) {
+		Collection<TeamEntity> foundEntities = null;
+		try {
+			System.out.println("TeamService: findByTournamentIdAndStatus: start");
+			System.out.println("tour: " + tournamentId);
+			System.out.println("status: " + status);
+			foundEntities = teamRepository.findByTournamentIdAndStatus(tournamentId, status);
+			System.out.println("TeamService: findByTournamentIdAndStatus: size " + foundEntities.size());
+		} catch (Exception e) {
+			System.out.println("TeamService: findByTournamentIdAndStatus: has exception");
+			return null;
+		}
+		System.out.println("TeamService: findByTournamentIdAndStatus: finish");
+		return foundEntities;
+	}
+	
+	@Override
+	public Long countByCompetitionTournamentIdAndStatus(Long tournamentId, String status) {
+		Long totalTeam = 0l;
+		try {
+			totalTeam = teamRepository.countByCompetitionTournamentIdIdAndStatus(tournamentId, status);
+			if (totalTeam == null) {
+				return 0l;
+			}
+		} catch (Exception e) {
+		}
+		
+		return totalTeam;
+	}
 
 }

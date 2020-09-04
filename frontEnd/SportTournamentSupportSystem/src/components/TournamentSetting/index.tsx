@@ -81,10 +81,10 @@ class TournamentSetting extends React.Component<ITournamentSettingProps, ITourna
       username: '',
       usernameError: false,
       usernameErrorContent: '',
-      startDate: formatStringToDate(tournamentInfo.openingTime as string, 'yyyy-MM-dd'),
-      endDate: formatStringToDate(tournamentInfo.closingTime as string, 'yyyy-MM-dd'),
-      endFormDate: formatStringToDate(tournamentInfo.openingTime as string, 'yyyy-MM-dd'),
-      startFormDate: formatStringToDate(tournamentInfo.openingTime as string, 'yyyy-MM-dd'),
+      startDate: formatStringToDate(tournamentInfo.openingTime as string, 'yyyy-MM-dd HH:mm:ss'),
+      endDate: formatStringToDate(tournamentInfo.closingTime as string, 'yyyy-MM-dd HH:mm:ss'),
+      endFormDate: formatStringToDate(tournamentInfo.openingTime as string, 'yyyy-MM-dd HH:mm:ss'),
+      startFormDate: formatStringToDate(tournamentInfo.openingTime as string, 'yyyy-MM-dd HH:mm:ss'),
     };
   }
 
@@ -174,15 +174,6 @@ class TournamentSetting extends React.Component<ITournamentSettingProps, ITourna
     }
 
     return { usernameError, usernameErrorContent };
-  }
-
-  private handleAddManager = () => {
-    const { usernameError, usernameErrorContent } = this.validate();
-    this.setState({
-      usernameError,
-      usernameErrorContent,
-    });
-    this.props.setUsernameExistedDefault();
   }
 
   private handleChangeStartDate = (value: Date) => {

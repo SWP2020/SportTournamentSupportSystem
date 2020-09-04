@@ -23,19 +23,16 @@ import doan2020.SportTournamentSupportSystem.converter.PermissionConverter;
 import doan2020.SportTournamentSupportSystem.converter.TeamConverter;
 import doan2020.SportTournamentSupportSystem.dto.PermissionDTO;
 import doan2020.SportTournamentSupportSystem.dto.TeamDTO;
-import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
 import doan2020.SportTournamentSupportSystem.entity.PermissionEntity;
 import doan2020.SportTournamentSupportSystem.entity.TeamEntity;
 import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
 import doan2020.SportTournamentSupportSystem.entity.UserEntity;
 import doan2020.SportTournamentSupportSystem.model.Entity.Player;
 import doan2020.SportTournamentSupportSystem.response.Response;
-import doan2020.SportTournamentSupportSystem.service.IFileStorageService;
 import doan2020.SportTournamentSupportSystem.service.IPermissionService;
 import doan2020.SportTournamentSupportSystem.service.ITeamService;
 import doan2020.SportTournamentSupportSystem.service.IUserService;
 import doan2020.SportTournamentSupportSystem.service.impl.JwtService;
-import doan2020.SportTournamentSupportSystem.service.impl.TeamService;
 
 @RestController
 @CrossOrigin
@@ -177,7 +174,8 @@ public class TeamAPI {
 			} else {
 
 				TournamentEntity tour = teamEntity.getCompetition().getTournament();
-				if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_INITIALIZING)) {
+				if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_INITIALIZING)
+						|| tour.getStatus().contains(Const.TOURNAMENT_STATUS_REGISTRATION_OPENING)) {
 
 					teamEntity.setStatus(Const.TEAM_STATUS_JOINED);
 					teamEntity = service.create(teamEntity);
@@ -197,9 +195,6 @@ public class TeamAPI {
 					service.saveTeamPlayersToFile(teamEntity, players);
 				} else {
 					String message = "Unknown error";
-					if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_REGISTRATION_OPENING)) {
-						message = Const.TOURNAMENT_MESSAGE_REGISTRATION_OPENING;
-					}
 					if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_PROCESSING)) {
 						message = Const.TOURNAMENT_MESSAGE_PROCESSING;
 					}
@@ -259,7 +254,8 @@ public class TeamAPI {
 			} else {
 
 				TournamentEntity tour = teamEntity.getCompetition().getTournament();
-				if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_INITIALIZING)) {
+				if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_INITIALIZING)
+						|| tour.getStatus().contains(Const.TOURNAMENT_STATUS_REGISTRATION_OPENING)) {
 
 					teamEntity = service.update(id, teamEntity);
 					players = teamDTO.getPlayers();
@@ -284,9 +280,7 @@ public class TeamAPI {
 					service.saveTeamPlayersToFile(teamEntity, players);
 				} else {
 					String message = "Unknown error";
-					if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_REGISTRATION_OPENING)) {
-						message = Const.TOURNAMENT_MESSAGE_REGISTRATION_OPENING;
-					}
+
 					if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_PROCESSING)) {
 						message = Const.TOURNAMENT_MESSAGE_PROCESSING;
 					}
@@ -342,7 +336,7 @@ public class TeamAPI {
 				error.put("Message", "Required Id");
 			} else {// id is exist
 				TournamentEntity tour = service.findOneById(id).getCompetition().getTournament();
-				if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_INITIALIZING)) {
+				if (!tour.getStatus().contains(Const.TOURNAMENT_STATUS_PROCESSING)) {
 
 					teamEntity = service.delete(id);
 					resDTO = converter.toDTO(teamEntity);
@@ -353,17 +347,8 @@ public class TeamAPI {
 					System.out.println("Team API - deleteTeam - cp2");
 				} else {
 					String message = "Unknown error";
-					if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_REGISTRATION_OPENING)) {
-						message = Const.TOURNAMENT_MESSAGE_REGISTRATION_OPENING;
-					}
 					if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_PROCESSING)) {
 						message = Const.TOURNAMENT_MESSAGE_PROCESSING;
-					}
-					if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_FINISHED)) {
-						message = Const.TOURNAMENT_MESSAGE_FINISHED;
-					}
-					if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_STOPPED)) {
-						message = Const.TOURNAMENT_MESSAGE_STOPPED;
 					}
 					result.put("Competition", null);
 					config.put("Global", 0);
@@ -412,7 +397,7 @@ public class TeamAPI {
 
 			}
 			TournamentEntity tour = teamEntity.getCompetition().getTournament();
-			if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_INITIALIZING)) {
+			if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_REGISTRATION_OPENING)) {
 
 				teamEntity.setStatus(Const.TEAM_STATUS_PENDING);
 				teamEntity = service.create(teamEntity);
@@ -428,8 +413,8 @@ public class TeamAPI {
 				service.saveTeamPlayersToFile(teamEntity, players);
 			} else {
 				String message = "Unknown error";
-				if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_REGISTRATION_OPENING)) {
-					message = Const.TOURNAMENT_MESSAGE_REGISTRATION_OPENING;
+				if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_INITIALIZING)) {
+					message = Const.TOURNAMENT_MESSAGE_INITIALIZING;
 				}
 				if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_PROCESSING)) {
 					message = Const.TOURNAMENT_MESSAGE_PROCESSING;
@@ -471,7 +456,6 @@ public class TeamAPI {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
 		TeamEntity teamEntity = new TeamEntity();
-		TeamDTO teamDTO = null;
 		ArrayList<Player> players = null;
 
 		try {
@@ -485,7 +469,9 @@ public class TeamAPI {
 				error.put("Message", "Team not exist");
 			} else {
 				TournamentEntity tour = teamEntity.getCompetition().getTournament();
-				if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_INITIALIZING)) {
+				if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_INITIALIZING)
+						|| tour.getStatus().contains(Const.TOURNAMENT_STATUS_REGISTRATION_OPENING)) {
+
 					teamEntity.setStatus(Const.TEAM_STATUS_JOINED);
 					Long competitionId = teamEntity.getCompetition().getId();
 					Long maxSeedNo = service.getMaxSeedNoByCompetitionId(competitionId);
@@ -495,22 +481,29 @@ public class TeamAPI {
 					players = (ArrayList<Player>) service.getTeamPlayerFromFile(teamEntity.getCompetition().getId(),
 							id);
 
-					teamDTO = converter.toDTO(teamEntity);
-					teamDTO.setPlayers(players);
+					ArrayList<TeamEntity> newPendingList = new ArrayList<>();
+					newPendingList
+							.addAll(service.findByCompetitionIdAndStatus(competitionId, Const.TEAM_STATUS_PENDING));
 
-					result.put("Team", teamDTO);
+					ArrayList<TeamDTO> dtos = new ArrayList<>();
+
+					for (TeamEntity team : newPendingList) {
+						TeamDTO dto = converter.toDTO(team);
+						dto.setPlayers((ArrayList<Player>)service.getTeamPlayerFromFile(competitionId, team.getId()));
+						dtos.add(dto);
+
+					}
+
+					result.put("Teams", dtos);
 					config.put("Global", 0);
 					error.put("MessageCode", 0);
 					error.put("Message", "Successful");
 
 					// save file
-
 					service.saveTeamPlayersToFile(teamEntity, players);
 				} else {
 					String message = "Unknown error";
-					if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_REGISTRATION_OPENING)) {
-						message = Const.TOURNAMENT_MESSAGE_REGISTRATION_OPENING;
-					}
+
 					if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_PROCESSING)) {
 						message = Const.TOURNAMENT_MESSAGE_PROCESSING;
 					}
@@ -520,7 +513,7 @@ public class TeamAPI {
 					if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_STOPPED)) {
 						message = Const.TOURNAMENT_MESSAGE_STOPPED;
 					}
-					result.put("Competition", null);
+					result.put("Teams", null);
 					config.put("Global", 0);
 					error.put("MessageCode", 1);
 					error.put("Message", message);
@@ -545,7 +538,7 @@ public class TeamAPI {
 
 	@PutMapping("/reject")
 	public ResponseEntity<Response> rejectTeam(@RequestParam("id") Long id) {
-		System.out.println("Team API - editTeam - start");
+		System.out.println("Team API: rejectTeam: start");
 		HttpStatus httpStatus = null;
 		httpStatus = HttpStatus.OK;
 		Response response = new Response();
@@ -553,7 +546,6 @@ public class TeamAPI {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
 		TeamEntity teamEntity = new TeamEntity();
-		TeamDTO teamDTO = null;
 		ArrayList<Player> players = null;
 
 		try {
@@ -569,13 +561,24 @@ public class TeamAPI {
 
 				teamEntity.setStatus(Const.TEAM_STATUS_REJECTED);
 				teamEntity = service.update(id, teamEntity);
-
+				Long competitionId = teamEntity.getCompetition().getId();
+				
 				players = (ArrayList<Player>) service.getTeamPlayerFromFile(teamEntity.getCompetition().getId(), id);
 
-				teamDTO = converter.toDTO(teamEntity);
-				teamDTO.setPlayers(players);
+				ArrayList<TeamEntity> newPendingList = new ArrayList<>();
+				newPendingList
+						.addAll(service.findByCompetitionIdAndStatus(competitionId, Const.TEAM_STATUS_PENDING));
 
-				result.put("Team", teamDTO);
+				ArrayList<TeamDTO> dtos = new ArrayList<>();
+
+				for (TeamEntity team : newPendingList) {
+					TeamDTO dto = converter.toDTO(team);
+					dto.setPlayers((ArrayList<Player>)service.getTeamPlayerFromFile(competitionId, team.getId()));
+					dtos.add(dto);
+
+				}
+
+				result.put("Teams", dtos);
 				config.put("Global", 0);
 				error.put("MessageCode", 0);
 				error.put("Message", "Successful");
@@ -586,9 +589,9 @@ public class TeamAPI {
 
 			}
 
-			System.out.println("Team API - editTeam - no exception");
+			System.out.println("Team API: rejectTeam - no exception");
 		} catch (Exception e) {
-			System.out.println("Team API - editTeam - has exception");
+			System.out.println("Team API: rejectTeam - has exception");
 			result.put("Team", null);
 			config.put("Global", 0);
 			error.put("MessageCode", 1);
@@ -597,7 +600,7 @@ public class TeamAPI {
 		response.setError(error);
 		response.setResult(result);
 		response.setConfig(config);
-		System.out.println("Team API - editTeam - finish");
+		System.out.println("Team API - rejectTeam - finish");
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
 

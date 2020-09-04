@@ -48,6 +48,22 @@ import { queryBracketRankInfo } from './sagas/BracketRank';
 import { deleteCompetition } from './sagas/DeleteCompetition';
 import { startTournament } from './sagas/StartTournament';
 import { getMatchResult } from './sagas/GetMatchResult';
+import { updateMatchResult } from './sagas/UpdateMatchResult';
+import { queryTournamentReport } from './sagas/QueryTournamentReport';
+import { reportViolation } from './sagas/ReportViolation';
+import { queryAllReports } from './sagas/QueryAllReports';
+import { registTeam } from './sagas/RegistTeam';
+import { queryListPendingTeam } from './sagas/QueryListPendingTeam';
+import { approveTeam } from './sagas/ApproveTeam';
+import { rejectTeam } from './sagas/RejectTeam';
+import { activeUser } from './sagas/ActiveUser';
+import { deActiveUser } from './sagas/DeActiveUser';
+import { stopTournament } from './sagas/StopTournament';
+import { continueTournament } from './sagas/ContinueTournament';
+import { openRegisterForm } from './sagas/OpenRegisterForm';
+import { closeRegisterForm } from './sagas/CloseRegisterForm';
+import { setAdmin } from './sagas/SetAdmin';
+import { deleteTeam } from './sagas/DeleteTeam';
 
 export default function* () {
   yield all([
@@ -100,5 +116,21 @@ export default function* () {
     deleteCompetition(),
     startTournament(),
     getMatchResult(),
+    updateMatchResult(),
+    queryTournamentReport(),
+    reportViolation(),
+    queryAllReports(),
+    registTeam(),
+    queryListPendingTeam(),
+    approveTeam(),
+    rejectTeam(),
+    activeUser(),
+    deActiveUser(),
+    stopTournament(),
+    continueTournament(),
+    openRegisterForm(),
+    closeRegisterForm(),
+    setAdmin(),
+    deleteTeam(),
   ]);
 }

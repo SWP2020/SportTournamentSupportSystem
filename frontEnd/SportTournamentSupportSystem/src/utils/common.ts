@@ -22,3 +22,11 @@ export function formatTournamentStatus(value: string) {
     return 'Đã kết thúc';
   }
 }
+
+export function formatUserStatus(value: string) {
+  if (value === 'active') {
+    return 'Đã kích hoạt';
+  } else {
+    return 'Chưa kích hoạt';
+  }
+}

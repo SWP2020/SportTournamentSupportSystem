@@ -34,8 +34,18 @@ public interface IUserService {
 	public Long countBySearchString(String searchString);
 	
 	public Long countAll();
+	
+	public Long countAllByRoleId(Long roleId);
 
 	public Collection<UserEntity> findByRoleId(Pageable pageable, Long roleId);
 	
 	public int countByRoleId(Long roleId);
+	
+	public UserEntity updateStatus(UserEntity newEntity, String status); 
+	
+	public UserEntity updateRole(UserEntity entity, String roleName);
+	
+	public Collection<UserEntity> findBySearchStringAndStatus(Pageable pageable, String searchString, String status);
+	
+	public Long countBySearchStringAndStatus(String searchString, String status);
 }

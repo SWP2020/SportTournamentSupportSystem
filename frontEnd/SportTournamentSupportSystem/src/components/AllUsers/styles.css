@@ -3,6 +3,20 @@
   flex-direction: column;
 }
 
+.AllUsers-button-text-hover :hover {
+  cursor: pointer;
+}
+
+.AllUsers-button-text {
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+.AllUsers-container-admin {
+  width: 100%;
+  height: 450px;
+}
+
 .AllUsers-container-container {
   color: white;
   display: flex;
