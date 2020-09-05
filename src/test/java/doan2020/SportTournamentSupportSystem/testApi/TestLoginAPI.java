@@ -140,20 +140,19 @@ public class TestLoginAPI {
 		user.setPassword(password);
 		
 		//phần expected result
-		HttpStatus expectedHttpStatus = HttpStatus.OK;
 		String expectedMessage = "Login successfull";
 		int expectedConfigGlobal = 0;
 		
 		//phần execute test
 		ResponseEntity<Response> response = loginApi.login(user);
 		
-		HttpStatus actualHttpStatus = response.getStatusCode();
+		//phan actual result
 		String actualMessage = (String)response.getBody().getError().get("Message");
 		int actualConfigGlobal = (int)response.getBody().getConfig().get("Global");
 		UserDTO actualUser = (UserDTO)response.getBody().getResult().get("User");
 		String actualToken = (String)response.getBody().getResult().get("Authentication");
 		
-		Assert.assertEquals(expectedHttpStatus, actualHttpStatus);
+		//phan so sanh ket qua
 		Assert.assertEquals(expectedMessage, actualMessage);
 		Assert.assertEquals(expectedConfigGlobal, actualConfigGlobal);
 		Assert.assertEquals(userDto, actualUser);
@@ -170,20 +169,19 @@ public class TestLoginAPI {
 		user.setPassword(password);
 		
 		//phần expected result
-		HttpStatus expectedHttpStatus = HttpStatus.OK;
 		String expectedMessage = "User is not Exist";
 		int expectedConfigGlobal = 0;
 		
 		//phần execute test
 		ResponseEntity<Response> response = loginApi.login(user);
 		
-		HttpStatus actualHttpStatus = response.getStatusCode();
+		//phan actual result
 		String actualMessage = (String)response.getBody().getError().get("Message");
 		int actualConfigGlobal = (int)response.getBody().getConfig().get("Global");
 		UserDTO actualUser = (UserDTO)response.getBody().getResult().get("User");
 		String actualToken = (String)response.getBody().getResult().get("Authentication");
 		
-		Assert.assertEquals(expectedHttpStatus, actualHttpStatus);
+		//phan so sanh ket qua
 		Assert.assertEquals(expectedMessage, actualMessage);
 		Assert.assertEquals(expectedConfigGlobal, actualConfigGlobal);
 		Assert.assertEquals(null, actualUser);
