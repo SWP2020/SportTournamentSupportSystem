@@ -121,7 +121,7 @@ public class DoubleBTree<E> extends BTree<E> implements Serializable {
 		if (findRight != null)
 			return findRight;
 
-		return node;
+		return null;
 	}
 
 }

@@ -32,8 +32,8 @@ public class Match implements Serializable {
 	/*
 	 * status:
 	 * -1: chỉ có 1 đội
-	 * 0: có sẵn 2 đội (round 1 win branch hoặc vòng bảng)
-	 * 1: 2 đội lấy từ 2 trận thắng của left và right ( round 2+ )
+	 * 0: đã có 2 đội 
+	 * 1: 2 đội lấy từ 2 trận thắng của left và right
 	 * 2: có sẵn đội 1, đội 2 lấy từ trận thắng của right (round 2 win branch)
 	 * 3: 2 đội lấy từ 2 trận thua của left và right (round 1 lose branch)
 	 * 4: đội 1 lấy từ đội thua của trận left, đội 2 lấy từ trận thắng của right (round 2+ lose branch)

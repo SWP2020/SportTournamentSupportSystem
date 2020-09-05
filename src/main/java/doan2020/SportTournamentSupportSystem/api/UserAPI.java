@@ -30,6 +30,7 @@ import doan2020.SportTournamentSupportSystem.response.Response;
 import doan2020.SportTournamentSupportSystem.service.IPermissionService;
 import doan2020.SportTournamentSupportSystem.service.IRoleService;
 import doan2020.SportTournamentSupportSystem.service.IUserService;
+import doan2020.SportTournamentSupportSystem.service.impl.AzureBlobAdapterService;
 import doan2020.SportTournamentSupportSystem.service.impl.FileStorageService;
 import doan2020.SportTournamentSupportSystem.service.impl.JwtService;
 import doan2020.SportTournamentSupportSystem.service.impl.VerificationTokenService;
@@ -61,6 +62,9 @@ public class UserAPI {
 
 	@Autowired
 	private JwtService jwtService;
+	
+	@Autowired
+	private AzureBlobAdapterService azureBlobAdapterService;
 
 	/* get One User */
 
@@ -431,19 +435,25 @@ public class UserAPI {
 				error.put("Message", "Required param id");
 			} else {// id not null
 				System.out.println("UserAPI: uploadAvatar: CP2");
-				String name = userService.findOneById(id).getUsername();
-				String fileName = fileStorageService.storeFileImage(file, name, Const.AVATAR);
+				String containName = "user-"+String.valueOf(id);
+				
+				// create container / folder to azure
+				azureBlobAdapterService.createContainer(containName);
+				
+				// upload image to this container
+				String urlImage = azureBlobAdapterService.upload(file, containName, Const.AVATAR).toString();
+				
 				System.out.println("UserAPI: uploadAvatar: CP3");
-				System.out.println("UserAPI: uploadAvatar: fileName: " + fileName);
-				if (fileName == null) {// fileName invalid
+				System.out.println("UserAPI: uploadAvatar: fileName: " + urlImage);
+				if (urlImage == null) {// urlImage invalid
 					result.put("User", null);
 					config.put("Global", 0);
 					error.put("MessageCode", 1);
 					error.put("Message", "Could not store file");
 				} else {// fileName valid
-					System.out.println(fileName);
+					System.out.println(urlImage);
 					UserDTO dto = new UserDTO();
-					dto.setAvatar(fileName);
+					dto.setAvatar(urlImage);
 					UserEntity userEntity = userConverter.toEntity(dto);
 					userEntity = userService.updateAvatar(id, userEntity);
 					System.out.println(userEntity.getAvatar());
@@ -484,10 +494,16 @@ public class UserAPI {
 				System.out.println("UserAPI: uploadAvatar: CP2");
 				System.out.println(file);
 
-				String name = userService.findOneById(id).getUsername();
-				String fileName = fileStorageService.storeFileImage(file, name, Const.BACKGROUND);
+				String containName = "user-"+String.valueOf(id);
+
+				// create container / folder to azure
+				azureBlobAdapterService.createContainer(containName);
+				
+				// upload image to this container
+				String urlImage = azureBlobAdapterService.upload(file, containName, Const.BACKGROUND).toString();
+
 				System.out.println("UserAPI: uploadAvatar: CP3");
-				if (fileName == null) {// fileName invalid
+				if (urlImage == null) {// fileName invalid
 					result.put("User", null);
 					config.put("Global", 0);
 					error.put("MessageCode", 1);
@@ -495,7 +511,7 @@ public class UserAPI {
 				} else {// fileName valid
 					System.out.println("check point");
 					UserDTO dto = new UserDTO();
-					dto.setBackground(fileName);
+					dto.setBackground(urlImage);
 					UserEntity userEntity = userConverter.toEntity(dto);
 					userEntity = userService.updateBackGround(id, userEntity);
 

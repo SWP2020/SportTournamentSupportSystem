@@ -36,6 +36,7 @@ public class SeedList extends ArrayList<Seed> implements Serializable {
 	}
 
 	public void applyTeams(ArrayList<TeamEntity> teams) {
+		System.out.println("SeedList: applyTeams: start");
 		java.util.Collections.sort(teams, new TeamEntity());
 		int seedNo = 0;
 		for (Seed seed : this) {
@@ -43,11 +44,11 @@ public class SeedList extends ArrayList<Seed> implements Serializable {
 			t.setId(teams.get(seedNo).getId());
 			t.setShortName(teams.get(seedNo).getShortName());
 			t.setFullName(teams.get(seedNo).getFullName());
-			t.setTotalLose(0);
-			t.setTotalWin(0);
+
 			seed.setTeam(t);
 			seedNo++;
 		}
+		System.out.println("SeedList: applyTeams: finish");
 	}
 
 	public void applyDescriptions(ArrayList<BoxDescription> descriptions) {
