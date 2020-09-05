@@ -53,6 +53,7 @@ public class RankingTable extends ArrayList<RankingTableSlot> implements Seriali
 	}
 	
 	public void applyTeams(ArrayList<TeamEntity> teams) {
+		System.out.println("RankingTable: applyTeams: start");
 		java.util.Collections.sort(teams, new TeamEntity());
 		int seedNo = 0;
 		for (RankingTableSlot slot : this) {
@@ -60,14 +61,16 @@ public class RankingTable extends ArrayList<RankingTableSlot> implements Seriali
 			t.setId(teams.get(seedNo).getId());
 			t.setShortName(teams.get(seedNo).getShortName());
 			t.setFullName(teams.get(seedNo).getFullName());
-			t.setTotalLose(0);
-			t.setTotalWin(0);
+			
+			slot.setTotalLose(0);
+			slot.setTotalWin(0);
 			
 			slot.setTeam(t);
 			slot.setDifference(0.0);
 			slot.setScore(0);
 			seedNo++;
 		}
+		System.out.println("RankingTable: applyTeams: finish");
 	}
 	
 	public void applyDescriptions(int tableId) {
@@ -78,7 +81,21 @@ public class RankingTable extends ArrayList<RankingTableSlot> implements Seriali
 		}
 	}
 	
-	
+	public void updateByTeamId(Long teamId, Integer score, Double diff, boolean isWin) {
+		for(RankingTableSlot slot: this) {
+			if (slot.getTeam() != null && slot.getTeam().getId().longValue() == teamId.longValue()) {
+				slot.setScore(slot.getScore() + score);
+				slot.setDifference(slot.getDifference() + diff);
+				if (isWin) {
+					slot.setTotalWin(slot.getTotalWin() + 1);
+				} else {
+					slot.setTotalLose(slot.getTotalLose() + 1);
+				}
+				break;
+			}
+		}
+		Collections.sort(this, new RankingTableSlot());
+	}
 //	public static void main(String[] args) {
 //		RankingTable x = new RankingTable(4, 9);
 //		for (RankingTableSlot y: x) {
