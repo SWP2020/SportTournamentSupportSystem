@@ -51,7 +51,6 @@ public final class Const {
 	public final static String STATUS_DEACTIVE = "deactive";
 	
 	public final static String STATUS_DELETED = "deleted";
-	
 //  status tournament
   
 	public final static String TOURNAMENT_STATUS_INITIALIZING = "initializing";
@@ -132,4 +131,7 @@ public final class Const {
 	public static final String STAGE_PROCESSING = "processing";
 	public static final String STAGE_FINISHED = "finished";
 	
+//	azure cloud
+	public final static String CONNECTION_STRING = "DefaultEndpointsProtocol=https;AccountName=doan2020;AccountKey=zQox6fOtBhUdJHayTJ6ArwxjUuC64/iiYzv4Qy/Kgv0lNbJ/VRQbpLQSDl+YpIBrwxfFN6Wz4UZ+F4JIC0iNKw==;EndpointSuffix=core.windows.net";
+
 }
