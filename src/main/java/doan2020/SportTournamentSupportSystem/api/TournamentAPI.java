@@ -37,6 +37,7 @@ import doan2020.SportTournamentSupportSystem.service.IPermissionService;
 import doan2020.SportTournamentSupportSystem.service.IScheduleService;
 import doan2020.SportTournamentSupportSystem.service.ITeamService;
 import doan2020.SportTournamentSupportSystem.service.ITournamentService;
+import doan2020.SportTournamentSupportSystem.service.impl.AzureBlobAdapterService;
 import doan2020.SportTournamentSupportSystem.service.impl.JwtService;
 import doan2020.SportTournamentSupportSystem.service.impl.UserService;
 
@@ -73,6 +74,9 @@ public class TournamentAPI {
 
 	@Autowired
 	private JwtService jwtService;
+
+	@Autowired
+	private AzureBlobAdapterService azureBlobAdapterService;
 
 	@GetMapping("")
 	public ResponseEntity<Response> getTournament(
@@ -296,10 +300,16 @@ public class TournamentAPI {
 			} else {// id not null
 				System.out.println("TournamentAPI: uploadAvatar: CP2");
 				System.out.println(file);
-				String name = service.findOneById(id).getShortName();
-				String fileName = fileStorageService.storeFileImage(file, name, Const.AVATAR);
+				String containName = "tournament-"+String.valueOf(id);
+
+				// create container / folder to azure
+				azureBlobAdapterService.createContainer(containName);
+
+				// upload image to this container
+				String urlImage = azureBlobAdapterService.upload(file, containName, Const.AVATAR).toString();
+
 				System.out.println("TournamentAPI: uploadAvatar: CP3");
-				if (fileName == null) {// fileName invalid
+				if (urlImage == null) {// fileName invalid
 					result.put("Tournament", null);
 					config.put("Global", 0);
 					error.put("MessageCode", 1);
@@ -307,7 +317,7 @@ public class TournamentAPI {
 				} else {// fileName valid
 					System.out.println("check point");
 					TournamentDTO dto = new TournamentDTO();
-					dto.setAvatar(fileName);
+					dto.setAvatar(urlImage);
 					TournamentEntity tournamentEntity = converter.toEntity(dto);
 					tournamentEntity = service.updateAvatar(id, tournamentEntity);
 
@@ -348,10 +358,15 @@ public class TournamentAPI {
 			} else {// id not null
 				System.out.println("TournamentAPI: uploadAvatar: CP2");
 				System.out.println(file);
-				String name = service.findOneById(id).getShortName();
-				String fileName = fileStorageService.storeFileImage(file, name, Const.BACKGROUND);
+				
+				String containName = "tournament-"+String.valueOf(id);
+				// create container / folder to azure
+				azureBlobAdapterService.createContainer(containName);
+
+				// upload image to this container
+				String urlImage = azureBlobAdapterService.upload(file, containName, Const.BACKGROUND).toString();
 				System.out.println("TournamentAPI: uploadAvatar: CP3");
-				if (fileName == null) {// fileName invalid
+				if (urlImage == null) {// fileName invalid
 					result.put("Tournament", null);
 					config.put("Global", 0);
 					error.put("MessageCode", 1);
@@ -359,7 +374,7 @@ public class TournamentAPI {
 				} else {// fileName valid
 					System.out.println("check point");
 					TournamentDTO dto = new TournamentDTO();
-					dto.setBackground(fileName);
+					dto.setBackground(urlImage);
 					TournamentEntity tournamentEntity = converter.toEntity(dto);
 					tournamentEntity = service.updateBackground(id, tournamentEntity);
 
@@ -559,7 +574,7 @@ public class TournamentAPI {
 		System.out.println("TournamentAPI: finishTournament: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
-	
+
 	@PutMapping("/openRegistration")
 	public ResponseEntity<Response> openRegistration(@RequestParam Long id) {
 		System.out.println("TournamentAPI: openRegistration: start");
@@ -587,7 +602,7 @@ public class TournamentAPI {
 					error.put("MessageCode", 1);
 					error.put("Message", "Tournament is not exist");
 				} else {
-					
+
 					System.out.println(thisTournament.getStatus());
 
 					String message = "Unknown error";
@@ -605,7 +620,8 @@ public class TournamentAPI {
 						message = Const.TOURNAMENT_MESSAGE_STOPPED;
 					}
 					if (thisTournament.getStatus().contains(Const.TOURNAMENT_STATUS_INITIALIZING)) {
-						thisTournament = service.updateStatus(thisTournament, Const.TOURNAMENT_STATUS_REGISTRATION_OPENING);
+						thisTournament = service.updateStatus(thisTournament,
+								Const.TOURNAMENT_STATUS_REGISTRATION_OPENING);
 
 						thisTournamentDTO = converter.toDTO(thisTournament);
 						message = "Success";
@@ -634,7 +650,7 @@ public class TournamentAPI {
 		System.out.println("TournamentAPI: finishTournament: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
-	
+
 	@PutMapping("/closeRegistration")
 	public ResponseEntity<Response> closeRegistration(@RequestParam Long id) {
 		System.out.println("TournamentAPI: closeRegistration: start");
