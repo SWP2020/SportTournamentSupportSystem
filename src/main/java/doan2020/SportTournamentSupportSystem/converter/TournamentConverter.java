@@ -12,15 +12,15 @@ import doan2020.SportTournamentSupportSystem.service.IUserService;
 import doan2020.SportTournamentSupportSystem.validator.Validator;
 
 @Component
-public class TournamentConverter{
-	
+public class TournamentConverter {
+
 	@Autowired
 	IUserService userService;
-	
+
 	@Autowired
 	private Validator validator;
-	
-	public TournamentEntity toEntity(TournamentDTO dto){
+
+	public TournamentEntity toEntity(TournamentDTO dto) {
 		System.out.println("TournamentConverter: toEntity: start");
 		TournamentEntity entity = new TournamentEntity();
 		System.out.println("In toEntity:");
@@ -30,25 +30,31 @@ public class TournamentConverter{
 			if (dto.getShortName() != null)
 				entity.setShortName(dto.getShortName());
 			entity.setDescription(dto.getDescription());
-			
+
 			if (dto.getCreatorId() != null) {
 				Long tournamentCreatorId = dto.getCreatorId();
 				UserEntity tournamentCreator = userService.findOneById(tournamentCreatorId);
 				entity.setCreator(tournamentCreator);
 			}
+			
 			entity.setOpeningLocation(dto.getOpeningLocation());
-			
-			Date openingTime = validator.formatStringToDate(dto.getOpeningTime());
-			entity.setOpeningTime(openingTime);
-			
 			entity.setClosingLocation(dto.getClosingLocation());
-			
-			Date closingTime = validator.formatStringToDate(dto.getClosingTime());
-			entity.setOpeningTime(closingTime);
-			
+
+			try {
+				Date openingTime = validator.formatStringToDate(dto.getOpeningTime());
+				entity.setOpeningTime(openingTime);
+
+				
+			} catch (Exception e) {
+			}
+			try {
+				Date closingTime = validator.formatStringToDate(dto.getClosingTime());
+				entity.setClosingTime(closingTime);
+			} catch (Exception e) {
+			}
+
 			entity.setDonor(dto.getDonor());
-			
-			
+
 			entity.setAvatar(dto.getAvatar());
 			entity.setBackground(dto.getBackground());
 			Date closeRegistrationTime = validator.formatStringToDate(dto.getClosingTime());
@@ -56,7 +62,7 @@ public class TournamentConverter{
 			Date openRegistrationTime = validator.formatStringToDate(dto.getClosingTime());
 			entity.setOpenRegistrationTime(openRegistrationTime);
 			System.out.println("TournamentConverter: toEntity: no exception");
-		}catch (Exception e) {
+		} catch (Exception e) {
 			System.out.println("TournamentConverter: toEntity: has exception");
 			return null;
 		}
@@ -64,7 +70,7 @@ public class TournamentConverter{
 		return entity;
 	}
 
-	public TournamentDTO toDTO(TournamentEntity entity){
+	public TournamentDTO toDTO(TournamentEntity entity) {
 		System.out.println("TournamentConverter: toDTO: finish");
 		TournamentDTO dto = new TournamentDTO();
 		try {
@@ -72,24 +78,23 @@ public class TournamentConverter{
 			dto.setFullName(entity.getFullName());
 			dto.setShortName(entity.getShortName());
 			dto.setDescription(entity.getDescription());
-			
-			
+
 			UserEntity tournamentCreator = entity.getCreator();
 			Long tournamentCreatorId = tournamentCreator.getId();
 			dto.setCreatorId(tournamentCreatorId);
-			
+
 			System.out.println("TournamentConverter: toDTO: CP1");
-			
+
 			dto.setOpeningLocation(entity.getOpeningLocation());
-			
+
 			String openingTime = validator.formatDateToString(entity.getOpeningTime());
 			dto.setOpeningTime(openingTime);
-			
+
 			dto.setClosingLocation(entity.getClosingLocation());
-			
+
 			String closingTime = validator.formatDateToString(entity.getClosingTime());
 			dto.setClosingTime(closingTime);
-			
+
 			dto.setDonor(entity.getDonor());
 			dto.setStatus(entity.getStatus());
 			dto.setUrl(entity.getUrl());
@@ -104,7 +109,7 @@ public class TournamentConverter{
 			System.out.println("TournamentConverter: toDTO: has exception");
 			return null;
 		}
-		
+
 		System.out.println("TournamentConverter: toDTO: finish");
 		return dto;
 	}

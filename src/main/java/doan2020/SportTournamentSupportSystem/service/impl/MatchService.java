@@ -41,7 +41,7 @@ public class MatchService implements IMatchService {
 			updatedEntity.setLocation(newEntity.getLocation());
 			updatedEntity.setTime(newEntity.getTime());
 			updatedEntity.setLoser(newEntity.getLoser());
-			updatedEntity.setResults(newEntity.getResults());
+//			updatedEntity.setResults(newEntity.getResults());
 			updatedEntity.setWinnner(newEntity.getWinnner());
 			updatedEntity.setTeam1(newEntity.getTeam1());
 			updatedEntity.setTeam2(newEntity.getTeam2());

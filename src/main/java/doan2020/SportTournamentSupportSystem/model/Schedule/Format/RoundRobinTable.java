@@ -59,19 +59,24 @@ public class RoundRobinTable extends ScheduleStruct implements Serializable {
 		this.matches = this.createMatches(this.totalTeam, homeMatch);
 		this.setTotalMatch(this.matches.size());
 	}
-	
+
 	public RoundRobinTable(Long id, ArrayList<Match> matches, int totalTeam, boolean homeMatch) {
 		super(totalTeam, id.intValue());
+		System.out.println("RoundRobinTable: Constructor: start");
 		this.id = id;
 		if (id >= 0) {
 			this.matchNaming = Const.TABLE_NAMING.charAt(this.id.intValue()) + "-";
 			this.name = "Table " + Const.TABLE_NAMING.charAt(this.id.intValue());
 		}
+		System.out.println("RoundRobinTable: Constructor: set id ok");
 		this.homeMatch = homeMatch;
 		this.totalTeam = totalTeam;
+		System.out.println("RoundRobinTable: Constructor: set total team ok");
 		this.totalRound = calTotalRound(totalTeam, homeMatch);
 		this.matches = matches;
+		System.out.println("RoundRobinTable: Constructor: set matches ok");
 		this.setTotalMatch(this.matches.size());
+		System.out.println("RoundRobinTable: Constructor: finish");
 	}
 
 	private ArrayList<Match> createMatches(int totalTeam, boolean homeMatch) {
@@ -87,13 +92,12 @@ public class RoundRobinTable extends ScheduleStruct implements Serializable {
 			info.setName(this.matchNaming + info.getMatchNo());
 			info.setRoundNo(1);
 			info.setTeam1(new MatchSlot());
-			info.setTeam2(null);
+			info.setTeam2(new MatchSlot());
 			info.setWinner(info.getTeam1());
 			info.setLoser(new MatchSlot());
-			info.setLocation(null);
-			info.setTime(null);
 			info.setStatus(-1);
 			info.getTeam1().setDescription(new BoxDescription((long) 1));
+			info.getTeam2().setDescription(new BoxDescription());
 			matches.add(info);
 			return matches;
 		}
@@ -117,13 +121,11 @@ public class RoundRobinTable extends ScheduleStruct implements Serializable {
 				Match info = new Match();
 				info.setMatchNo(totalMatch);
 				info.setName(this.matchNaming + info.getMatchNo());
-				info.setRoundNo(homeMatch?this.totalRound / 2 + round:round);
+				info.setRoundNo(homeMatch ? this.totalRound / 2 + round : round);
 				info.setTeam1(new MatchSlot());
 				info.setTeam2(new MatchSlot());
 				info.setWinner(new MatchSlot());
 				info.setLoser(new MatchSlot());
-				info.setLocation(null);
-				info.setTime(null);
 				info.setStatus(0);
 				if ((freeSeed % 2 != 0 && !homeMatch) || (freeSeed % 2 == 0 && homeMatch)) {
 					info.getTeam1().setDescription(new BoxDescription((long) freeSeed));
@@ -139,15 +141,14 @@ public class RoundRobinTable extends ScheduleStruct implements Serializable {
 				Match info = new Match();
 				info.setMatchNo(totalMatch);
 				info.setName(this.matchNaming + info.getMatchNo());
-				info.setRoundNo(homeMatch?this.totalRound / 2 + round:round);
+				info.setRoundNo(homeMatch ? this.totalRound / 2 + round : round);
 				info.setTeam1(new MatchSlot());
-				info.setTeam2(null);
+				info.setTeam2(new MatchSlot());
 				info.setWinner(info.getTeam1());
 				info.setLoser(new MatchSlot());
-				info.setLocation(null);
-				info.setTime(null);
-				info.setStatus(0);
+				info.setStatus(-1);
 				info.getTeam1().setDescription(new BoxDescription((long) freeSeed));
+				info.getTeam2().setDescription(new BoxDescription());
 				matches.add(info);
 			}
 
@@ -159,13 +160,11 @@ public class RoundRobinTable extends ScheduleStruct implements Serializable {
 				Match info = new Match();
 				info.setMatchNo(totalMatch);
 				info.setName(this.matchNaming + info.getMatchNo());
-				info.setRoundNo(homeMatch?this.totalRound / 2 + round:round);
+				info.setRoundNo(homeMatch ? this.totalRound / 2 + round : round);
 				info.setTeam1(new MatchSlot());
 				info.setTeam2(new MatchSlot());
 				info.setWinner(new MatchSlot());
 				info.setLoser(new MatchSlot());
-				info.setLocation(null);
-				info.setTime(null);
 				info.setStatus(0);
 				if (homeMatch) {
 					info.getTeam1().setDescription(new BoxDescription((long) left));
@@ -185,27 +184,29 @@ public class RoundRobinTable extends ScheduleStruct implements Serializable {
 
 	@Override
 	protected void applyTeams() {
+		System.out.println("RR: applyTeams: start");
 		for (Match match : this.matches) {
 			BoxDescription description1 = match.getTeam1().getDescription();
-			match.getTeam1().setTeam(this.seedList.get(description1.getUnitIndex() - 1).getTeam());
+			if (description1.getDescType() == 0)
+				match.getTeam1().setTeam(this.seedList.get(description1.getUnitIndex() - 1).getTeam());
 
 			BoxDescription description2 = match.getTeam2().getDescription();
-			match.getTeam2().setTeam(this.seedList.get(description2.getUnitIndex() - 1).getTeam());
+			if (description2.getDescType() == 0)
+				match.getTeam2().setTeam(this.seedList.get(description2.getUnitIndex() - 1).getTeam());
 		}
+		System.out.println("RR: applyTeams: finish");
 	}
 
 	@Override
 	protected void applyDescriptions() {
 
 		for (Match match : this.matches) {
-			if (match.getTeam1() != null) {
-				BoxDescription description1 = match.getTeam1().getDescription();
+			BoxDescription description1 = match.getTeam1().getDescription();
+			if (description1.getDescType() == 0)
 				match.getTeam1().setDescription(this.seedList.get(description1.getUnitIndex() - 1).getDescription());
-			}
-			if (match.getTeam2() != null) {
-				BoxDescription description2 = match.getTeam2().getDescription();
+			BoxDescription description2 = match.getTeam2().getDescription();
+			if (description2.getDescType() == 0)
 				match.getTeam2().setDescription(this.seedList.get(description2.getUnitIndex() - 1).getDescription());
-			}
 		}
 	}
 

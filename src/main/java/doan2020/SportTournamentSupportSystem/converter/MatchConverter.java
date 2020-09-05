@@ -32,21 +32,19 @@ public class MatchConverter {
 			entity.setName(dto.getName());
 			entity.setLocation(dto.getLocation());
 
-			if (dto.getLoserId() != null) {
-				TeamEntity loser = teamService.findOneById(dto.getLoserId());
-				entity.setLoser(loser);
-			}
-
 			if (dto.getTeam1Id() != null) {
 				TeamEntity team1 = teamService.findOneById(dto.getTeam1Id());
 				entity.setTeam1(team1);
 			}
-			entity.setTeam1Bonus(dto.getTeam1Bonus());
+			
 			if (dto.getTeam2Id() != null) {
 				TeamEntity team2 = teamService.findOneById(dto.getTeam2Id());
 				entity.setTeam2(team2);
 			}
+			
+			entity.setTeam1Bonus(dto.getTeam1Bonus());
 			entity.setTeam2Bonus(dto.getTeam2Bonus());
+			
 			Date expectedDate = validator.formatStringToDate(dto.getTime());
 			entity.setTime(expectedDate);
 
@@ -57,8 +55,13 @@ public class MatchConverter {
 			}
 
 			if (dto.getWinnerId() != null) {
-				TeamEntity winner = teamService.findOneById(dto.getLoserId());
+				TeamEntity winner = teamService.findOneById(dto.getWinnerId());
 				entity.setWinnner(winner);
+			}
+			
+			if (dto.getLoserId() != null) {
+				TeamEntity loser = teamService.findOneById(dto.getLoserId());
+				entity.setLoser(loser);
 			}
 
 			System.out.println("MatchConverter: toEntity: no exception");

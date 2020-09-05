@@ -62,7 +62,10 @@ public class BoxDescription implements Serializable{
 		this.unitRank = rankNo;
 		this.unitType = Const.TABLE;
 		this.unitIndex = tableNo;
-		this.unitName = unitType + Const.TABLE_NAMING.charAt(this.unitIndex);
+		if (tableNo >= 0)
+			this.unitName = unitType + Const.TABLE_NAMING.charAt(this.unitIndex);
+		else
+			this.unitName = "";
 		this.description = unitResult + getUnitRankString() + unitName;
 	}
 	
