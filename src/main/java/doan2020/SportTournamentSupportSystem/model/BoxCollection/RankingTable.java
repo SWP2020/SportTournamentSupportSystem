@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import doan2020.SportTournamentSupportSystem.config.Const;
 import doan2020.SportTournamentSupportSystem.entity.TeamEntity;
 import doan2020.SportTournamentSupportSystem.model.Box.RankingTableSlot;
 import doan2020.SportTournamentSupportSystem.model.Box.Seed;
@@ -35,9 +36,11 @@ public class RankingTable extends ArrayList<RankingTableSlot> implements Seriali
 	
 	public RankingTable(ArrayList<Team> teams) {
 		this.totalTeam = teams.size();
+		int seedNo = 0;
 		for (Team team: teams) {
-			RankingTableSlot slot = new RankingTableSlot(team);
+			RankingTableSlot slot = new RankingTableSlot(team, seedNo);
 			this.add(slot);
+			seedNo ++;
 		}
 		Collections.sort(this, new RankingTableSlot());
 	}
@@ -68,6 +71,7 @@ public class RankingTable extends ArrayList<RankingTableSlot> implements Seriali
 			slot.setTeam(t);
 			slot.setDifference(0.0);
 			slot.setScore(0);
+//			slot.updateElo(new Double(-1*seedNo));
 			seedNo++;
 		}
 		System.out.println("RankingTable: applyTeams: finish");
@@ -81,7 +85,16 @@ public class RankingTable extends ArrayList<RankingTableSlot> implements Seriali
 		}
 	}
 	
-	public void updateByTeamId(Long teamId, Integer score, Double diff, boolean isWin) {
+	public Double getEloByTeamId(Long teamId) {
+		for(RankingTableSlot slot: this) {
+			if (slot.getTeam() != null && slot.getTeam().getId().longValue() == teamId.longValue()) {
+				return slot.getElo();
+			}
+		}
+		return 0.0;
+	}
+	
+	public void updateByTeamId(Long teamId, Integer score, Double diff, boolean isWin, Double eloBonus) {
 		for(RankingTableSlot slot: this) {
 			if (slot.getTeam() != null && slot.getTeam().getId().longValue() == teamId.longValue()) {
 				slot.setScore(slot.getScore() + score);
@@ -91,10 +104,20 @@ public class RankingTable extends ArrayList<RankingTableSlot> implements Seriali
 				} else {
 					slot.setTotalLose(slot.getTotalLose() + 1);
 				}
+				slot.updateElo(eloBonus);
 				break;
 			}
 		}
 		Collections.sort(this, new RankingTableSlot());
+	}
+	
+	public void addTeam(Team team) {
+		for (RankingTableSlot slot: this) {
+			if (slot.getTeam() == null) {
+				slot.setTeam(team);
+				return;
+			}
+		}
 	}
 //	public static void main(String[] args) {
 //		RankingTable x = new RankingTable(4, 9);

@@ -36,7 +36,7 @@ public class TournamentConverter {
 				UserEntity tournamentCreator = userService.findOneById(tournamentCreatorId);
 				entity.setCreator(tournamentCreator);
 			}
-			
+				
 			entity.setOpeningLocation(dto.getOpeningLocation());
 			entity.setClosingLocation(dto.getClosingLocation());
 

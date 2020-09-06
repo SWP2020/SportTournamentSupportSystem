@@ -53,6 +53,8 @@ public class MatchesAPI {
 			} else {// userId not null
 
 				matchEntites = service.findByCompetitionId(competitionId);
+				
+				System.out.println("totalMatch: " + matchEntites.size());
 
 				if (matchEntites.isEmpty()) { // not found
 					result.put("Matchs", null);

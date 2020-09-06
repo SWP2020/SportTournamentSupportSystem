@@ -15,7 +15,7 @@ public final class Const {
 	public final static Date DEFAULT_DATE = new Date(2020, 1, 13, 7, 0, 0);
 	public final static String DEFAULT_DATE_STRING = "2020-01-13 07:00:00";
 	
-	public final static String DEFAULT_PLACE = "Gầm cầu Long Biên";
+	public final static String DEFAULT_PLACE = "Hòa Lạc";
 	
 	public final static String TOKEN_HEADER = "Authorization";
 	
@@ -134,4 +134,7 @@ public final class Const {
 //	azure cloud
 	public final static String CONNECTION_STRING = "DefaultEndpointsProtocol=https;AccountName=doan2020;AccountKey=zQox6fOtBhUdJHayTJ6ArwxjUuC64/iiYzv4Qy/Kgv0lNbJ/VRQbpLQSDl+YpIBrwxfFN6Wz4UZ+F4JIC0iNKw==;EndpointSuffix=core.windows.net";
 
+//	elo
+	public static final Double DEFAULT_ELO = 10000.0;
+	public static final Double EPSILON = 0.01;
 }

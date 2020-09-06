@@ -3,6 +3,7 @@ package doan2020.SportTournamentSupportSystem.model.Box;
 import java.io.Serializable;
 import java.util.Comparator;
 
+import doan2020.SportTournamentSupportSystem.config.Const;
 import doan2020.SportTournamentSupportSystem.model.Entity.Team;
 import doan2020.SportTournamentSupportSystem.model.Indexing.BoxDescription;
 
@@ -16,9 +17,15 @@ public class RankingTableSlot implements Serializable, Comparator<RankingTableSl
 	private Integer score = 0;
 	private Integer totalWin = 0;
 	private Integer totalLose = 0;
+	private Double elo = Const.DEFAULT_ELO;
 
 	public RankingTableSlot(Team team) {
 		this.team = team;
+	}
+
+	public RankingTableSlot(Team team, int seedNo) {
+		this.team = team;
+//		elo -= new Double(seedNo);
 	}
 
 	public RankingTableSlot() {
@@ -56,14 +63,22 @@ public class RankingTableSlot implements Serializable, Comparator<RankingTableSl
 		Integer score2 = o2.getScore();
 		Double diff1 = o1.getDifference();
 		Double diff2 = o2.getDifference();
-		if (totalWin1 == totalWin2) {
-			if (score1 == score2) {
-				return (int) Math.ceil(diff2 - diff1);
+
+		Double elo1 = o1.getElo();
+		Double elo2 = o2.getElo();
+
+		if (elo1 == elo2) {
+			if (totalWin1 == totalWin2) {
+				if (score1 == score2) {
+					return (int) Math.ceil(diff2 - diff1);
+				} else {
+					return score2 - score1;
+				}
 			} else {
-				return score2 - score1;
+				return totalWin2 - totalWin1;
 			}
 		} else {
-			return totalWin2 - totalWin1;
+			return (int) Math.ceil(elo2 - elo1);
 		}
 	}
 
@@ -89,6 +104,14 @@ public class RankingTableSlot implements Serializable, Comparator<RankingTableSl
 
 	public void setTotalLose(Integer totalLose) {
 		this.totalLose = totalLose;
+	}
+
+	public Double getElo() {
+		return elo;
+	}
+
+	public void updateElo(Double update) {
+		this.elo += update;
 	}
 
 }
