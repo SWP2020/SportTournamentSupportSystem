@@ -2,6 +2,7 @@ package doan2020.SportTournamentSupportSystem.service.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,6 @@ import doan2020.SportTournamentSupportSystem.entity.MatchEntity;
 import doan2020.SportTournamentSupportSystem.entity.ResultEntity;
 import doan2020.SportTournamentSupportSystem.entity.TeamEntity;
 import doan2020.SportTournamentSupportSystem.model.BoxCollection.RankingTable;
-import doan2020.SportTournamentSupportSystem.model.BoxCollection.SeedList;
 import doan2020.SportTournamentSupportSystem.model.Entity.Match;
 import doan2020.SportTournamentSupportSystem.model.Entity.Team;
 import doan2020.SportTournamentSupportSystem.model.Indexing.BoxDescription;
@@ -83,8 +83,49 @@ public class ScheduleService implements IScheduleService {
 			}
 
 			if (checkFinalStageFormat && checkGroupStageFormat && checkTeamNumber) {
-				System.out.println("ScheduleService: getSchedule: finish");
-				return schedule;
+
+				boolean checkFinalStageOption = true;
+				boolean checkGroupStageOption = true;
+
+				if (cfFinalStageFormat.contains(Const.SINGLE_ELIMINATION_FORMAT)) {
+					SingleEliminationScheduleDTO fss = (SingleEliminationScheduleDTO) schedule.getFinalStageSchedule();
+					boolean db = thisCompetition.getFinalStageSetting().isHasHomeMatch();
+					boolean cf = fss.isHasMatch34();
+					checkFinalStageOption = (db == cf);
+				}
+
+				if (cfFinalStageFormat.contains(Const.ROUND_ROBIN_FORMAT)) {
+					RoundRobinScheduleDTO fss = (RoundRobinScheduleDTO) schedule.getFinalStageSchedule();
+					boolean db = thisCompetition.getFinalStageSetting().isHasHomeMatch();
+					boolean cf = fss.isHasHomeMatch();
+					checkFinalStageOption = (db == cf);
+				}
+				if (thisCompetition.isHasGroupStage()) {
+					String cfGroupStageFormat = schedule.getGroupStageSchedule().getFormatName();
+					if (cfGroupStageFormat.contains(Const.SINGLE_ELIMINATION_FORMAT)) {
+						SingleEliminationScheduleDTO fss = (SingleEliminationScheduleDTO) schedule
+								.getGroupStageSchedule().getTables().get(0);
+						boolean db = thisCompetition.getFinalStageSetting().isHasHomeMatch();
+						boolean cf = fss.isHasMatch34();
+						checkFinalStageOption = (db == cf);
+					}
+
+					if (cfGroupStageFormat.contains(Const.ROUND_ROBIN_FORMAT)) {
+						RoundRobinScheduleDTO fss = (RoundRobinScheduleDTO) schedule.getGroupStageSchedule().getTables()
+								.get(0);
+						boolean db = thisCompetition.getFinalStageSetting().isHasHomeMatch();
+						boolean cf = fss.isHasHomeMatch();
+						checkFinalStageOption = (db == cf);
+					}
+				}
+				if (checkFinalStageOption && checkGroupStageOption) {
+
+					return schedule;
+				} else {
+					System.out.println("setting has change");
+					System.out.println("ScheduleService: getSchedule: finish -> ScheduleService: createSchedule:");
+					return createSchedule(thisCompetition);
+				}
 			} else {
 				System.out.println("setting has change");
 				System.out.println("ScheduleService: getSchedule: finish -> ScheduleService: createSchedule:");
@@ -172,31 +213,58 @@ public class ScheduleService implements IScheduleService {
 			int totalMatch = 0;
 			int finishedMatch = 0;
 
-			for (FinalStageScheduleDTO table : tables) {
+			for (int tableId = 0; tableId < tables.size(); tableId++) {
 
 				ArrayList<TeamEntity> tableTeams = new ArrayList<>();
-				int firstSeed = table.getFirstSeed();
-				int totalTeam = table.getTotalTeam();
+
+				int firstSeed = tables.get(tableId).getFirstSeed();
+				int totalTeam = tables.get(tableId).getTotalTeam();
 
 				int seed = 0;
 				while (seed < totalTeam) {
-					tableTeams.add(realTeams.get(seed + firstSeed));
+					tableTeams.add(realTeams.get(seed + firstSeed - 1));
 					seed++;
 				}
 
 				if (groupStageFormat.contains(Const.SINGLE_ELIMINATION_FORMAT)) {
-					table = createMatchesInDatabase((SingleEliminationScheduleDTO) table, tableTeams, thisCompetition);
+					tables.set(tableId, createMatchesInDatabase((SingleEliminationScheduleDTO) tables.get(tableId),
+							tableTeams, thisCompetition));
 				}
 				if (groupStageFormat.contains(Const.DOUBLE_ELIMINATION_FORMAT)) {
-					table = createMatchesInDatabase((DoubleEliminationScheduleDTO) table, tableTeams, thisCompetition);
+					tables.set(tableId, createMatchesInDatabase((DoubleEliminationScheduleDTO) tables.get(tableId),
+							tableTeams, thisCompetition));
 				}
 				if (groupStageFormat.contains(Const.ROUND_ROBIN_FORMAT)) {
-					table = createMatchesInDatabase((RoundRobinScheduleDTO) table, tableTeams, thisCompetition);
+					tables.set(tableId, createMatchesInDatabase((RoundRobinScheduleDTO) tables.get(tableId), tableTeams,
+							thisCompetition));
 				}
 
-				totalMatch += table.getProcess().getTotalMatch();
-				finishedMatch += table.getProcess().getFinishedMatch();
-				groupStageSchedule.getMapping().putAll(table.getMapping());
+				System.out.println(tables.get(tableId).getRankingTable().get(0).getTeam());
+
+				totalMatch += tables.get(tableId).getProcess().getTotalMatch();
+				finishedMatch += tables.get(tableId).getProcess().getFinishedMatch();
+				groupStageSchedule.getMapping().putAll(tables.get(tableId).getMapping());
+
+				if (tables.get(tableId).getProcess().isFinish()) {
+
+					int top = (int) Math.min(schedule.getGroupStageSchedule().getAdvanceTeamPerTable(),
+							tables.get(tableId).getRankingTable().size());
+					if (finalStageFormat.contains(Const.SINGLE_ELIMINATION_FORMAT)) {
+						schedule.setFinalStageSchedule(updateTeamFromGroupStageToFinalStage(
+								(SingleEliminationScheduleDTO) schedule.getFinalStageSchedule(),
+								tables.get(tableId).getRankingTable(), (long) tableId, top));
+					}
+					if (finalStageFormat.contains(Const.DOUBLE_ELIMINATION_FORMAT)) {
+						schedule.setFinalStageSchedule(updateTeamFromGroupStageToFinalStage(
+								(DoubleEliminationScheduleDTO) schedule.getFinalStageSchedule(),
+								tables.get(tableId).getRankingTable(), (long) tableId, top));
+					}
+					if (finalStageFormat.contains(Const.ROUND_ROBIN_FORMAT)) {
+						schedule.setFinalStageSchedule(updateTeamFromGroupStageToFinalStage(
+								(RoundRobinScheduleDTO) schedule.getFinalStageSchedule(),
+								tables.get(tableId).getRankingTable(), (long) tableId, top));
+					}
+				}
 
 			}
 
@@ -232,10 +300,8 @@ public class ScheduleService implements IScheduleService {
 					.getFinalStageSchedule();
 			schedule.setFinalStageSchedule(createMatchesInDatabase(finalStageSchedule, teams, thisCompetition));
 			schedule.getMapping().putAll(finalStageSchedule.getMapping());
-			System.out.println("totalMatch: " + finalStageSchedule.getProcess().getTotalMatch());
 			schedule.getFinalStageSchedule().setProcess(finalStageSchedule.getProcess());
-			System.out.println(
-					"totalMatch set to schedule: " + schedule.getFinalStageSchedule().getProcess().getTotalMatch());
+
 		}
 		if (finalStageFormat.contains(Const.DOUBLE_ELIMINATION_FORMAT)) {
 			DoubleEliminationScheduleDTO finalStageSchedule = (DoubleEliminationScheduleDTO) schedule
@@ -299,6 +365,7 @@ public class ScheduleService implements IScheduleService {
 
 			if (match.getStatus() == -1) {
 				realMatch.setStatus(Const.MATCH_STATUS_FINISHED);
+				realMatch.setWinnner(teamService.findOneById(match.getWinner().getTeam().getId()));
 				finishedMatch++;
 			}
 			if (match.getStatus() == 0) {
@@ -388,7 +455,7 @@ public class ScheduleService implements IScheduleService {
 		int finishedMatch = 0;
 		System.out.println("apply tree OK");
 		for (Match match : tree.getMatches()) {
-
+			System.out.println("match " + match);
 			totalMatch++;
 
 			MatchEntity realMatch = new MatchEntity();
@@ -396,10 +463,11 @@ public class ScheduleService implements IScheduleService {
 			realMatch.setName(match.getName());
 			realMatch.setLocation(match.getLocation());
 			realMatch.setTime(validator.formatStringToDate(match.getTime()));
-
+			System.out.println("init DE - cp1");
 			if (match.getStatus() == -1) {
 				realMatch.setStatus(Const.MATCH_STATUS_FINISHED);
-				finishedMatch++;
+//				realMatch.setWinnner(teamService.findOneById(match.getWinner().getTeam().getId()));
+//				finishedMatch++;
 			}
 			if (match.getStatus() == 0) {
 				realMatch.setStatus(Const.MATCH_STATUS_PLAYING);
@@ -414,10 +482,13 @@ public class ScheduleService implements IScheduleService {
 			} catch (Exception e) {
 			}
 
+			System.out.println("set team ok");
+
 			int nodeId;
 			RevertMapping map = new RevertMapping();
 
 			if (match.getName().contains(Const.LOSE_BRANCH_NAMING)) {
+				System.out.println("in lose branch");
 				Node<Match> node = tree.getLoseBranch().findNodeByData(match);
 				nodeId = node.getId();
 				map.setLocation(2);
@@ -534,6 +605,7 @@ public class ScheduleService implements IScheduleService {
 
 			if (match.getStatus() == -1) {
 				realMatch.setStatus(Const.MATCH_STATUS_FINISHED);
+				realMatch.setWinnner(teamService.findOneById(match.getWinner().getTeam().getId()));
 				finishedMatch++;
 			}
 			if (match.getStatus() == 0) {
@@ -568,7 +640,7 @@ public class ScheduleService implements IScheduleService {
 		System.out.println("ScheduleService: RoundRobinScheduleDTO createMatchesInDatabase: cp5");
 		schedule.setMatches(table.getMatches());
 		schedule.setRankingTable(table.getRankingTable());
-
+		System.out.println("RR create match: rankingtable" + table.getRankingTable().get(0).getTeam());
 		schedule.getProcess().setTotalMatch(totalMatch);
 		schedule.getProcess().setFinishedMatch(finishedMatch);
 		if (totalMatch == finishedMatch)
@@ -765,13 +837,18 @@ public class ScheduleService implements IScheduleService {
 					}
 					tree.setTableId(tableId);
 
+					System.out.println("DE - CP1");
+
 					dto.setWinBranch(tree.getWinBranch());
 					dto.setLoseBranch(tree.getLoseBranch());
-					System.out.println(tree.getLoseBranch().toString());
+					System.out.println("DE - CP1-1");
 					dto.setSummaryFinal(tree.getSummaryFinal());
 					dto.setOptionFinal(tree.getOptionFinal());
+					System.out.println("DE - CP1-2");
 					dto.setTotalWinRound(tree.getTotalRound());
 					dto.setTotalLoseRound(tree.getTotalLoseBranchRound());
+
+					System.out.println("DE - CP2");
 
 					dto.setRankingTable(tree.getRankingTable());
 					dto.setMatches(tree.getMatches());
@@ -805,6 +882,8 @@ public class ScheduleService implements IScheduleService {
 						table = new RoundRobinTable(totalTeam, hasHomeMatch);
 						table.applyDescriptions(descriptions);
 					}
+
+					System.out.println("RR -CP1");
 
 					table.setTableId(tableId);
 					dto.setHasHomeMatch(hasHomeMatch);
@@ -946,17 +1025,23 @@ public class ScheduleService implements IScheduleService {
 
 		switch (location) {
 		case -1:
+			System.out.println("case -1");
 			if (tableId >= 0) {
 				GroupStageScheduleDTO gss = schedule.getGroupStageSchedule();
 				RoundRobinScheduleDTO thisTable = (RoundRobinScheduleDTO) gss.getTables().get(thisMap.getTableId());
-				thisMatch = thisTable.getMatches().get(nodeId);
+				thisMatch = thisTable.getMatches().get(nodeId - 1);
 				rankingTable = thisTable.getRankingTable();
 				thisTable.getProcess().finishMatch();
 				gss.getProcess().finishMatch();
-
+				System.out.println("total match: " + thisTable.getProcess().getTotalMatch());
+				System.out.println("finished match: " + thisTable.getProcess().getFinishedMatch());
+				System.out.println("is finish: " + thisTable.getProcess().isFinish());
+				if (thisTable.getProcess().isFinish()) {
+					isLastMatch = true;
+				}
 			} else {
 				RoundRobinScheduleDTO fss = (RoundRobinScheduleDTO) schedule.getFinalStageSchedule();
-				thisMatch = fss.getMatches().get(nodeId);
+				thisMatch = fss.getMatches().get(nodeId - 1);
 				rankingTable = fss.getRankingTable();
 				fss.getProcess().finishMatch();
 			}
@@ -980,6 +1065,9 @@ public class ScheduleService implements IScheduleService {
 				}
 				thisTable.getProcess().finishMatch();
 				gss.getProcess().finishMatch();
+				if (thisTable.getProcess().isFinish()) {
+					isLastMatch = true;
+				}
 			} else {
 				SingleEliminationScheduleDTO fss = (SingleEliminationScheduleDTO) schedule.getFinalStageSchedule();
 				thisMatch = fss.getBracket().getById(nodeId).getData();
@@ -1009,6 +1097,9 @@ public class ScheduleService implements IScheduleService {
 				}
 				thisTable.getProcess().finishMatch();
 				gss.getProcess().finishMatch();
+				if (thisTable.getProcess().isFinish()) {
+					isLastMatch = true;
+				}
 			} else {
 				DoubleEliminationScheduleDTO fss = (DoubleEliminationScheduleDTO) schedule.getFinalStageSchedule();
 				thisMatch = fss.getWinBranch().getById(nodeId).getData();
@@ -1038,13 +1129,19 @@ public class ScheduleService implements IScheduleService {
 				}
 				thisTable.getProcess().finishMatch();
 				gss.getProcess().finishMatch();
+				if (thisTable.getProcess().isFinish()) {
+					isLastMatch = true;
+				}
 
 			} else {
+				
 				DoubleEliminationScheduleDTO fss = (DoubleEliminationScheduleDTO) schedule.getFinalStageSchedule();
 				thisMatch = fss.getLoseBranch().getByIdAndDegree(nodeId, degree).getData();
 				rankingTable = fss.getRankingTable();
+				
 				updateMatch(match, thisMatch, results, rankingTable, 1);
 				try {
+					
 					nextIfWin = fss.getLoseBranch().getByIdAndDegree(nodeId, degree).getNextIfWin().getData();
 					System.out.println("case 2: thisMatch: " + thisMatch);
 					System.out.println("case 2: nextIfWin: " + nextIfWin);
@@ -1064,6 +1161,9 @@ public class ScheduleService implements IScheduleService {
 				updateMatch(match, thisMatch, results, rankingTable, 1);
 				thisTable.getProcess().finishMatch();
 				gss.getProcess().finishMatch();
+				if (thisTable.getProcess().isFinish()) {
+					isLastMatch = true;
+				}
 			} else {
 				SingleEliminationScheduleDTO fss = (SingleEliminationScheduleDTO) schedule.getFinalStageSchedule();
 				thisMatch = fss.getMatch34();
@@ -1105,6 +1205,9 @@ public class ScheduleService implements IScheduleService {
 					gss.getProcess().finishMatch();
 					schedule.getProcess().finishMatch();
 				}
+				if (thisTable.getProcess().isFinish()) {
+					isLastMatch = true;
+				}
 
 			} else {
 				DoubleEliminationScheduleDTO fss = (DoubleEliminationScheduleDTO) schedule.getFinalStageSchedule();
@@ -1143,6 +1246,9 @@ public class ScheduleService implements IScheduleService {
 				updateMatch(match, thisMatch, results, rankingTable, 1);
 				thisTable.getProcess().finishMatch();
 				gss.getProcess().finishMatch();
+				if (thisTable.getProcess().isFinish()) {
+					isLastMatch = true;
+				}
 			} else {
 				DoubleEliminationScheduleDTO fss = (DoubleEliminationScheduleDTO) schedule.getFinalStageSchedule();
 				thisMatch = fss.getOptionFinal();
@@ -1204,6 +1310,14 @@ public class ScheduleService implements IScheduleService {
 				if (team1 != null && team2 != null) {
 					nextIfLoseReal.setStatus(Const.MATCH_STATUS_PLAYING);
 				}
+				if (nextIfLose.getStatus() == -1) {
+					System.out.println("finish a finished match");
+					nextIfLoseReal.setWinnner(nextIfLoseReal.getTeam1());
+					matchService.update(nextIfLoseReal.getId(), nextIfLoseReal);
+					System.out.println("nextIfLose: winner: " + nextIfLoseReal.getWinnner());
+					saveScheduleToFile(schedule, competitionId);
+					schedule = finishMatch(nextIfLoseReal);
+				}
 			}
 		} else {
 
@@ -1218,19 +1332,23 @@ public class ScheduleService implements IScheduleService {
 		}
 
 		if (tableId >= 0 && isLastMatch) {
+			System.out.println("Last match");
 			String finalStageFormat = schedule.getFinalStageSchedule().getFormatName();
 			int top = (int) Math.min(schedule.getGroupStageSchedule().getAdvanceTeamPerTable(), rankingTable.size());
 			if (finalStageFormat.contains(Const.SINGLE_ELIMINATION_FORMAT)) {
+				System.out.println("SINGLE_ELIMINATION_FORMAT");
 				schedule.setFinalStageSchedule(updateTeamFromGroupStageToFinalStage(
 						(SingleEliminationScheduleDTO) schedule.getFinalStageSchedule(), rankingTable, (long) tableId,
 						top));
 			}
 			if (finalStageFormat.contains(Const.DOUBLE_ELIMINATION_FORMAT)) {
+				System.out.println("DOUBLE_ELIMINATION_FORMAT");
 				schedule.setFinalStageSchedule(updateTeamFromGroupStageToFinalStage(
 						(DoubleEliminationScheduleDTO) schedule.getFinalStageSchedule(), rankingTable, (long) tableId,
 						top));
 			}
 			if (finalStageFormat.contains(Const.ROUND_ROBIN_FORMAT)) {
+				System.out.println("ROUND_ROBIN_FORMAT");
 				schedule.setFinalStageSchedule(updateTeamFromGroupStageToFinalStage(
 						(RoundRobinScheduleDTO) schedule.getFinalStageSchedule(), rankingTable, (long) tableId, top));
 			}
@@ -1252,7 +1370,10 @@ public class ScheduleService implements IScheduleService {
 		Double team2Diff = 0.0;
 
 		Double team1Elo = rt.getEloByTeamId(match.getTeam1().getId());
-		Double team2Elo = rt.getEloByTeamId(match.getTeam2().getId());
+
+		Double team2Elo = 0.0;
+		if (match.getTeam2() != null)
+			team2Elo = rt.getEloByTeamId(match.getTeam2().getId());
 
 		Double diff = Math.abs(team1Elo - team2Elo);
 
@@ -1286,21 +1407,29 @@ public class ScheduleService implements IScheduleService {
 		if (match.getWinnner().getId() == match.getTeam1().getId()) {
 			thisMatch.getWinner().setTeam(thisMatch.getTeam1().getTeam());
 			thisMatch.getLoser().setTeam(thisMatch.getTeam2().getTeam());
-
-			rt.updateByTeamId(match.getTeam1().getId(), team1Score, team1Diff, true, winElo);
-			rt.updateByTeamId(match.getTeam2().getId(), team2Score, team2Diff, false, loseElo);
+			if (team1Elo <= team2Elo) {
+				rt.updateByTeamId(match.getTeam1().getId(), team1Score, team1Diff, true, winElo);
+				if (match.getTeam2() != null)
+					rt.updateByTeamId(match.getTeam2().getId(), team2Score, team2Diff, false, loseElo);
+			}
 		} else {
 			thisMatch.getWinner().setTeam(thisMatch.getTeam2().getTeam());
 			thisMatch.getLoser().setTeam(thisMatch.getTeam1().getTeam());
-			rt.updateByTeamId(match.getTeam1().getId(), team1Score, team1Diff, false, loseElo);
-			rt.updateByTeamId(match.getTeam2().getId(), team2Score, team2Diff, true, winElo);
+			if (team1Elo >= team2Elo) {
+				rt.updateByTeamId(match.getTeam1().getId(), team1Score, team1Diff, false, loseElo);
+				if (match.getTeam2() != null)
+					rt.updateByTeamId(match.getTeam2().getId(), team2Score, team2Diff, true, winElo);
+			}
 		}
 
 		thisMatch.getTeam1().setScore(team1Score);
-		thisMatch.getTeam2().setScore(team2Score);
-		thisMatch.getTeam1().setDifference(team1Diff);
-		thisMatch.getTeam2().setDifference(team2Diff);
 
+		thisMatch.getTeam1().setDifference(team1Diff);
+
+		if (match.getTeam2() != null) {
+			thisMatch.getTeam2().setScore(team2Score);
+			thisMatch.getTeam2().setDifference(team2Diff);
+		}
 	}
 
 	private SingleEliminationScheduleDTO updateTeamFromGroupStageToFinalStage(
@@ -1309,7 +1438,10 @@ public class ScheduleService implements IScheduleService {
 		updateMatchInSE(finalSchedule.getBracket().getRoot(), tableId, rt);
 		for (int rank = 0; rank < getTop; rank++) {
 			Team t = rt.get(rank).getTeam();
+			System.out.println("SingleEliminationScheduleDTO updateTeamFromGroupStageToFinalStage: rank: " + rank);
 			finalSchedule.getRankingTable().addTeam(t);
+			System.out.println("SingleEliminationScheduleDTO updateTeamFromGroupStageToFinalStage: update: "
+					+ finalSchedule.getRankingTable().get(0));
 		}
 		return finalSchedule;
 	}
@@ -1409,4 +1541,109 @@ public class ScheduleService implements IScheduleService {
 	}
 
 	// ----------------------------------------------------------------------
+
+	@Override
+	public ScheduleDTO changeMatchInfo(CompetitionEntity competition, Integer nodeId, Integer degree, Integer location,
+			Integer tableId, HashMap<String, Object> newInfo) {
+		Match thisMatch = new Match();
+
+		ScheduleDTO schedule = getSchedule(competition);
+
+		switch (location) {
+		case -1:
+			System.out.println("case -1");
+			if (tableId >= 0) {
+				GroupStageScheduleDTO gss = schedule.getGroupStageSchedule();
+				RoundRobinScheduleDTO thisTable = (RoundRobinScheduleDTO) gss.getTables().get(tableId);
+				thisMatch = thisTable.getMatches().get(nodeId - 1);
+
+			} else {
+				RoundRobinScheduleDTO fss = (RoundRobinScheduleDTO) schedule.getFinalStageSchedule();
+				thisMatch = fss.getMatches().get(nodeId - 1);
+			}
+
+			break;
+		case 0:
+			if (tableId >= 0) {
+				GroupStageScheduleDTO gss = schedule.getGroupStageSchedule();
+				SingleEliminationScheduleDTO thisTable = (SingleEliminationScheduleDTO) gss.getTables().get(tableId);
+				thisMatch = thisTable.getBracket().getById(nodeId).getData();
+
+			} else {
+				SingleEliminationScheduleDTO fss = (SingleEliminationScheduleDTO) schedule.getFinalStageSchedule();
+				thisMatch = fss.getBracket().getById(nodeId).getData();
+
+			}
+			break;
+		case 1:
+
+			if (tableId >= 0) {
+				GroupStageScheduleDTO gss = schedule.getGroupStageSchedule();
+				DoubleEliminationScheduleDTO thisTable = (DoubleEliminationScheduleDTO) gss.getTables().get(tableId);
+				thisMatch = thisTable.getWinBranch().getById(nodeId).getData();
+
+			} else {
+				DoubleEliminationScheduleDTO fss = (DoubleEliminationScheduleDTO) schedule.getFinalStageSchedule();
+				thisMatch = fss.getWinBranch().getById(nodeId).getData();
+
+			}
+
+			break;
+		case 2:
+			if (tableId >= 0) {
+				GroupStageScheduleDTO gss = schedule.getGroupStageSchedule();
+				DoubleEliminationScheduleDTO thisTable = (DoubleEliminationScheduleDTO) gss.getTables().get(tableId);
+				thisMatch = thisTable.getLoseBranch().getByIdAndDegree(nodeId, degree).getData();
+
+			} else {
+				DoubleEliminationScheduleDTO fss = (DoubleEliminationScheduleDTO) schedule.getFinalStageSchedule();
+				thisMatch = fss.getLoseBranch().getByIdAndDegree(nodeId, degree).getData();
+
+			}
+			break;
+		case 3:
+			if (tableId >= 0) {
+				GroupStageScheduleDTO gss = schedule.getGroupStageSchedule();
+				SingleEliminationScheduleDTO thisTable = (SingleEliminationScheduleDTO) gss.getTables().get(tableId);
+				thisMatch = thisTable.getMatch34();
+
+			} else {
+				SingleEliminationScheduleDTO fss = (SingleEliminationScheduleDTO) schedule.getFinalStageSchedule();
+				thisMatch = fss.getMatch34();
+
+			}
+			break;
+		case 4:
+			if (tableId >= 0) {
+				GroupStageScheduleDTO gss = schedule.getGroupStageSchedule();
+				DoubleEliminationScheduleDTO thisTable = (DoubleEliminationScheduleDTO) gss.getTables().get(tableId);
+				thisMatch = thisTable.getSummaryFinal();
+
+			} else {
+				DoubleEliminationScheduleDTO fss = (DoubleEliminationScheduleDTO) schedule.getFinalStageSchedule();
+				thisMatch = fss.getSummaryFinal();
+
+			}
+
+			break;
+		case 5:
+			if (tableId >= 0) {
+				GroupStageScheduleDTO gss = schedule.getGroupStageSchedule();
+				DoubleEliminationScheduleDTO thisTable = (DoubleEliminationScheduleDTO) gss.getTables().get(tableId);
+				thisMatch = thisTable.getOptionFinal();
+			} else {
+				DoubleEliminationScheduleDTO fss = (DoubleEliminationScheduleDTO) schedule.getFinalStageSchedule();
+				thisMatch = fss.getOptionFinal();
+			}
+			break;
+
+		}
+
+		thisMatch.setLocation((String) newInfo.get("location"));
+		thisMatch.setTime((String) newInfo.get("time"));
+
+		saveScheduleToFile(schedule, competition.getId());
+
+		return schedule;
+	}
 }

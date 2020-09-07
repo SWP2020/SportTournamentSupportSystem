@@ -105,6 +105,7 @@ public class RankingTable extends ArrayList<RankingTableSlot> implements Seriali
 					slot.setTotalLose(slot.getTotalLose() + 1);
 				}
 				slot.updateElo(eloBonus);
+				Collections.sort(this, new RankingTableSlot());
 				break;
 			}
 		}
