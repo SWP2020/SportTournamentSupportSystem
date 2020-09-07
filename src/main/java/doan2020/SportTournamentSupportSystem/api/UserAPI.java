@@ -420,6 +420,7 @@ public class UserAPI {
 
 	@PostMapping("/uploadAvatar")
 	public ResponseEntity<Response> uploadAvatar(@RequestBody MultipartFile file, @RequestParam(value = "id") Long id) {
+		System.out.println("UserAPI: uploadAvatar: start");
 		Response response = new Response();
 		HttpStatus httpStatus = HttpStatus.OK;
 		Map<String, Object> config = new HashMap<String, Object>();
@@ -469,6 +470,7 @@ public class UserAPI {
 		response.setError(error);
 		response.setResult(result);
 		response.setConfig(config);
+		System.out.println("UserAPI: uploadAvatar: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
 

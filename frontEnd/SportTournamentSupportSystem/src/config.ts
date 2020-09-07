@@ -37,6 +37,8 @@ export interface IConfig {
     number: RegExp;
     orderPasswordKBSV: RegExp;
   };
+  defaultAvatar: string;
+  defaultBackground: string;
 }
 
 let config: IConfig = {
@@ -57,6 +59,8 @@ let config: IConfig = {
     number: /^[0-9]*$/,
     orderPasswordKBSV: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{7,}$/,
   },
+  defaultAvatar: 'https://thumbs.dreamstime.com/b/user-avatar-icon-button-profile-symbol-flat-person-icon-stock-vector-user-avatar-icon-button-profile-symbol-flat-person-icon-159777243.jpg',
+  defaultBackground: 'https://www.sths.org/wp-content/uploads/2018/07/grey-background.jpg',
 };
 
 export default config;

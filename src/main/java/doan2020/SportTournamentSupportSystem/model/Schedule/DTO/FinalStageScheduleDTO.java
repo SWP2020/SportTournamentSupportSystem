@@ -4,7 +4,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import doan2020.SportTournamentSupportSystem.model.Process;
 import doan2020.SportTournamentSupportSystem.model.BoxCollection.RankingTable;
+import doan2020.SportTournamentSupportSystem.model.BoxCollection.SeedList;
 import doan2020.SportTournamentSupportSystem.model.Entity.Match;
 import doan2020.SportTournamentSupportSystem.model.Indexing.RevertMapping;
 
@@ -22,7 +24,10 @@ abstract public class FinalStageScheduleDTO implements Serializable {
 	protected ArrayList<Match> matches;
 	protected String status;
 	protected ArrayList<String> roundsNaming;
-	private HashMap<Long, RevertMapping> mapping;
+	protected HashMap<Long, RevertMapping> mapping;
+	protected Process process = new Process();
+	
+	protected SeedList seedList;
 
 	public int getTotalTeam() {
 		return totalTeam;
@@ -111,6 +116,14 @@ abstract public class FinalStageScheduleDTO implements Serializable {
 
 	public void setMapping(HashMap<Long, RevertMapping> mapping) {
 		this.mapping = mapping;
+	}
+
+	public Process getProcess() {
+		return process;
+	}
+
+	public void setProcess(Process process) {
+		this.process = process;
 	}
 
 }

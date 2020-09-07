@@ -56,24 +56,34 @@ public class JwtAuthenticationTokenFilter extends UsernamePasswordAuthentication
 
 		try {
 			HttpServletRequest httpRequest = (HttpServletRequest) request;
-			System.out.println("===========0");
+			System.out.println("=========== 0");
 			String authToken = httpRequest.getHeader(TOKEN_HEADER);
+			
+			if (authToken == null) {
+				System.out.println("=========== authToken NULL");
+			} else {
+				if (jwtService.validateJwtToken(authToken)) {
+					System.out.println("=========== validate fail");
+				}
+			}
 
 			if (authToken != null && jwtService.validateJwtToken(authToken)) {
-				System.out.println("===========1");
+				System.out.println("=========== 1");
 				String username = jwtService.getUserNameFromJwtToken(authToken);
 				UserDetails userDetails = userService.loadUserByUsername(username);
 				if (userDetails != null) {
-					System.out.println("===========2");
+					System.out.println("=========== userDetails not NULL");
 					UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
 							userDetails, null, userDetails.getAuthorities());
 					authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpRequest));
 					SecurityContextHolder.getContext().setAuthentication(authentication);
 
+				} else {
+					System.out.println("=========== userDetails NULL");
 				}
 			}
 		} catch (Exception e) {
-			System.out.println("===========3");
+			System.out.println("=========== EXCEPTION");
 			logger.error("Cannot set user authentication: {}", e);
 		}
 

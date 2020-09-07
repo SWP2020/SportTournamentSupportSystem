@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -179,4 +181,53 @@ public class ScheduleAPI {
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
 
+	@PutMapping("/changeMatchInfo")
+	public ResponseEntity<Response> changeMatchInfo(
+			@RequestParam(value = "competitionId", required = false) Long competitionId,
+			@RequestParam(value = "nodeId") Integer nodeId,
+			@RequestParam(value = "degree") Integer degree,
+			@RequestParam(value = "location") Integer location, // -1-RR, 0-SE, 1-Win branch, 2-Lose branch, 3-match34,
+																// 4-summary final, 5-option
+			@RequestParam(value = "tableId") Integer tableId, @RequestBody HashMap<String, Object> newInfo) {
+		System.out.println("ScheduleAPI: changeMatchInfo: start");
+		Response response = new Response();
+		HttpStatus httpStatus = HttpStatus.OK;
+		Map<String, Object> config = new HashMap<String, Object>();
+		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> error = new HashMap<String, Object>();
+
+		try {
+
+			CompetitionEntity thisCompetition = competitionService.findOneById(competitionId);
+			if (thisCompetition == null) {
+				result.put("Schedule", null);
+				config.put("Global", 0);
+				error.put("MessageCode", 1);
+				error.put("Message", "Competition not found");
+			} else {
+
+				ScheduleDTO schedule = scheduleService.changeMatchInfo(thisCompetition, nodeId, degree, location,
+						tableId, newInfo);
+
+				result.put("Schedule", schedule);
+				config.put("Global", 0);
+				error.put("MessageCode", 0);
+				error.put("Message", "Success");
+
+			}
+			System.out.println("ScheduleAPI: changeMatchInfo: no exception");
+		} catch (Exception e) {
+			System.out.println("ScheduleAPI: changeMatchInfo: has exception");
+			result.put("Schedule", null);
+			config.put("Global", 0);
+			error.put("MessageCode", 1);
+			error.put("Message", "Server error");
+		}
+
+		response.setConfig(config);
+		response.setResult(result);
+		response.setError(error);
+		System.out.println("ScheduleAPI: changeMatchInfo: finish");
+		return new ResponseEntity<Response>(response, httpStatus);
+	}
 }

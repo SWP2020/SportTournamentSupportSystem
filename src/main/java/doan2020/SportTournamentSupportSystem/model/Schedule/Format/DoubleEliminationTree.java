@@ -50,15 +50,15 @@ public class DoubleEliminationTree extends SingleEliminationTree implements Seri
 
 		System.out.println("DoubleEliminationTree: Contructor: loseTree OK");
 
-		this.summaryFinal = getSummaryFinal();
-		System.out.println("DoubleEliminationTree: Contructor: get summary final OK");
-		this.optionFinal = getOptionFinal();
-		System.out.println("DoubleEliminationTree: Contructor: get option final OK");
+//		this.summaryFinal = getSummaryFinal();
+//		System.out.println("DoubleEliminationTree: Contructor: get summary final OK");
+//		this.optionFinal = getOptionFinal();
+//		System.out.println("DoubleEliminationTree: Contructor: get option final OK");
 
 		System.out.println("WIN BRANCH TOTAL MATCH: " + this.bracket.toArrayList().size());
 		System.out.println("WIN BRANCH TOTAL MATCH: " + this.matches.size());
-
-		this.matches.addAll(this.loseBranch.toArrayList());
+		if (this.loseBranch != null)
+			this.matches.addAll(this.loseBranch.toArrayList());
 		System.out.println("DoubleEliminationTree: Contructor: finish");
 	}
 
@@ -75,13 +75,13 @@ public class DoubleEliminationTree extends SingleEliminationTree implements Seri
 		this.loseBranch = loseBranch;
 		this.loseBranch.setName("LoseBranch");
 
-		this.summaryFinal = getSummaryFinal();
-		this.optionFinal = getOptionFinal();
+//		this.summaryFinal = getSummaryFinal();
+//		this.optionFinal = getOptionFinal();
 
 		System.out.println("WIN BRANCH TOTAL MATCH: " + this.bracket.toArrayList().size());
 		System.out.println("WIN BRANCH TOTAL MATCH: " + this.matches.size());
-
-		this.matches.addAll(this.loseBranch.toArrayList());
+		if (this.loseBranch != null)
+			this.matches.addAll(this.loseBranch.toArrayList());
 		System.out.println("DoubleEliminationTree: Contructor: finish");
 
 	}
@@ -121,14 +121,13 @@ public class DoubleEliminationTree extends SingleEliminationTree implements Seri
 
 		node.setId(index);
 		node.setNextIfWin(parent);
-		
+
 		info.setTeam1(new MatchSlot());
 		info.setTeam2(new MatchSlot());
 		info.getTeam1().setDescription(new BoxDescription());
 		info.getTeam2().setDescription(new BoxDescription());
 		info.setWinner(new MatchSlot());
 		info.setLoser(new MatchSlot());
-
 
 		if (parent == null) { // this is root
 			info.setRoundNo(this.totalLoseBranchRound);
@@ -198,7 +197,7 @@ public class DoubleEliminationTree extends SingleEliminationTree implements Seri
 		System.out.println("DE: node: " + node);
 		System.out.println("DE: parent: " + parent);
 		System.out.println("EliminationTree: buildLoseBranch: finish");
-		
+
 		return node;
 	}
 
@@ -312,6 +311,11 @@ public class DoubleEliminationTree extends SingleEliminationTree implements Seri
 	// ------------------ browse the tree
 
 	protected void setSummaryFinal() {
+		
+		if (this.totalTeam < 2) {
+			this.summaryFinal = null;
+			return;
+		}
 
 		this.summaryFinal = new Match();
 		this.summaryFinal.setMatchNo(1);
@@ -327,21 +331,22 @@ public class DoubleEliminationTree extends SingleEliminationTree implements Seri
 		this.summaryFinal.setWinner(winner);
 		this.summaryFinal.setLoser(loser);
 
-		this.summaryFinal.setTeam1(this.bracket.getRoot().getData().getWinner());
 		Node<Match> node = new Node<>();
 		node.setData(this.summaryFinal);
+
+		this.summaryFinal.setTeam1(this.bracket.getRoot().getData().getWinner());
 		this.bracket.getRoot().setNextIfWin(node);
-		if (totalTeam > 2) {
-			this.summaryFinal.setTeam2(this.loseBranch.getRoot().getData().getWinner());
-			this.loseBranch.getRoot().setNextIfWin(node);
-		} else {
-			this.summaryFinal.setTeam2(this.bracket.getRoot().getData().getLoser());
-			this.bracket.getRoot().setNextIfLose(node);
-		}
+
+		this.summaryFinal.setTeam2(this.loseBranch.getRoot().getData().getWinner());
+		this.loseBranch.getRoot().setNextIfWin(node);
 
 	}
 
 	protected void setOptionFinal() {
+		if (this.getSummaryFinal() == null) {
+			this.optionFinal = null;
+			return;
+		}
 		this.optionFinal = new Match();
 		this.optionFinal.setMatchNo(2);
 		this.optionFinal.setRoundNo(2);

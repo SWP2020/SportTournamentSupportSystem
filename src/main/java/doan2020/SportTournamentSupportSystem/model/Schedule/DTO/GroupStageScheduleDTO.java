@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import doan2020.SportTournamentSupportSystem.model.Process;
 import doan2020.SportTournamentSupportSystem.model.Indexing.RevertMapping;
 
 public class GroupStageScheduleDTO implements Serializable{
@@ -19,6 +20,7 @@ public class GroupStageScheduleDTO implements Serializable{
 	protected int totalTeamInFinalTable;
 	protected String status;
 	protected HashMap<Long, RevertMapping> mapping;
+	protected Process process = new Process();
 	
 	ArrayList<FinalStageScheduleDTO> tables;
 
@@ -101,7 +103,13 @@ public class GroupStageScheduleDTO implements Serializable{
 	public void setMapping(HashMap<Long, RevertMapping> map) {
 		this.mapping = map;
 	}
-	
-	
+
+	public Process getProcess() {
+		return process;
+	}
+
+	public void setProcess(Process process) {
+		this.process = process;
+	}
 
 }

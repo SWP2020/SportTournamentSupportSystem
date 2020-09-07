@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import doan2020.SportTournamentSupportSystem.config.Const;
 import doan2020.SportTournamentSupportSystem.entity.TeamEntity;
 import doan2020.SportTournamentSupportSystem.model.Box.RankingTableSlot;
 import doan2020.SportTournamentSupportSystem.model.Box.Seed;
@@ -35,9 +36,11 @@ public class RankingTable extends ArrayList<RankingTableSlot> implements Seriali
 	
 	public RankingTable(ArrayList<Team> teams) {
 		this.totalTeam = teams.size();
+		int seedNo = 0;
 		for (Team team: teams) {
-			RankingTableSlot slot = new RankingTableSlot(team);
+			RankingTableSlot slot = new RankingTableSlot(team, seedNo);
 			this.add(slot);
+			seedNo ++;
 		}
 		Collections.sort(this, new RankingTableSlot());
 	}
@@ -62,12 +65,9 @@ public class RankingTable extends ArrayList<RankingTableSlot> implements Seriali
 			t.setShortName(teams.get(seedNo).getShortName());
 			t.setFullName(teams.get(seedNo).getFullName());
 			
-			slot.setTotalLose(0);
-			slot.setTotalWin(0);
 			
 			slot.setTeam(t);
-			slot.setDifference(0.0);
-			slot.setScore(0);
+//			slot.updateElo(new Double(-1*seedNo));
 			seedNo++;
 		}
 		System.out.println("RankingTable: applyTeams: finish");
@@ -81,20 +81,43 @@ public class RankingTable extends ArrayList<RankingTableSlot> implements Seriali
 		}
 	}
 	
-	public void updateByTeamId(Long teamId, Integer score, Double diff, boolean isWin) {
+	public Double getEloByTeamId(Long teamId) {
 		for(RankingTableSlot slot: this) {
 			if (slot.getTeam() != null && slot.getTeam().getId().longValue() == teamId.longValue()) {
-				slot.setScore(slot.getScore() + score);
-				slot.setDifference(slot.getDifference() + diff);
+				return slot.getElo();
+			}
+		}
+		return 0.0;
+	}
+	
+	public void updateByTeamId(Long teamId, Integer score, Double diff, boolean isWin, Double eloBonus) {
+		System.out.println("RankingTable: updateByTeamId: teamId: " + teamId);
+		for(RankingTableSlot slot: this) {
+			if (slot.getTeam() != null && slot.getTeam().getId().longValue() == teamId.longValue()) {
+				System.out.println("RankingTable: updateByTeamId: team: " + slot.getTeam());
+				System.out.println("Slot totalWin: " + slot.getTotalWin());
+				slot.updateScore(score);
+				slot.updateDifference(diff);
 				if (isWin) {
-					slot.setTotalWin(slot.getTotalWin() + 1);
+					slot.updateTotalWin();
 				} else {
-					slot.setTotalLose(slot.getTotalLose() + 1);
+					slot.updateTotalLose();
 				}
+				slot.updateElo(eloBonus);
+				Collections.sort(this, new RankingTableSlot());
 				break;
 			}
 		}
 		Collections.sort(this, new RankingTableSlot());
+	}
+	
+	public void addTeam(Team team) {
+		for (RankingTableSlot slot: this) {
+			if (slot.getTeam() == null) {
+				slot.setTeam(team);
+				return;
+			}
+		}
 	}
 //	public static void main(String[] args) {
 //		RankingTable x = new RankingTable(4, 9);
