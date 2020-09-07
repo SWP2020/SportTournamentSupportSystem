@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class Const {
 	
-	public final static String DOMAIN = "http://192.168.1.127:3000"; //vuthon8
+	public final static String DOMAIN = "http://192.168.1.131:3000"; //vuthon8
 //	public final static String DOMAIN = "http://192.168.43.15:3000"; //LongSama
 //	public final static String DOMAIN = "http://172.20.10.6:3000"; // Nhan's 11
 	
@@ -15,7 +15,7 @@ public final class Const {
 	public final static Date DEFAULT_DATE = new Date(2020, 1, 13, 7, 0, 0);
 	public final static String DEFAULT_DATE_STRING = "2020-01-13 07:00:00";
 	
-	public final static String DEFAULT_PLACE = "Gầm cầu Long Biên";
+	public final static String DEFAULT_PLACE = "Hòa Lạc";
 	
 	public final static String TOKEN_HEADER = "Authorization";
 	
@@ -51,7 +51,6 @@ public final class Const {
 	public final static String STATUS_DEACTIVE = "deactive";
 	
 	public final static String STATUS_DELETED = "deleted";
-	
 //  status tournament
   
 	public final static String TOURNAMENT_STATUS_INITIALIZING = "initializing";
@@ -132,4 +131,10 @@ public final class Const {
 	public static final String STAGE_PROCESSING = "processing";
 	public static final String STAGE_FINISHED = "finished";
 	
+//	azure cloud
+	public final static String CONNECTION_STRING = "DefaultEndpointsProtocol=https;AccountName=doan2020;AccountKey=zQox6fOtBhUdJHayTJ6ArwxjUuC64/iiYzv4Qy/Kgv0lNbJ/VRQbpLQSDl+YpIBrwxfFN6Wz4UZ+F4JIC0iNKw==;EndpointSuffix=core.windows.net";
+
+//	elo
+	public static final Double DEFAULT_ELO = 10000.0;
+	public static final Double EPSILON = 0.01;
 }

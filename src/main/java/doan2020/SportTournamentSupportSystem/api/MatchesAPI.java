@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import doan2020.SportTournamentSupportSystem.converter.MatchConverter;
 import doan2020.SportTournamentSupportSystem.dto.MatchDTO;
 import doan2020.SportTournamentSupportSystem.entity.MatchEntity;
+import doan2020.SportTournamentSupportSystem.entity.ResultEntity;
 import doan2020.SportTournamentSupportSystem.response.Response;
 import doan2020.SportTournamentSupportSystem.service.IMatchService;
 
@@ -41,6 +42,7 @@ public class MatchesAPI {
 		Map<String, Object> error = new HashMap<String, Object>();
 		Collection<MatchEntity> matchEntites = new ArrayList<MatchEntity>();
 		List<MatchDTO> matchDTOs = new ArrayList<MatchDTO>();
+		HashMap<Long, HashMap<String, Integer>> scores = new HashMap<>();
 		try {
 
 			if (competitionId == null) {// userId null
@@ -51,6 +53,8 @@ public class MatchesAPI {
 			} else {// userId not null
 
 				matchEntites = service.findByCompetitionId(competitionId);
+				
+				System.out.println("totalMatch: " + matchEntites.size());
 
 				if (matchEntites.isEmpty()) { // not found
 					result.put("Matchs", null);
@@ -62,9 +66,32 @@ public class MatchesAPI {
 					for (MatchEntity entity : matchEntites) {
 						MatchDTO dto = converter.toDTO(entity);
 						matchDTOs.add(dto);
+
+						ArrayList<ResultEntity> results = new ArrayList<>();
+						results.addAll(entity.getResults());
+
+						Integer team1Score = 0;
+						Integer team2Score = 0;
+
+						for (ResultEntity r : results) {
+							Double tmpDiff1 = new Double(r.getTeam1Score() - r.getTeam2Score());
+							Double tmpDiff2 = 0 - tmpDiff1;
+							
+							if (tmpDiff1 > 0)
+								team1Score++;
+
+							if (tmpDiff2 > 0)
+								team2Score++;
+						}
+						
+						HashMap<String, Integer> score = new HashMap<>();
+						score.put("team1", team1Score);
+						score.put("team2", team2Score);
+						scores.put(entity.getId(), score);
 					}
 
 					result.put("Matchs", matchDTOs);
+					result.put("Scores", scores);
 					config.put("Global", 0);
 					error.put("MessageCode", 0);
 					error.put("Message", "Found");

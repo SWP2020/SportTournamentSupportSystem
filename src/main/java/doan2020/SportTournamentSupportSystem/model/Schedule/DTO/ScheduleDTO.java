@@ -3,6 +3,7 @@ package doan2020.SportTournamentSupportSystem.model.Schedule.DTO;
 import java.io.Serializable;
 import java.util.HashMap;
 
+import doan2020.SportTournamentSupportSystem.model.Process;
 import doan2020.SportTournamentSupportSystem.model.Indexing.RevertMapping;
 
 public class ScheduleDTO implements Serializable{
@@ -17,6 +18,7 @@ public class ScheduleDTO implements Serializable{
 	private boolean hasGroupStage;
 	private int totalTeam;
 	private HashMap<Long, RevertMapping> mapping;
+	private Process process = new Process();
 	
 	
 	public FinalStageScheduleDTO getFinalStageSchedule() {
@@ -48,6 +50,12 @@ public class ScheduleDTO implements Serializable{
 	}
 	public void setMapping(HashMap<Long, RevertMapping> mapping) {
 		this.mapping = mapping;
+	}
+	public Process getProcess() {
+		return process;
+	}
+	public void setProcess(Process process) {
+		this.process = process;
 	}
 	
 

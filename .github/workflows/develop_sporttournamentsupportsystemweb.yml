@@ -24,9 +24,9 @@ jobs:
       run: mvn clean install
 
     - name: Deploy to Azure Web App
-      uses: azure/webapps-deploy@v1
+      uses: azure/webapps-deploy@v2
       with:
         app-name: 'sporttournamentsupportsystemweb'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_3244d67c581f4703961a111889baa6be }}
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_fa7e45c3189744dfab6e2635a8ab1b4b }}
         package: '${{ github.workspace }}/target/*.jar'

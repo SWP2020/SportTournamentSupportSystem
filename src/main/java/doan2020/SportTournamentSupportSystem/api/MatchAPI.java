@@ -161,7 +161,7 @@ public class MatchAPI {
 				newEntity = service.update(id, newEntity);
 
 				MatchDTO dto = converter.toDTO(newEntity);
-
+				System.out.println(dto);
 				result.put("Match", dto);
 				config.put("Global", 0);
 				error.put("MessageCode", 0);
@@ -186,7 +186,7 @@ public class MatchAPI {
 	@PostMapping("/finish")
 	@CrossOrigin
 	public ResponseEntity<Response> finishMatch(@RequestParam Long id) {
-		System.out.println("MatchAPI: editMatch: start");
+		System.out.println("MatchAPI: finishMatch: start");
 
 		HttpStatus httpStatus = HttpStatus.OK;
 		Response response = new Response();
@@ -197,6 +197,7 @@ public class MatchAPI {
 
 		try {
 			matchEntity = service.findOneById(id);
+			System.out.println("find match ok");
 
 			if (matchEntity.getStatus().contains(Const.MATCH_STATUS_FINISHED)) {
 				result.put("Match", null);
@@ -205,22 +206,33 @@ public class MatchAPI {
 				error.put("Message", "Match has finished");
 			} else {
 
-				matchEntity.setStatus(Const.MATCH_STATUS_FINISHED);
-				matchEntity = service.update(id, matchEntity);
+				if (matchEntity.getWinnner() == null || matchEntity.getLoser() == null) {
+					result.put("Match", null);
+					config.put("Global", 0);
+					error.put("MessageCode", 1);
+					error.put("Message", "Không thể kết thúc trận đấu mà chưa xác định người thắng cuộc");
+				} else {
 
-				
-				scheduleService.finishMatch(matchEntity);
-
-				MatchDTO dto = converter.toDTO(matchEntity);
-
-				result.put("Match", dto);
-				config.put("Global", 0);
-				error.put("MessageCode", 0);
-				error.put("Message", "Match finish successfuly");
+					System.out.println("cp 2");
+					scheduleService.finishMatch(matchEntity);
+					System.out.println("cp 3");
+					
+					matchEntity.setStatus(Const.MATCH_STATUS_FINISHED);
+					matchEntity = service.update(id, matchEntity);
+					
+					MatchDTO dto = converter.toDTO(matchEntity);
+					System.out.println("cp 4");
+					result.put("Match", dto);
+					config.put("Global", 0);
+					error.put("MessageCode", 0);
+					error.put("Message", "Match finish successfuly");
+					
+				}
 			}
-			System.out.println("MatchAPI: editMatch: no exception");
+			System.out.println("MatchAPI: finishMatch: no exception");
 		} catch (Exception e) {
-			System.out.println("MatchAPI: editMatch: has exception");
+			System.out.println("MatchAPI: finishMatch: has exception");
+			System.out.println(e);
 			result.put("Match", null);
 			config.put("Global", 0);
 			error.put("MessageCode", 1);
@@ -230,7 +242,9 @@ public class MatchAPI {
 		response.setConfig(config);
 		response.setResult(result);
 		response.setError(error);
-		System.out.println("MatchAPI: editMatch: finish");
+		System.out.println("MatchAPI: finishMatch: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
+	
+
 }

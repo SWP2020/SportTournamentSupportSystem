@@ -13,11 +13,11 @@ import doan2020.SportTournamentSupportSystem.model.Struct.DoubleBTree;
 import doan2020.SportTournamentSupportSystem.model.Struct.Node;
 
 public class DoubleEliminationTree extends SingleEliminationTree implements Serializable {
-	
+
 	private static final long serialVersionUID = 1L;
-	
+
 	private String loseBranchNaming = Const.LOSE_BRANCH_NAMING;
-	
+
 	private Integer totalLoseBranchRound;
 	protected int completeLoseTreeDegree;
 	protected int firstRoundTotalLoseMatch;
@@ -35,31 +35,30 @@ public class DoubleEliminationTree extends SingleEliminationTree implements Seri
 
 	public DoubleEliminationTree(int totalTeam) {
 		super(totalTeam, Const.WIN_BRANCH_NAMING);
-		
+
 		System.out.println("DoubleEliminationTree: Contructor: winTree OK");
 		this.bracket.setName("WinBranch");
-		
+
 		this.firstRoundTotalLoseMatch = this.calFirstRoundTotalLoseMatch(totalTeam);
 		this.firstRoundCurrentLoseMatch = 0;
 		this.totalLoseBranchRound = calTotalLoseBranchRound(this.totalTeam);
 		System.out.println("DoubleEliminationTree: Contructor: etc number OK");
-		
 
 		this.loseBranch = new DoubleBTree<Match>(this.buildLoseBranch(null, 1, this.totalTeam - 1, 1));
 
 		this.loseBranch.setName("LoseBranch");
-		
+
 		System.out.println("DoubleEliminationTree: Contructor: loseTree OK");
-		
-		this.summaryFinal = getSummaryFinal();
-		System.out.println("DoubleEliminationTree: Contructor: get summary final OK");
-		this.optionFinal = getOptionFinal();
-		System.out.println("DoubleEliminationTree: Contructor: get option final OK");
-		
+
+//		this.summaryFinal = getSummaryFinal();
+//		System.out.println("DoubleEliminationTree: Contructor: get summary final OK");
+//		this.optionFinal = getOptionFinal();
+//		System.out.println("DoubleEliminationTree: Contructor: get option final OK");
+
 		System.out.println("WIN BRANCH TOTAL MATCH: " + this.bracket.toArrayList().size());
 		System.out.println("WIN BRANCH TOTAL MATCH: " + this.matches.size());
-		
-		this.matches.addAll(this.loseBranch.toArrayList());
+		if (this.loseBranch != null)
+			this.matches.addAll(this.loseBranch.toArrayList());
 		System.out.println("DoubleEliminationTree: Contructor: finish");
 	}
 
@@ -67,24 +66,24 @@ public class DoubleEliminationTree extends SingleEliminationTree implements Seri
 		super(winBranch, totalTeam, Const.WIN_BRANCH_NAMING);
 		System.out.println("DoubleEliminationTree: Contructor: winTree OK");
 		this.bracket.setName("WinBranch");
-		
+
 		this.firstRoundTotalLoseMatch = this.calFirstRoundTotalLoseMatch(totalTeam);
 		System.out.println("FIRST ROUND TOTAL LOSE MATCH: " + this.firstRoundTotalLoseMatch);
 		this.firstRoundCurrentLoseMatch = 0;
 		this.totalLoseBranchRound = calTotalLoseBranchRound(this.totalTeam);
-		
+
 		this.loseBranch = loseBranch;
 		this.loseBranch.setName("LoseBranch");
-		
-		this.summaryFinal = getSummaryFinal();
-		this.optionFinal = getOptionFinal();
-		
+
+//		this.summaryFinal = getSummaryFinal();
+//		this.optionFinal = getOptionFinal();
+
 		System.out.println("WIN BRANCH TOTAL MATCH: " + this.bracket.toArrayList().size());
 		System.out.println("WIN BRANCH TOTAL MATCH: " + this.matches.size());
-		
-		this.matches.addAll(this.loseBranch.toArrayList());
+		if (this.loseBranch != null)
+			this.matches.addAll(this.loseBranch.toArrayList());
 		System.out.println("DoubleEliminationTree: Contructor: finish");
-		
+
 	}
 
 	// ------------Getter setter
@@ -100,7 +99,7 @@ public class DoubleEliminationTree extends SingleEliminationTree implements Seri
 	public DoubleBTree<Match> getLoseBranch() {
 		return loseBranch;
 	}
-	
+
 	public Integer getTotalLoseBranchRound() {
 		return totalLoseBranchRound;
 	}
@@ -121,13 +120,14 @@ public class DoubleEliminationTree extends SingleEliminationTree implements Seri
 		System.out.println("EliminationTree: buildLoseBranch: CP1: totalLoseTeam: " + totalLoseTeam.toString());
 
 		node.setId(index);
-		node.setParent(parent);
+		node.setNextIfWin(parent);
+
 		info.setTeam1(new MatchSlot());
 		info.setTeam2(new MatchSlot());
+		info.getTeam1().setDescription(new BoxDescription());
+		info.getTeam2().setDescription(new BoxDescription());
 		info.setWinner(new MatchSlot());
 		info.setLoser(new MatchSlot());
-
-		System.out.println("EliminationTree: buildLoseBranch: CP2: parent: " + parent);
 
 		if (parent == null) { // this is root
 			info.setRoundNo(this.totalLoseBranchRound);
@@ -136,27 +136,27 @@ public class DoubleEliminationTree extends SingleEliminationTree implements Seri
 			info.setRoundNo(parent.getData().getRoundNo() - 1);
 			node.setDegree(parent.getDegree() + 1);
 		}
-		
-		System.out.println("DoubleEliminationTree: buildLoseBranch: index: "+ index);
+
+		System.out.println("DoubleEliminationTree: buildLoseBranch: index: " + index);
 
 		if (info.getRoundNo() == 1 && this.firstRoundCurrentLoseMatch < this.firstRoundTotalLoseMatch) {
-			
+
 			this.firstRoundCurrentLoseMatch++;
 			info.setMatchNo(this.firstRoundCurrentLoseMatch);
-			System.out.println("DoubleEliminationTree: buildLoseBranch: case1: "+ info.getMatchNo());
+			System.out.println("DoubleEliminationTree: buildLoseBranch: case1: " + info.getMatchNo());
 		} else {
 			info.setMatchNo(calLoseMatchNo(index, node.getDegree() + 1));
-			System.out.println("DoubleEliminationTree: buildLoseBranch: case2: "+ info.getMatchNo());
+			System.out.println("DoubleEliminationTree: buildLoseBranch: case2: " + info.getMatchNo());
 		}
-		
+
 		info.setTeam1(this.bracket.getById(leftIndex).getData().getLoser());
 		node.setData(info);
 		node.setLeft(this.bracket.getById(leftIndex));
-		
-		if (totalLoseTeam == 1){
+		this.bracket.getById(leftIndex).setNextIfLose(node);
+
+		if (totalLoseTeam == 1) {
 			info.setMatchNo(1);
 			info.setRoundNo(1);
-			info.setTeam2(null);
 			info.setName(this.loseBranchNaming + info.getMatchNo());
 			info.setWinner(info.getTeam1());
 			info.getLoser().setDescription(new BoxDescription(5l, info.getMatchNo()));
@@ -166,12 +166,13 @@ public class DoubleEliminationTree extends SingleEliminationTree implements Seri
 			node.setData(info);
 			return node;
 		}
-		
+
 		Integer rightIndex = reverseIndex(leftIndex) * 2 + 1;
 		Integer rightLeftIndex = rightIndex - 1;
 
 		if (this.bracket.getById(rightLeftIndex) == null) {
 			node.setRight(this.bracket.getById(rightIndex));
+			this.bracket.getById(rightIndex).setNextIfLose(node);
 
 			info.setTeam2(this.bracket.getById(rightIndex).getData().getLoser());
 
@@ -181,18 +182,20 @@ public class DoubleEliminationTree extends SingleEliminationTree implements Seri
 			node.setRight(buildRightLoseBranch(node, index, totalLoseTeam, rightLeftIndex));
 
 			info.setTeam1(this.bracket.getById(leftIndex).getData().getLoser());
-			info.setTeam2(node.getRight().getData().getLoser());
+			info.setTeam2(node.getRight().getData().getWinner());
 			info.setStatus(4);
 
 		}
-		
+
 		info.setName(this.loseBranchNaming + info.getMatchNo());
-		
+
 		info.getWinner().setDescription(new BoxDescription(3l, info.getMatchNo()));
 		info.getLoser().setDescription(new BoxDescription(5l, info.getMatchNo()));
-		
-		node.setData(info);
 
+		node.setData(info);
+		System.out.println("Check parent");
+		System.out.println("DE: node: " + node);
+		System.out.println("DE: parent: " + parent);
 		System.out.println("EliminationTree: buildLoseBranch: finish");
 
 		return node;
@@ -213,7 +216,7 @@ public class DoubleEliminationTree extends SingleEliminationTree implements Seri
 		System.out.println("EliminationTree: buildRightLoseBranch: CP1: totalLoseTeam: " + totalLoseTeam.toString());
 
 		node.setId(index);
-		node.setParent(parent);
+		node.setNextIfWin(parent);
 		info.setTeam1(new MatchSlot());
 		info.setTeam2(new MatchSlot());
 		info.setWinner(new MatchSlot());
@@ -224,17 +227,17 @@ public class DoubleEliminationTree extends SingleEliminationTree implements Seri
 		info.setRoundNo(parent.getData().getRoundNo() - 1);
 
 		node.setDegree(parent.getDegree() + 1);
-		
-		System.out.println("DoubleEliminationTree: buildRightLoseBranch: index: "+ index);
+
+		System.out.println("DoubleEliminationTree: buildRightLoseBranch: index: " + index);
 		if (info.getRoundNo() == 1 && this.firstRoundCurrentLoseMatch < this.firstRoundTotalLoseMatch) {
 			this.firstRoundCurrentLoseMatch++;
 			info.setMatchNo(this.firstRoundCurrentLoseMatch);
-			System.out.println("DoubleEliminationTree: buildRightLoseBranch: case1: "+ info.getMatchNo());
+			System.out.println("DoubleEliminationTree: buildRightLoseBranch: case1: " + info.getMatchNo());
 		} else {
 			info.setMatchNo(calLoseMatchNo(index, node.getDegree() + 1));
-			System.out.println("DoubleEliminationTree: buildRightLoseBranch: case2: "+ info.getMatchNo());
+			System.out.println("DoubleEliminationTree: buildRightLoseBranch: case2: " + info.getMatchNo());
 		}
-		
+
 		Integer rightIndex = leftIndex + 1;
 
 		Integer leftRightIndex = reverseIndex(leftIndex) * 2 + 1;
@@ -251,9 +254,11 @@ public class DoubleEliminationTree extends SingleEliminationTree implements Seri
 
 			info.setTeam1(this.bracket.getById(leftIndex).getData().getLoser());
 			info.setTeam2(this.bracket.getById(rightIndex).getData().getLoser());
-;
+
+			this.bracket.getById(leftIndex).setNextIfLose(node);
+			this.bracket.getById(rightIndex).setNextIfLose(node);
+			;
 			info.setStatus(3);
-			
 
 		} else {
 			if (this.bracket.getById(leftRightIndex) == null) {
@@ -262,6 +267,9 @@ public class DoubleEliminationTree extends SingleEliminationTree implements Seri
 
 				info.setTeam1(this.bracket.getById(leftIndex).getData().getLoser());
 				info.setTeam2(node.getRight().getData().getWinner());
+
+				this.bracket.getById(leftIndex).setNextIfLose(node);
+
 				info.setStatus(4);
 			}
 
@@ -271,6 +279,9 @@ public class DoubleEliminationTree extends SingleEliminationTree implements Seri
 
 				info.setTeam1(node.getLeft().getData().getWinner());
 				info.setTeam2(this.bracket.getById(rightIndex).getData().getLoser());
+
+				this.bracket.getById(rightIndex).setNextIfLose(node);
+
 				info.setStatus(4);
 			}
 
@@ -283,21 +294,29 @@ public class DoubleEliminationTree extends SingleEliminationTree implements Seri
 				info.setStatus(1);
 			}
 		}
-		
+
 		info.setName(this.loseBranchNaming + info.getMatchNo());
 		info.getWinner().setDescription(new BoxDescription(3l, info.getRoundNo()));
 		info.getLoser().setDescription(new BoxDescription(5l, info.getRoundNo()));
-		
+
 		node.setData(info);
 
+		System.out.println("Check parent");
+		System.out.println("DE: node: " + node);
+		System.out.println("DE: parent: " + parent);
 		System.out.println("EliminationTree: buildRightLoseBranch: finish");
 		return node;
 	}
 
 	// ------------------ browse the tree
-	
+
 	protected void setSummaryFinal() {
 		
+		if (this.totalTeam < 2) {
+			this.summaryFinal = null;
+			return;
+		}
+
 		this.summaryFinal = new Match();
 		this.summaryFinal.setMatchNo(1);
 		this.summaryFinal.setRoundNo(1);
@@ -305,23 +324,29 @@ public class DoubleEliminationTree extends SingleEliminationTree implements Seri
 
 		MatchSlot winner = new MatchSlot();
 		MatchSlot loser = new MatchSlot();
-		
+
 		winner.setDescription(new BoxDescription(-1l, Const.WIN_MATCH, 0l, Const.SUMMARY_FINAL, 1));
 		loser.setDescription(new BoxDescription(-1l, Const.LOSE_MATCH, 0l, Const.SUMMARY_FINAL, 1));
-		
+
 		this.summaryFinal.setWinner(winner);
 		this.summaryFinal.setLoser(loser);
 
+		Node<Match> node = new Node<>();
+		node.setData(this.summaryFinal);
+
 		this.summaryFinal.setTeam1(this.bracket.getRoot().getData().getWinner());
-		if (totalTeam > 2)
-			this.summaryFinal.setTeam2(this.loseBranch.getRoot().getData().getWinner());
-		else
-			this.summaryFinal.setTeam2(this.bracket.getRoot().getData().getLoser());
-		
-		
+		this.bracket.getRoot().setNextIfWin(node);
+
+		this.summaryFinal.setTeam2(this.loseBranch.getRoot().getData().getWinner());
+		this.loseBranch.getRoot().setNextIfWin(node);
+
 	}
-	
+
 	protected void setOptionFinal() {
+		if (this.getSummaryFinal() == null) {
+			this.optionFinal = null;
+			return;
+		}
 		this.optionFinal = new Match();
 		this.optionFinal.setMatchNo(2);
 		this.optionFinal.setRoundNo(2);
@@ -329,33 +354,31 @@ public class DoubleEliminationTree extends SingleEliminationTree implements Seri
 
 		MatchSlot winner = new MatchSlot();
 		MatchSlot loser = new MatchSlot();
-		
+
 		winner.setDescription(new BoxDescription(-1l, Const.WIN_MATCH, 0l, Const.SUMMARY_FINAL, 2));
 		loser.setDescription(new BoxDescription(-1l, Const.LOSE_MATCH, 0l, Const.SUMMARY_FINAL, 2));
-		
+
 		this.optionFinal.setWinner(winner);
 		this.optionFinal.setLoser(loser);
 
 		this.optionFinal.setTeam1(this.getSummaryFinal().getWinner());
 		this.optionFinal.setTeam2(this.getSummaryFinal().getLoser());
 
-		
-		
 	}
-	
+
 	public Match getSummaryFinal() {
 		if (this.summaryFinal == null) {
 			this.setSummaryFinal();
 		}
-		
+
 		return this.summaryFinal;
 	}
-	
+
 	public Match getOptionFinal() {
 		if (this.optionFinal == null) {
 			this.setOptionFinal();
 		}
-		
+
 		return this.optionFinal;
 	}
 
@@ -405,26 +428,25 @@ public class DoubleEliminationTree extends SingleEliminationTree implements Seri
 
 	private int calTotalCompleteLoseTreeNode(int degree) {
 		int totalNode = 2 * ((int) Math.pow(2, degree / 2) - 1);
-		
-		
+
 		if (degree % 2 == 1) {
-			totalNode += (int)Math.pow(2, degree / 2);
+			totalNode += (int) Math.pow(2, degree / 2);
 		}
-		
+
 		return totalNode;
 	}
-	
+
 	private int calTotalTeamInCompleteTree(int degree) {
 		int realDegree = (degree + 1) / 2;
-		int totalTeam = (int)Math.pow(2, realDegree) - 1;
+		int totalTeam = (int) Math.pow(2, realDegree) - 1;
 		if (degree % 2 == 0) {
-			totalTeam += (int)Math.pow(2, realDegree);
+			totalTeam += (int) Math.pow(2, realDegree);
 		} else {
-			totalTeam += (int)Math.pow(2, realDegree - 1);
+			totalTeam += (int) Math.pow(2, realDegree - 1);
 		}
 		return totalTeam;
 	}
-	
+
 	private int calFirstRoundTotalLoseMatch(int totalTeam) {
 		int degree = calLoseTreeCompleteDegree(totalTeam);
 		return totalTeam - calTotalTeamInCompleteTree(degree) - 1;
@@ -433,29 +455,25 @@ public class DoubleEliminationTree extends SingleEliminationTree implements Seri
 	private int calLoseMatchNo(int index, int nodeDegree) {
 		System.out.println("\nDoubleElimination: calLoseMatchNo: start --------------------------------------");
 		int matchNo = 0;
-		
+
 		int completeTreeDegree = calLoseTreeCompleteDegree(this.totalTeam);
-	
-		int totalNodeBelow = (int) calTotalCompleteLoseTreeNode(completeTreeDegree) - calTotalCompleteLoseTreeNode(nodeDegree);
+
+		int totalNodeBelow = (int) calTotalCompleteLoseTreeNode(completeTreeDegree)
+				- calTotalCompleteLoseTreeNode(nodeDegree);
 		int totalNodeAbove = (int) Math.pow(2, (nodeDegree - 1) / 2) - 1;
 
 		matchNo = index + totalNodeBelow - totalNodeAbove + this.firstRoundTotalLoseMatch;
-		
+
 		System.out.println("index: " + index);
-		System.out.println("nodeDegree: "+ nodeDegree);
+		System.out.println("nodeDegree: " + nodeDegree);
 		System.out.println("completeTreeDegree: " + completeTreeDegree);
-		System.out.println("totalNodeBelow: "+ totalNodeBelow);
-		System.out.println("totalNodeAbove: "+ totalNodeAbove);
+		System.out.println("totalNodeBelow: " + totalNodeBelow);
+		System.out.println("totalNodeAbove: " + totalNodeAbove);
 		System.out.println("matchNo: " + matchNo);
 		System.out.println("DoubleElimination: calLoseMatchNo: finish -------------------------------------\n");
 		return matchNo;
 
 	}
-	
-
-
-	
-	
 
 //	public static void main(String[] args) {
 //		int totalTeam = 15;

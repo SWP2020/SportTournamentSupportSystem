@@ -35,13 +35,13 @@ public class MatchService implements IMatchService {
 			updatedEntity = matchRepository.findOneById(id);
 
 			updatedEntity.setName(newEntity.getName());
-			updatedEntity.setCompetition(newEntity.getCompetition());
+//			updatedEntity.setCompetition(newEntity.getCompetition());
 			if (newEntity.getStatus() != null) {updatedEntity.setStatus(newEntity.getStatus());}
 			updatedEntity.setUrl(newEntity.getUrl());
 			updatedEntity.setLocation(newEntity.getLocation());
 			updatedEntity.setTime(newEntity.getTime());
 			updatedEntity.setLoser(newEntity.getLoser());
-			updatedEntity.setResults(newEntity.getResults());
+//			updatedEntity.setResults(newEntity.getResults());
 			updatedEntity.setWinnner(newEntity.getWinnner());
 			updatedEntity.setTeam1(newEntity.getTeam1());
 			updatedEntity.setTeam2(newEntity.getTeam2());
