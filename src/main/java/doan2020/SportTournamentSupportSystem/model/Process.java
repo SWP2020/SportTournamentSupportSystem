@@ -40,7 +40,7 @@ public class Process implements Serializable{
 	}
 	public void finishMatch() {
 		this.finishedMatch ++;
-		this.isFinish = (this.finishedMatch == this.totalMatch);
+		this.isFinish = (this.finishedMatch.intValue() == this.totalMatch.intValue());
 		if (this.totalMatch > 0)
 			this.process = new Double(this.finishedMatch) / new Double(this.totalMatch);
 	}
