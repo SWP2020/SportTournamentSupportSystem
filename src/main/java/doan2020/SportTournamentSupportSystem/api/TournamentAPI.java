@@ -545,7 +545,7 @@ public class TournamentAPI {
 					if (thisTournament.getStatus().contains(Const.TOURNAMENT_STATUS_STOPPED)) {
 						message = Const.TOURNAMENT_MESSAGE_STOPPED;
 					}
-					if (thisTournament.getStatus().contains(Const.TOURNAMENT_MESSAGE_PROCESSING)) {
+					if (thisTournament.getStatus().contains(Const.TOURNAMENT_STATUS_PROCESSING)) {
 						thisTournament = service.updateStatus(thisTournament, Const.TOURNAMENT_STATUS_FINISHED);
 
 						thisTournamentDTO = converter.toDTO(thisTournament);

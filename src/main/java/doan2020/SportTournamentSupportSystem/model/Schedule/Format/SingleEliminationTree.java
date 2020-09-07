@@ -288,7 +288,7 @@ public class SingleEliminationTree extends ScheduleStruct {
 		}
 		BoxDescription description1 = node.getData().getTeam1().getDescription();
 		if (description1.getDescType() == 0) {
-			int seedNo = description1.getUnitIndex() - 1;
+			int seedNo = (description1.getUnitIndex() - 1) % totalTeam;
 			node.getData().getTeam1().setTeam(this.seedList.get(seedNo).getTeam());
 		} else {
 			applySeedList(node.getLeft());
@@ -296,7 +296,7 @@ public class SingleEliminationTree extends ScheduleStruct {
 
 		BoxDescription description2 = node.getData().getTeam2().getDescription();
 		if (description2.getDescType() == 0) {
-			int seedNo = description2.getUnitIndex() - 1;
+			int seedNo = (description2.getUnitIndex() - 1) % totalTeam;
 			node.getData().getTeam2().setTeam(this.seedList.get(seedNo).getTeam());
 		} else {
 			applySeedList(node.getRight());
@@ -310,14 +310,14 @@ public class SingleEliminationTree extends ScheduleStruct {
 		}
 		BoxDescription description1 = node.getData().getTeam1().getDescription();
 		if (description1.getDescType() == 0) {
-			int seedNo = description1.getUnitIndex() - 1;
+			int seedNo = (description1.getUnitIndex() - 1) % this.totalTeam;
 			node.getData().getTeam1().setDescription(this.seedList.get(seedNo).getDescription());
 		} else {
 			applyDescriptionsDownTree(node.getLeft());
 		}
 		BoxDescription description2 = node.getData().getTeam2().getDescription();
 		if (description2.getDescType() == 0) {
-			int seedNo = description2.getUnitIndex() - 1;
+			int seedNo = (description2.getUnitIndex() - 1) % this.totalTeam;
 			node.getData().getTeam2().setDescription(this.seedList.get(seedNo).getDescription());
 		} else {
 			applyDescriptionsDownTree(node.getRight());
