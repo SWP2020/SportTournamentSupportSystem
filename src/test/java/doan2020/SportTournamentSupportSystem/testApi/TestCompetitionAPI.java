@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -19,7 +18,6 @@ import doan2020.SportTournamentSupportSystem.converter.CompetitionConverter;
 import doan2020.SportTournamentSupportSystem.converter.PermissionConverter;
 import doan2020.SportTournamentSupportSystem.dto.CompetitionDTO;
 import doan2020.SportTournamentSupportSystem.dto.PermissionDTO;
-import doan2020.SportTournamentSupportSystem.dto.UserDTO;
 import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
 import doan2020.SportTournamentSupportSystem.entity.PermissionEntity;
 import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
@@ -41,7 +39,7 @@ import doan2020.SportTournamentSupportSystem.service.impl.UserService;
 public class TestCompetitionAPI {
 
 	@TestConfiguration
-	public static class testloginAPIConfiguration {
+	public static class testCompetitionAPIConfiguration {
 		
 		@Bean
 		CompetitionAPI competitionApi() {
