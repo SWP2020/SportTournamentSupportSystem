@@ -64,11 +64,11 @@ public class AzureBlobAdapterService {
         	String OriginalFilename = StringUtils.cleanPath(multipartFile.getOriginalFilename());
         	
         	if(type==Const.AVATAR) {
-				fileName = (FilenameUtils.getBaseName(Const.AVATAR) + "." + FilenameUtils.getExtension(OriginalFilename));
+				fileName = (FilenameUtils.getBaseName(Const.AVATAR) + "-" +OriginalFilename);
 			}else if(type == Const.BACKGROUND){
-				fileName = (FilenameUtils.getBaseName(Const.BACKGROUND) + "." + FilenameUtils.getExtension(OriginalFilename));
+				fileName = (FilenameUtils.getBaseName(Const.BACKGROUND) + "-" +OriginalFilename);
 			}
-        	
+     
             blob = container.getBlockBlobReference(fileName);
             blob.upload(multipartFile.getInputStream(), -1);
             uri = blob.getUri();
