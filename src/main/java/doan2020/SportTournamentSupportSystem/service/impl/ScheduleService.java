@@ -1407,7 +1407,7 @@ public class ScheduleService implements IScheduleService {
 		if (match.getWinnner().getId() == match.getTeam1().getId()) {
 			thisMatch.getWinner().setTeam(thisMatch.getTeam1().getTeam());
 			thisMatch.getLoser().setTeam(thisMatch.getTeam2().getTeam());
-			if (team1Elo <= team2Elo) {
+			if (team1Elo <= team2Elo || type == 0) {
 				rt.updateByTeamId(match.getTeam1().getId(), team1Score, team1Diff, true, winElo);
 				if (match.getTeam2() != null)
 					rt.updateByTeamId(match.getTeam2().getId(), team2Score, team2Diff, false, loseElo);
@@ -1415,7 +1415,7 @@ public class ScheduleService implements IScheduleService {
 		} else {
 			thisMatch.getWinner().setTeam(thisMatch.getTeam2().getTeam());
 			thisMatch.getLoser().setTeam(thisMatch.getTeam1().getTeam());
-			if (team1Elo >= team2Elo) {
+			if (team1Elo >= team2Elo || type == 0) {
 				rt.updateByTeamId(match.getTeam1().getId(), team1Score, team1Diff, false, loseElo);
 				if (match.getTeam2() != null)
 					rt.updateByTeamId(match.getTeam2().getId(), team2Score, team2Diff, true, winElo);
