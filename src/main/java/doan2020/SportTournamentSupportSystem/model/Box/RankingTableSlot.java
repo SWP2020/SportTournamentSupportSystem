@@ -43,16 +43,16 @@ public class RankingTableSlot implements Serializable, Comparator<RankingTableSl
 		return difference;
 	}
 
-	public void setDifference(Double difference) {
-		this.difference = difference;
+	public void updateDifference(Double difference) {
+		this.difference += difference;
 	}
 
 	public Integer getScore() {
 		return score;
 	}
 
-	public void setScore(Integer score) {
-		this.score = score;
+	public void updateScore(Integer score) {
+		this.score += score;
 	}
 
 	@Override
@@ -94,16 +94,16 @@ public class RankingTableSlot implements Serializable, Comparator<RankingTableSl
 		return totalWin;
 	}
 
-	public void setTotalWin(Integer totalWin) {
-		this.totalWin = totalWin;
+	public void updateTotalWin() {
+		this.totalWin ++;
 	}
 
 	public Integer getTotalLose() {
 		return totalLose;
 	}
 
-	public void setTotalLose(Integer totalLose) {
-		this.totalLose = totalLose;
+	public void updateTotalLose() {
+		this.totalLose ++;
 	}
 
 	public Double getElo() {
