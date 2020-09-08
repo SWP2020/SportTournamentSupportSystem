@@ -64,6 +64,7 @@ public class MatchesAPI {
 				} else { // found
 
 					for (MatchEntity entity : matchEntites) {
+//						System.out.println("match: " + entity.getId());
 						MatchDTO dto = converter.toDTO(entity);
 						matchDTOs.add(dto);
 
@@ -72,6 +73,8 @@ public class MatchesAPI {
 
 						Integer team1Score = 0;
 						Integer team2Score = 0;
+						
+						System.out.println("counting results");
 
 						for (ResultEntity r : results) {
 							Double tmpDiff1 = new Double(r.getTeam1Score() - r.getTeam2Score());

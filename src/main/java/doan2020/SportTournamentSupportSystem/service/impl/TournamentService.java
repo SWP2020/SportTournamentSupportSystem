@@ -16,8 +16,11 @@ import org.springframework.stereotype.Service;
 import doan2020.SportTournamentSupportSystem.config.Const;
 import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
 import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
+import doan2020.SportTournamentSupportSystem.model.Schedule.DTO.ScheduleDTO;
 import doan2020.SportTournamentSupportSystem.repository.CompetitionRepository;
+import doan2020.SportTournamentSupportSystem.repository.MatchRepository;
 import doan2020.SportTournamentSupportSystem.repository.TournamentRepository;
+import doan2020.SportTournamentSupportSystem.service.IScheduleService;
 import doan2020.SportTournamentSupportSystem.service.ITournamentService;
 
 @Service
@@ -28,6 +31,9 @@ public class TournamentService implements ITournamentService {
 
 	@Autowired
 	private CompetitionRepository competitionRepository;
+
+	@Autowired
+	private MatchRepository matchRepository;
 
 	@Override
 	public Long countAll() {
@@ -62,7 +68,9 @@ public class TournamentService implements ITournamentService {
 			updatedEntity.setClosingLocation(newEntity.getClosingLocation());
 			updatedEntity.setClosingTime(newEntity.getClosingTime());
 			updatedEntity.setDonor(newEntity.getDonor());
-			if (newEntity.getStatus() != null) {updatedEntity.setStatus(newEntity.getStatus());}
+			if (newEntity.getStatus() != null) {
+				updatedEntity.setStatus(newEntity.getStatus());
+			}
 			updatedEntity.setUrl(newEntity.getUrl());
 			updatedEntity.setCloseRegistrationTime(newEntity.getCloseRegistrationTime());
 			updatedEntity.setOpenRegistrationTime(newEntity.getOpenRegistrationTime());
@@ -201,9 +209,34 @@ public class TournamentService implements ITournamentService {
 
 			countTeam += comp.getTeams().size();
 		}
+
+		Double process = 0.0;
+		if (thisTournament.getStatus().contains(Const.TOURNAMENT_STATUS_FINISHED)) {
+			process = 1.0;
+		}
+
+		if (thisTournament.getStatus().contains(Const.TOURNAMENT_STATUS_INITIALIZING)
+				|| thisTournament.getStatus().contains(Const.TOURNAMENT_STATUS_REGISTRATION_OPENING)) {
+			process = 0.0;
+		}
+
+		if (thisTournament.getStatus().contains(Const.TOURNAMENT_STATUS_PROCESSING)
+				|| thisTournament.getStatus().contains(Const.TOURNAMENT_STATUS_STOPPED)) {
+
+			int totalMatch = matchRepository.countByTournamentId(id);
+			int finishedMatch = matchRepository.countByTournamentIdAndStatus(id, Const.MATCH_STATUS_FINISHED);
+			
+			if (totalMatch > 0)
+				process = new Double(finishedMatch) / new Double(totalMatch);
+			System.out.println("totalMatch:  " + totalMatch);
+			System.out.println("finishedMatch: " + finishedMatch);
+		}
+		
+		process = new Double(Math.floor(process * 10000)/100.0);
+
 		option.put("sportsName", sportsName);
 		option.put("countTeam", countTeam);
-		option.put("process", 0);
+		option.put("process", process);
 		return option;
 	}
 
