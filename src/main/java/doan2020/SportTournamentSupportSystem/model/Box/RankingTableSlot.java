@@ -43,34 +43,58 @@ public class RankingTableSlot implements Serializable, Comparator<RankingTableSl
 		return difference;
 	}
 
-	public void setDifference(Double difference) {
-		this.difference = difference;
+	public void updateDifference(Double difference) {
+		this.difference += difference;
 	}
 
 	public Integer getScore() {
 		return score;
 	}
 
-	public void setScore(Integer score) {
-		this.score = score;
+	public void updateScore(Integer score) {
+		this.score += score;
 	}
 
 	@Override
 	public int compare(RankingTableSlot o1, RankingTableSlot o2) {
-		Integer totalWin1 = o1.getTotalWin();
-		Integer totalWin2 = o2.getTotalWin();
-		Integer score1 = o1.getScore();
-		Integer score2 = o2.getScore();
-		Double diff1 = o1.getDifference();
-		Double diff2 = o2.getDifference();
 
 		Double elo1 = o1.getElo();
 		Double elo2 = o2.getElo();
 
-		if (elo1 == elo2) {
-			if (totalWin1 == totalWin2) {
-				if (score1 == score2) {
-					return (int) Math.ceil(diff2 - diff1);
+		Integer totalWin1 = o1.getTotalWin();
+		Integer totalWin2 = o2.getTotalWin();
+
+		Integer score1 = o1.getScore();
+		Integer score2 = o2.getScore();
+
+		Double diff1 = o1.getDifference();
+		Double diff2 = o2.getDifference();
+		
+//		System.out.println("Compare: ");
+//		System.out.println("team1: " + o1.getTeam());
+//		System.out.println("team2: " + o2.getTeam());
+//
+//		System.out.println("elo1: " + elo1);
+//		System.out.println("elo2: " + elo2);
+//		System.out.println("totalWin1: " + totalWin1);
+//		System.out.println("totalWin2: " + totalWin2);
+//		System.out.println("score1: " + score1);
+//		System.out.println("score2: " + score2);
+//		System.out.println("diff1: " + diff1);
+//		System.out.println("diff2: " + diff2);
+
+		if (Math.abs(elo1 - elo2) <= Const.EPSILON) {
+//			System.out.println("elo1 == elo2");
+			if (totalWin1.intValue() == totalWin2.intValue()) {
+//				System.out.println("totalWin1 == totalWin2");
+				if (score1.intValue() == score2.intValue()) {
+//					System.out.println("score1 == score2");
+					if (Math.abs(diff2 - diff1) <= Const.EPSILON) {
+//						System.out.println("diff1 == diff2");
+						return 0;
+					} else {
+						return (int) (diff2 - diff1);
+					}
 				} else {
 					return score2 - score1;
 				}
@@ -78,7 +102,7 @@ public class RankingTableSlot implements Serializable, Comparator<RankingTableSl
 				return totalWin2 - totalWin1;
 			}
 		} else {
-			return (int) Math.ceil(elo2 - elo1);
+			return (int) (elo2 - elo1);
 		}
 	}
 
@@ -94,16 +118,16 @@ public class RankingTableSlot implements Serializable, Comparator<RankingTableSl
 		return totalWin;
 	}
 
-	public void setTotalWin(Integer totalWin) {
-		this.totalWin = totalWin;
+	public void updateTotalWin() {
+		this.totalWin++;
 	}
 
 	public Integer getTotalLose() {
 		return totalLose;
 	}
 
-	public void setTotalLose(Integer totalLose) {
-		this.totalLose = totalLose;
+	public void updateTotalLose() {
+		this.totalLose++;
 	}
 
 	public Double getElo() {

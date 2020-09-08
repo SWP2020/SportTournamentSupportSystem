@@ -22,6 +22,9 @@ public class DoubleEliminationScheduleDTO extends FinalStageScheduleDTO{
 	protected ArrayList<String> loseRoundsNaming;
 	protected ArrayList<String> finalRoundsNaming;
 	
+	public DoubleEliminationScheduleDTO() {
+		super();
+	}
 	public BTree<Match> getWinBranch() {
 		return winBranch;
 	}

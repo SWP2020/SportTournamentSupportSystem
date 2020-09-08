@@ -61,6 +61,11 @@ public class ScheduleAPI {
 			} else {
 				System.out.println("ScheduleAPI: getScheduleByCompetitionId: -> ScheduleService: getSchedule: ");
 				ScheduleDTO schedule = scheduleService.getSchedule(thisCompetition);
+				try {
+				System.out.println("check data send to front end: " + schedule.getGroupStageSchedule().getTables().get(0).getMatches().get(0));
+				}catch (Exception e) {
+					// TODO: handle exception
+				}
 				System.out.println("ScheduleService: getSchedule: -> ScheduleAPI: getScheduleByCompetitionId:");
 				if (schedule == null) {
 					result.put("Schedule", null);
@@ -80,7 +85,7 @@ public class ScheduleAPI {
 			result.put("Schedule", null);
 			config.put("Global", 0);
 			error.put("MessageCode", 1);
-			error.put("Message", "Server error");
+			error.put("Message", "Đã có lỗi xảy ra, vui lòng thử lại");
 		}
 
 		response.setConfig(config);
@@ -171,7 +176,7 @@ public class ScheduleAPI {
 			result.put("Schedule", null);
 			config.put("Global", 0);
 			error.put("MessageCode", 1);
-			error.put("Message", "Server error");
+			error.put("Message", "Đã có lỗi xảy ra, vui lòng thử lại");
 		}
 
 		response.setConfig(config);
@@ -221,7 +226,7 @@ public class ScheduleAPI {
 			result.put("Schedule", null);
 			config.put("Global", 0);
 			error.put("MessageCode", 1);
-			error.put("Message", "Server error");
+			error.put("Message", "Đã có lỗi xảy ra, vui lòng thử lại");
 		}
 
 		response.setConfig(config);

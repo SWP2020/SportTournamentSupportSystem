@@ -9,6 +9,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -43,7 +44,10 @@ public class LoginAPI {
 
 	@Autowired
 	private IVerificationTokenService verificationTokenService;
-
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+	
 	@PostMapping
 	public ResponseEntity<Response> login(@RequestBody UserDTO user) {
 		System.out.println("LoginAPI: login: start");
@@ -54,13 +58,10 @@ public class LoginAPI {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
 		
-		String username = user.getUsername();
-		String password = user.getPassword();
-		
-		System.out.println(username);
-		System.out.println(password);
-		
 		try {
+			
+			String username = user.getUsername();
+			String password = user.getPassword();
 			
 			UserEntity findUser = userService.findByUsername(username);
 
@@ -86,13 +87,14 @@ public class LoginAPI {
 					error.put("Message", "User is not active");
 				} else { // User is active
 					System.out.println("LoginAPI: login: User is active");
-//					boolean checkPW = passwordEncoder.matches(user.getPassword(), findUser.getPassword());
+
+					boolean checkPW = passwordEncoder.matches(password, findUser.getPassword());
 					
-					System.out.println("LoginAPI: login: Password: " + findUser.getPassword());
-					int checkPW = password.compareTo(findUser.getPassword());
+//					System.out.println("LoginAPI: login: Password: " + findUser.getPassword());
+//					int checkPW = password.compareTo(findUser.getPassword());
 					
-//					if (!checkPW) {// password wrong
-					if (checkPW != 0) {
+					if (!checkPW) {// password wrong
+//					if (checkPW != 0) {
 						System.out.println("LoginAPI: login: Password wrong");
 						result.put("User", null);
 						result.put("Authentication", null);
@@ -123,7 +125,7 @@ public class LoginAPI {
 			result.put("User", null);
 			config.put("Global", 0);
 			error.put("MessageCode", 1);
-			error.put("Message", "Server error");
+			error.put("Message", "Đã có lỗi xảy ra, vui lòng thử lại");
 		}
 
 		

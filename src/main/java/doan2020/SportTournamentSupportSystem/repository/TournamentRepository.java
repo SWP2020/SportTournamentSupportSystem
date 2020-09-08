@@ -17,5 +17,6 @@ public interface TournamentRepository extends JpaRepository<TournamentEntity, Lo
 
     @Query(value="SELECT t FROM TournamentEntity t WHERE t.fullName LIKE CONCAT('%',:str,'%') or t.shortName LIKE CONCAT('%',:str,'%')")
     Collection<TournamentEntity> findBySearchString(@Param("str") String searchString);
+    
 
 }

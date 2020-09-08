@@ -65,12 +65,8 @@ public class RankingTable extends ArrayList<RankingTableSlot> implements Seriali
 			t.setShortName(teams.get(seedNo).getShortName());
 			t.setFullName(teams.get(seedNo).getFullName());
 			
-			slot.setTotalLose(0);
-			slot.setTotalWin(0);
 			
 			slot.setTeam(t);
-			slot.setDifference(0.0);
-			slot.setScore(0);
 //			slot.updateElo(new Double(-1*seedNo));
 			seedNo++;
 		}
@@ -95,14 +91,17 @@ public class RankingTable extends ArrayList<RankingTableSlot> implements Seriali
 	}
 	
 	public void updateByTeamId(Long teamId, Integer score, Double diff, boolean isWin, Double eloBonus) {
+		System.out.println("RankingTable: updateByTeamId: teamId: " + teamId);
 		for(RankingTableSlot slot: this) {
 			if (slot.getTeam() != null && slot.getTeam().getId().longValue() == teamId.longValue()) {
-				slot.setScore(slot.getScore() + score);
-				slot.setDifference(slot.getDifference() + diff);
+				System.out.println("RankingTable: updateByTeamId: team: " + slot.getTeam());
+				System.out.println("Slot totalWin: " + slot.getTotalWin());
+				slot.updateScore(score);
+				slot.updateDifference(diff);
 				if (isWin) {
-					slot.setTotalWin(slot.getTotalWin() + 1);
+					slot.updateTotalWin();
 				} else {
-					slot.setTotalLose(slot.getTotalLose() + 1);
+					slot.updateTotalLose();
 				}
 				slot.updateElo(eloBonus);
 				Collections.sort(this, new RankingTableSlot());

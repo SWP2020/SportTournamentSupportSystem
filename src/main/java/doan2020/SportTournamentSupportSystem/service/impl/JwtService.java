@@ -22,7 +22,7 @@ public class JwtService {
 	public static final String USERNAME = "username";
 	public static final String ID = "id";
 	public static final String SECRET_KEY = "bezKoderSecretKey";
-	public static final int EXPIRE_TIME = 86400000;
+	public static final int EXPIRE_TIME = 864000000;
 
 	public String generateTokenLogin(UserEntity user) {
 		System.out.println("JwtService: generateTokenLogin: user: "+ user);

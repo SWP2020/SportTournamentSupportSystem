@@ -217,7 +217,7 @@ public class TeamAPI {
 			result.put("Team", null);
 			config.put("Global", 0);
 			error.put("MessageCode", 1);
-			error.put("Message", "server error");
+			error.put("Message", "Đã có lỗi xảy ra, vui lòng thử lại");
 		}
 		response.setError(error);
 		response.setResult(result);
@@ -305,7 +305,7 @@ public class TeamAPI {
 			result.put("PlayerList", null);
 			config.put("Global", 0);
 			error.put("MessageCode", 1);
-			error.put("Message", "server error");
+			error.put("Message", "Đã có lỗi xảy ra, vui lòng thử lại");
 		}
 		response.setError(error);
 		response.setResult(result);
@@ -363,7 +363,7 @@ public class TeamAPI {
 			result.put("Team", resDTO);
 			config.put("Global", 0);
 			error.put("MessageCode", 1);
-			error.put("Message", "server error");
+			error.put("Message", "Đã có lỗi xảy ra, vui lòng thử lại");
 		}
 		response.setError(error);
 		response.setResult(result);
@@ -437,7 +437,7 @@ public class TeamAPI {
 			result.put("Team", null);
 			config.put("Global", 0);
 			error.put("MessageCode", 1);
-			error.put("Message", "server error");
+			error.put("Message", "Đã có lỗi xảy ra, vui lòng thử lại");
 		}
 		response.setError(error);
 		response.setResult(result);
@@ -527,7 +527,7 @@ public class TeamAPI {
 			result.put("Team", null);
 			config.put("Global", 0);
 			error.put("MessageCode", 1);
-			error.put("Message", "server error");
+			error.put("Message", "Đã có lỗi xảy ra, vui lòng thử lại");
 		}
 		response.setError(error);
 		response.setResult(result);
@@ -595,7 +595,7 @@ public class TeamAPI {
 			result.put("Team", null);
 			config.put("Global", 0);
 			error.put("MessageCode", 1);
-			error.put("Message", "server error");
+			error.put("Message", "Đã có lỗi xảy ra, vui lòng thử lại");
 		}
 		response.setError(error);
 		response.setResult(result);
