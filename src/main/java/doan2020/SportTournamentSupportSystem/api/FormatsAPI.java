@@ -61,7 +61,7 @@ public class FormatsAPI {
 			System.out.println("FormatsAPI: getAllFormat: has exception");
 			result.put("Users", dtos);
 			error.put("MessageCode", 1);
-			error.put("Message", "Server error");
+			error.put("Message", "Đã có lỗi xảy ra, vui lòng thử lại");
 		}
 		response.setError(error);
 		response.setResult(result);

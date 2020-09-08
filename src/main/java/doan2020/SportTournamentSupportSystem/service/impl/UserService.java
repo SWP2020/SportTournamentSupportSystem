@@ -290,4 +290,20 @@ public class UserService implements IUserService {
 		return (long)userRepository.countByRoleId(roleId);
 	}
 
+	@Override
+	public UserEntity changePassword(Long id, String password) {
+		UserEntity updatedEntity = null;
+		try {
+			updatedEntity = userRepository.findOneById(id);
+			
+			updatedEntity.setPassword(password);
+			
+			updatedEntity = userRepository.save(updatedEntity);
+		} catch (Exception e) {
+			return null;
+		}
+
+		return updatedEntity;
+	}
+
 }

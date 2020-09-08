@@ -169,7 +169,7 @@ public class SingleEliminationTree extends ScheduleStruct {
 			info.setMatchNo(1);
 			info.setName(this.bracketMatchNaming + info.getMatchNo());
 			info.getTeam1().setDescription(new BoxDescription((long) leftSeedIndex));
-			
+
 			info.setWinner(info.getTeam1());
 			info.getLoser().setDescription(
 					new BoxDescription(4l, Const.LOSE_MATCH, 0l, this.bracketMatchNaming, info.getMatchNo()));
@@ -193,7 +193,7 @@ public class SingleEliminationTree extends ScheduleStruct {
 		} else {
 			if (leftRightIndex > totalSeed) {
 				node.setRight(buildBracket(node, index * 2 + 1, totalSeed, rightSeedIndex));
-				
+
 				info.setTeam2(node.getRight().getData().getWinner());
 
 				info.getTeam1().setDescription(new BoxDescription((long) leftSeedIndex));
@@ -205,7 +205,7 @@ public class SingleEliminationTree extends ScheduleStruct {
 
 				info.setTeam1(node.getLeft().getData().getWinner());
 				info.setTeam2(node.getRight().getData().getWinner());
-				
+
 				info.setStatus(1);
 			}
 		}
@@ -238,7 +238,7 @@ public class SingleEliminationTree extends ScheduleStruct {
 		System.out.println("SingleEliminationTree: setMatch34: total team > 4");
 
 		this.match34.setMatchNo(this.bracket.getTotalNode() + 1);
-
+		this.match34.setStatus(100);
 		this.match34.setName(this.bracketMatchNaming + this.match34.getMatchNo());
 
 		MatchSlot winner = new MatchSlot();

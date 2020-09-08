@@ -3,6 +3,7 @@ package doan2020.SportTournamentSupportSystem.service.impl;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -44,7 +45,9 @@ public class SendingMailService {
 		String subject = "Please verify your email";
 		String body = "";
 		try {
+//			templates.setDefaultEncoding("UTF-8");
 			Template t = templates.getTemplate("email-verification.ftl");
+//			t.setEncoding("UTF-8");
 			Map<String, String> map = new HashMap<>();
 			map.put("USERNAME",username);
 			map.put("DOMAIN",domain);
@@ -54,6 +57,36 @@ public class SendingMailService {
 			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, ex.getMessage(), ex);
 		}
 		return sendMail(toEmail, subject, body);
+	}
+	
+	public boolean sendForgotPasswordMail(String toEmail, String username, String newPassword) {
+		String subject = "New Password for your account";
+		String body = "";
+		try {
+			Template t = templates.getTemplate("forgotPassword.ftl");
+			Map<String, String> map = new HashMap<>();
+			map.put("USERNAME",username);
+			map.put("NEWPASSWORD",newPassword);
+			body = FreeMarkerTemplateUtils.processTemplateIntoString(t, map);
+		} catch (Exception ex) {
+			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, ex.getMessage(), ex);
+		}
+		return sendMail(toEmail, subject, body);
+	}
+	
+	public void sendNotificationMail(String toEmail, String tournamentName, String userName) {
+		String subject = "New Password for your account";
+		String body = "";
+		try {
+			Template t = templates.getTemplate("notification.ftl");
+			Map<String, String> map = new HashMap<>();
+			map.put("USERNAME",userName);
+			map.put("TOURNAMENTNAME",tournamentName);
+			body = FreeMarkerTemplateUtils.processTemplateIntoString(t, map);
+			sendMail(toEmail, subject, body);
+		} catch (Exception ex) {
+			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, ex.getMessage(), ex);
+		}
 	}
 
 	private boolean sendMail(String toEmail, String subject, String body) {
@@ -84,4 +117,6 @@ public class SendingMailService {
 
 		return false;
 	}
+	
+	
 }

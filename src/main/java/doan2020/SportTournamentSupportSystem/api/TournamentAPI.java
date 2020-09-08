@@ -3,6 +3,7 @@ package doan2020.SportTournamentSupportSystem.api;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,7 @@ import doan2020.SportTournamentSupportSystem.dto.PermissionDTO;
 import doan2020.SportTournamentSupportSystem.dto.TournamentDTO;
 import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
 import doan2020.SportTournamentSupportSystem.entity.PermissionEntity;
+import doan2020.SportTournamentSupportSystem.entity.TeamEntity;
 import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
 import doan2020.SportTournamentSupportSystem.entity.UserEntity;
 import doan2020.SportTournamentSupportSystem.response.Response;
@@ -39,6 +41,7 @@ import doan2020.SportTournamentSupportSystem.service.ITeamService;
 import doan2020.SportTournamentSupportSystem.service.ITournamentService;
 import doan2020.SportTournamentSupportSystem.service.impl.AzureBlobAdapterService;
 import doan2020.SportTournamentSupportSystem.service.impl.JwtService;
+import doan2020.SportTournamentSupportSystem.service.impl.SendingMailService;
 import doan2020.SportTournamentSupportSystem.service.impl.UserService;
 
 @RestController
@@ -77,6 +80,9 @@ public class TournamentAPI {
 
 	@Autowired
 	private AzureBlobAdapterService azureBlobAdapterService;
+	
+	@Autowired
+	private SendingMailService sendingMailService;
 
 	@GetMapping("")
 	public ResponseEntity<Response> getTournament(
@@ -153,7 +159,7 @@ public class TournamentAPI {
 			result.put("OtherInformation", otherInformation);
 			config.put("Global", 0);
 			error.put("MessageCode", 1);
-			error.put("Message", "Server error");
+			error.put("Message", "Đã có lỗi xảy ra, vui lòng thử lại");
 		}
 
 		response.setConfig(config);
@@ -195,7 +201,7 @@ public class TournamentAPI {
 			result.put("Tournament", null);
 			config.put("Global", 0);
 			error.put("MessageCode", 1);
-			error.put("Message", "Server error");
+			error.put("Message", "Đã có lỗi xảy ra, vui lòng thử lại");
 		}
 
 		response.setConfig(config);
@@ -269,7 +275,7 @@ public class TournamentAPI {
 			result.put("Tournament", null);
 			config.put("Global", 0);
 			error.put("MessageCode", 1);
-			error.put("Message", "Server error");
+			error.put("Message", "Đã có lỗi xảy ra, vui lòng thử lại");
 		}
 
 		response.setConfig(config);
@@ -479,6 +485,21 @@ public class TournamentAPI {
 							}
 						}
 					}
+					
+					System.out.println("tounament"+id);
+					List<TeamEntity> teamEntities = (List<TeamEntity>) teamService.findByTournamentIdAndStatus(id, Const.TOURNAMENT_STATUS_PROCESSING);
+
+					for(TeamEntity teamEntity: teamEntities) {
+						System.out.println("creator "+teamEntity.getCreator().getId());
+						if(teamEntity.getCreator().getId() != id) {
+							String mail = teamEntity.getCreator().getEmail();
+							
+						    String userName = teamEntity.getCreator().getUsername();
+							
+							sendingMailService.sendNotificationMail(mail, thisTournament.getFullName(), userName);
+						}
+					}
+					
 					result.put("Tournament", thisTournamentDTO);
 					config.put("Global", 0);
 					error.put("MessageCode", code);
@@ -493,7 +514,7 @@ public class TournamentAPI {
 			result.put("Tournament", null);
 			config.put("Global", 0);
 			error.put("MessageCode", 1);
-			error.put("Message", "Server error");
+			error.put("Message", "Đã có lỗi xảy ra, vui lòng thử lại");
 		}
 
 		response.setError(error);
@@ -545,6 +566,7 @@ public class TournamentAPI {
 					if (thisTournament.getStatus().contains(Const.TOURNAMENT_STATUS_STOPPED)) {
 						message = Const.TOURNAMENT_MESSAGE_STOPPED;
 					}
+				
 					if (thisTournament.getStatus().contains(Const.TOURNAMENT_STATUS_PROCESSING)) {
 						thisTournament = service.updateStatus(thisTournament, Const.TOURNAMENT_STATUS_FINISHED);
 
@@ -565,7 +587,7 @@ public class TournamentAPI {
 			result.put("Tournament", null);
 			config.put("Global", 0);
 			error.put("MessageCode", 1);
-			error.put("Message", "Server error");
+			error.put("Message", "Đã có lỗi xảy ra, vui lòng thử lại");
 		}
 
 		response.setError(error);
@@ -641,7 +663,7 @@ public class TournamentAPI {
 			result.put("Tournament", null);
 			config.put("Global", 0);
 			error.put("MessageCode", 1);
-			error.put("Message", "Server error");
+			error.put("Message", "Đã có lỗi xảy ra, vui lòng thử lại");
 		}
 
 		response.setError(error);
@@ -714,7 +736,7 @@ public class TournamentAPI {
 			result.put("Tournament", null);
 			config.put("Global", 0);
 			error.put("MessageCode", 1);
-			error.put("Message", "Server error");
+			error.put("Message", "Đã có lỗi xảy ra, vui lòng thử lại");
 		}
 
 		response.setError(error);
@@ -776,7 +798,7 @@ public class TournamentAPI {
 			result.put("Tournament", null);
 			config.put("Global", 0);
 			error.put("MessageCode", 1);
-			error.put("Message", "Server error");
+			error.put("Message", "Đã có lỗi xảy ra, vui lòng thử lại");
 		}
 
 		response.setError(error);
