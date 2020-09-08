@@ -14,8 +14,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import doan2020.SportTournamentSupportSystem.api.GroupStageSettingAPI;
 import doan2020.SportTournamentSupportSystem.converter.GroupStageSettingConverter;
+import doan2020.SportTournamentSupportSystem.dto.GroupStageSettingDTO;
 import doan2020.SportTournamentSupportSystem.entity.GroupStageSettingEntity;
-import doan2020.SportTournamentSupportSystem.entity.MatchEntity;
 import doan2020.SportTournamentSupportSystem.response.Response;
 import doan2020.SportTournamentSupportSystem.service.IGroupStageSettingService;
 import doan2020.SportTournamentSupportSystem.service.impl.GroupStageSettingService;
@@ -23,6 +23,7 @@ import doan2020.SportTournamentSupportSystem.service.impl.GroupStageSettingServi
 @RunWith(SpringRunner.class)
 public class TestGroupStageSettingAPI {
 
+	//Bean definition
 	@TestConfiguration
 	public static class testGroupStageSettingAPIConfiguration {
 		
@@ -51,30 +52,72 @@ public class TestGroupStageSettingAPI {
 	@Autowired
 	GroupStageSettingAPI groupStageSettingApi;
 	
+	GroupStageSettingDTO groupStageSettingDto3;
+	
+	//Emulate before execute test
 	@Before
 	public void setUp() {
-		GroupStageSettingEntity groupStageSettingEntity = new GroupStageSettingEntity();
-		Mockito.when(service.findByCompetitionId((long)1)).thenReturn(groupStageSettingEntity);
+		//1
+		//2
+		Mockito.when(service.findByCompetitionId((long)2)).thenReturn(null);
+		//3
+		GroupStageSettingEntity groupStageSettingEntity3 = new GroupStageSettingEntity();
+		Mockito.when(service.findByCompetitionId((long)3)).thenReturn(groupStageSettingEntity3);
+		groupStageSettingDto3 = new GroupStageSettingDTO();
+		Mockito.when(converter.toDTO(groupStageSettingEntity3)).thenReturn(groupStageSettingDto3);
 	}
 	
 	@Test
 	public void testGetGroupStageSettingCaseIdNull() {
-
-		//phần expected result
-		String expectedMessage = "Required param competitionId";
-		int expectedConfigGlobal = 0;
-		
-		//phần execute test
+		//Get actual result
 		ResponseEntity<Response> response = groupStageSettingApi.getGroupStageSetting(null);
 		
-		//phan actual result
+		//Actual result
+		int actualMessageCode = (int)response.getBody().getError().get("MessageCode");
 		String actualMessage = (String)response.getBody().getError().get("Message");
 		int actualConfigGlobal = (int)response.getBody().getConfig().get("Global");
-		MatchEntity actualGroupStageSetting = (MatchEntity)response.getBody().getResult().get("GroupStageSetting");
+		GroupStageSettingDTO actualgroupStageSetting = (GroupStageSettingDTO)response.getBody().getResult().get("GroupStageSetting");
 		
-		//phan so sanh ket qua
-		Assert.assertEquals(expectedMessage, actualMessage);
-		Assert.assertEquals(expectedConfigGlobal, actualConfigGlobal);
-		Assert.assertEquals(null, actualGroupStageSetting);
+		//Compare expected and actual
+		Assert.assertEquals(1, actualMessageCode);
+		Assert.assertEquals("Required param competitionId", actualMessage);
+		Assert.assertEquals(0, actualConfigGlobal);
+		Assert.assertEquals(null, actualgroupStageSetting);
+	}
+	
+	@Test
+	public void testGetGroupStageSettingCaseGroupStageSettingNotExist() {
+		//Get actual result
+		ResponseEntity<Response> response = groupStageSettingApi.getGroupStageSetting((long)2);
+		
+		//Actual result
+		int actualMessageCode = (int)response.getBody().getError().get("MessageCode");
+		String actualMessage = (String)response.getBody().getError().get("Message");
+		int actualConfigGlobal = (int)response.getBody().getConfig().get("Global");
+		GroupStageSettingDTO actualgroupStageSetting = (GroupStageSettingDTO)response.getBody().getResult().get("GroupStageSetting");
+		
+		//Compare expected and actual
+		Assert.assertEquals(1, actualMessageCode);
+		Assert.assertEquals("Not found", actualMessage);
+		Assert.assertEquals(0, actualConfigGlobal);
+		Assert.assertEquals(null, actualgroupStageSetting);
+	}
+	
+	@Test
+	public void testGetGroupStageSetting() {
+		//Get actual result
+		ResponseEntity<Response> response = groupStageSettingApi.getGroupStageSetting((long)3);
+		
+		//Actual result
+		int actualMessageCode = (int)response.getBody().getError().get("MessageCode");
+		String actualMessage = (String)response.getBody().getError().get("Message");
+		int actualConfigGlobal = (int)response.getBody().getConfig().get("Global");
+		GroupStageSettingDTO actualgroupStageSetting = (GroupStageSettingDTO)response.getBody().getResult().get("GroupStageSetting");
+		
+		//Compare expected and actual
+		Assert.assertEquals(0, actualMessageCode);
+		Assert.assertEquals("Found", actualMessage);
+		Assert.assertEquals(0, actualConfigGlobal);
+		Assert.assertEquals(groupStageSettingDto3, actualgroupStageSetting);
 	}
 }

@@ -1,13 +1,10 @@
 package doan2020.SportTournamentSupportSystem.testApi;
 
-import java.util.Date;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -30,10 +27,7 @@ import doan2020.SportTournamentSupportSystem.service.impl.UserService;
 @RunWith(SpringRunner.class)
 public class TestLoginAPI {
 	
-	/*
-	Các Bean được tạo bởi @TestConfiguration chỉ tồn tại trong môi trường Test
-	Cần Bean gì thì tự tạo ra trong @TestConfiguration
-	*/
+	//Bean definition
 	@TestConfiguration
 	public static class testLoginAPIConfiguration {
 		
@@ -92,152 +86,135 @@ public class TestLoginAPI {
 	@Autowired
 	LoginAPI loginApi;
 	
-	private UserEntity userEntity;
-	private UserDTO userDto;
+	UserDTO user4Dto;
 	
-	/*
-	 setup trước khi thực hiện test
-	 */
+	//Emulate before execute test
 	@Before
 	public void setUp() {
-		Date returnUserDob = new Date(2020 - 1900, 6, 12);
-		Date returnUserCreatedDate = new Date(2020 - 1900, 6, 12);
-		Date returnUserModifiedDate = new Date(2020 - 1900, 6, 12);
-		
-		userEntity = new UserEntity((long)1, "Cong", "123456", 
-				"Do Van", "Cong", "Thanh Xuan, Ha Noi", 
-				"12345678", true, returnUserDob, 
-				"cong123@gmail.com", "ava1.jpg", "background1.jpg", 	
-				"active", "stss.com/user/abcdef", null);
-		userDto = new UserDTO((long)1, "Cong", "123456", 
-				"Do Van", "Cong", "Thanh Xuan, Ha Noi", 
-				"12345678", true, "1998-01-01", 
-				"cong123@gmail.com", "ava1.jpg", "background1.jpg", 
-				(long)2, "active", "stss.com/user/abcdef");
-		/*
-		Giả lập kết quả trả về của hàm findByUsername trong userService
-		 */
-		Mockito.when(userService.findByUsername("Cong")).thenReturn(userEntity);
-		Mockito.when(jwtService.generateTokenLogin(userEntity)).thenReturn("tempToken");
-		Mockito.when(converter.toDTO(userEntity)).thenReturn(userDto);
-		Mockito.when(userService.findByUsername("Thanh")).thenReturn(null);
-		
-		
-		MockitoAnnotations.initMocks(this);
-	}
-	
-	/*
-	 * Verify kết quả trả về của hàm login trong login API
-	 */
-	@Test
-	public void testLogin() {
-		//phần data test (thay đổi theo các test case tương ứng)
-		String username = "Cong";
-		String password = "123456";
-		UserDTO user = new UserDTO();
-		user.setUsername(username);
-		user.setPassword(password);
-		
-		//phần expected result
-		String expectedMessage = "Login successfull";
-		int expectedConfigGlobal = 0;
-		
-		//phần execute test
-		ResponseEntity<Response> response = loginApi.login(user);
-		
-		//phan actual result
-		String actualMessage = (String)response.getBody().getError().get("Message");
-		int actualConfigGlobal = (int)response.getBody().getConfig().get("Global");
-		UserDTO actualUser = (UserDTO)response.getBody().getResult().get("User");
-		String actualToken = (String)response.getBody().getResult().get("Authentication");
-		
-		//phan so sanh ket qua
-		Assert.assertEquals(expectedMessage, actualMessage);
-		Assert.assertEquals(expectedConfigGlobal, actualConfigGlobal);
-		Assert.assertEquals(userDto, actualUser);
-		Assert.assertEquals("tempToken", actualToken);
+		//1
+		Mockito.when(userService.findByUsername("user1")).thenReturn(null);
+		//2
+		UserEntity user2 = new UserEntity();
+		user2.setId((long)2);
+		user2.setStatus("unactive");
+		Mockito.when(userService.findByUsername("user2")).thenReturn(user2);
+		//3
+		UserEntity user3 = new UserEntity();
+		user3.setId((long)3);
+		user3.setStatus("active");
+		user3.setUsername("user3");
+		user3.setPassword("user3");
+		Mockito.when(userService.findByUsername("user3")).thenReturn(user3);
+		//4
+		UserEntity user4 = new UserEntity();
+		user4.setId((long)4);
+		user4.setStatus("active");
+		user4.setUsername("user4");
+		user4.setPassword("user4");
+		Mockito.when(userService.findByUsername("user4")).thenReturn(user4);
+		user4Dto = new UserDTO();
+		Mockito.when(converter.toDTO(user4)).thenReturn(user4Dto);
+		Mockito.when(jwtService.generateTokenLogin(user4)).thenReturn("user4Token");
 	}
 	
 	@Test
 	public void testLoginCaseUserNotExist() {
-		//phần data test (thay đổi theo các test case tương ứng)
-		String username = "Thanh";
-		String password = "123456";
-		UserDTO user = new UserDTO();
-		user.setUsername(username);
-		user.setPassword(password);
+		//Test data
+		UserDTO user1 = new UserDTO();
+		user1.setUsername("user1");
+		user1.setPassword("user1");
 		
-		//phần expected result
-		String expectedMessage = "User is not Exist";
-		int expectedConfigGlobal = 0;
+		//Get actual result
+		ResponseEntity<Response> response = loginApi.login(user1);
 		
-		//phần execute test
-		ResponseEntity<Response> response = loginApi.login(user);
-		
-		//phan actual result
+		//Actual result
+		int actualMessageCode = (int)response.getBody().getError().get("MessageCode");
 		String actualMessage = (String)response.getBody().getError().get("Message");
 		int actualConfigGlobal = (int)response.getBody().getConfig().get("Global");
 		UserDTO actualUser = (UserDTO)response.getBody().getResult().get("User");
-		String actualToken = (String)response.getBody().getResult().get("Authentication");
+		String actualAuthentication = (String)response.getBody().getResult().get("Authentication");
 		
-		//phan so sanh ket qua
-		Assert.assertEquals(expectedMessage, actualMessage);
-		Assert.assertEquals(expectedConfigGlobal, actualConfigGlobal);
+		//Compare expected and actual
+		Assert.assertEquals(1, actualMessageCode);
+		Assert.assertEquals("User is not Exist", actualMessage);
+		Assert.assertEquals(0, actualConfigGlobal);
 		Assert.assertEquals(null, actualUser);
-		Assert.assertEquals(null, actualToken);
-	}
-	/*
-	@Test
-	public void testLoginCaseUserUnactive() {
-		//phần data test (thay đổi theo các test case tương ứng)
-		String username = "Cong";
-		String password = "123456";
-		UserDTO user = new UserDTO();
-		user.setUsername(username);
-		user.setPassword(password);
-		
-		//phần expected result
-		HttpStatus expectedHttpStatus = HttpStatus.OK;
-		String expectedMessage = "Login successfull";
-		int expectedConfigGlobal = 0;
-		
-		//phần execute test
-		ResponseEntity<Response> response = loginApi.login(user);
-		
-		HttpStatus actualHttpStatus = response.getStatusCode();
-		String actualMessage = (String)response.getBody().getError().get("Message");
-		int actualConfigGlobal = (int)response.getBody().getConfig().get("Global");
-		System.out.println("____"+actualMessage);
-		Assert.assertEquals(expectedHttpStatus, actualHttpStatus);
-		Assert.assertEquals(expectedMessage, actualMessage);
-		Assert.assertEquals(expectedConfigGlobal, actualConfigGlobal);
+		Assert.assertEquals(null, actualAuthentication);
 	}
 	
+	@Test
+	public void testLoginCaseUserUnactive() {
+		//Test data
+		UserDTO user2 = new UserDTO();
+		user2.setUsername("user2");
+		user2.setPassword("user2");
+		
+		//Get actual result
+		ResponseEntity<Response> response = loginApi.login(user2);
+		
+		//Actual result
+		int actualMessageCode = (int)response.getBody().getError().get("MessageCode");
+		String actualMessage = (String)response.getBody().getError().get("Message");
+		int actualConfigGlobal = (int)response.getBody().getConfig().get("Global");
+		UserDTO actualUser = (UserDTO)response.getBody().getResult().get("User");
+		String actualAuthentication = (String)response.getBody().getResult().get("Authentication");
+		
+		//Compare expected and actual
+		Assert.assertEquals(1, actualMessageCode);
+		Assert.assertEquals("User is not active", actualMessage);
+		Assert.assertEquals(0, actualConfigGlobal);
+		Assert.assertEquals(null, actualUser);
+		Assert.assertEquals(null, actualAuthentication);
+	}
 	
 	@Test
 	public void testLoginCaseIncorrectPassword() {
-		//phần data test (thay đổi theo các test case tương ứng)
-		String username = "Cong";
-		String password = "123456";
-		UserDTO user = new UserDTO();
-		user.setUsername(username);
-		user.setPassword(password);
+		//Test data
+		UserDTO user3 = new UserDTO();
+		user3.setUsername("user3");
+		user3.setPassword("user321");
 		
-		//phần expected result
-		HttpStatus expectedHttpStatus = HttpStatus.OK;
-		String expectedMessage = "Login successfull";
-		int expectedConfigGlobal = 0;
+		//Get actual result
+		ResponseEntity<Response> response = loginApi.login(user3);
 		
-		//phần execute test
-		ResponseEntity<Response> response = loginApi.login(user);
-		
-		HttpStatus actualHttpStatus = response.getStatusCode();
+		//Actual result
+		int actualMessageCode = (int)response.getBody().getError().get("MessageCode");
 		String actualMessage = (String)response.getBody().getError().get("Message");
 		int actualConfigGlobal = (int)response.getBody().getConfig().get("Global");
-		System.out.println("____"+actualMessage);
-		Assert.assertEquals(expectedHttpStatus, actualHttpStatus);
-		Assert.assertEquals(expectedMessage, actualMessage);
-		Assert.assertEquals(expectedConfigGlobal, actualConfigGlobal);
+		UserDTO actualUser = (UserDTO)response.getBody().getResult().get("User");
+		String actualAuthentication = (String)response.getBody().getResult().get("Authentication");
+		
+		//Compare expected and actual
+		Assert.assertEquals(1, actualMessageCode);
+		Assert.assertEquals("Password wrong", actualMessage);
+		Assert.assertEquals(0, actualConfigGlobal);
+		Assert.assertEquals(null, actualUser);
+		Assert.assertEquals(null, actualAuthentication);
 	}
-	*/
+	
+	@Test
+	public void testLogin() {
+		//Test data
+		UserDTO user4 = new UserDTO();
+		user4.setUsername("user4");
+		user4.setPassword("user4");
+		
+		//Get actual result
+		ResponseEntity<Response> response = loginApi.login(user4);
+		
+		//Actual result
+		int actualMessageCode = (int)response.getBody().getError().get("MessageCode");
+		String actualMessage = (String)response.getBody().getError().get("Message");
+		int actualConfigGlobal = (int)response.getBody().getConfig().get("Global");
+		UserDTO actualUser = (UserDTO)response.getBody().getResult().get("User");
+		String actualAuthentication = (String)response.getBody().getResult().get("Authentication");
+		
+		//Compare expected and actual
+		Assert.assertEquals(0, actualMessageCode);
+		Assert.assertEquals("Login successfull", actualMessage);
+		Assert.assertEquals(0, actualConfigGlobal);
+		Assert.assertEquals(user4Dto, actualUser);
+		Assert.assertEquals("user4Token", actualAuthentication);
+	}
+	
 }
