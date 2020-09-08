@@ -1,5 +1,11 @@
 package doan2020.SportTournamentSupportSystem.testApi;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -17,6 +24,7 @@ import doan2020.SportTournamentSupportSystem.api.LoginAPI;
 import doan2020.SportTournamentSupportSystem.converter.UserConverter;
 import doan2020.SportTournamentSupportSystem.dto.UserDTO;
 import doan2020.SportTournamentSupportSystem.entity.UserEntity;
+import doan2020.SportTournamentSupportSystem.entity.VerificationTokenEntity;
 import doan2020.SportTournamentSupportSystem.repository.UserRepository;
 import doan2020.SportTournamentSupportSystem.response.Response;
 import doan2020.SportTournamentSupportSystem.service.IVerificationTokenService;
@@ -115,6 +123,19 @@ public class TestLoginAPI {
 		user4Dto = new UserDTO();
 		Mockito.when(converter.toDTO(user4)).thenReturn(user4Dto);
 		Mockito.when(jwtService.generateTokenLogin(user4)).thenReturn("user4Token");
+		//5
+		Mockito.when(verificationTokenService.findOneByToken("token5")).thenReturn(null);
+		//6
+		VerificationTokenEntity verificationToken6 = new VerificationTokenEntity();
+		verificationToken6.setExpiredDateTime(new Date(2020-1900, 9-1, 7));
+		Mockito.when(verificationTokenService.findOneByToken("token6")).thenReturn(verificationToken6);
+		//7
+		UserEntity user7 = new UserEntity();
+		VerificationTokenEntity verificationToken7 = new VerificationTokenEntity();
+		verificationToken7.setUser(user7);
+		verificationToken7.setExpiredDateTime(new Date(2020-1900, 9-1, 10));
+		Mockito.when(verificationTokenService.findOneByToken("token7")).thenReturn(verificationToken7);
+		Mockito.when(verificationTokenService.verifyEmail(verificationToken7)).thenReturn(verificationToken7);
 	}
 	
 	@Test
@@ -218,7 +239,64 @@ public class TestLoginAPI {
 	}
 	
 	@Test
-	public void testVerifyEmail() {
+	public void testVerifyEmailCaseTokenNotExist() {
+		//Test data
+		Map<String, String> data5 = new HashMap<String, String>();
+		data5.put("code", "token5");
 		
+		//Get actual result
+		ResponseEntity<Response> response = loginApi.verifyEmail(data5);
+		
+		//Actual result
+		int actualMessageCode = (int)response.getBody().getError().get("MessageCode");
+		String actualMessage = (String)response.getBody().getError().get("Message");
+		HttpStatus actualHttpStatus = (HttpStatus)response.getStatusCode();
+		
+		//Compare expected and actual
+		Assert.assertEquals(1, actualMessageCode);
+		Assert.assertEquals("Invalid token.", actualMessage);
+		Assert.assertEquals(HttpStatus.OK, actualHttpStatus);
+	}
+	
+	@Test
+	public void testVerifyEmailCaseTokenExpireDate() {
+		//Test data
+		Map<String, String> data6 = new HashMap<String, String>();
+		data6.put("code", "token6");
+		
+		//Get actual result
+		ResponseEntity<Response> response = loginApi.verifyEmail(data6);
+		
+		//Actual result
+		int actualMessageCode = (int)response.getBody().getError().get("MessageCode");
+		String actualMessage = (String)response.getBody().getError().get("Message");
+		HttpStatus actualHttpStatus = (HttpStatus)response.getStatusCode();
+		
+		//Compare expected and actual
+		Assert.assertEquals(1, actualMessageCode);
+		Assert.assertEquals("Expired token.", actualMessage);
+		Assert.assertEquals(HttpStatus.OK, actualHttpStatus);
+	}
+	
+	@Test
+	public void testVerifyEmail() {
+		//Test data
+		Map<String, String> data7 = new HashMap<String, String>();
+		data7.put("code", "token7");
+		
+		//Get actual result
+		ResponseEntity<Response> response = loginApi.verifyEmail(data7);
+		
+		//Actual result
+		int actualMessageCode = (int)response.getBody().getError().get("MessageCode");
+		String actualMessage = (String)response.getBody().getError().get("Message");
+		int actualConfigGlobal = (int)response.getBody().getConfig().get("Global");
+		HttpStatus actualHttpStatus = (HttpStatus)response.getStatusCode();
+		
+		//Compare expected and actual
+		Assert.assertEquals(0, actualMessageCode);
+		Assert.assertEquals("", actualMessage);
+		Assert.assertEquals(0, actualConfigGlobal);
+		Assert.assertEquals(HttpStatus.OK, actualHttpStatus);
 	}
 }
