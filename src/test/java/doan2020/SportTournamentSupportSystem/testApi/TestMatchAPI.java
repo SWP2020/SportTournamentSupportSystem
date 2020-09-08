@@ -14,6 +14,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import doan2020.SportTournamentSupportSystem.api.MatchAPI;
 import doan2020.SportTournamentSupportSystem.converter.MatchConverter;
+import doan2020.SportTournamentSupportSystem.dto.MatchDTO;
 import doan2020.SportTournamentSupportSystem.entity.MatchEntity;
 import doan2020.SportTournamentSupportSystem.response.Response;
 import doan2020.SportTournamentSupportSystem.service.IMatchService;
@@ -24,6 +25,7 @@ import doan2020.SportTournamentSupportSystem.service.impl.ScheduleService;
 @RunWith(SpringRunner.class)
 public class TestMatchAPI {
 
+	//Bean definition
 	@TestConfiguration
 	public static class testMatchAPIConfiguration {
 		
@@ -60,32 +62,72 @@ public class TestMatchAPI {
 	@Autowired
 	private MatchAPI matchApi;
 	
+	MatchDTO matchDto3;
+	
+	//Emulate before execute test
 	@Before
 	public void setUp() {
-		MatchEntity match = new MatchEntity();
-		Mockito.when(service.findOneById((long)1)).thenReturn(match);
-		
+		//1
+		//2
+		Mockito.when(service.findOneById((long)2)).thenReturn(null);
+		//3
+		MatchEntity match3 = new MatchEntity();
+		Mockito.when(service.findOneById((long)3)).thenReturn(match3);
+		matchDto3 = new MatchDTO();
+		Mockito.when(converter.toDTO(match3)).thenReturn(matchDto3);
 	}
 	
 	@Test
 	public void testGetMatchCaseIdNull() {
-
-		//phần expected result
-		String expectedMessage = "Required param id";
-		int expectedConfigGlobal = 0;
-		
-		//phần execute test
+		//Get actual result
 		ResponseEntity<Response> response = matchApi.getMatch(null);
 		
-		//phan actual result
+		//Actual result
+		int actualMessageCode = (int)response.getBody().getError().get("MessageCode");
 		String actualMessage = (String)response.getBody().getError().get("Message");
 		int actualConfigGlobal = (int)response.getBody().getConfig().get("Global");
-		MatchEntity actualMatch = (MatchEntity)response.getBody().getResult().get("Match");
+		MatchDTO actualMatch = (MatchDTO)response.getBody().getResult().get("Match");
 		
-		//phan so sanh ket qua
-		Assert.assertEquals(expectedMessage, actualMessage);
-		Assert.assertEquals(expectedConfigGlobal, actualConfigGlobal);
+		//Compare expected and actual
+		Assert.assertEquals(1, actualMessageCode);
+		Assert.assertEquals("Required param id", actualMessage);
+		Assert.assertEquals(0, actualConfigGlobal);
 		Assert.assertEquals(null, actualMatch);
 	}
 	
+	@Test
+	public void testGetMatchCaseMatchNotExist() {
+		//Get actual result
+		ResponseEntity<Response> response = matchApi.getMatch((long)2);
+		
+		//Actual result
+		int actualMessageCode = (int)response.getBody().getError().get("MessageCode");
+		String actualMessage = (String)response.getBody().getError().get("Message");
+		int actualConfigGlobal = (int)response.getBody().getConfig().get("Global");
+		MatchDTO actualMatch = (MatchDTO)response.getBody().getResult().get("Match");
+		
+		//Compare expected and actual
+		Assert.assertEquals(1, actualMessageCode);
+		Assert.assertEquals("Not found", actualMessage);
+		Assert.assertEquals(0, actualConfigGlobal);
+		Assert.assertEquals(null, actualMatch);
+	}
+	
+	@Test
+	public void testGetMatch() {
+		//Get actual result
+		ResponseEntity<Response> response = matchApi.getMatch((long)3);
+		
+		//Actual result
+		int actualMessageCode = (int)response.getBody().getError().get("MessageCode");
+		String actualMessage = (String)response.getBody().getError().get("Message");
+		int actualConfigGlobal = (int)response.getBody().getConfig().get("Global");
+		MatchDTO actualMatch = (MatchDTO)response.getBody().getResult().get("Match");
+		
+		//Compare expected and actual
+		Assert.assertEquals(0, actualMessageCode);
+		Assert.assertEquals("Found", actualMessage);
+		Assert.assertEquals(0, actualConfigGlobal);
+		Assert.assertEquals(matchDto3, actualMatch);
+	}
 }

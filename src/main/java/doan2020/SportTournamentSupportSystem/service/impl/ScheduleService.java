@@ -1341,7 +1341,7 @@ public class ScheduleService implements IScheduleService {
 
 				if (team1 != null && team1.getId().longValue() == winnerId.longValue()) {
 					System.out.println("Finish match: team1.getId() " + team1.getId());
-					System.out.println(teamService.findOneById(team1.getId()));
+//					System.out.println(teamService.findOneById(team1.getId()));
 					nextIfWinReal.setTeam1(teamService.findOneById(team1.getId()));
 					System.out.println("set team 1 ok");
 				}
@@ -1358,7 +1358,7 @@ public class ScheduleService implements IScheduleService {
 				System.out.println("set status ok");
 				System.out.println(nextIfWin.toString());
 				System.out.println(nextIfWin.getStatus());
-				if (nextIfWin.getStatus() == -1) {
+				if (nextIfWin.getStatus() != null && nextIfWin.getStatus() == -1) {
 					System.out.println("finish a finished match");
 					nextIfWinReal.setWinnner(nextIfWinReal.getTeam1());
 					matchService.update(nextIfWinReal.getId(), nextIfWinReal);
@@ -1373,7 +1373,10 @@ public class ScheduleService implements IScheduleService {
 
 			if (loserId != null && nextIfLose != null && nextIfLose.getId() != null) {
 				System.out.println("set nextIfLose");
+				System.out.println(nextIfLose.getId());
 				nextIfLoseReal = matchService.findOneById(nextIfLose.getId());
+				
+				System.out.println(nextIfLoseReal);
 				Team team1 = nextIfLose.getTeam1().getTeam();
 				Team team2 = nextIfLose.getTeam2().getTeam();
 				if (team1 != null && team1.getId().longValue() == loserId.longValue()) {
@@ -1391,7 +1394,7 @@ public class ScheduleService implements IScheduleService {
 				if (team1 != null && team2 != null) {
 					nextIfLoseReal.setStatus(Const.MATCH_STATUS_PLAYING);
 				}
-				if (nextIfLose.getStatus() == -1) {
+				if (nextIfLose.getStatus() != null && nextIfLose.getStatus() == -1) {
 					System.out.println("finish a finished match");
 					nextIfLoseReal.setWinnner(nextIfLoseReal.getTeam1());
 					matchService.update(nextIfLoseReal.getId(), nextIfLoseReal);

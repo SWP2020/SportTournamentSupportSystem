@@ -47,7 +47,7 @@ public class LoginAPI {
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
-
+  
 	@PostMapping
 	public ResponseEntity<Response> login(@RequestBody UserDTO user) {
 		System.out.println("LoginAPI: login: start");
@@ -58,13 +58,10 @@ public class LoginAPI {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
 		
-		String username = user.getUsername();
-		String password = user.getPassword();
-		
-		System.out.println(username);
-		System.out.println(password);
-		
 		try {
+			
+			String username = user.getUsername();
+			String password = user.getPassword();
 			
 			UserEntity findUser = userService.findByUsername(username);
 
@@ -90,9 +87,11 @@ public class LoginAPI {
 					error.put("Message", "User is not active");
 				} else { // User is active
 					System.out.println("LoginAPI: login: User is active");
+
 					boolean checkPW = passwordEncoder.matches(user.getPassword(), findUser.getPassword());
 					
 					System.out.println("LoginAPI: login: Password: " + findUser.getPassword());
+
 //					int checkPW = password.compareTo(findUser.getPassword());
 					
 					if (!checkPW) {// password wrong
@@ -127,7 +126,7 @@ public class LoginAPI {
 			result.put("User", null);
 			config.put("Global", 0);
 			error.put("MessageCode", 1);
-			error.put("Message", "Server error");
+			error.put("Message", "Đã có lỗi xảy ra, vui lòng thử lại");
 		}
 
 		

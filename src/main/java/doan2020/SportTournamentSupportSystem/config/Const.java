@@ -10,7 +10,9 @@ public final class Const {
 //	public final static String DOMAIN = "http://192.168.1.131:3000"; //vuthon8
 //	public final static String DOMAIN = "http://192.168.43.15:3000"; //LongSama
 //	public final static String DOMAIN = "http://172.20.10.6:3000"; // Nhan's 11
+
 	public final static String DOMAIN = "https://sport-tournament-system.herokuapp.com"; //heroku cloud
+
 	@SuppressWarnings("deprecation")
 	public final static Date DEFAULT_DATE = new Date(2020, 1, 13, 7, 0, 0);
 	public final static String DEFAULT_DATE_STRING = "2020-01-13 07:00:00";
@@ -72,7 +74,7 @@ public final class Const {
 	public final static String RESPONSE_SUCCESS = "Success";
 	public final static String RESPONSE_NOT_FOUND = "Not found";
 	public final static String RESPONSE_INVALID_INFO = "Invalid info";
-	public final static String RESPONSE_SERVER_ERROR = "Server error";
+	public final static String RESPONSE_SERVER_ERROR = "Đã có lỗi xảy ra, vui lòng thử lại";
 	
 //	Constant for naming match
 	
@@ -136,5 +138,5 @@ public final class Const {
 
 //	elo
 	public static final Double DEFAULT_ELO = 10000.0;
-	public static final Double EPSILON = 0.01;
+	public static final Double EPSILON = 0.1;
 }

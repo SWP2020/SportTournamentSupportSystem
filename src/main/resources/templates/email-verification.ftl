@@ -6,4 +6,4 @@ ${DOMAIN}/active/${VERIFICATION_URL}<br/>
 
 If you did not sign up for a SportTournamentSupportSystem account please disregard this email.<br/>
 
-The SportTournamentSupportSystem team,
+The SportTournamentSupportSystem team.

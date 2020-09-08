@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -13,7 +14,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import doan2020.SportTournamentSupportSystem.api.ReportAPI;
 import doan2020.SportTournamentSupportSystem.converter.ReportConverter;
-import doan2020.SportTournamentSupportSystem.entity.MatchEntity;
+import doan2020.SportTournamentSupportSystem.dto.ReportDTO;
+import doan2020.SportTournamentSupportSystem.entity.ReportEntity;
 import doan2020.SportTournamentSupportSystem.response.Response;
 import doan2020.SportTournamentSupportSystem.service.IReportService;
 import doan2020.SportTournamentSupportSystem.service.impl.ReportService;
@@ -21,6 +23,7 @@ import doan2020.SportTournamentSupportSystem.service.impl.ReportService;
 @RunWith(SpringRunner.class)
 public class TestReportAPI {
 
+	//Bean definition
 	@TestConfiguration
 	public static class testReportAPIConfiguration {
 		
@@ -49,29 +52,72 @@ public class TestReportAPI {
 	@Autowired
 	private ReportAPI reportApi;
 	
+	ReportDTO reportDto3;
+	
+	//Emulate before execute test
 	@Before
 	public void setUp() {
-		
+		//1
+		//2
+		Mockito.when(service.findOneById((long)2)).thenReturn(null);
+		//3
+		ReportEntity report3 = new ReportEntity();
+		Mockito.when(service.findOneById((long)3)).thenReturn(report3);
+		reportDto3 = new ReportDTO();
+		Mockito.when(converter.toDTO(report3)).thenReturn(reportDto3);
 	}
 	
 	@Test
 	public void testGetReportCaseIdNull() {
-
-		//phần expected result
-		String expectedMessage = "Required param id";
-		int expectedConfigGlobal = 0;
-		
-		//phần execute test
+		//Get actual result
 		ResponseEntity<Response> response = reportApi.getReport(null);
 		
-		//phan actual result
+		//Actual result
+		int actualMessageCode = (int)response.getBody().getError().get("MessageCode");
 		String actualMessage = (String)response.getBody().getError().get("Message");
 		int actualConfigGlobal = (int)response.getBody().getConfig().get("Global");
-		MatchEntity actualMatch = (MatchEntity)response.getBody().getResult().get("Report");
+		ReportDTO actualreport = (ReportDTO)response.getBody().getResult().get("Report");
 		
-		//phan so sanh ket qua
-		Assert.assertEquals(expectedMessage, actualMessage);
-		Assert.assertEquals(expectedConfigGlobal, actualConfigGlobal);
-		Assert.assertEquals(null, actualMatch);
+		//Compare expected and actual
+		Assert.assertEquals(1, actualMessageCode);
+		Assert.assertEquals("Required param id", actualMessage);
+		Assert.assertEquals(0, actualConfigGlobal);
+		Assert.assertEquals(null, actualreport);
+	}
+	
+	@Test
+	public void testGetReportCaseReportNotExist() {
+		//Get actual result
+		ResponseEntity<Response> response = reportApi.getReport((long)2);
+		
+		//Actual result
+		int actualMessageCode = (int)response.getBody().getError().get("MessageCode");
+		String actualMessage = (String)response.getBody().getError().get("Message");
+		int actualConfigGlobal = (int)response.getBody().getConfig().get("Global");
+		ReportDTO actualreport = (ReportDTO)response.getBody().getResult().get("Report");
+		
+		//Compare expected and actual
+		Assert.assertEquals(1, actualMessageCode);
+		Assert.assertEquals("Not found", actualMessage);
+		Assert.assertEquals(0, actualConfigGlobal);
+		Assert.assertEquals(null, actualreport);
+	}
+	
+	@Test
+	public void testGetReport() {
+		//Get actual result
+		ResponseEntity<Response> response = reportApi.getReport((long)3);
+		
+		//Actual result
+		int actualMessageCode = (int)response.getBody().getError().get("MessageCode");
+		String actualMessage = (String)response.getBody().getError().get("Message");
+		int actualConfigGlobal = (int)response.getBody().getConfig().get("Global");
+		ReportDTO actualreport = (ReportDTO)response.getBody().getResult().get("Report");
+		
+		//Compare expected and actual
+		Assert.assertEquals(0, actualMessageCode);
+		Assert.assertEquals("Found", actualMessage);
+		Assert.assertEquals(0, actualConfigGlobal);
+		Assert.assertEquals(reportDto3, actualreport);
 	}
 }
