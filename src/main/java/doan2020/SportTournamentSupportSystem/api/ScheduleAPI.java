@@ -61,6 +61,11 @@ public class ScheduleAPI {
 			} else {
 				System.out.println("ScheduleAPI: getScheduleByCompetitionId: -> ScheduleService: getSchedule: ");
 				ScheduleDTO schedule = scheduleService.getSchedule(thisCompetition);
+				try {
+				System.out.println("check data send to front end: " + schedule.getGroupStageSchedule().getTables().get(0).getMatches().get(0));
+				}catch (Exception e) {
+					// TODO: handle exception
+				}
 				System.out.println("ScheduleService: getSchedule: -> ScheduleAPI: getScheduleByCompetitionId:");
 				if (schedule == null) {
 					result.put("Schedule", null);
