@@ -9,6 +9,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -43,6 +44,9 @@ public class LoginAPI {
 
 	@Autowired
 	private IVerificationTokenService verificationTokenService;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 	@PostMapping
 	public ResponseEntity<Response> login(@RequestBody UserDTO user) {
@@ -86,13 +90,13 @@ public class LoginAPI {
 					error.put("Message", "User is not active");
 				} else { // User is active
 					System.out.println("LoginAPI: login: User is active");
-//					boolean checkPW = passwordEncoder.matches(user.getPassword(), findUser.getPassword());
+					boolean checkPW = passwordEncoder.matches(user.getPassword(), findUser.getPassword());
 					
 					System.out.println("LoginAPI: login: Password: " + findUser.getPassword());
-					int checkPW = password.compareTo(findUser.getPassword());
+//					int checkPW = password.compareTo(findUser.getPassword());
 					
-//					if (!checkPW) {// password wrong
-					if (checkPW != 0) {
+					if (!checkPW) {// password wrong
+//					if (checkPW != 0) {
 						System.out.println("LoginAPI: login: Password wrong");
 						result.put("User", null);
 						result.put("Authentication", null);
