@@ -89,7 +89,7 @@ public class UsersAPI {
 			System.out.println("UsersAPI: getAllUser: has exception");
 			result.put("Users", findPageDTO);
 			error.put("MessageCode", 1);
-			error.put("Message", "Server error");
+			error.put("Message", "Đã có lỗi xảy ra, vui lòng thử lại");
 		}
 		response.setError(error);
 		response.setResult(result);
@@ -156,7 +156,7 @@ public class UsersAPI {
 				result.put("Users", dtos);
 				config.put("Global", 0);
 				error.put("MessageCode", 0);
-				error.put("Message", "Server error");
+				error.put("Message", "Đã có lỗi xảy ra, vui lòng thử lại");
 			}
 			
 		}
@@ -226,7 +226,7 @@ public class UsersAPI {
 				result.put("Users", dtos);
 				config.put("Global", 0);
 				error.put("MessageCode", 0);
-				error.put("Message", "Server error");
+				error.put("Message", "Đã có lỗi xảy ra, vui lòng thử lại");
 			}
 			
 		}

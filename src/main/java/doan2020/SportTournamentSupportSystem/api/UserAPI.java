@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -65,6 +66,9 @@ public class UserAPI {
 	
 	@Autowired
 	private AzureBlobAdapterService azureBlobAdapterService;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 	/* get One User */
 
@@ -132,7 +136,7 @@ public class UserAPI {
 			System.out.println("UserAPI: getById: has exception");
 			result.put("User", null);
 			error.put("MessageCode", 1);
-			error.put("Message", "Server error");
+			error.put("Message", "Đã có lỗi xảy ra, vui lòng thử lại");
 		}
 
 		response.setError(error);
@@ -179,7 +183,7 @@ public class UserAPI {
 			System.out.println("UserAPI: getByUserName: has exception");
 			result.put("User", null);
 			error.put("MessageCode", 1);
-			error.put("Message", "Server error");
+			error.put("Message", "Đã có lỗi xảy ra, vui lòng thử lại");
 		}
 		response.setError(error);
 		response.setResult(result);
@@ -224,7 +228,7 @@ public class UserAPI {
 			System.out.println("UserAPI: getByUserName: has exception");
 			result.put("User", null);
 			error.put("MessageCode", 1);
-			error.put("Message", "Server error");
+			error.put("Message", "Đã có lỗi xảy ra, vui lòng thử lại");
 		}
 		response.setError(error);
 		response.setResult(result);
@@ -281,7 +285,7 @@ public class UserAPI {
 			System.out.println("UserAPI: createUser: has exception");
 			result.put("User", null);
 			error.put("MessageCode", 1);
-			error.put("Message", "Server error");
+			error.put("Message", "Đã có lỗi xảy ra, vui lòng thử lại");
 		}
 		response.setError(error);
 		response.setResult(result);
@@ -535,8 +539,10 @@ public class UserAPI {
 	
 	/* ---------------- Edit Profile User ------------------------ */
 	@PutMapping("/changePassword")
-	public ResponseEntity<Response> changePassword(@RequestParam(value = "id") Long id, @RequestBody UserDTO dto) {
-		System.out.println("UserAPI: changePassword: start");
+	public ResponseEntity<Response> changePassword(
+			@RequestParam(value = "id") Long id,
+			@RequestBody HashMap<String, String> data) {
+		System.out.println("UserAPI: changePassword: start"); // oldPassword, newPassword
 		HttpStatus httpStatus = HttpStatus.OK;
 		Response response = new Response();
 		Map<String, Object> config = new HashMap<String, Object>();
@@ -545,11 +551,28 @@ public class UserAPI {
 		try {
 			UserEntity userEntity = new UserEntity();
 			if (id != null) {
-				userEntity = userConverter.toEntity(dto);
-				userEntity = userService.changePassword(id, userEntity);
-
-				error.put("MessageCode", 0);
-				error.put("Message", "changePassword Successfull");
+				String newPassword = passwordEncoder.encode(data.get("newPassword"));
+				String oldPassword = data.get("oldPassword");
+				
+				System.out.println("oldPass: " + oldPassword);
+				System.out.println("newPass: " + data.get("newPassword"));
+				
+				userEntity = userService.findOneById(id);
+				
+				System.out.println("check: " + passwordEncoder.matches(oldPassword, userEntity.getPassword()));
+				
+				if (passwordEncoder.matches(oldPassword, userEntity.getPassword())) {
+					userEntity = userService.changePassword(id, newPassword);
+					UserDTO dto = userConverter.toDTO(userEntity);
+					result.put("User", dto);
+					error.put("MessageCode", 0);
+					error.put("Message", "changePassword Successfull");
+				}else {
+					result.put("User", null);
+					error.put("MessageCode", 1);
+					error.put("Message", "Old password incorect");
+				}
+				
 			} else {
 				error.put("MessageCode", 1);
 				error.put("Message", "required user id");
