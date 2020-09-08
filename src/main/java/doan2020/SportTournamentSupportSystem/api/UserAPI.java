@@ -408,7 +408,7 @@ public class UserAPI {
 
 	}
 
-	@PutMapping("/forgotPassword")
+	@GetMapping("/forgotPassword")
 	public ResponseEntity<Response> forgotPassword(@RequestParam(value = "email") String email) {
 		Response response = new Response();
 		HttpStatus httpStatus = null;
@@ -426,13 +426,14 @@ public class UserAPI {
 				error.put("Message", "User is not exist");
 			} else {
 				String userName = user.getUsername();
-				user = userService.changePassword(user.getId(), user);
 				UUID uuid = new UUID(UUID.randomUUID().getMostSignificantBits(),
 						UUID.randomUUID().getLeastSignificantBits());
 				String newPassWord = uuid.toString();
 				UserDTO dto = userConverter.toDTO(user);
 				
 				if (sendingMailService.sendForgotPasswordMail(email, userName, newPassWord)) {
+					String encoderPassword = passwordEncoder.encode(newPassWord);
+					userService.changePassword(user.getId(), encoderPassword);
 					result.put("User", dto);
 					error.put("MessageCode", 0);
 					error.put("Message", "forgot password successfully");

@@ -47,9 +47,6 @@ public class LoginAPI {
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
-
-	@Autowired
-	private PasswordEncoder passwordEncoder;
 	
 	@PostMapping
 	public ResponseEntity<Response> login(@RequestBody UserDTO user) {
