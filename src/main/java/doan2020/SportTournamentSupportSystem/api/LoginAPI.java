@@ -44,6 +44,9 @@ public class LoginAPI {
 
 	@Autowired
 	private IVerificationTokenService verificationTokenService;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -87,6 +90,7 @@ public class LoginAPI {
 					error.put("Message", "User is not active");
 				} else { // User is active
 					System.out.println("LoginAPI: login: User is active");
+
 					boolean checkPW = passwordEncoder.matches(password, findUser.getPassword());
 					
 //					System.out.println("LoginAPI: login: Password: " + findUser.getPassword());
