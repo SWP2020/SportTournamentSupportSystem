@@ -48,4 +48,6 @@ public interface IUserService {
 	public Collection<UserEntity> findBySearchStringAndStatus(Pageable pageable, String searchString, String status);
 	
 	public Long countBySearchStringAndStatus(String searchString, String status);
+	
+	public UserEntity changePassword(Long id, UserEntity newEntity);
 }
