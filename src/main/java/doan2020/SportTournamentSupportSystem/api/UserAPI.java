@@ -2,6 +2,7 @@ package doan2020.SportTournamentSupportSystem.api;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,6 +34,7 @@ import doan2020.SportTournamentSupportSystem.service.IUserService;
 import doan2020.SportTournamentSupportSystem.service.impl.AzureBlobAdapterService;
 import doan2020.SportTournamentSupportSystem.service.impl.FileStorageService;
 import doan2020.SportTournamentSupportSystem.service.impl.JwtService;
+import doan2020.SportTournamentSupportSystem.service.impl.SendingMailService;
 import doan2020.SportTournamentSupportSystem.service.impl.VerificationTokenService;
 
 @RestController
@@ -62,9 +64,12 @@ public class UserAPI {
 
 	@Autowired
 	private JwtService jwtService;
-	
+
 	@Autowired
 	private AzureBlobAdapterService azureBlobAdapterService;
+
+	@Autowired
+	private SendingMailService sendingMailService;
 
 	/* get One User */
 
@@ -399,22 +404,49 @@ public class UserAPI {
 
 	}
 
-	@PostMapping("/forgotPassword")
-	public ResponseEntity<Response> forgotPassword(@RequestBody UserDTO userDTO) {
+	@PutMapping("/forgotPassword")
+	public ResponseEntity<Response> forgotPassword(@RequestParam(value = "email") String email) {
 		Response response = new Response();
 		HttpStatus httpStatus = null;
 		Map<String, Object> config = new HashMap<String, Object>();
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
+		httpStatus = HttpStatus.OK;
+		UserEntity user = null;
+
 		try {
+			user = userService.findByEmail(email);
+			if (user == null) {
+				result.put("User", null);
+				error.put("MessageCode", 1);
+				error.put("Message", "User is not exist");
+			} else {
+				String userName = user.getUsername();
+				user = userService.changePassword(user.getId(), user);
+				UUID uuid = new UUID(UUID.randomUUID().getMostSignificantBits(),
+						UUID.randomUUID().getLeastSignificantBits());
+				String newPassWord = uuid.toString();
+				UserDTO dto = userConverter.toDTO(user);
+				
+				if (sendingMailService.sendForgotPasswordMail(email, userName, newPassWord)) {
+					result.put("User", dto);
+					error.put("MessageCode", 0);
+					error.put("Message", "forgot password successfully");
+				} else {
+					result.put("User", null);
+					error.put("MessageCode", 1);
+					error.put("Message", "forgot password fail");
+				}
+			}
 
 		} catch (Exception e) {
-			// TODO: handle exception
+			result.put("User", null);
+			error.put("MessageCode", 1);
+			error.put("Message", "send  Mail fail");
 		}
 		response.setError(error);
 		response.setResult(result);
 		response.setConfig(config);
-
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
 
@@ -436,14 +468,14 @@ public class UserAPI {
 				error.put("Message", "Required param id");
 			} else {// id not null
 				System.out.println("UserAPI: uploadAvatar: CP2");
-				String containName = "user-"+String.valueOf(id);
-				
+				String containName = "user-" + String.valueOf(id);
+
 				// create container / folder to azure
 				azureBlobAdapterService.createContainer(containName);
-				
+
 				// upload image to this container
 				String urlImage = azureBlobAdapterService.upload(file, containName, Const.AVATAR).toString();
-				
+
 				System.out.println("UserAPI: uploadAvatar: CP3");
 				System.out.println("UserAPI: uploadAvatar: fileName: " + urlImage);
 				if (urlImage == null) {// urlImage invalid
@@ -496,11 +528,11 @@ public class UserAPI {
 				System.out.println("UserAPI: uploadAvatar: CP2");
 				System.out.println(file);
 
-				String containName = "user-"+String.valueOf(id);
+				String containName = "user-" + String.valueOf(id);
 
 				// create container / folder to azure
 				azureBlobAdapterService.createContainer(containName);
-				
+
 				// upload image to this container
 				String urlImage = azureBlobAdapterService.upload(file, containName, Const.BACKGROUND).toString();
 
@@ -532,7 +564,7 @@ public class UserAPI {
 		System.out.println("UserAPI: uploadBackground: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
-	
+
 	/* ---------------- Edit Profile User ------------------------ */
 	@PutMapping("/changePassword")
 	public ResponseEntity<Response> changePassword(@RequestParam(value = "id") Long id, @RequestBody UserDTO dto) {
