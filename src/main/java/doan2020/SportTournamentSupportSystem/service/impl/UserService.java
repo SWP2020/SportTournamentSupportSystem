@@ -291,19 +291,19 @@ public class UserService implements IUserService {
 	}
 
 	@Override
-	public UserEntity changePassword(Long id, UserEntity newEntity) {
+	public UserEntity changePassword(Long id, String password) {
 		UserEntity updatedEntity = null;
 		try {
 			updatedEntity = userRepository.findOneById(id);
 			
-			updatedEntity.setPassword(newEntity.getPassword());
+			updatedEntity.setPassword(password);
 			
 			updatedEntity = userRepository.save(updatedEntity);
 		} catch (Exception e) {
 			return null;
 		}
 
-		return newEntity;
+		return updatedEntity;
 	}
 
 }

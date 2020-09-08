@@ -73,7 +73,7 @@ public class NotificationsAPI {
 			System.out.println("NotificationsAPI: getAllNotification: has exception");
 			result.put("Users", findPageDTO);
 			error.put("MessageCode", 1);
-			error.put("Message", "Server error");
+			error.put("Message", "Đã có lỗi xảy ra, vui lòng thử lại");
 		}
 		response.setError(error);
 		response.setResult(result);

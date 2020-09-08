@@ -72,7 +72,7 @@ public final class Const {
 	public final static String RESPONSE_SUCCESS = "Success";
 	public final static String RESPONSE_NOT_FOUND = "Not found";
 	public final static String RESPONSE_INVALID_INFO = "Invalid info";
-	public final static String RESPONSE_SERVER_ERROR = "Server error";
+	public final static String RESPONSE_SERVER_ERROR = "Đã có lỗi xảy ra, vui lòng thử lại";
 	
 //	Constant for naming match
 	
@@ -136,5 +136,5 @@ public final class Const {
 
 //	elo
 	public static final Double DEFAULT_ELO = 10000.0;
-	public static final Double EPSILON = 0.01;
+	public static final Double EPSILON = 0.1;
 }

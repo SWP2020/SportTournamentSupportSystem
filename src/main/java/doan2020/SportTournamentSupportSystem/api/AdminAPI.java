@@ -169,7 +169,7 @@ public class AdminAPI {
 				result.put("Tournaments", tournaments);
 				config.put("Global", 0);
 				error.put("MessageCode", 0);
-				error.put("Message", "Server error");
+				error.put("Message", "Đã có lỗi xảy ra, vui lòng thử lại");
 			}
 
 		}
@@ -238,7 +238,7 @@ public class AdminAPI {
 				result.put("Users", dtos);
 				config.put("Global", 0);
 				error.put("MessageCode", 0);
-				error.put("Message", "Server error");
+				error.put("Message", "Đã có lỗi xảy ra, vui lòng thử lại");
 			}
 
 		}
@@ -307,7 +307,7 @@ public class AdminAPI {
 				result.put("Users", dtos);
 				config.put("Global", 0);
 				error.put("MessageCode", 0);
-				error.put("Message", "Server error");
+				error.put("Message", "Đã có lỗi xảy ra, vui lòng thử lại");
 			}
 
 		}
@@ -386,7 +386,7 @@ public class AdminAPI {
 			System.out.println("AdminAPI: getById: has exception");
 			result.put("User", null);
 			error.put("MessageCode", 1);
-			error.put("Message", "Server error");
+			error.put("Message", "Đã có lỗi xảy ra, vui lòng thử lại");
 		}
 
 		response.setError(error);
@@ -463,7 +463,7 @@ public class AdminAPI {
 			result.put("Tournament", null);
 			config.put("Global", 0);
 			error.put("MessageCode", 1);
-			error.put("Message", "Server error");
+			error.put("Message", "Đã có lỗi xảy ra, vui lòng thử lại");
 		}
 
 		response.setError(error);
@@ -540,7 +540,7 @@ public class AdminAPI {
 			result.put("Tournament", null);
 			config.put("Global", 0);
 			error.put("MessageCode", 1);
-			error.put("Message", "Server error");
+			error.put("Message", "Đã có lỗi xảy ra, vui lòng thử lại");
 		}
 
 		response.setError(error);
@@ -594,7 +594,7 @@ public class AdminAPI {
 			result.put("User", userDTO);
 			config.put("Global", 0);
 			error.put("MessageCode", 1);
-			error.put("Message", "Server error");
+			error.put("Message", "Đã có lỗi xảy ra, vui lòng thử lại");
 		}
 		response.setError(error);
 		response.setResult(result);
@@ -650,7 +650,7 @@ public class AdminAPI {
 			result.put("User", null);
 			config.put("Global", 0);
 			error.put("MessageCode", 1);
-			error.put("Message", "Server error");
+			error.put("Message", "Đã có lỗi xảy ra, vui lòng thử lại");
 		}
 
 		response.setError(error);
@@ -707,7 +707,7 @@ public class AdminAPI {
 			result.put("User", null);
 			config.put("Global", 0);
 			error.put("MessageCode", 1);
-			error.put("Message", "Server error");
+			error.put("Message", "Đã có lỗi xảy ra, vui lòng thử lại");
 		}
 
 		response.setError(error);
@@ -769,7 +769,7 @@ public class AdminAPI {
 			result.put("Reports", dtos);
 			config.put("Global", 0);
 			error.put("MessageCode", 0);
-			error.put("Message", "Server error");
+			error.put("Message", "Đã có lỗi xảy ra, vui lòng thử lại");
 		}
 
 		response.setConfig(config);
@@ -831,7 +831,7 @@ public class AdminAPI {
 			result.put("Reports", dtos);
 			config.put("Global", 0);
 			error.put("MessageCode", 0);
-			error.put("Message", "Server error");
+			error.put("Message", "Đã có lỗi xảy ra, vui lòng thử lại");
 		}
 
 		response.setConfig(config);

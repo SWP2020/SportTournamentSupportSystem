@@ -74,7 +74,7 @@ public class RoleAPI {
 			result.put("Role", null);
 			config.put("Global", 0);
 			error.put("MessageCode", 1);
-			error.put("Message", "Server error");
+			error.put("Message", "Đã có lỗi xảy ra, vui lòng thử lại");
 		}
 
 		response.setConfig(config);
@@ -116,7 +116,7 @@ public class RoleAPI {
 			result.put("Role", null);
 			config.put("Global", 0);
 			error.put("MessageCode", 1);
-			error.put("Message", "Server error");
+			error.put("Message", "Đã có lỗi xảy ra, vui lòng thử lại");
 		}
 
 		response.setConfig(config);

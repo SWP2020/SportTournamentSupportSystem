@@ -45,7 +45,9 @@ public class SendingMailService {
 		String subject = "Please verify your email";
 		String body = "";
 		try {
+//			templates.setDefaultEncoding("UTF-8");
 			Template t = templates.getTemplate("email-verification.ftl");
+//			t.setEncoding("UTF-8");
 			Map<String, String> map = new HashMap<>();
 			map.put("USERNAME",username);
 			map.put("DOMAIN",domain);
