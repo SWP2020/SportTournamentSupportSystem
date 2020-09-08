@@ -9,6 +9,12 @@ public class RoundRobinScheduleDTO extends FinalStageScheduleDTO {
 	private static final long serialVersionUID = 1L;
 
 	protected boolean hasHomeMatch;
+	
+	
+
+	public RoundRobinScheduleDTO() {
+		super();
+	}
 
 	public boolean isHasHomeMatch() {
 		return hasHomeMatch;

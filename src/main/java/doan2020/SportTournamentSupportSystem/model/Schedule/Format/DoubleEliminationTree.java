@@ -321,6 +321,7 @@ public class DoubleEliminationTree extends SingleEliminationTree implements Seri
 		this.summaryFinal.setMatchNo(1);
 		this.summaryFinal.setRoundNo(1);
 		this.summaryFinal.setName(Const.SUMMARY_FINAL + 1);
+		this.summaryFinal.setStatus(100);
 
 		MatchSlot winner = new MatchSlot();
 		MatchSlot loser = new MatchSlot();
@@ -351,6 +352,7 @@ public class DoubleEliminationTree extends SingleEliminationTree implements Seri
 		this.optionFinal.setMatchNo(2);
 		this.optionFinal.setRoundNo(2);
 		this.optionFinal.setName(Const.SUMMARY_FINAL + 2);
+		this.optionFinal.setStatus(100);
 
 		MatchSlot winner = new MatchSlot();
 		MatchSlot loser = new MatchSlot();
