@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -36,7 +35,7 @@ public class TestLoginAPI {
 	Cần Bean gì thì tự tạo ra trong @TestConfiguration
 	*/
 	@TestConfiguration
-	public static class testloginAPIConfiguration {
+	public static class testLoginAPIConfiguration {
 		
 		@Bean
 		LoginService loginService() {
@@ -140,20 +139,19 @@ public class TestLoginAPI {
 		user.setPassword(password);
 		
 		//phần expected result
-		HttpStatus expectedHttpStatus = HttpStatus.OK;
 		String expectedMessage = "Login successfull";
 		int expectedConfigGlobal = 0;
 		
 		//phần execute test
 		ResponseEntity<Response> response = loginApi.login(user);
 		
-		HttpStatus actualHttpStatus = response.getStatusCode();
+		//phan actual result
 		String actualMessage = (String)response.getBody().getError().get("Message");
 		int actualConfigGlobal = (int)response.getBody().getConfig().get("Global");
 		UserDTO actualUser = (UserDTO)response.getBody().getResult().get("User");
 		String actualToken = (String)response.getBody().getResult().get("Authentication");
 		
-		Assert.assertEquals(expectedHttpStatus, actualHttpStatus);
+		//phan so sanh ket qua
 		Assert.assertEquals(expectedMessage, actualMessage);
 		Assert.assertEquals(expectedConfigGlobal, actualConfigGlobal);
 		Assert.assertEquals(userDto, actualUser);
@@ -170,20 +168,19 @@ public class TestLoginAPI {
 		user.setPassword(password);
 		
 		//phần expected result
-		HttpStatus expectedHttpStatus = HttpStatus.OK;
 		String expectedMessage = "User is not Exist";
 		int expectedConfigGlobal = 0;
 		
 		//phần execute test
 		ResponseEntity<Response> response = loginApi.login(user);
 		
-		HttpStatus actualHttpStatus = response.getStatusCode();
+		//phan actual result
 		String actualMessage = (String)response.getBody().getError().get("Message");
 		int actualConfigGlobal = (int)response.getBody().getConfig().get("Global");
 		UserDTO actualUser = (UserDTO)response.getBody().getResult().get("User");
 		String actualToken = (String)response.getBody().getResult().get("Authentication");
 		
-		Assert.assertEquals(expectedHttpStatus, actualHttpStatus);
+		//phan so sanh ket qua
 		Assert.assertEquals(expectedMessage, actualMessage);
 		Assert.assertEquals(expectedConfigGlobal, actualConfigGlobal);
 		Assert.assertEquals(null, actualUser);
