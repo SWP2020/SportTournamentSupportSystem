@@ -3,6 +3,7 @@ package doan2020.SportTournamentSupportSystem.api;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -482,23 +483,31 @@ public class TournamentAPI {
 								thisTournament.setStatus(Const.TOURNAMENT_STATUS_PROCESSING);
 								thisTournament = service.update(id, thisTournament);
 								thisTournamentDTO = converter.toDTO(thisTournament);
+								
+								System.out.println("tounament"+id);
+								Long managerId = thisTournament.getCreator().getId();
+								
+								HashSet<UserEntity> users = new HashSet<>();
+								
+								List<TeamEntity> teamEntities = (List<TeamEntity>) teamService.findByTournamentIdAndStatus(id, Const.TEAM_STATUS_JOINED);
+
+								for(TeamEntity teamEntity: teamEntities) {
+									if(teamEntity.getCreator().getId().longValue() != managerId.longValue()) {
+										users.add(teamEntity.getCreator());
+									}
+								}
+								
+								for (UserEntity user: users) {
+									System.out.println("CreatorId: " + user.getId());
+									String mail = user.getEmail();
+								    String userName = user.getUsername();
+									sendingMailService.sendNotificationMail(mail, thisTournament.getFullName(), userName);
+								}
 							}
 						}
 					}
 					
-					System.out.println("tounament"+id);
-					List<TeamEntity> teamEntities = (List<TeamEntity>) teamService.findByTournamentIdAndStatus(id, Const.TOURNAMENT_STATUS_PROCESSING);
-
-					for(TeamEntity teamEntity: teamEntities) {
-						System.out.println("creator "+teamEntity.getCreator().getId());
-						if(teamEntity.getCreator().getId() != id) {
-							String mail = teamEntity.getCreator().getEmail();
-							
-						    String userName = teamEntity.getCreator().getUsername();
-							
-							sendingMailService.sendNotificationMail(mail, thisTournament.getFullName(), userName);
-						}
-					}
+					
 					
 					result.put("Tournament", thisTournamentDTO);
 					config.put("Global", 0);
