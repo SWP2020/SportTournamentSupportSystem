@@ -217,4 +217,8 @@ public class TestLoginAPI {
 		Assert.assertEquals("user4Token", actualAuthentication);
 	}
 	
+	@Test
+	public void testVerifyEmail() {
+		
+	}
 }

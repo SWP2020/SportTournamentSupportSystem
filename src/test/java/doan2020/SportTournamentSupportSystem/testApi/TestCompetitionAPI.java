@@ -121,6 +121,13 @@ public class TestCompetitionAPI {
 	PermissionDTO permissionDto4;
 	CompetitionDTO competitionDto4;
 	
+	CompetitionDTO competitionDto5;
+	
+	CompetitionDTO competitionDto6;
+	
+	CompetitionDTO competitionDto7;
+	CompetitionDTO createCompetitionDto7;
+	
 	//Emulate before execute test
 	@Before
 	public void setUp() {
@@ -175,6 +182,25 @@ public class TestCompetitionAPI {
 		Mockito.when(permissionConverter.toDTO(permissionEntity4)).thenReturn(permissionDto4);
 		competitionDto4 = new CompetitionDTO();
 		Mockito.when(competitionConverter.toDTO(competition4)).thenReturn(competitionDto4);
+		//5
+		competitionDto5 = new CompetitionDTO();
+		Mockito.when(competitionConverter.toEntity(competitionDto5)).thenReturn(null);
+		//6
+		TournamentEntity tournament6 = new TournamentEntity();
+		tournament6.setStatus(Const.TOURNAMENT_STATUS_REGISTRATION_OPENING);
+		CompetitionEntity competition6 = new CompetitionEntity();
+		competition6.setTournament(tournament6);
+		competitionDto6 = new CompetitionDTO();
+		Mockito.when(competitionConverter.toEntity(competitionDto6)).thenReturn(competition6);
+		//7
+		TournamentEntity tournament7 = new TournamentEntity();
+		tournament7.setStatus(Const.TOURNAMENT_STATUS_INITIALIZING);
+		CompetitionEntity competition7 = new CompetitionEntity();
+		competition7.setTournament(tournament7);
+		Mockito.when(competitionConverter.toEntity(competitionDto7)).thenReturn(competition7);
+		Mockito.when(competitionService.create(competition7)).thenReturn(null);//
+		createCompetitionDto7 = new CompetitionDTO();
+		Mockito.when(competitionConverter.toDTO(competition7)).thenReturn(createCompetitionDto7);
 	}
 	
 	@Test
@@ -247,5 +273,59 @@ public class TestCompetitionAPI {
 		Assert.assertEquals("Found", actualMessage);
 		Assert.assertEquals(permissionDto4, actualConfigGlobal);
 		Assert.assertEquals(competitionDto4, actualCompetition);
+	}
+	
+	@Test
+	public void testCreateCompetitionCaseConvertFail() {
+		//Get actual result
+		ResponseEntity<Response> response = competitionApi.createCompetition(competitionDto5);
+		
+		//Actual result
+		int actualMessageCode = (int)response.getBody().getError().get("MessageCode");
+		String actualMessage = (String)response.getBody().getError().get("Message");
+		int actualConfigGlobal = (int)response.getBody().getConfig().get("Global");
+		CompetitionDTO actualCompetition = (CompetitionDTO)response.getBody().getResult().get("Competition");
+		
+		//Compare expected and actual
+		Assert.assertEquals(1, actualMessageCode);
+		Assert.assertEquals("create new Competition fail", actualMessage);
+		Assert.assertEquals(0, actualConfigGlobal);
+		Assert.assertEquals(null, actualCompetition);
+	}
+	
+	@Test
+	public void testCreateCompetitionCaseRegistrationOpening() {
+		//Get actual result
+		ResponseEntity<Response> response = competitionApi.createCompetition(competitionDto6);
+		
+		//Actual result
+		int actualMessageCode = (int)response.getBody().getError().get("MessageCode");
+		String actualMessage = (String)response.getBody().getError().get("Message");
+		int actualConfigGlobal = (int)response.getBody().getConfig().get("Global");
+		CompetitionDTO actualCompetition = (CompetitionDTO)response.getBody().getResult().get("Competition");
+		
+		//Compare expected and actual
+		Assert.assertEquals(1, actualMessageCode);
+		Assert.assertEquals(Const.TOURNAMENT_MESSAGE_REGISTRATION_OPENING, actualMessage);
+		Assert.assertEquals(0, actualConfigGlobal);
+		Assert.assertEquals(null, actualCompetition);
+	}
+	
+	@Test
+	public void testCreateCompetition() {
+		//Get actual result
+		ResponseEntity<Response> response = competitionApi.createCompetition(competitionDto7);
+		
+		//Actual result
+		int actualMessageCode = (int)response.getBody().getError().get("MessageCode");
+		String actualMessage = (String)response.getBody().getError().get("Message");
+		int actualConfigGlobal = (int)response.getBody().getConfig().get("Global");
+		CompetitionDTO actualCompetition = (CompetitionDTO)response.getBody().getResult().get("Competition");
+		
+		//Compare expected and actual
+		Assert.assertEquals(0, actualMessageCode);
+		Assert.assertEquals("create new Competition successfull", actualMessage);
+		Assert.assertEquals(0, actualConfigGlobal);
+		Assert.assertEquals(createCompetitionDto7, actualCompetition);
 	}
 }
