@@ -7,9 +7,11 @@ import org.springframework.stereotype.Component;
 @Component
 public final class Const {
 	
-	public final static String DOMAIN = "http://192.168.1.131:3000"; //vuthon8
+//	public final static String DOMAIN = "http://192.168.1.131:3000"; //vuthon8
 //	public final static String DOMAIN = "http://192.168.43.15:3000"; //LongSama
 //	public final static String DOMAIN = "http://172.20.10.6:3000"; // Nhan's 11
+	
+	public final static String DOMAIN = "https://sport-tournament-system.herokuapp.com"; //heroku cloud
 	
 	@SuppressWarnings("deprecation")
 	public final static Date DEFAULT_DATE = new Date(2020, 1, 13, 7, 0, 0);
