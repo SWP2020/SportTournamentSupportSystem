@@ -6,7 +6,6 @@ import { IParams, IBigRequest } from 'interfaces/common';
 import { getMatchResult } from 'components/BracketMatch/actions';
 import { updateResult, updateMatchInfo } from './actions';
 import './styles.css';
-import { FaLessThanEqual } from 'react-icons/fa';
 
 interface IMatchSettingProps extends React.ClassAttributes<MatchSetting> {
   teamsInfo: IParams[];
