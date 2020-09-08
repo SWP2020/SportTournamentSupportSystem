@@ -532,5 +532,40 @@ public class UserAPI {
 		System.out.println("UserAPI: uploadBackground: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
+	
+	/* ---------------- Edit Profile User ------------------------ */
+	@PutMapping("/changePassword")
+	public ResponseEntity<Response> changePassword(@RequestParam(value = "id") Long id, @RequestBody UserDTO dto) {
+		System.out.println("UserAPI: changePassword: start");
+		HttpStatus httpStatus = HttpStatus.OK;
+		Response response = new Response();
+		Map<String, Object> config = new HashMap<String, Object>();
+		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> error = new HashMap<String, Object>();
+		try {
+			UserEntity userEntity = new UserEntity();
+			if (id != null) {
+				userEntity = userConverter.toEntity(dto);
+				userEntity = userService.changePassword(id, userEntity);
+
+				error.put("MessageCode", 0);
+				error.put("Message", "changePassword Successfull");
+			} else {
+				error.put("MessageCode", 1);
+				error.put("Message", "required user id");
+			}
+			System.out.println("UserAPI: changePassword: no exception");
+		} catch (Exception ex) {
+			System.out.println("UserAPI: changePassword: has exception");
+			result.put("User", null);
+			error.put("MessageCode", 1);
+			error.put("Message", "changePassword fail");
+		}
+		response.setError(error);
+		response.setResult(result);
+		response.setConfig(config);
+		System.out.println("UserAPI: changePassword: finish");
+		return new ResponseEntity<Response>(response, httpStatus);
+	}
 
 }
