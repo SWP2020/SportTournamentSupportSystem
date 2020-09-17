@@ -1,12 +1,10 @@
-Chào ${USERNAME},<br/>
+Hi ${USERNAME},<br/>
 
-Cảm ơn bạn đã sử dụng dịch vụ của SportTournamentSupportSystem! <br/>
-Bạn có thể nhấn vào đường link để có thể xác thực tài khoản của bạn.<br/>
+Thank you for using the service of Sport Tournament Support System! <br/>
+Please click on the link to be able to verify your account:<br/>
 
 ${DOMAIN}/active/${VERIFICATION_URL}<br/>
 
-Nếu sau khi đã nhấn vào đường link xác thực tài khoản ở trên mà bạn vẫn không thể đăng nhập vào trang web của chúng tôi<br/>
-
-Bạn có thể gửi thư lại, chúng tôi sẽ hỗ trợ bạn sớm nhất có thể.
+If not you, please ignore this message.<br/>
 
 The SportTournamentSupportSystem team,
