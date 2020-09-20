@@ -15,9 +15,9 @@ public interface IMatchService {
 	
 	public MatchEntity update(Long id, MatchEntity newEntity);
 	
-	Collection<MatchEntity> findByCompetitionId(Long competitionId);
+	Collection<MatchEntity> findByTournamentId(Long TournamentId);
 	
 	public MatchEntity delete(Long id);
 	
-	public Collection<MatchEntity> schedule(Long competitionId, Long competitionFormatId);
+	public Collection<MatchEntity> schedule(Long TournamentId, Long TournamentFormatId);
 }

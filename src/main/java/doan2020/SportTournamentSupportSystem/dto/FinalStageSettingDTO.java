@@ -3,7 +3,7 @@ package doan2020.SportTournamentSupportSystem.dto;
 public class FinalStageSettingDTO {
 	
 	private Long id;
-	private Long competitionId;
+	private Long TournamentId;
 	private boolean hasHomeMatch;
 	private Long formatId;
 	private String status;
@@ -42,12 +42,12 @@ public class FinalStageSettingDTO {
 		this.hasHomeMatch = hasHomeMatch;
 	}
 
-	public Long getCompetitionId() {
-		return competitionId;
+	public Long getTournamentId() {
+		return TournamentId;
 	}
 
-	public void setCompetitionId(Long competitionId) {
-		this.competitionId = competitionId;
+	public void setTournamentId(Long TournamentId) {
+		this.TournamentId = TournamentId;
 	}
 
 	public String getStatus() {

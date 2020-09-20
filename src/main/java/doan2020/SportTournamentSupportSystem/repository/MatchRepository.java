@@ -11,13 +11,9 @@ import doan2020.SportTournamentSupportSystem.entity.MatchEntity;
 public interface MatchRepository extends JpaRepository<MatchEntity, Long> {
 	MatchEntity findOneById(Long id);
 
-	Collection<MatchEntity> findByCompetitionId(Long competitionId);
+	Collection<MatchEntity> findByTournamentId(Long TournamentId);
 
-	@Query(value = "select count(m.id) from matches m left join competitions c on m.competition_id=c.id "
-			+ "where c.tournament_id=?1", nativeQuery = true)
 	Integer countByTournamentId(Long tournamentId);
 	
-	@Query(value = "select count(m.id) from matches m left join competitions c on m.competition_id=c.id "
-			+ "where c.tournament_id=?1 and m.status=?2", nativeQuery = true)
 	Integer countByTournamentIdAndStatus(Long tournamentId, String status);
 }

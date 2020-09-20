@@ -9,7 +9,7 @@ import doan2020.SportTournamentSupportSystem.entity.FormatEntity;
 public class FormatConverter {
 	
 	public FormatEntity toEntity(FormatDTO dto){
-		System.out.println("CompetitionFormatConverter: toEntity: start");
+		System.out.println("TournamentFormatConverter: toEntity: start");
 		FormatEntity entity = new FormatEntity();
 		try {
 			if (dto.getName() != null)
@@ -18,17 +18,17 @@ public class FormatConverter {
 			entity.setDescription(dto.getDescription());
 			
 			
-			System.out.println("CompetitionFormatConverter: toEntity: no exception");
+			System.out.println("TournamentFormatConverter: toEntity: no exception");
 		}catch (Exception e) {
-			System.out.println("CompetitionFormatConverter: toEntity: has exception");
+			System.out.println("TournamentFormatConverter: toEntity: has exception");
 			return null;
 		}
-		System.out.println("CompetitionFormatConverter: toEntity: finish");
+		System.out.println("TournamentFormatConverter: toEntity: finish");
 		return entity;
 	}
 
 	public FormatDTO toDTO(FormatEntity entity){
-		System.out.println("CompetitionFormatConverter: toDTO: finish");
+		System.out.println("TournamentFormatConverter: toDTO: finish");
 		FormatDTO dto = new FormatDTO();
 		try {
 			dto.setId(entity.getId());
@@ -37,13 +37,13 @@ public class FormatConverter {
 			
 			dto.setStatus(entity.getStatus());
 			dto.setUrl(entity.getUrl());
-			System.out.println("CompetitionFormatConverter: toDTO: no exception");
+			System.out.println("TournamentFormatConverter: toDTO: no exception");
 		} catch (Exception e) {
-			System.out.println("CompetitionFormatConverter: toDTO: has exception");
+			System.out.println("TournamentFormatConverter: toDTO: has exception");
 			return null;
 		}
 		
-		System.out.println("CompetitionFormatConverter: toDTO: finish");
+		System.out.println("TournamentFormatConverter: toDTO: finish");
 		return dto;
 	}
 

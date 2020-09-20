@@ -23,14 +23,10 @@ public class FinalStageSettingEntity {
 	@Column(nullable = false)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-
-	public Long getId() {
-		return id;
-	}
 	
 	@OneToOne
-	@JoinColumn(name = "competition_id", nullable = false)
-	private CompetitionEntity competition;
+	@JoinColumn(name = "tournamentId", nullable = false)
+	private TournamentEntity tournament;
 
 	@Column(nullable = false)
 	@ColumnDefault("0")
@@ -45,6 +41,12 @@ public class FinalStageSettingEntity {
 	private String status;
 
 	private String url = "/?";
+	
+	
+	
+	public Long getId() {
+		return id;
+	}
 
 	public boolean isHasHomeMatch() {
 		return hasHomeMatch;
@@ -78,12 +80,16 @@ public class FinalStageSettingEntity {
 		this.url = url;
 	}
 
-	public CompetitionEntity getCompetition() {
-		return competition;
+	public TournamentEntity gettournament() {
+		return tournament;
 	}
 
-	public void setCompetition(CompetitionEntity competition) {
-		this.competition = competition;
+	public void setTournament(TournamentEntity tournament) {
+		this.tournament = tournament;
+	}
+
+	public TournamentEntity getTournament() {
+		return tournament;
 	}
 	
 	

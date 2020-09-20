@@ -15,7 +15,7 @@ public class MatchDTO{
 
 	private String url;
 	
-	private Long competitionId;
+	private Long TournamentId;
 	
 	private Long team1Id;
 	
@@ -33,7 +33,7 @@ public class MatchDTO{
 		
 	}
 
-	public MatchDTO(Long id, String name, String time, String location, String status, String url, Long competitionId,
+	public MatchDTO(Long id, String name, String time, String location, String status, String url, Long TournamentId,
 			Long team1Id, Long team2Id, Long winnerId, Long loserId, float team1Bonus, float team2Bonus) {
 		super();
 		this.id = id;
@@ -42,7 +42,7 @@ public class MatchDTO{
 		this.location = location;
 		this.status = status;
 		this.url = url;
-		this.competitionId = competitionId;
+		this.TournamentId = TournamentId;
 		this.team1Id = team1Id;
 		this.team2Id = team2Id;
 		this.winnerId = winnerId;
@@ -99,12 +99,12 @@ public class MatchDTO{
 		this.url = url;
 	}
 
-	public Long getCompetitionId() {
-		return competitionId;
+	public Long getTournamentId() {
+		return TournamentId;
 	}
 
-	public void setCompetitionId(Long competitionId) {
-		this.competitionId = competitionId;
+	public void setTournamentId(Long TournamentId) {
+		this.TournamentId = TournamentId;
 	}
 
 	public Long getTeam1Id() {

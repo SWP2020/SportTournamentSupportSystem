@@ -3,10 +3,10 @@ package doan2020.SportTournamentSupportSystem.dto;
 
 import com.sun.istack.NotNull;
 
-public class TournamentDTO{
-	private Long id;
+public class TournamentDTO {
 
-	@NotNull
+	private Long id;
+	
 	private String fullName;
 
 	private String shortName;
@@ -38,34 +38,12 @@ public class TournamentDTO{
 	private Long creatorId;
 	
 	private String createDate;
-	
+
+	private Long sportId;
+
+	private boolean hasGroupStage;
+
 	public TournamentDTO() {
-		
-	}
-
-	
-
-	public TournamentDTO(Long id, String fullName, String shortName, String description, String openingLocation,
-			String openingTime, String closingLocation, String closingTime, String donor, String status, String url,
-			String avatar, String background, String openRegistrationTime, String closeRegistrationTime,
-			Long creatorId) {
-		super();
-		this.id = id;
-		this.fullName = fullName;
-		this.shortName = shortName;
-		this.description = description;
-		this.openingLocation = openingLocation;
-		this.openingTime = openingTime;
-		this.closingLocation = closingLocation;
-		this.closingTime = closingTime;
-		this.donor = donor;
-		this.status = status;
-		this.url = url;
-		this.avatar = avatar;
-		this.background = background;
-		this.openRegistrationTime = openRegistrationTime;
-		this.closeRegistrationTime = closeRegistrationTime;
-		this.creatorId = creatorId;
 	}
 
 	public Long getId() {
@@ -128,8 +106,6 @@ public class TournamentDTO{
 		return closingTime;
 	}
 
-
-
 	public void setClosingTime(String closingTime) {
 		this.closingTime = closingTime;
 	}
@@ -141,8 +117,6 @@ public class TournamentDTO{
 	public void setDonor(String donor) {
 		this.donor = donor;
 	}
-
-
 
 	public String getStatus() {
 		return status;
@@ -156,13 +130,9 @@ public class TournamentDTO{
 		return url;
 	}
 
-
-
 	public void setUrl(String url) {
 		this.url = url;
 	}
-
-
 
 	public String getAvatar() {
 		return avatar;
@@ -199,23 +169,46 @@ public class TournamentDTO{
 	public Long getCreatorId() {
 		return creatorId;
 	}
-	
+
 	public void setCreatorId(Long creatorId) {
 		this.creatorId = creatorId;
 	}
-
-
 
 	public String getCreateDate() {
 		return createDate;
 	}
 
-
-
 	public void setCreateDate(String createDate) {
 		this.createDate = createDate;
 	}
 
+	public Long getSportId() {
+		return sportId;
+	}
+
+	public void setSportId(Long sportId) {
+		this.sportId = sportId;
+	}
+
+	public boolean isHasGroupStage() {
+		return hasGroupStage;
+	}
+
+	public void setHasGroupStage(boolean hasGroupStage) {
+		this.hasGroupStage = hasGroupStage;
+	}
+
+	@Override
+	public String toString() {
+		return "TournamentDTO [id=" + id + ", fullName=" + fullName + ", shortName=" + shortName + ", description="
+				+ description + ", openingLocation=" + openingLocation + ", openingTime=" + openingTime
+				+ ", closingLocation=" + closingLocation + ", closingTime=" + closingTime + ", donor=" + donor
+				+ ", status=" + status + ", url=" + url + ", avatar=" + avatar + ", background=" + background
+				+ ", openRegistrationTime=" + openRegistrationTime + ", closeRegistrationTime=" + closeRegistrationTime
+				+ ", creatorId=" + creatorId + ", createDate=" + createDate + ", sportId=" + sportId
+				+ ", hasGroupStage=" + hasGroupStage + "]";
+	}
 	
 	
+
 }

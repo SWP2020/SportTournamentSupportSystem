@@ -4,11 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import doan2020.SportTournamentSupportSystem.dto.FinalStageSettingDTO;
-import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
+import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
 import doan2020.SportTournamentSupportSystem.entity.FinalStageSettingEntity;
 import doan2020.SportTournamentSupportSystem.entity.FormatEntity;
 import doan2020.SportTournamentSupportSystem.entity.TeamEntity;
-import doan2020.SportTournamentSupportSystem.service.ICompetitionService;
+import doan2020.SportTournamentSupportSystem.service.ITournamentService;
 import doan2020.SportTournamentSupportSystem.service.IFormatService;
 
 @Component
@@ -18,7 +18,7 @@ public class FinalStageSettingConverter {
 	private IFormatService formatService;
 	
 	@Autowired
-	private ICompetitionService competitionService;
+	private ITournamentService TournamentService;
 	
 	public FinalStageSettingEntity toEntity(FinalStageSettingDTO dto){
 		System.out.println("FinalStageSettingConverter: toEntity: start");
@@ -27,9 +27,9 @@ public class FinalStageSettingConverter {
 			entity.setHasHomeMatch(dto.isHasHomeMatch());
 			if (dto.getFormatId() != null) {
 				Long formatId = dto.getFormatId();
-				if (dto.getCompetitionId() != null) {
-					CompetitionEntity competition = competitionService.findOneById(dto.getCompetitionId());
-					entity.setCompetition(competition);;
+				if (dto.getTournamentId() != null) {
+					TournamentEntity Tournament = TournamentService.findOneById(dto.getTournamentId());
+					entity.setTournament(Tournament);;
 				}
 				FormatEntity format = formatService.findOneById(formatId);
 				entity.setFormat(format);
@@ -52,8 +52,8 @@ public class FinalStageSettingConverter {
 			dto.setId(entity.getId());
 			if (entity.getFormat() != null)
 				dto.setFormatId(entity.getFormat().getId());
-			if (entity.getCompetition() != null)
-				dto.setCompetitionId(entity.getCompetition().getId());
+			if (entity.getTournament() != null)
+				dto.setTournamentId(entity.getTournament().getId());
 			dto.setHasHomeMatch(entity.isHasHomeMatch());
 			dto.setStatus(entity.getStatus());
 			dto.setUrl(entity.getUrl());

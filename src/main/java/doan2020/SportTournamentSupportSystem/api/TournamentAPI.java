@@ -23,17 +23,18 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import doan2020.SportTournamentSupportSystem.config.Const;
-import doan2020.SportTournamentSupportSystem.converter.CompetitionConverter;
+import doan2020.SportTournamentSupportSystem.converter.TournamentConverter;
 import doan2020.SportTournamentSupportSystem.converter.PermissionConverter;
 import doan2020.SportTournamentSupportSystem.converter.TournamentConverter;
-import doan2020.SportTournamentSupportSystem.dto.CompetitionDTO;
+import doan2020.SportTournamentSupportSystem.dto.TournamentDTO;
 import doan2020.SportTournamentSupportSystem.dto.PermissionDTO;
 import doan2020.SportTournamentSupportSystem.dto.TournamentDTO;
-import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
+import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
 import doan2020.SportTournamentSupportSystem.entity.PermissionEntity;
 import doan2020.SportTournamentSupportSystem.entity.TeamEntity;
 import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
 import doan2020.SportTournamentSupportSystem.entity.UserEntity;
+import doan2020.SportTournamentSupportSystem.model.Ranks;
 import doan2020.SportTournamentSupportSystem.response.Response;
 import doan2020.SportTournamentSupportSystem.service.IFileStorageService;
 import doan2020.SportTournamentSupportSystem.service.IPermissionService;
@@ -59,7 +60,7 @@ public class TournamentAPI {
 	private ITeamService teamService;
 
 	@Autowired
-	private CompetitionConverter competitionConverter;
+	private TournamentConverter TournamentConverter;
 
 	@Autowired
 	private TournamentConverter converter;
@@ -81,7 +82,7 @@ public class TournamentAPI {
 
 	@Autowired
 	private AzureBlobAdapterService azureBlobAdapterService;
-	
+
 	@Autowired
 	private SendingMailService sendingMailService;
 
@@ -178,6 +179,7 @@ public class TournamentAPI {
 	@CrossOrigin
 	public ResponseEntity<Response> createTournament(@RequestBody TournamentDTO newTournament) {
 		System.out.println("TournamentAPI: createTournament: start");
+		System.out.println(newTournament.toString());
 		HttpStatus httpStatus = HttpStatus.OK;
 		Response response = new Response();
 		Map<String, Object> config = new HashMap<String, Object>();
@@ -307,7 +309,7 @@ public class TournamentAPI {
 			} else {// id not null
 				System.out.println("TournamentAPI: uploadAvatar: CP2");
 				System.out.println(file);
-				String containName = "tournament-"+String.valueOf(id);
+				String containName = "tournament-" + String.valueOf(id);
 
 				// create container / folder to azure
 				azureBlobAdapterService.createContainer(containName);
@@ -365,8 +367,8 @@ public class TournamentAPI {
 			} else {// id not null
 				System.out.println("TournamentAPI: uploadAvatar: CP2");
 				System.out.println(file);
-				
-				String containName = "tournament-"+String.valueOf(id);
+
+				String containName = "tournament-" + String.valueOf(id);
 				// create container / folder to azure
 				azureBlobAdapterService.createContainer(containName);
 
@@ -448,67 +450,57 @@ public class TournamentAPI {
 
 					if (thisTournament.getStatus().contains(Const.TOURNAMENT_STATUS_INITIALIZING)) {
 						System.out.println("CP4");
-						Collection<CompetitionEntity> comps = thisTournament.getCompetitions();
 
 						message = Const.RESPONSE_SUCCESS;
 						code = 0;
 
-						ArrayList<CompetitionDTO> notReadyCompetitions = new ArrayList<>();
+						boolean ready = true;
 
-						for (CompetitionEntity comp : comps) {
-							int totalTeam = teamService
-									.countByCompetitionIdAndStatus(comp.getId(), Const.TEAM_STATUS_JOINED).intValue();
-							if (totalTeam <= 0)
-								notReadyCompetitions.add(competitionConverter.toDTO(comp));
-						}
+						int totalTeam = teamService
+								.countByTournamentIdAndStatus(thisTournament.getId(), Const.TEAM_STATUS_JOINED)
+								.intValue();
 
-						if (notReadyCompetitions.size() > 0) {
+						if (totalTeam <= 0)
+							ready = false;
+
+						if (!ready) {
 							code = 1;
 							message = Const.TOURNAMENT_MESSAGE_NOT_READY;
-							result.put("NotReadyCompetitions", notReadyCompetitions);
 						} else {
-							if (comps.size() == 0) {
-								code = 1;
-								message = Const.TOURNAMENT_MESSAGE_NO_COMPETITION;
-							} else {
 
-								System.out.println("Try to Start Tournament");
+							System.out.println("Try to Start Tournament");
 
-								for (CompetitionEntity comp : comps) {
-									System.out.println("Try to save to DB: comp: " + comp.getId());
-									scheduleService.createMatchesInDatabase(comp);
-									System.out.println("save finish");
-								}
-								System.out.println("CP5");
-								thisTournament.setStatus(Const.TOURNAMENT_STATUS_PROCESSING);
-								thisTournament = service.update(id, thisTournament);
-								thisTournamentDTO = converter.toDTO(thisTournament);
-								
-								System.out.println("tounament"+id);
-								Long managerId = thisTournament.getCreator().getId();
-								
-								HashSet<UserEntity> users = new HashSet<>();
-								
-								List<TeamEntity> teamEntities = (List<TeamEntity>) teamService.findByTournamentIdAndStatus(id, Const.TEAM_STATUS_JOINED);
+							scheduleService.createMatchesInDatabase(thisTournament);
 
-								for(TeamEntity teamEntity: teamEntities) {
-									if(teamEntity.getCreator().getId().longValue() != managerId.longValue()) {
-										users.add(teamEntity.getCreator());
-									}
-								}
-								
-								for (UserEntity user: users) {
-									System.out.println("CreatorId: " + user.getId());
-									String mail = user.getEmail();
-								    String userName = user.getUsername();
-									sendingMailService.sendNotificationMail(mail, thisTournament.getFullName(), userName);
+							System.out.println("CP5");
+							thisTournament.setStatus(Const.TOURNAMENT_STATUS_PROCESSING);
+							thisTournament = service.update(id, thisTournament);
+							thisTournamentDTO = converter.toDTO(thisTournament);
+
+							System.out.println("tounament" + id);
+							Long managerId = thisTournament.getCreator().getId();
+
+							HashSet<UserEntity> users = new HashSet<>();
+
+							List<TeamEntity> teamEntities = (List<TeamEntity>) teamService
+									.findByTournamentIdAndStatus(id, Const.TEAM_STATUS_JOINED);
+
+							for (TeamEntity teamEntity : teamEntities) {
+								if (teamEntity.getCreator().getId().longValue() != managerId.longValue()) {
+									users.add(teamEntity.getCreator());
 								}
 							}
+
+							for (UserEntity user : users) {
+								System.out.println("CreatorId: " + user.getId());
+								String mail = user.getEmail();
+								String userName = user.getUsername();
+								sendingMailService.sendNotificationMail(mail, thisTournament.getFullName(), userName);
+							}
+
 						}
 					}
-					
-					
-					
+
 					result.put("Tournament", thisTournamentDTO);
 					config.put("Global", 0);
 					error.put("MessageCode", code);
@@ -575,7 +567,7 @@ public class TournamentAPI {
 					if (thisTournament.getStatus().contains(Const.TOURNAMENT_STATUS_STOPPED)) {
 						message = Const.TOURNAMENT_MESSAGE_STOPPED;
 					}
-				
+
 					if (thisTournament.getStatus().contains(Const.TOURNAMENT_STATUS_PROCESSING)) {
 						thisTournament = service.updateStatus(thisTournament, Const.TOURNAMENT_STATUS_FINISHED);
 
@@ -817,4 +809,53 @@ public class TournamentAPI {
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
 
+	@GetMapping("/rank")
+	public ResponseEntity<Response> getRanks(@RequestHeader(value = Const.TOKEN_HEADER, required = false) String jwt,
+			@RequestParam("id") Long id) {
+		System.out.println("Tournament API - GetCompetiton - start");
+		System.out.println(id);
+		HttpStatus httpStatus = null;
+		httpStatus = HttpStatus.OK;
+		Response response = new Response();
+		Map<String, Object> config = new HashMap<String, Object>();
+		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> error = new HashMap<String, Object>();
+		TournamentEntity TournamentEntity = new TournamentEntity();
+		List<Ranks> ranks = new ArrayList<Ranks>();
+		try {
+			if (id == null) {// id not exist
+				System.out.println("Tournament API - GetCompetiton - id null");
+				result.put("Tournament", null);
+				config.put("Global", 0);
+				error.put("MessageCode", 1);
+				error.put("Message", "Requried id");
+			} else {// id exist
+				System.out.println("Tournament API - GetCompetiton - id not null: " + id.toString());
+				TournamentEntity = service.findOneById(id);
+				System.out.println("Tournament API - GetCompetiton - find OK");
+				if (TournamentEntity == null) {// Tournament is not exist
+					System.out.println("Tournament API - GetCompetiton - TournamentEntity null");
+					result.put("Tournament", null);
+					config.put("Global", 0);
+					error.put("MessageCode", 1);
+					error.put("Message", "Not found");
+				} else {// Tournament is exist
+
+					error.put("MessageCode", 0);
+					error.put("Message", "Found");
+				}
+			}
+			System.out.println("Tournament API - GetCompetiton - no exception");
+		} catch (Exception e) {
+			System.out.println("Tournament API - GetCompetiton - has exception");
+			config.put("Global", 0);
+			error.put("MessageCode", 0);
+			error.put("Message", "exception");
+		}
+		response.setError(error);
+		response.setResult(result);
+		response.setConfig(config);
+		System.out.println("Tournament API - GetCompetiton - finish");
+		return new ResponseEntity<Response>(response, httpStatus);
+	}
 }

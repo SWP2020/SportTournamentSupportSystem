@@ -30,7 +30,7 @@ public class FinalStageSettingService implements IFinalStageSettingService{
 		try {
 			updatedEntity = finalStageSettingRepository.findOneById(id);
 			
-			updatedEntity.setCompetition(newEntity.getCompetition());
+			updatedEntity.setTournament(newEntity.getTournament());
 			updatedEntity.setFormat(newEntity.getFormat());
 			updatedEntity.setHasHomeMatch(newEntity.isHasHomeMatch());
 			if (newEntity.getStatus() != null) {updatedEntity.setStatus(newEntity.getStatus());}
@@ -69,10 +69,10 @@ public class FinalStageSettingService implements IFinalStageSettingService{
 	}
 	
 	@Override
-	public FinalStageSettingEntity findByCompetitionId(Long competitionId) {
+	public FinalStageSettingEntity findByTournamentId(Long TournamentId) {
 		FinalStageSettingEntity foundEntity = null;
 		try {
-			foundEntity = finalStageSettingRepository.findByCompetitionId(competitionId);
+			foundEntity = finalStageSettingRepository.findByTournamentId(TournamentId);
 		} catch (Exception e) {
 			return null;
 		}
