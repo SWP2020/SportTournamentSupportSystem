@@ -158,13 +158,13 @@ class Footer extends React.Component<IFooterProps, IFooterState> {
         <div className={'Footer-column-container'}>
           <p>Liên hệ</p>
           <div className={'Footer-icon-container'}>
-            <a href={'https://www.facebook.com/nhan.phantrong.355/'} target={'_blank'}>
+            <a href={'https://www.facebook.com/nhan.phantrong.355/'} target={'_blank'} rel="noopener noreferrer">
               <AiFillFacebook color={'white'} size={40} />
             </a>
-            <a href={'mailto:nhanptse05568@fpt.edu.vn'} target={'_blank'}>
+            <a href={'mailto:nhanptse05568@fpt.edu.vn'} target={'_blank'} rel="noopener noreferrer">
               <GoMail color={'white'} size={40} />
             </a>
-            <a href={'https://github.com/SWP2020/SportTournamentSupportSystem'} target={'_blank'}>
+            <a href={'https://github.com/SWP2020/SportTournamentSupportSystem'} target={'_blank'} rel="noopener noreferrer">
               <AiFillGithub color={'white'} size={40} />
             </a>
           </div>

@@ -15,6 +15,24 @@
   text-decoration: underline;
 }
 
+.MatchSetting-winner-container {
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+  background-color: gold;
+}
+
+.MatchSetting-loser-container {
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+  background-color: silver;
+}
+
+.MatchSetting-winner-container-disable {
+  opacity: 0.5;
+}
+
 .MatchSetting-set-text {
   font-weight: bold;
   margin-left: 15px;

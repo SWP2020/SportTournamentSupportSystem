@@ -4,9 +4,9 @@ import { connect } from 'react-redux';
 import { FaRunning } from 'react-icons/fa';
 import { IoIosPeople } from 'react-icons/io';
 import { IParams } from 'interfaces/common';
+import { formatDateToDisplay } from 'utils/datetime';
 import config from 'config';
 import './styles.css';
-import { formatDateToDisplay } from 'utils/datetime';
 
 interface ITournamentOverviewProps extends React.ClassAttributes<TournamentOverview> {
   info: IParams;

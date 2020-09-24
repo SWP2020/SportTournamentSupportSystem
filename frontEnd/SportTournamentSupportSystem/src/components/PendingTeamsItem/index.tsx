@@ -14,8 +14,6 @@ interface IPendingTeamsItemProps extends React.ClassAttributes<PendingTeamsItem>
   info: IParams;
   index: number;
   tournamentInfo: IParams | null;
-  competitionInfo: IParams | null;
-  competitionInfo2: IParams | null;
   userInfo: IParams | null;
 
   queryUserInfo(param: IBigRequest): void;
@@ -145,8 +143,7 @@ class PendingTeamsItem extends React.Component<IPendingTeamsItemProps, IPendingT
               <p>Tên ngắn: {this.props.info.shortName}</p>
               <p>Giải tham gia: {this.props.tournamentInfo != null && this.props.tournamentInfo.Tournament != null && (this.props.tournamentInfo.Tournament as unknown as IParams).fullName}</p>
               <p>Bộ môn tham gia: Bóng đá</p>
-              <p>Tên cuộc thi: {this.props.competitionInfo != null ? (this.props.competitionInfo.Competition != null && (this.props.competitionInfo.Competition as unknown as IParams).name) : (this.props.competitionInfo2 != null && this.props.competitionInfo2.Competition != null && (this.props.competitionInfo2.Competition as unknown as IParams).name)}</p>
-              <p>Quản lý của đội: <Link style={{ fontWeight: 'bold' }} target={'_blank'} to={`/user/${this.props.info.creatorId}`}>
+              <p>Quản lý của đội: <Link style={{ fontWeight: 'bold' }} target={'_blank'} to={`/user/${this.props.info.creatorId}`} rel="noopener noreferrer">
                 {this.props.userInfo != null ? `${(this.props.userInfo.User as unknown as IParams).firstName} ${(this.props.userInfo.User as unknown as IParams).lastName}` : ''}
               </Link></p>
               <p>Danh sách thành viên:</p>
@@ -180,7 +177,6 @@ class PendingTeamsItem extends React.Component<IPendingTeamsItemProps, IPendingT
 const mapStateToProps = (state: IState) => {
   return {
     userInfo: state.userInfo,
-    competitionInfo2: state.competitionInfo,
   };
 };
 

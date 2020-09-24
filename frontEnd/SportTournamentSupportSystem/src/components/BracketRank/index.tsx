@@ -6,7 +6,7 @@ import { queryBracketRankInfo } from './actions';
 import './styles.css';
 
 interface IBracketRankProps extends React.ClassAttributes<BracketRank> {
-  competitionId: number;
+  tournamentId: number;
   finalStage: boolean;
   bracketRankInfo: IParams | null;
 
@@ -31,7 +31,7 @@ class BracketRank extends React.Component<IBracketRankProps, IBracketRankState> 
     const params: IBigRequest = {
       path: '',
       param: {
-        competitionId: this.props.competitionId,
+        tournamentId: this.props.tournamentId,
       },
       data: {},
     };

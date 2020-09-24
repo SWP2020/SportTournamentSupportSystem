@@ -10,7 +10,7 @@ import './styles.css';
 
 interface IBracketScheduleProps extends React.ClassAttributes<BracketSchedule> {
   bracketBoardInfo: IParams | null;
-  competitionId: number;
+  tournamentId: number;
   finalStage: boolean;
   listTeam: IParams[] | null;
   allMatches: IParams | null;
@@ -39,7 +39,7 @@ class BracketSchedule extends React.Component<IBracketScheduleProps, IBracketSch
     let params: IBigRequest = {
       path: '',
       param: {
-        competitionId: this.props.competitionId,
+        tournamentId: this.props.tournamentId,
       },
       data: {},
     };
@@ -47,7 +47,7 @@ class BracketSchedule extends React.Component<IBracketScheduleProps, IBracketSch
     params = {
       path: '',
       param: {
-        competitionId: this.props.competitionId,
+        tournamentId: this.props.tournamentId,
         limit: 999,
       },
       data: {},
@@ -57,7 +57,7 @@ class BracketSchedule extends React.Component<IBracketScheduleProps, IBracketSch
       params = {
         path: '',
         param: {
-          competitionId: this.props.competitionId,
+          tournamentId: this.props.tournamentId,
         },
         data: {},
       };
