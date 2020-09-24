@@ -23,7 +23,7 @@ public class TeamDTO{
 	
 	private Long creatorId;
 	
-	private Long competitionId;
+	private Long TournamentId;
 	
 	private ArrayList<Player> players;
 	
@@ -32,7 +32,7 @@ public class TeamDTO{
 	}
 
 	public TeamDTO(Long id, String fullName, String shortName, String description, Long seedNo, String status,
-			String url, Long creatorId, Long competitionId) {
+			String url, Long creatorId, Long TournamentId) {
 		super();
 		this.id = id;
 		this.fullName = fullName;
@@ -42,7 +42,7 @@ public class TeamDTO{
 		this.status = status;
 		this.url = url;
 		this.creatorId = creatorId;
-		this.competitionId = competitionId;
+		this.TournamentId = TournamentId;
 	}
 
 	public Long getId() {
@@ -109,12 +109,12 @@ public class TeamDTO{
 		this.creatorId = creatorId;
 	}
 
-	public Long getCompetitionId() {
-		return competitionId;
+	public Long getTournamentId() {
+		return TournamentId;
 	}
 
-	public void setCompetitionId(Long competitionId) {
-		this.competitionId = competitionId;
+	public void setTournamentId(Long TournamentId) {
+		this.TournamentId = TournamentId;
 	}
 
 	public ArrayList<Player> getPlayers() {
@@ -129,7 +129,7 @@ public class TeamDTO{
 	public String toString() {
 		return "TeamDTO [id=" + id + ", fullName=" + fullName + ", shortName=" + shortName + ", description="
 				+ description + ", seedNo=" + seedNo + ", status=" + status + ", url=" + url + ", creatorId="
-				+ creatorId + ", competitionId=" + competitionId + ", players=" + players + "]";
+				+ creatorId + ", TournamentId=" + TournamentId + ", players=" + players + "]";
 	}
 	
 	

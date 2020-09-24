@@ -41,7 +41,7 @@ public class SportEntity {
 	private String url = "/?";
 
 	@OneToMany(mappedBy = "sport", cascade = CascadeType.ALL)
-	private Collection<CompetitionEntity> competitions;
+	private Collection<TournamentEntity> tournaments;
 
 	public Long getId() {
 		return id;
@@ -87,12 +87,12 @@ public class SportEntity {
 		this.url = url;
 	}
 
-	public Collection<CompetitionEntity> getCompetitions() {
-		return competitions;
+	public Collection<TournamentEntity> getTournaments() {
+		return tournaments;
 	}
 
-	public void setCompetitions(Collection<CompetitionEntity> competitions) {
-		this.competitions = competitions;
+	public void setTournaments(Collection<TournamentEntity> Tournaments) {
+		this.tournaments = Tournaments;
 	}
 
 }

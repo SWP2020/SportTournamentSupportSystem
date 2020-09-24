@@ -7,7 +7,7 @@ public class Ranks {
 	private String managementTeam;
 	private String matchHistory;
 	private int score;
-	private Long competitionId;
+	private Long TournamentId;
 	
 	public Ranks() {
 		
@@ -16,14 +16,14 @@ public class Ranks {
 	
 	
 	public Ranks(int rankNumber, String teamName, String managementTeam, String matchHistory, int score,
-			Long competitionId) {
+			Long TournamentId) {
 		super();
 		this.rankNumber = rankNumber;
 		this.teamName = teamName;
 		this.managementTeam = managementTeam;
 		this.matchHistory = matchHistory;
 		this.score = score;
-		this.competitionId = competitionId;
+		this.TournamentId = TournamentId;
 	}
 
 
@@ -59,12 +59,12 @@ public class Ranks {
 		this.score = score;
 	}
 
-	public Long getCompetitionId() {
-		return competitionId;
+	public Long getTournamentId() {
+		return TournamentId;
 	}
 
-	public void setCompetitionId(Long competitionId) {
-		this.competitionId = competitionId;
+	public void setTournamentId(Long TournamentId) {
+		this.TournamentId = TournamentId;
 	}
 	
 }

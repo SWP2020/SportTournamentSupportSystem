@@ -44,8 +44,8 @@ public class MatchEntity {
 	private String url = "/?";
 
 	@ManyToOne
-	@JoinColumn(name = "competitionId", nullable = false)
-	private CompetitionEntity competition;
+	@JoinColumn(name = "tournamentId", nullable = false)
+	private TournamentEntity tournament;
 
 	@ManyToOne
 	@JoinColumn(name = "team1Id")
@@ -120,12 +120,12 @@ public class MatchEntity {
 		this.url = url;
 	}
 
-	public CompetitionEntity getCompetition() {
-		return competition;
+	public TournamentEntity getTournament() {
+		return tournament;
 	}
 
-	public void setCompetition(CompetitionEntity competition) {
-		this.competition = competition;
+	public void setTournament(TournamentEntity Tournament) {
+		this.tournament = Tournament;
 	}
 
 	public TeamEntity getTeam1() {

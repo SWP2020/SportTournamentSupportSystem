@@ -59,10 +59,10 @@ public class TestGroupStageSettingAPI {
 	public void setUp() {
 		//1
 		//2
-		Mockito.when(service.findByCompetitionId((long)2)).thenReturn(null);
+		Mockito.when(service.findByTournamentId((long)2)).thenReturn(null);
 		//3
 		GroupStageSettingEntity groupStageSettingEntity3 = new GroupStageSettingEntity();
-		Mockito.when(service.findByCompetitionId((long)3)).thenReturn(groupStageSettingEntity3);
+		Mockito.when(service.findByTournamentId((long)3)).thenReturn(groupStageSettingEntity3);
 		groupStageSettingDto3 = new GroupStageSettingDTO();
 		Mockito.when(converter.toDTO(groupStageSettingEntity3)).thenReturn(groupStageSettingDto3);
 	}
@@ -80,7 +80,7 @@ public class TestGroupStageSettingAPI {
 		
 		//Compare expected and actual
 		Assert.assertEquals(1, actualMessageCode);
-		Assert.assertEquals("Required param competitionId", actualMessage);
+		Assert.assertEquals("Required param TournamentId", actualMessage);
 		Assert.assertEquals(0, actualConfigGlobal);
 		Assert.assertEquals(null, actualgroupStageSetting);
 	}

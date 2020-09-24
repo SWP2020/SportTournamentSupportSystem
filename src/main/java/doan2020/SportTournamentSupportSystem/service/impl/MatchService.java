@@ -35,7 +35,7 @@ public class MatchService implements IMatchService {
 			updatedEntity = matchRepository.findOneById(id);
 
 			updatedEntity.setName(newEntity.getName());
-//			updatedEntity.setCompetition(newEntity.getCompetition());
+//			updatedEntity.setTournament(newEntity.getTournament());
 			if (newEntity.getStatus() != null) {updatedEntity.setStatus(newEntity.getStatus());}
 			updatedEntity.setUrl(newEntity.getUrl());
 			updatedEntity.setLocation(newEntity.getLocation());
@@ -81,7 +81,7 @@ public class MatchService implements IMatchService {
 	}
 	
 	@Override
-	public Collection<MatchEntity> schedule(Long competitionId, Long competitionFormatId) {
+	public Collection<MatchEntity> schedule(Long TournamentId, Long TournamentFormatId) {
 		return null;
 	}
 
@@ -97,10 +97,10 @@ public class MatchService implements IMatchService {
 	}
 
 	@Override
-	public Collection<MatchEntity> findByCompetitionId(Long competitionId) {
+	public Collection<MatchEntity> findByTournamentId(Long TournamentId) {
 		Collection<MatchEntity> foundEntitys = null;
 		try {
-			foundEntitys = matchRepository.findByCompetitionId(competitionId);
+			foundEntitys = matchRepository.findByTournamentId(TournamentId);
 		} catch (Exception e) {
 			return null;
 		}

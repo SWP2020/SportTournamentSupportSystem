@@ -15,5 +15,5 @@ public interface IFinalStageSettingService {
 	
 	public FinalStageSettingEntity delete(Long id);
 	
-	public FinalStageSettingEntity findByCompetitionId(Long competitionId);
+	public FinalStageSettingEntity findByTournamentId(Long TournamentId);
 }

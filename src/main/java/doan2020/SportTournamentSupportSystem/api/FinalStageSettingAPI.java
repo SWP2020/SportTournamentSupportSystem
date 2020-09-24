@@ -36,9 +36,9 @@ public class FinalStageSettingAPI {
 	@Autowired
 	private IFinalStageSettingService service;
 
-	@GetMapping("/getByCompetitionId")
+	@GetMapping("/getByTournamentId")
 	public ResponseEntity<Response> getFinalStageSetting(
-			@RequestParam(value = "competitionId", required = false) Long competitionId) {
+			@RequestParam(value = "tournamentId", required = false) Long tournamentId) {
 		System.out.println("FinalStageSettingAPI: getFinalStageSetting: no exception");
 		HttpStatus httpStatus = HttpStatus.OK;
 		Response response = new Response();
@@ -48,14 +48,14 @@ public class FinalStageSettingAPI {
 		FinalStageSettingEntity finalStageSettingEntity = new FinalStageSettingEntity();
 		FinalStageSettingDTO finalStageSettingDTO = new FinalStageSettingDTO();
 		try {
-			if (competitionId == null) { // competitionId null
+			if (tournamentId == null) { // TournamentId null
 				result.put("FinalStageSetting", null);
 				config.put("Global", 0);
 				error.put("MessageCode", 1);
-				error.put("Message", "Required param competitionId");
-			} else { // competitionId not null
+				error.put("Message", "Required param TournamentId");
+			} else { // TournamentId not null
 
-				finalStageSettingEntity = service.findByCompetitionId(competitionId);
+				finalStageSettingEntity = service.findByTournamentId(tournamentId);
 
 				if (finalStageSettingEntity == null) { // not found
 					result.put("FinalStageSetting", null);
@@ -100,7 +100,7 @@ public class FinalStageSettingAPI {
 
 		try {
 			finalStageSettingEntity = converter.toEntity(newFinalStageSetting);
-			TournamentEntity tour = finalStageSettingEntity.getCompetition().getTournament();
+			TournamentEntity tour = finalStageSettingEntity.getTournament();
 			if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_INITIALIZING)) {
 
 				finalStageSettingEntity = service.create(finalStageSettingEntity);
@@ -126,7 +126,7 @@ public class FinalStageSettingAPI {
 				if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_STOPPED)) {
 					message = Const.TOURNAMENT_MESSAGE_STOPPED;
 				}
-				result.put("Competition", null);
+				result.put("Tournament", null);
 				config.put("Global", 0);
 				error.put("MessageCode", 1);
 				error.put("Message", message);
@@ -161,7 +161,7 @@ public class FinalStageSettingAPI {
 		try {
 
 			finalStageSettingEntity = converter.toEntity(finalStageSetting);
-			TournamentEntity tour = finalStageSettingEntity.getCompetition().getTournament();
+			TournamentEntity tour = finalStageSettingEntity.getTournament();
 			if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_INITIALIZING)) {
 
 				finalStageSettingEntity = service.update(id, finalStageSettingEntity);
@@ -188,7 +188,7 @@ public class FinalStageSettingAPI {
 				if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_STOPPED)) {
 					message = Const.TOURNAMENT_MESSAGE_STOPPED;
 				}
-				result.put("Competition", null);
+				result.put("Tournament", null);
 				config.put("Global", 0);
 				error.put("MessageCode", 1);
 				error.put("Message", message);
