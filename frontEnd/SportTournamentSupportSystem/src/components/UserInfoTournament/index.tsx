@@ -48,7 +48,6 @@ class UserInfoTournament extends React.Component<IUserInfoTournamentProps, IUser
   }
 
   render() {
-    console.log(this.props.listTournamentOfUser);
     return (
       <div className="UserInfoTournament-container">
         <div className="UserInfoTournament-container-container">

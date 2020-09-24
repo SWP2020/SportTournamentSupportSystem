@@ -12,7 +12,6 @@ import config from 'config';
 import { TOURNAMENT_STATUS } from 'global';
 import { IState } from 'redux-saga/reducers';
 import { queryUserInfo } from 'screens/UserInfo/actions';
-import { queryCompetition } from 'screens/CompetitionInfo/actions';
 import { editTeam, deleteTeam } from './actions';
 import './styles.css';
 
@@ -20,14 +19,12 @@ interface IUserInfoTeamsItemProps extends React.ClassAttributes<UserInfoTeamsIte
   info: IParams;
   index: number;
   tournamentInfo: IParams | null;
-  competitionInfo: IParams | null;
-  competitionInfo2: IParams | null;
   userInfo: IParams | null;
   listTeam: IParams[];
   tournamentStatus: string;
 
   queryUserInfo(param: IBigRequest): void;
-  queryCompetition(param: IBigRequest): void;
+  // queryCompetition(param: IBigRequest): void;
   deleteTeam(param: IBigRequest): void;
   editTeam(param: IBigRequest): void;
 }
@@ -87,16 +84,16 @@ class UserInfoTeamsItem extends React.Component<IUserInfoTeamsItemProps, IUserIn
         onEditMode: false,
       });
     }
-    if (this.state.seeMoreInfo !== nextState.seeMoreInfo && nextState.seeMoreInfo === true && nextProps.competitionInfo == null) {
-      const params = {
-        path: '',
-        param: {
-          id: this.props.info.competitionId,
-        },
-        data: {},
-      }
-      this.props.queryCompetition(params);
-    }
+    // if (this.state.seeMoreInfo !== nextState.seeMoreInfo && nextState.seeMoreInfo === true && nextProps.competitionInfo == null) {
+    //   const params = {
+    //     path: '',
+    //     param: {
+    //       id: this.props.info.competitionId,
+    //     },
+    //     data: {},
+    //   }
+    //   this.props.queryCompetition(params);
+    // }
     return true;
   }
 
@@ -377,8 +374,7 @@ class UserInfoTeamsItem extends React.Component<IUserInfoTeamsItemProps, IUserIn
               }
               <p>Giải tham gia: {this.props.tournamentInfo != null && this.props.tournamentInfo.Tournament != null && (this.props.tournamentInfo.Tournament as unknown as IParams).fullName}</p>
               <p>Bộ môn tham gia: Bóng đá</p>
-              <p>Tên cuộc thi: {this.props.competitionInfo != null ? (this.props.competitionInfo.Competition != null && (this.props.competitionInfo.Competition as unknown as IParams).name) : (this.props.competitionInfo2 != null && this.props.competitionInfo2.Competition != null && (this.props.competitionInfo2.Competition as unknown as IParams).name)}</p>
-              <p>Quản lý của đội: <Link style={{ fontWeight: 'bold' }} target={'_blank'} to={`/user/${this.props.info.creatorId}`}>
+              <p>Quản lý của đội: <Link style={{ fontWeight: 'bold' }} target={'_blank'} to={`/user/${this.props.info.creatorId}`} rel="noopener noreferrer">
                 {this.props.userInfo != null ? `${(this.props.userInfo.User as unknown as IParams).firstName} ${(this.props.userInfo.User as unknown as IParams).lastName}` : ''}
               </Link></p>
               <p>Danh sách thành viên:</p>
@@ -402,7 +398,7 @@ class UserInfoTeamsItem extends React.Component<IUserInfoTeamsItemProps, IUserIn
               </div>
               {
                 this.state.onEditMode === true ?
-                (this.state.listPlayerInForm != null && this.state.listPlayerInForm.map((item, index) => <Player onDelete={this.onDeletePlayer} info={item} freeToEdit={this.state.onEditMode} key={index} index={index} />)) :
+                  (this.state.listPlayerInForm != null && this.state.listPlayerInForm.map((item, index) => <Player onDelete={this.onDeletePlayer} info={item} freeToEdit={this.state.onEditMode} key={index} index={index} />)) :
                   (this.props.info.players != null && (this.props.info.players as unknown as IParams[]).map((item, index) => <Player onDelete={this.onDeletePlayer} info={item} freeToEdit={this.state.onEditMode} key={index} index={index} />))
               }
               {this.state.onEditMode === true &&
@@ -446,11 +442,10 @@ class UserInfoTeamsItem extends React.Component<IUserInfoTeamsItemProps, IUserIn
 const mapStateToProps = (state: IState) => {
   return {
     userInfo: state.userInfo,
-    competitionInfo2: state.competitionInfo,
   };
 };
 
 export default connect(
   mapStateToProps,
-  { queryCompetition, queryUserInfo, editTeam, deleteTeam }
+  { queryUserInfo, editTeam, deleteTeam }
 )(UserInfoTeamsItem);

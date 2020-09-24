@@ -11,9 +11,7 @@ import { Styles } from 'react-modal';
 import { AiFillCamera } from 'react-icons/ai';
 import CustomTab from 'components/CustomTab';
 import CustomModal from 'components/CustomModal';
-import TournamentListTeam from 'components/TournamentListTeam';
 import TournamentSetting from 'components/TournamentSetting';
-import CompetitionsSetting from 'components/CompetitionsSetting';
 import Player from 'components/Player';
 import TournamentReport from 'components/TournamentReport';
 import TextInput from 'components/TextInput';
@@ -26,10 +24,16 @@ import config from 'config';
 import { formatTournamentStatus } from 'utils/common';
 import { onEditBracketMode, deleteListSelectingTeam } from 'components/BracketTeam/actions';
 import { queryAllCompetitionsByTournamentId } from 'components/CompetitionsSetting/actions';
+import { querySportInfo, queryAllFormats, queryFinalStageSetting, queryGroupStageSetting, } from 'screens/CompetitionInfo/actions';
 import { openRegisterForm, closeRegisterForm, registTeam, reportViolation, updateBackgroundTournament, updateAvatarTournament, queryTournamentInfo, querySportsByTournament, finishTournament, queryCompetitionsBySportAndTournament, startTournament } from './actions';
 import { START_TOURNAMENT, FINISH_TOURNAMENT, REPORT_VIOLATION } from 'redux-saga/actions';
 import { START_TOURNAMENT_SUCCESS, START_TOURNAMENT_FAILED, FINISH_TOURNAMENT_SUCCESS, FINISH_TOURNAMENT_FAILED, REPORT_VIOLATION_SUCCESS, REPORT_VIOLATION_FAILED } from './reducers';
 import './styles.css';
+import BracketBoard from 'components/BracketBoard';
+import BracketSchedule from 'components/BracketSchedule';
+import BracketRank from 'components/BracketRank';
+import PendingTeams from 'components/PendingTeams';
+import Teams from 'components/Teams';
 
 interface ITournamentInfoProps extends React.ClassAttributes<TournamentInfo> {
   routerInfo: RouteComponentProps<any, StaticContext, H.LocationState>;
@@ -38,12 +42,19 @@ interface ITournamentInfoProps extends React.ClassAttributes<TournamentInfo> {
   listCompetitionsBySportAndTournament: IParams[] | null;
   allCompetitionByTournamentId: IParams[] | null;
   currentUserInfo: IParams | null;
+  sportInfo: IParams | null;
+  allFormats: IParams[];
+  finalStageSetting: IParams | null;
+  groupStageSetting: IParams | null;
 
   queryTournamentInfo(param: IBigRequest): void;
+  querySportInfo(params: IBigRequest): void;
   querySportsByTournament(param: IBigRequest): void;
   queryCompetitionsBySportAndTournament(param: IBigRequest): void;
   startTournament(param: IBigRequest): void;
   finishTournament(param: IBigRequest): void;
+  queryFinalStageSetting(params: IBigRequest): void;
+  queryGroupStageSetting(params: IBigRequest): void;
   updateAvatarTournament(param: IBigRequest): void;
   updateBackgroundTournament(param: IBigRequest): void;
   onEditBracketMode(status: boolean): void;
@@ -53,12 +64,10 @@ interface ITournamentInfoProps extends React.ClassAttributes<TournamentInfo> {
   registTeam(param: IBigRequest): void;
   openRegisterForm(param: IBigRequest): void;
   closeRegisterForm(param: IBigRequest): void;
+  queryAllFormats(): void;
 }
 
 interface ITournamentInfoState {
-  selectedCompetitionInForm: ValueType<OptionTypeBase>;
-  selectedCompetitionInFormError: boolean;
-  selectedCompetitionInFormErrorContent: string;
   showJoinModal: boolean;
   showReportModal: boolean;
   teamNameInForm: string;
@@ -131,7 +140,6 @@ class TournamentInfo extends React.Component<ITournamentInfoProps, ITournamentIn
   constructor(props: ITournamentInfoProps) {
     super(props);
     this.state = {
-      selectedCompetitionInForm: null,
       showJoinModal: false,
       showReportModal: false,
       teamNameInForm: '',
@@ -147,8 +155,6 @@ class TournamentInfo extends React.Component<ITournamentInfoProps, ITournamentIn
       playerNameInForm: '',
       playerAgeInForm: 0,
       playerGenderInForm: { value: true, label: 'Nam' },
-      selectedCompetitionInFormError: false,
-      selectedCompetitionInFormErrorContent: '',
       playerEmailInFormError: false,
       playerEmailInFormErrorContent: '',
       playerNameInFormError: false,
@@ -189,28 +195,120 @@ class TournamentInfo extends React.Component<ITournamentInfoProps, ITournamentIn
       this.componentList = [];
       if (nextProps.tournamentInfo != null) {
         if ((nextProps.tournamentInfo as IParams).Config != null && ((nextProps.tournamentInfo as IParams).Config as IParams).canEdit === true) {
-          this.tabList = [
-            'Các cuộc thi trong giải',
-            'Các đội tham gia giải',
-            'Cài đặt',
-            'Báo cáo giải'
-          ];
-          this.componentList = [
-            <CompetitionsSetting canEdit={((nextProps.tournamentInfo as IParams).Tournament as IParams).status === TOURNAMENT_STATUS.INITIALIZING || ((nextProps.tournamentInfo as IParams).Tournament as IParams).status === TOURNAMENT_STATUS.OPENING} tournamentInfo={nextProps.tournamentInfo.Tournament as unknown as IParams} tournamentId={Number(this.props.routerInfo.match.params.tournamentId)} onChangeCompetitionSetting={this.onChangeCompetitionSetting} />,
-            <TournamentListTeam id={Number(this.props.routerInfo.match.params.tournamentId)} tournamentInfo={nextProps.tournamentInfo} />,
-            <TournamentSetting tournamentId={Number(this.props.routerInfo.match.params.tournamentId)} tournamentInfo={nextProps.tournamentInfo.Tournament as unknown as IParams} />,
-            <TournamentReport tournamentId={Number(this.props.routerInfo.match.params.tournamentId)} tournamentInfo={nextProps.tournamentInfo.Tournament as unknown as IParams} />
-          ];
+          if ((nextProps.tournamentInfo.Tournament as IParams).hasGroupStage === true) {
+            this.tabList = [
+              // 'Các cuộc thi trong giải',
+              'Nhánh thi đấu vòng bảng',
+              'Lịch thi đấu vòng bảng',
+              'BXH vòng bảng',
+              'Nhánh thi đấu vòng chung kết',
+              'Lịch thi đấu vòng chung kết',
+              'BXH vòng chung kết',
+              'Các đội tham gia giải',
+              'Các đội đang chờ phê duyệt',
+              'Cài đặt'
+            ];
+            this.componentList = [
+              // <CompetitionsSetting canEdit={((nextProps.tournamentInfo as IParams).Tournament as IParams).status === TOURNAMENT_STATUS.INITIALIZING || ((nextProps.tournamentInfo as IParams).Tournament as IParams).status === TOURNAMENT_STATUS.OPENING} tournamentInfo={nextProps.tournamentInfo.Tournament as unknown as IParams} tournamentId={Number(this.props.routerInfo.match.params.tournamentId)} onChangeCompetitionSetting={this.onChangeCompetitionSetting} />,
+              <BracketBoard swapAble={(nextProps.tournamentInfo.Tournament as IParams).status === TOURNAMENT_STATUS.INITIALIZING || (nextProps.tournamentInfo.Tournament as IParams).status === TOURNAMENT_STATUS.OPENING} tournamentStatus={(nextProps.tournamentInfo.Tournament as IParams).status as string} tournamentId={this.props.routerInfo.match.params.tournamentId as number} finalStage={false} />,
+              <BracketSchedule started={(nextProps.tournamentInfo.Tournament as IParams).status !== TOURNAMENT_STATUS.INITIALIZING && (nextProps.tournamentInfo.Tournament as IParams).status !== TOURNAMENT_STATUS.OPENING} tournamentId={this.props.routerInfo.match.params.tournamentId as number} finalStage={false} />,
+              <BracketRank tournamentId={this.props.routerInfo.match.params.tournamentId as number} finalStage={false} />,
+              <BracketBoard swapAble={(nextProps.tournamentInfo.Tournament as IParams).status === TOURNAMENT_STATUS.INITIALIZING || (nextProps.tournamentInfo.Tournament as IParams).status === TOURNAMENT_STATUS.OPENING} tournamentStatus={(nextProps.tournamentInfo.Tournament as IParams).status as string} tournamentId={this.props.routerInfo.match.params.tournamentId as number} finalStage={true} />,
+              <BracketSchedule started={(nextProps.tournamentInfo.Tournament as IParams).status !== TOURNAMENT_STATUS.INITIALIZING && (nextProps.tournamentInfo.Tournament as IParams).status !== TOURNAMENT_STATUS.OPENING} tournamentId={this.props.routerInfo.match.params.tournamentId as number} finalStage={true} />,
+              <BracketRank tournamentId={this.props.routerInfo.match.params.tournamentId as number} finalStage={true} />,
+              <Teams tournamentStatus={(nextProps.tournamentInfo.Tournament as IParams).status as string} tournamentInfo={nextProps.tournamentInfo} id={this.props.routerInfo.match.params.tournamentId as number} />,
+              <PendingTeams tournamentInfo={nextProps.tournamentInfo} id={this.props.routerInfo.match.params.tournamentId as number} />,
+              <TournamentSetting tournamentId={Number(this.props.routerInfo.match.params.tournamentId)} tournamentInfo={nextProps.tournamentInfo.Tournament as unknown as IParams} />
+            ];
+          } else {
+            this.tabList = [
+              // 'Các cuộc thi trong giải',
+              'Nhánh thi đấu vòng chung kết',
+              'Lịch thi đấu vòng chung kết',
+              'BXH vòng chung kết',
+              'Các đội tham gia giải',
+              'Các đội đang chờ phê duyệt',
+              'Cài đặt'
+            ];
+            this.componentList = [
+              // <CompetitionsSetting canEdit={((nextProps.tournamentInfo as IParams).Tournament as IParams).status === TOURNAMENT_STATUS.INITIALIZING || ((nextProps.tournamentInfo as IParams).Tournament as IParams).status === TOURNAMENT_STATUS.OPENING} tournamentInfo={nextProps.tournamentInfo.Tournament as unknown as IParams} tournamentId={Number(this.props.routerInfo.match.params.tournamentId)} onChangeCompetitionSetting={this.onChangeCompetitionSetting} />,
+              <BracketBoard swapAble={(nextProps.tournamentInfo.Tournament as IParams).status === TOURNAMENT_STATUS.INITIALIZING || (nextProps.tournamentInfo.Tournament as IParams).status === TOURNAMENT_STATUS.OPENING} tournamentStatus={(nextProps.tournamentInfo.Tournament as IParams).status as string} tournamentId={this.props.routerInfo.match.params.tournamentId as number} finalStage={true} />,
+              <BracketSchedule started={(nextProps.tournamentInfo.Tournament as IParams).status !== TOURNAMENT_STATUS.INITIALIZING && (nextProps.tournamentInfo.Tournament as IParams).status !== TOURNAMENT_STATUS.OPENING} tournamentId={this.props.routerInfo.match.params.tournamentId as number} finalStage={true} />,
+              <BracketRank tournamentId={this.props.routerInfo.match.params.tournamentId as number} finalStage={true} />,
+              <Teams tournamentStatus={(nextProps.tournamentInfo.Tournament as IParams).status as string} tournamentInfo={nextProps.tournamentInfo} id={this.props.routerInfo.match.params.tournamentId as number} />,
+              <PendingTeams tournamentInfo={nextProps.tournamentInfo} id={this.props.routerInfo.match.params.tournamentId as number} />,
+              <TournamentSetting tournamentId={Number(this.props.routerInfo.match.params.tournamentId)} tournamentInfo={nextProps.tournamentInfo.Tournament as unknown as IParams} />
+            ];
+          }
         } else {
-          this.tabList = [
-            'Các cuộc thi trong giải',
-            'Các đội tham gia giải',
-          ];
-          this.componentList = [
-            <CompetitionsSetting canEdit={false} tournamentInfo={nextProps.tournamentInfo.Tournament as unknown as IParams} tournamentId={Number(this.props.routerInfo.match.params.tournamentId)} onChangeCompetitionSetting={this.onChangeCompetitionSetting} />,
-            <TournamentListTeam id={Number(this.props.routerInfo.match.params.tournamentId)} tournamentInfo={nextProps.tournamentInfo} />,
-          ];
+          if ((nextProps.tournamentInfo.Tournament as IParams).hasGroupStage === true) {
+            this.tabList = [
+              // 'Các cuộc thi trong giải',
+              'Nhánh thi đấu vòng bảng',
+              'Lịch thi đấu vòng bảng',
+              'BXH vòng bảng',
+              'Nhánh thi đấu vòng chung kết',
+              'Lịch thi đấu vòng chung kết',
+              'BXH vòng chung kết',
+              'Các đội tham gia giải',
+              'Báo cáo giải'
+            ];
+            this.componentList = [
+              // <CompetitionsSetting canEdit={((nextProps.tournamentInfo as IParams).Tournament as IParams).status === TOURNAMENT_STATUS.INITIALIZING || ((nextProps.tournamentInfo as IParams).Tournament as IParams).status === TOURNAMENT_STATUS.OPENING} tournamentInfo={nextProps.tournamentInfo.Tournament as unknown as IParams} tournamentId={Number(this.props.routerInfo.match.params.tournamentId)} onChangeCompetitionSetting={this.onChangeCompetitionSetting} />,
+              <BracketBoard swapAble={false} tournamentStatus={(nextProps.tournamentInfo.Tournament as IParams).status as string} tournamentId={this.props.routerInfo.match.params.tournamentId as number} finalStage={false} />,
+              <BracketSchedule started={(nextProps.tournamentInfo.Tournament as IParams).status !== TOURNAMENT_STATUS.INITIALIZING && (nextProps.tournamentInfo.Tournament as IParams).status !== TOURNAMENT_STATUS.OPENING} tournamentId={this.props.routerInfo.match.params.tournamentId as number} finalStage={false} />,
+              <BracketRank tournamentId={this.props.routerInfo.match.params.tournamentId as number} finalStage={false} />,
+              <BracketBoard swapAble={false} tournamentStatus={(nextProps.tournamentInfo.Tournament as IParams).status as string} tournamentId={this.props.routerInfo.match.params.tournamentId as number} finalStage={true} />,
+              <BracketSchedule started={(nextProps.tournamentInfo.Tournament as IParams).status !== TOURNAMENT_STATUS.INITIALIZING && (nextProps.tournamentInfo.Tournament as IParams).status !== TOURNAMENT_STATUS.OPENING} tournamentId={this.props.routerInfo.match.params.tournamentId as number} finalStage={true} />,
+              <BracketRank tournamentId={this.props.routerInfo.match.params.tournamentId as number} finalStage={true} />,
+              <Teams tournamentStatus={(nextProps.tournamentInfo.Tournament as IParams).status as string} tournamentInfo={nextProps.tournamentInfo} id={this.props.routerInfo.match.params.tournamentId as number} />,
+              <TournamentReport tournamentId={Number(this.props.routerInfo.match.params.tournamentId)} tournamentInfo={nextProps.tournamentInfo.Tournament as unknown as IParams} />
+            ];
+          } else {
+            this.tabList = [
+              // 'Các cuộc thi trong giải',
+              'Nhánh thi đấu vòng chung kết',
+              'Lịch thi đấu vòng chung kết',
+              'BXH vòng chung kết',
+              'Các đội tham gia giải',
+              'Báo cáo giải'
+            ];
+            this.componentList = [
+              // <CompetitionsSetting canEdit={((nextProps.tournamentInfo as IParams).Tournament as IParams).status === TOURNAMENT_STATUS.INITIALIZING || ((nextProps.tournamentInfo as IParams).Tournament as IParams).status === TOURNAMENT_STATUS.OPENING} tournamentInfo={nextProps.tournamentInfo.Tournament as unknown as IParams} tournamentId={Number(this.props.routerInfo.match.params.tournamentId)} onChangeCompetitionSetting={this.onChangeCompetitionSetting} />,
+              <BracketBoard swapAble={false} tournamentStatus={(nextProps.tournamentInfo.Tournament as IParams).status as string} tournamentId={this.props.routerInfo.match.params.tournamentId as number} finalStage={true} />,
+              <BracketSchedule started={(nextProps.tournamentInfo.Tournament as IParams).status !== TOURNAMENT_STATUS.INITIALIZING && (nextProps.tournamentInfo.Tournament as IParams).status !== TOURNAMENT_STATUS.OPENING} tournamentId={this.props.routerInfo.match.params.tournamentId as number} finalStage={true} />,
+              <BracketRank tournamentId={this.props.routerInfo.match.params.tournamentId as number} finalStage={true} />,
+              <Teams tournamentStatus={(nextProps.tournamentInfo.Tournament as IParams).status as string} tournamentInfo={nextProps.tournamentInfo} id={this.props.routerInfo.match.params.tournamentId as number} />,
+              <TournamentReport tournamentId={Number(this.props.routerInfo.match.params.tournamentId)} tournamentInfo={nextProps.tournamentInfo.Tournament as unknown as IParams} />
+            ];
+          }
         }
+      }
+      if (nextProps.tournamentInfo != null && nextProps.tournamentInfo.Tournament != null) {
+        let params: IBigRequest = {
+          path: '',
+          param: {
+            id: (nextProps.tournamentInfo.Tournament as IParams).sportId,
+          },
+          data: {},
+        };
+        this.props.querySportInfo(params);
+        params = {
+          path: '',
+          param: {
+            tournamentId: this.props.routerInfo.match.params.tournamentId as number,
+          },
+          data: {},
+        };
+        this.props.queryFinalStageSetting(params);
+        params = {
+          path: '',
+          param: {
+            tournamentId: this.props.routerInfo.match.params.tournamentId as number,
+          },
+          data: {},
+        };
+        this.props.queryGroupStageSetting(params);
       }
     }
     // if (this.state.selectedSport !== nextState.selectedSport || this.state.selectedCompetition !== nextState.selectedCompetition) {
@@ -269,27 +367,16 @@ class TournamentInfo extends React.Component<ITournamentInfoProps, ITournamentIn
       data: {},
     };
     this.props.queryTournamentInfo(params);
-    params = {
-      path: '',
-      param: {
-        tournamentId: Number(this.props.routerInfo.match.params.tournamentId),
-        limit: 99,
-      },
-      data: {},
-    };
-    this.props.queryAllCompetitionsByTournamentId(params);
-  }
-
-  private onChangeCompetitionSetting = () => {
-    this.setState({
-      selectedCompetitionInForm: null,
-    });
-  }
-
-  private onChangeSelectedCompetitionInForm = (value: ValueType<OptionTypeBase>) => {
-    this.setState({
-      selectedCompetitionInForm: value,
-    });
+    this.props.queryAllFormats();
+    // params = {
+    //   path: '',
+    //   param: {
+    //     tournamentId: Number(this.props.routerInfo.match.params.tournamentId),
+    //     limit: 99,
+    //   },
+    //   data: {},
+    // };
+    // this.props.queryAllCompetitionsByTournamentId(params);
   }
 
   private updateBackground = (selectorFiles: FileList | null) => {
@@ -409,16 +496,10 @@ class TournamentInfo extends React.Component<ITournamentInfoProps, ITournamentIn
   };
 
   private validateForm = () => {
-    let selectedCompetitionInFormError = false;
-    let selectedCompetitionInFormErrorContent = '';
     let teamNameInFormError = false;
     let teamNameInFormErrorContent = '';
     let teamShortNameInFormErrorContent = '';
     let teamShortNameInFormError = false;
-    if (this.state.selectedCompetitionInForm == null) {
-      selectedCompetitionInFormError = true;
-      selectedCompetitionInFormErrorContent = 'Bạn phải chọn giải đấu muốn tham gia';
-    }
     if (this.state.teamNameInForm.trim() === '') {
       teamNameInFormError = true;
       teamNameInFormErrorContent = 'Tên đội không được trống';
@@ -429,8 +510,6 @@ class TournamentInfo extends React.Component<ITournamentInfoProps, ITournamentIn
     }
 
     return {
-      selectedCompetitionInFormError,
-      selectedCompetitionInFormErrorContent,
       teamNameInFormError,
       teamNameInFormErrorContent,
       teamShortNameInFormError,
@@ -484,22 +563,18 @@ class TournamentInfo extends React.Component<ITournamentInfoProps, ITournamentIn
 
   private handleConfirmModal = () => {
     const {
-      selectedCompetitionInFormError,
-      selectedCompetitionInFormErrorContent,
       teamNameInFormError,
       teamNameInFormErrorContent,
       teamShortNameInFormError,
       teamShortNameInFormErrorContent
     } = this.validateForm();
     this.setState({
-      selectedCompetitionInFormError,
-      selectedCompetitionInFormErrorContent,
       teamNameInFormError,
       teamNameInFormErrorContent,
       teamShortNameInFormError,
       teamShortNameInFormErrorContent
     });
-    if (teamNameInFormError === true || selectedCompetitionInFormError === true || teamShortNameInFormError === true) {
+    if (teamNameInFormError === true || teamShortNameInFormError === true) {
       return;
     }
     const params = {
@@ -507,7 +582,7 @@ class TournamentInfo extends React.Component<ITournamentInfoProps, ITournamentIn
       param: {},
       data: {
         creatorId: this.props.currentUserInfo!.id,
-        competitionId: (this.state.selectedCompetitionInForm as IParams).value,
+        tournamentId: this.props.routerInfo.match.params.tournamentId as number,
         fullName: this.state.teamNameInForm,
         shortName: this.state.teamShortNameInForm,
         players: this.state.listPlayerInForm,
@@ -740,6 +815,110 @@ class TournamentInfo extends React.Component<ITournamentInfoProps, ITournamentIn
                       </div>
                       <div className="TournamentInfo-content-info-basic-info-container-singleRow">
                         <div className="TournamentInfo-info-item">
+                          <p>{this.props.sportInfo != null ? `Bộ môn thi đấu: ${this.props.sportInfo.fullName}` : <Skeleton width={200} height={20} />}</p>
+                        </div>
+                        <div className="TournamentInfo-info-item">
+                          <p>{this.props.tournamentInfo != null && this.props.tournamentInfo.Tournament ? `Cách tổ chức giải: ${(this.props.tournamentInfo.Tournament as IParams).hasGroupStage === true ? '2 giai đoạn' : '1 giai đoạn'}` : <Skeleton width={200} height={20} />}</p>
+                        </div>
+                      </div>
+                      <div className="TournamentInfo-content-info-basic-info-container-singleRow">
+                        <div className="TournamentInfo-info-item">
+                          <p>
+                            {
+                              this.props.tournamentInfo != null && this.props.tournamentInfo.Tournament ?
+                                `${(this.props.tournamentInfo.Tournament as IParams).hasGroupStage === true ?
+                                  'Thể thức vòng bảng: ' : 'Thể thức: '}
+                            ${this.props.groupStageSetting != null &&
+                                  this.props.allFormats != null &&
+                                  this.props.finalStageSetting != null &&
+                                  this.props.allFormats.length > 0 &&
+                                  this.props.allFormats.find(element => element.id === this.props.finalStageSetting!.formatId) != null &&
+                                  this.props.allFormats.find(element => element.id === this.props.groupStageSetting!.formatId) != null ?
+                                  ((this.props.tournamentInfo.Tournament as IParams).hasGroupStage !== true ? this.props.allFormats.find(element => element.id === this.props.finalStageSetting!.formatId)!.description :
+                                    this.props.allFormats.find(element => element.id === this.props.groupStageSetting!.formatId)!.description) : 'chưa có'
+                                }` : <Skeleton width={300} height={20} />}
+                          </p>
+                        </div>
+                      </div>
+                      {(this.props.tournamentInfo != null && this.props.tournamentInfo.Tournament && ((this.props.tournamentInfo.Tournament as IParams).hasGroupStage === true ?
+                        this.props.groupStageSetting != null && this.props.groupStageSetting.formatId !== 2 && <div className="CompetitionInfo-content-info-basic-info-container-singleRow">
+                          <div className="CompetitionInfo-info-item">
+                            <p>
+                              {
+                                this.props.groupStageSetting.hasHomeMatch === true ?
+                                  (this.props.groupStageSetting.formatId === 1 ? 'Có trận tranh hạng 3 vòng bảng' : 'Có chơi lượt đi lượt về vòng bảng') :
+                                  (this.props.groupStageSetting.formatId === 1 ? 'Không có trận tranh hạng 3 vòng bảng' : 'Không chơi lượt đi lượt về vòng bảng')
+                              }
+                            </p>
+                          </div>
+                        </div> : (this.props.finalStageSetting != null && this.props.finalStageSetting.formatId !== 2 && <div className="CompetitionInfo-content-info-basic-info-container-singleRow">
+                          <div className="CompetitionInfo-info-item">
+                            <p>
+                              {
+                                this.props.finalStageSetting.hasHomeMatch === true ?
+                                  (this.props.finalStageSetting.formatId === 1 ? 'Có trận tranh hạng 3' : 'Có chơi lượt đi lượt về') :
+                                  (this.props.finalStageSetting.formatId === 1 ? 'Không có trận tranh hạng 3' : 'Không chơi lượt đi lượt về')
+                              }
+                            </p>
+                          </div>
+                        </div>)))}
+                      <div className="TournamentInfo-content-info-basic-info-container-singleRow">
+                        <div className="TournamentInfo-info-item">
+                          <p>
+                            {
+                              this.props.tournamentInfo != null && this.props.tournamentInfo.Tournament ?
+                                `${(this.props.tournamentInfo.Tournament as IParams).hasGroupStage !== true ?
+                                  'Số set 1 trận: ' : 'Số set 1 trận vòng bảng: '}
+                            ${this.props.groupStageSetting != null &&
+                                  this.props.finalStageSetting != null ?
+                                  ((this.props.tournamentInfo.Tournament as IParams).hasGroupStage !== true ? this.props.finalStageSetting.bo :
+                                    this.props.groupStageSetting.bo) : 'chưa có'
+                                }` : <Skeleton width={300} height={20} />}
+                          </p>
+                        </div>
+                      </div>
+                      {(this.props.tournamentInfo != null &&
+                        this.props.tournamentInfo.Tournament &&
+                        (this.props.tournamentInfo.Tournament as IParams).hasGroupStage === true &&
+                        <div className="CompetitionInfo-content-info-basic-info-container-singleRow">
+                          <div className="CompetitionInfo-info-item">
+                            <p>Số đội trong 1 bảng: {this.props.groupStageSetting != null ? this.props.groupStageSetting.maxTeamPerTable as number : 2}</p>
+                          </div>
+                          <div className="CompetitionInfo-info-item">
+                            <p>Số đội đi tiếp trong 1 bảng: {this.props.groupStageSetting != null ? this.props.groupStageSetting.advanceTeamPerTable as number : 1}</p>
+                          </div>
+                        </div>)}
+                      {(this.props.tournamentInfo != null && this.props.tournamentInfo.Tournament != null && (this.props.tournamentInfo.Tournament as IParams).hasGroupStage === true &&
+                        <div className="CompetitionInfo-content-info-basic-info-container-singleRow">
+                          <div className="CompetitionInfo-info-item">
+                            <p>Thể thức vòng chung kết: {
+                              this.props.allFormats != null &&
+                              this.props.finalStageSetting != null &&
+                              this.props.allFormats.length > 0 &&
+                              this.props.allFormats.find(element => element.id === this.props.finalStageSetting!.formatId) != null &&
+                              this.props.allFormats.find(element => element.id === this.props.finalStageSetting!.formatId)!.description
+                            }
+                            </p>
+                          </div>
+                        </div>)}
+                      {this.props.tournamentInfo != null && this.props.tournamentInfo.Tournament != null && (this.props.tournamentInfo.Tournament as IParams).hasGroupStage === true && this.props.finalStageSetting != null && this.props.finalStageSetting.formatId !== 2 && (this.props.finalStageSetting.formatId === 3 ?
+                        <div className="CompetitionInfo-content-info-basic-info-container-singleRow">
+                          <div className="CompetitionInfo-info-item">
+                            <p>{this.props.finalStageSetting.hasHomeMatch === true ? 'Chơi lượt đi lượt về vòng chung kết' : 'Không chơi lượt đi lượt về vòng chung kết'}</p>
+                          </div>
+                        </div> : <div className="CompetitionInfo-content-info-basic-info-container-singleRow">
+                          <div className="CompetitionInfo-info-item">
+                            <p>{this.props.finalStageSetting.hasHomeMatch === true ? 'Có trận tranh hạng 3 vòng chung kết' : 'Không có trận tranh hạng 3 vòng chung kết'}</p>
+                          </div>
+                        </div>)}
+                      {this.props.tournamentInfo != null && this.props.tournamentInfo.Tournament != null && (this.props.tournamentInfo.Tournament as IParams).hasGroupStage === true && this.props.finalStageSetting != null &&
+                        <div className="TournamentInfo-content-info-basic-info-container-singleRow">
+                          <div className="TournamentInfo-info-item">
+                            <p>Số set 1 trận vòng chung kết: {this.props.finalStageSetting.bo}</p>
+                          </div>
+                        </div>}
+                      <div className="TournamentInfo-content-info-basic-info-container-singleRow">
+                        <div className="TournamentInfo-info-item">
                           <p>{this.props.tournamentInfo != null && this.props.tournamentInfo.Tournament ? `Mô tả: ${(this.props.tournamentInfo.Tournament as unknown as IParams).description}` : <Skeleton width={300} height={20} />}</p>
                         </div>
                       </div>
@@ -753,7 +932,7 @@ class TournamentInfo extends React.Component<ITournamentInfoProps, ITournamentIn
                   </div>
                   {this.props.tournamentInfo != null && this.props.tournamentInfo.Config != null && this.props.tournamentInfo.Tournament != null &&
                     ((this.props.tournamentInfo.Config as IParams).canEdit === true ?
-                    ((this.props.tournamentInfo.Tournament as IParams).status === TOURNAMENT_STATUS.INITIALIZING ?
+                      ((this.props.tournamentInfo.Tournament as IParams).status === TOURNAMENT_STATUS.INITIALIZING ?
                         <div className="TournamentInfo-login-container">
                           <div
                             className="TournamentInfo-login"
@@ -875,7 +1054,7 @@ class TournamentInfo extends React.Component<ITournamentInfoProps, ITournamentIn
                 <div className={'TournamentInfo-join-tournament-form-competition-header'}>
                   <h3>Form đăng ký dự thi</h3>
                 </div>
-                <div className={'TournamentInfo-join-tournament-form-competition-option'}>
+                {/* <div className={'TournamentInfo-join-tournament-form-competition-option'}>
                   <p>Chọn cuộc thi</p>
                   <Select
                     options={allCompetitionOptions}
@@ -886,7 +1065,7 @@ class TournamentInfo extends React.Component<ITournamentInfoProps, ITournamentIn
                     maxMenuHeight={140}
                   />
                   {this.state.selectedCompetitionInFormError === true && <p style={{ color: 'red' }}>{this.state.selectedCompetitionInFormErrorContent}</p>}
-                </div>
+                </div> */}
                 <TextInput label={'Tên đội'} value={this.state.teamNameInForm} onChangeText={this.onChangeTeamNameInForm} error={this.state.teamNameInFormError} errorContent={this.state.teamNameInFormErrorContent} />
                 <TextInput label={'Tên ngắn đội'} value={this.state.teamShortNameInForm} onChangeText={this.onChangeTeamShortNameInForm} error={this.state.teamShortNameInFormError} errorContent={this.state.teamShortNameInFormErrorContent} />
                 <div className="TournamentInfo-join-tournament-container">
@@ -947,10 +1126,14 @@ const mapStateToProps = (state: IState) => {
     listCompetitionsBySportAndTournament: state.listCompetitionsBySportAndTournament,
     allCompetitionByTournamentId: state.allCompetitionByTournamentId,
     currentUserInfo: state.currentUserInfo,
+    sportInfo: state.sportInfo,
+    allFormats: state.allFormats,
+    groupStageSetting: state.groupStageSetting,
+    finalStageSetting: state.finalStageSetting,
   };
 };
 
 export default connect(
   mapStateToProps,
-  { openRegisterForm, closeRegisterForm, registTeam, reportViolation, queryAllCompetitionsByTournamentId, deleteListSelectingTeam, onEditBracketMode, updateBackgroundTournament, updateAvatarTournament, queryTournamentInfo, querySportsByTournament, queryCompetitionsBySportAndTournament, startTournament, finishTournament }
+  { queryFinalStageSetting, queryGroupStageSetting, queryAllFormats, querySportInfo, openRegisterForm, closeRegisterForm, registTeam, reportViolation, queryAllCompetitionsByTournamentId, deleteListSelectingTeam, onEditBracketMode, updateBackgroundTournament, updateAvatarTournament, queryTournamentInfo, querySportsByTournament, queryCompetitionsBySportAndTournament, startTournament, finishTournament }
 )(TournamentInfo);

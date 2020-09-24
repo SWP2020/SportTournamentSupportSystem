@@ -15,7 +15,7 @@ interface IMatchDetailProps extends React.ClassAttributes<MatchDetail> {
   matchInfo: IParams | null;
   allMatches: IParams | null;
   beforeInfo?: IParams;
-  competitionId: number;
+  tournamentId: number;
   lowerBracket?: boolean;
 
   updateMatchInfo(params: IBigRequest): void;
@@ -160,7 +160,7 @@ class MatchDetail extends React.Component<IMatchDetailProps, IMatchDetailState> 
           id: this.props.matchInfo.id,
         },
         data: {
-          competitionId: this.props.matchInfo.competitionId,
+          tournamentId: this.props.matchInfo.tournamentId,
           location: this.state.location,
           time: formatDateToString(this.state.time, 'yyyy-MM-dd HH:mm:ss'),
           loserId: this.props.matchInfo.loserId,
@@ -182,7 +182,7 @@ class MatchDetail extends React.Component<IMatchDetailProps, IMatchDetailState> 
           param: {
             degree: (this.props.beforeInfo.degree as number) + 1,
             nodeId: this.props.beforeInfo.id,
-            competitionId: this.props.competitionId,
+            tournamentId: this.props.tournamentId,
             location: this.props.lowerBracket === true ? 2 : 0,
             tableId: -1,
           },
@@ -198,7 +198,7 @@ class MatchDetail extends React.Component<IMatchDetailProps, IMatchDetailState> 
           param: {
             degree: 0,
             nodeId: this.props.info.matchNo,
-            competitionId: this.props.competitionId,
+            tournamentId: this.props.tournamentId,
             location: -1,
             tableId: -1,
           },
