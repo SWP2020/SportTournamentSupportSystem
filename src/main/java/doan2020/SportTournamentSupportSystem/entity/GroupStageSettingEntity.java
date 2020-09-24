@@ -27,6 +27,9 @@ public class GroupStageSettingEntity {
 	@OneToOne
 	@JoinColumn(name = "tournamentId", nullable = false)
 	private TournamentEntity tournament;
+	
+	@ColumnDefault("3")
+	private Integer bo = 3;
 
 	@Column(nullable = false)
 	@ColumnDefault("4")
@@ -109,5 +112,15 @@ public class GroupStageSettingEntity {
 	public void setTournament(TournamentEntity tournament) {
 		this.tournament = tournament;
 	}
+
+	public Integer getBo() {
+		return bo;
+	}
+
+	public void setBo(Integer bo) {
+		this.bo = bo;
+	}
+	
+	
 
 }

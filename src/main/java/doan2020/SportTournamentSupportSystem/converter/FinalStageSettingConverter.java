@@ -13,31 +13,35 @@ import doan2020.SportTournamentSupportSystem.service.IFormatService;
 
 @Component
 public class FinalStageSettingConverter {
-	
+
 	@Autowired
 	private IFormatService formatService;
-	
+
 	@Autowired
 	private ITournamentService TournamentService;
-	
-	public FinalStageSettingEntity toEntity(FinalStageSettingDTO dto){
+
+	public FinalStageSettingEntity toEntity(FinalStageSettingDTO dto) {
 		System.out.println("FinalStageSettingConverter: toEntity: start");
 		FinalStageSettingEntity entity = new FinalStageSettingEntity();
 		try {
 			entity.setHasHomeMatch(dto.isHasHomeMatch());
+			System.out.println(dto.getBo());
+			if (dto.getBo() != null) {
+				entity.setBo(dto.getBo());
+			}
 			if (dto.getFormatId() != null) {
 				Long formatId = dto.getFormatId();
 				if (dto.getTournamentId() != null) {
 					TournamentEntity Tournament = TournamentService.findOneById(dto.getTournamentId());
-					entity.setTournament(Tournament);;
+					entity.setTournament(Tournament);
+					;
 				}
 				FormatEntity format = formatService.findOneById(formatId);
 				entity.setFormat(format);
-				
-				
+
 			}
 			System.out.println("FinalStageSettingConverter: toEntity: no exception");
-		}catch (Exception e) {
+		} catch (Exception e) {
 			System.out.println("FinalStageSettingConverter: toEntity: has exception");
 			return null;
 		}
@@ -45,11 +49,12 @@ public class FinalStageSettingConverter {
 		return entity;
 	}
 
-	public FinalStageSettingDTO toDTO(FinalStageSettingEntity entity){
+	public FinalStageSettingDTO toDTO(FinalStageSettingEntity entity) {
 		System.out.println("FinalStageSettingConverter: toDTO: finish");
 		FinalStageSettingDTO dto = new FinalStageSettingDTO();
 		try {
 			dto.setId(entity.getId());
+			dto.setBo(entity.getBo());
 			if (entity.getFormat() != null)
 				dto.setFormatId(entity.getFormat().getId());
 			if (entity.getTournament() != null)
@@ -62,7 +67,7 @@ public class FinalStageSettingConverter {
 			System.out.println("FinalStageSettingConverter: toDTO: has exception");
 			return null;
 		}
-		
+
 		System.out.println("FinalStageSettingConverter: toDTO: finish");
 		return dto;
 	}

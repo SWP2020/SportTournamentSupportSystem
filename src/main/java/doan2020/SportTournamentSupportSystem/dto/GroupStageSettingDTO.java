@@ -9,6 +9,8 @@ public class GroupStageSettingDTO {
 
 	private Integer advanceTeamPerTable;
 	
+	private Integer bo;
+	
 	private boolean hasHomeMatch;
 	private Long formatId;
 	
@@ -84,6 +86,14 @@ public class GroupStageSettingDTO {
 
 	public void setUrl(String url) {
 		this.url = url;
+	}
+
+	public Integer getBo() {
+		return bo;
+	}
+
+	public void setBo(Integer bo) {
+		this.bo = bo;
 	}
 	
 	

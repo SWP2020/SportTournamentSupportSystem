@@ -31,6 +31,9 @@ public class FinalStageSettingEntity {
 	@Column(nullable = false)
 	@ColumnDefault("0")
 	private boolean hasHomeMatch = false;
+	
+	@ColumnDefault("3")
+	private Integer bo = 3;
 
 	@ManyToOne
 	@JoinColumn(name = "formatId", nullable = false)
@@ -91,7 +94,13 @@ public class FinalStageSettingEntity {
 	public TournamentEntity getTournament() {
 		return tournament;
 	}
-	
-	
+
+	public Integer getBo() {
+		return bo;
+	}
+
+	public void setBo(Integer bo) {
+		this.bo = bo;
+	}
 
 }

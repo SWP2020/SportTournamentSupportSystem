@@ -25,6 +25,9 @@ public class GroupStageSettingConverter {
 		GroupStageSettingEntity entity = new GroupStageSettingEntity();
 		try {
 			entity.setHasHomeMatch(dto.isHasHomeMatch());
+			if (dto.getBo() != null) {
+				entity.setBo(dto.getBo());
+			}
 			if (dto.getFormatId() != null) {
 				Long formatId = dto.getFormatId();
 				FormatEntity format = formatService.findOneById(formatId);
@@ -60,6 +63,10 @@ public class GroupStageSettingConverter {
 		GroupStageSettingDTO dto = new GroupStageSettingDTO();
 		try {
 			dto.setId(entity.getId());
+			System.out.println(dto.getBo());
+
+			dto.setBo(entity.getBo());
+
 			if (entity.getFormat() != null)
 				dto.setFormatId(entity.getFormat().getId());
 			if (entity.getTournament() != null)

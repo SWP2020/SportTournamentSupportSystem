@@ -6,6 +6,7 @@ public class FinalStageSettingDTO {
 	private Long TournamentId;
 	private boolean hasHomeMatch;
 	private Long formatId;
+	private Integer bo;
 	private String status;
 	private String url;
 	
@@ -64,6 +65,14 @@ public class FinalStageSettingDTO {
 
 	public void setUrl(String url) {
 		this.url = url;
+	}
+
+	public Integer getBo() {
+		return bo;
+	}
+
+	public void setBo(Integer bo) {
+		this.bo = bo;
 	}
 	
 	

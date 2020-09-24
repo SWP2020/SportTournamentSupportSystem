@@ -31,6 +31,7 @@ public class GroupStageSettingService implements IGroupStageSettingService{
 			updatedEntity = groupStageSettingRepository.findOneById(id);
 
 			updatedEntity.setTournament(newEntity.getTournament());
+			updatedEntity.setBo(newEntity.getBo());
 			updatedEntity.setFormat(newEntity.getFormat());
 			updatedEntity.setHasHomeMatch(newEntity.isHasHomeMatch());
 			updatedEntity.setAdvanceTeamPerTable(newEntity.getAdvanceTeamPerTable());
