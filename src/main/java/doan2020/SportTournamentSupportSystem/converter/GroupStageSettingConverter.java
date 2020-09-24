@@ -6,9 +6,9 @@ import org.springframework.stereotype.Component;
 import doan2020.SportTournamentSupportSystem.config.Const;
 import doan2020.SportTournamentSupportSystem.dto.GroupStageSettingDTO;
 import doan2020.SportTournamentSupportSystem.entity.GroupStageSettingEntity;
-import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
+import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
 import doan2020.SportTournamentSupportSystem.entity.FormatEntity;
-import doan2020.SportTournamentSupportSystem.service.ICompetitionService;
+import doan2020.SportTournamentSupportSystem.service.ITournamentService;
 import doan2020.SportTournamentSupportSystem.service.IFormatService;
 
 @Component
@@ -18,7 +18,7 @@ public class GroupStageSettingConverter {
 	private IFormatService formatService;
 
 	@Autowired
-	private ICompetitionService competitionService;
+	private ITournamentService TournamentService;
 
 	public GroupStageSettingEntity toEntity(GroupStageSettingDTO dto) {
 		System.out.println("GroupStageSettingConverter: toEntity: start");
@@ -35,9 +35,9 @@ public class GroupStageSettingConverter {
 				entity.setFormat(format);
 			}
 
-			if (dto.getCompetitionId() != null) {
-				CompetitionEntity competition = competitionService.findOneById(dto.getCompetitionId());
-				entity.setCompetition(competition);
+			if (dto.getTournamentId() != null) {
+				TournamentEntity Tournament = TournamentService.findOneById(dto.getTournamentId());
+				entity.setTournament(Tournament);
 			}
 			if (dto.getMaxTeamPerTable() != null) {
 				entity.setMaxTeamPerTable(dto.getMaxTeamPerTable());
@@ -62,8 +62,8 @@ public class GroupStageSettingConverter {
 			dto.setId(entity.getId());
 			if (entity.getFormat() != null)
 				dto.setFormatId(entity.getFormat().getId());
-			if (entity.getCompetition() != null)
-				dto.setCompetitionId(entity.getCompetition().getId());
+			if (entity.getTournament() != null)
+				dto.setTournamentId(entity.getTournament().getId());
 			dto.setHasHomeMatch(entity.isHasHomeMatch());
 			dto.setMaxTeamPerTable(entity.getMaxTeamPerTable());
 			dto.setAdvanceTeamPerTable(entity.getAdvanceTeamPerTable());

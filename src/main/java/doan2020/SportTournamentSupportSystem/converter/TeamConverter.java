@@ -4,10 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import doan2020.SportTournamentSupportSystem.dto.TeamDTO;
-import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
+import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
 import doan2020.SportTournamentSupportSystem.entity.TeamEntity;
 import doan2020.SportTournamentSupportSystem.entity.UserEntity;
-import doan2020.SportTournamentSupportSystem.service.ICompetitionService;
+import doan2020.SportTournamentSupportSystem.service.ITournamentService;
 import doan2020.SportTournamentSupportSystem.service.IUserService;
 
 @Component
@@ -17,7 +17,7 @@ public class TeamConverter{
 	private IUserService userService;
 	
 	@Autowired
-	private ICompetitionService competitionService;
+	private ITournamentService TournamentService;
 	
 	public TeamEntity toEntity(TeamDTO dto){
 		System.out.println("TeamConverter: toEntity: start");
@@ -30,10 +30,10 @@ public class TeamConverter{
 				entity.setShortName(dto.getShortName());
 			entity.setDescription(dto.getDescription());
 			
-			if (dto.getCompetitionId() != null) {
-				Long competitionId = dto.getCompetitionId();
-				CompetitionEntity competition = competitionService.findOneById(competitionId);
-				entity.setCompetition(competition);
+			if (dto.getTournamentId() != null) {
+				Long TournamentId = dto.getTournamentId();
+				TournamentEntity Tournament = TournamentService.findOneById(TournamentId);
+				entity.setTournament(Tournament);
 			}
 			
 			if (dto.getCreatorId() != null) {
@@ -72,11 +72,11 @@ public class TeamConverter{
 			
 			System.out.println("TeamConverter: toDTO: creator OK");
 			
-			CompetitionEntity competition = entity.getCompetition();
-			Long competitionId = competition.getId();
-			dto.setCompetitionId(competitionId);
+			TournamentEntity Tournament = entity.getTournament();
+			Long TournamentId = Tournament.getId();
+			dto.setTournamentId(TournamentId);
 			
-			System.out.println("TeamConverter: toDTO: competition OK");
+			System.out.println("TeamConverter: toDTO: Tournament OK");
 			
 			dto.setSeedNo(entity.getSeedNo());
 			

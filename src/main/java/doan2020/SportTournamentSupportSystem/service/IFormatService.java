@@ -9,7 +9,7 @@ public interface IFormatService {
 	
 	public FormatEntity findOneById(Long id);
 	
-//	public Collection<CompetitionFormatEntity> findAll(Pageable pageable);
+//	public Collection<TournamentFormatEntity> findAll(Pageable pageable);
 	
 	public FormatEntity create(FormatEntity formatEntity);
 	

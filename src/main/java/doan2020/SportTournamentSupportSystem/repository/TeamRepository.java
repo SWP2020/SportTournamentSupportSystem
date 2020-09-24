@@ -14,23 +14,15 @@ public interface TeamRepository extends JpaRepository<TeamEntity, Long> {
 
 	Collection<TeamEntity> findByCreatorId(Long creatorId);
 
-	Collection<TeamEntity> findByCompetitionId(Long competitionId);
+	Collection<TeamEntity> findByTournamentId(Long TournamentId);
 
-	Collection<TeamEntity> findByCompetitionIdAndStatus(Long competitionId, String status);
+	Collection<TeamEntity> findByTournamentIdAndStatus(Long TournamentId, String status);
 
-	@Query(value = "select teams.* from teams left join competitions on teams.competition_id = competitions.id "
-			+ "where competitions.tournament_id = ?1 and teams.status=?2", nativeQuery=true)
-	Collection<TeamEntity> findByTournamentIdAndStatus(Long tournamentId, String status);
+	Long countByTournamentIdAndStatus(Long TournamentId, String status);
 
-	Long countByCompetitionIdAndStatus(Long competitionId, String status);
+	Long countByTournamentId(Long TournamentId);
 
-	@Query(value = "select count(t.id) from teams t left join competitions c on t.competition_id = c.id "
-			+ "where c.tournament_id = ?1 and t.status=?2", nativeQuery = true)
-	Long countByCompetitionTournamentIdIdAndStatus(Long tournamentId, String status);
-
-	Long countByCompetitionId(Long competitionId);
-
-	@Query(value = "SELECT MAX(seed_no) FROM teams WHERE competition_id = ?1 and status = \'" + Const.TEAM_STATUS_JOINED
+	@Query(value = "SELECT MAX(seed_no) FROM teams WHERE tournament_id = ?1 and status = \'" + Const.TEAM_STATUS_JOINED
 			+ "\'", nativeQuery = true)
-	Long getMaxSeedNoByCompetitionId(Long competitionId);
+	Long getMaxSeedNoByTournamentId(Long TournamentId);
 }

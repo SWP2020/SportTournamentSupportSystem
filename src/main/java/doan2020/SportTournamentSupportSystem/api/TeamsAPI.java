@@ -22,13 +22,13 @@ import org.springframework.web.bind.annotation.RestController;
 import doan2020.SportTournamentSupportSystem.config.Const;
 import doan2020.SportTournamentSupportSystem.converter.TeamConverter;
 import doan2020.SportTournamentSupportSystem.dto.TeamDTO;
-import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
+import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
 import doan2020.SportTournamentSupportSystem.entity.TeamEntity;
 import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
 import doan2020.SportTournamentSupportSystem.entity.UserEntity;
 import doan2020.SportTournamentSupportSystem.model.Entity.Player;
 import doan2020.SportTournamentSupportSystem.response.Response;
-import doan2020.SportTournamentSupportSystem.service.ICompetitionService;
+import doan2020.SportTournamentSupportSystem.service.ITournamentService;
 import doan2020.SportTournamentSupportSystem.service.ITeamService;
 import doan2020.SportTournamentSupportSystem.service.ITournamentService;
 import doan2020.SportTournamentSupportSystem.service.IUserService;
@@ -42,9 +42,6 @@ public class TeamsAPI {
 
 	@Autowired
 	private IUserService userService;
-
-	@Autowired
-	private ICompetitionService competitionService;
 
 	@Autowired
 	private ITournamentService tournamentService;
@@ -204,14 +201,14 @@ public class TeamsAPI {
 	}
 
 	/*
-	 * Get all joined team by CompetitionId
+	 * Get all joined team by TournamentId
 	 */
-	@GetMapping("/getByCompetitionId")
-	public ResponseEntity<Response> getTeamsByCompetitionId(
+	@GetMapping("/getByTournamentId")
+	public ResponseEntity<Response> getTeamsByTournamentId(
 			@RequestParam(value = "page", required = false) Integer page,
 			@RequestParam(value = "limit", required = false) Integer limit,
-			@RequestParam(value = "competitionId") Long competitionId) {
-		System.out.println("TeamsAPI: getByCompetitionId: start");
+			@RequestParam(value = "tournamentId") Long tournamentId) {
+		System.out.println("TeamsAPI: getByTournamentId: start");
 		HttpStatus httpStatus = HttpStatus.OK;
 		Response response = new Response();
 		Map<String, Object> config = new HashMap<String, Object>();
@@ -227,15 +224,15 @@ public class TeamsAPI {
 			if (page == null || page <= 0)
 				page = 1;
 
-			if (competitionId == null) {
+			if (tournamentId == null) {
 				result.put("Total page", 0);
 				result.put("Teams", null);
 				config.put("Global", 0);
 				error.put("MessageCode", 0);
-				error.put("Message", "required competitionId");
+				error.put("Message", "required TournamentId");
 			} else {
 
-				list = (List<TeamEntity>) service.findByCompetitionIdAndStatus(competitionId, Const.TEAM_STATUS_JOINED);
+				list = (List<TeamEntity>) service.findByTournamentIdAndStatus(tournamentId, Const.TEAM_STATUS_JOINED);
 
 				if (list == null) {// list is not exist
 					result.put("Total page", 0);
@@ -249,15 +246,15 @@ public class TeamsAPI {
 
 					for (TeamEntity teamEntity : list) {
 						ArrayList<Player> players = (ArrayList<Player>) service
-								.getTeamPlayerFromFile(teamEntity.getCompetition().getId(), teamEntity.getId());
+								.getTeamPlayerFromFile(teamEntity.getTournament().getId(), teamEntity.getId());
 						TeamDTO resDTO = converter.toDTO(teamEntity);
 						resDTO.setPlayers(players);
 						teamDTOs.add(resDTO);
 					}
 
-					CompetitionEntity competitionEntity = competitionService.findOneById(competitionId);
+					TournamentEntity TournamentEntity = tournamentService.findOneById(tournamentId);
 
-					int total = competitionEntity.getTeams().size();
+					int total = TournamentEntity.getTeams().size();
 					int totalPage = total / limit;
 					if (total % limit != 0) {
 						totalPage++;
@@ -287,14 +284,14 @@ public class TeamsAPI {
 	}
 
 	/*
-	 * Get all pending team by CompetitionId
+	 * Get all pending team by TournamentId
 	 */
-	@GetMapping("/getPendingTeamsByCompetitionId")
-	public ResponseEntity<Response> getPendingTeamsByCompetitionId(
+	@GetMapping("/getPendingTeamsByTournamentId")
+	public ResponseEntity<Response> getPendingTeamsByTournamentId(
 			@RequestParam(value = "page", required = false) Integer page,
 			@RequestParam(value = "limit", required = false) Integer limit,
-			@RequestParam(value = "competitionId") Long competitionId) {
-		System.out.println("TeamsAPI: getPendingTeamsByCompetitionId: start");
+			@RequestParam(value = "tournamentId") Long tournamentId) {
+		System.out.println("TeamsAPI: getPendingTeamsByTournamentId: start");
 		HttpStatus httpStatus = HttpStatus.OK;
 		Response response = new Response();
 		Map<String, Object> config = new HashMap<String, Object>();
@@ -310,15 +307,15 @@ public class TeamsAPI {
 			if (page == null || page <= 0)
 				page = 1;
 
-			if (competitionId == null) {
+			if (tournamentId == null) {
 				result.put("Total page", 0);
 				result.put("Teams", teamDTOs);
 				config.put("Global", 0);
 				error.put("MessageCode", 1);
-				error.put("Message", "required competitionId");
+				error.put("Message", "required TournamentId");
 			} else {
 
-				list = (List<TeamEntity>) service.findByCompetitionIdAndStatus(competitionId,
+				list = (List<TeamEntity>) service.findByTournamentIdAndStatus(tournamentId,
 						Const.TEAM_STATUS_PENDING);
 
 				if (list == null) {// list is not exist
@@ -333,15 +330,15 @@ public class TeamsAPI {
 
 					for (TeamEntity teamEntity : list) {
 						ArrayList<Player> players = (ArrayList<Player>) service
-								.getTeamPlayerFromFile(teamEntity.getCompetition().getId(), teamEntity.getId());
+								.getTeamPlayerFromFile(teamEntity.getTournament().getId(), teamEntity.getId());
 						TeamDTO resDTO = converter.toDTO(teamEntity);
 						resDTO.setPlayers(players);
 						teamDTOs.add(resDTO);
 					}
 
-					CompetitionEntity competitionEntity = competitionService.findOneById(competitionId);
+					TournamentEntity TournamentEntity = tournamentService.findOneById(tournamentId);
 
-					int total = competitionEntity.getTeams().size();
+					int total = TournamentEntity.getTeams().size();
 					int totalPage = total / limit;
 					if (total % limit != 0) {
 						totalPage++;
@@ -354,9 +351,9 @@ public class TeamsAPI {
 
 				}
 			}
-			System.out.println("TeamsAPI: getPendingTeamsByCompetitionId: no exception");
+			System.out.println("TeamsAPI: getPendingTeamsByTournamentId: no exception");
 		} catch (Exception e) {
-			System.out.println("TeamsAPI: getPendingTeamsByCompetitionId: has exception");
+			System.out.println("TeamsAPI: getPendingTeamsByTournamentId: has exception");
 			result.put("Teams", teamDTOs);
 			config.put("Global", 0);
 			error.put("MessageCode", 1);
@@ -366,7 +363,7 @@ public class TeamsAPI {
 		response.setConfig(config);
 		response.setResult(result);
 		response.setError(error);
-		System.out.println("TeamsAPI: getPendingTeamsByCompetitionId: finish");
+		System.out.println("TeamsAPI: getPendingTeamsByTournamentId: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
 
@@ -387,14 +384,14 @@ public class TeamsAPI {
 			TeamEntity team1 = service.findOneById(team1Id);
 			TeamEntity team2 = service.findOneById(team2Id);
 
-			if (team1.getCompetition().getId() != team2.getCompetition().getId()) {
+			if (team1.getTournament().getId() != team2.getTournament().getId()) {
 				result.put("Teams", null);
 				config.put("Global", 0);
 				error.put("MessageCode", 1);
-				error.put("Message", "Two team must join same competition");
+				error.put("Message", "Two team must join same Tournament");
 			} else {
 
-				TournamentEntity tour = team1.getCompetition().getTournament();
+				TournamentEntity tour = team1.getTournament();
 				if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_INITIALIZING)
 						|| tour.getStatus().contains(Const.TOURNAMENT_STATUS_REGISTRATION_OPENING)) {
 
@@ -402,7 +399,7 @@ public class TeamsAPI {
 
 					for (TeamEntity teamEntity : teams) {
 						ArrayList<Player> players = (ArrayList<Player>) service
-								.getTeamPlayerFromFile(teamEntity.getCompetition().getId(), teamEntity.getId());
+								.getTeamPlayerFromFile(teamEntity.getTournament().getId(), teamEntity.getId());
 						TeamDTO resDTO = converter.toDTO(teamEntity);
 						resDTO.setPlayers(players);
 						teamDTOs.add(resDTO);
@@ -423,7 +420,7 @@ public class TeamsAPI {
 					if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_STOPPED)) {
 						message = Const.TOURNAMENT_MESSAGE_STOPPED;
 					}
-					result.put("Competition", null);
+					result.put("Tournament", null);
 					config.put("Global", 0);
 					error.put("MessageCode", 1);
 					error.put("Message", message);
@@ -442,89 +439,6 @@ public class TeamsAPI {
 		response.setResult(result);
 		response.setError(error);
 		System.out.println("TeamsAPI: swapTowTeams: finish");
-		return new ResponseEntity<Response>(response, httpStatus);
-	}
-
-	/*
-	 * Get all joined team by CompetitionId
-	 */
-	@GetMapping("/getByTournamentId")
-	public ResponseEntity<Response> getByTournamentId(@RequestParam(value = "page", required = false) Integer page,
-			@RequestParam(value = "limit", required = false) Integer limit,
-			@RequestParam(value = "tournamentId") Long tournamentId) {
-		System.out.println("TeamsAPI: getByTournamentId: start");
-		HttpStatus httpStatus = HttpStatus.OK;
-		Response response = new Response();
-		Map<String, Object> config = new HashMap<String, Object>();
-		Map<String, Object> result = new HashMap<String, Object>();
-		Map<String, Object> error = new HashMap<String, Object>();
-		List<TeamDTO> teamDTOs = new ArrayList<TeamDTO>();
-		List<TeamEntity> teams = new ArrayList<TeamEntity>();
-		try {
-
-			if (limit == null || limit <= 0)
-				limit = 3;
-
-			if (page == null || page <= 0)
-				page = 1;
-
-			if (tournamentId == null) {
-				result.put("Total page", 0);
-				result.put("Teams", null);
-				config.put("Global", 0);
-				error.put("MessageCode", 0);
-				error.put("Message", "required tournamentId");
-			} else {
-
-				TournamentEntity thisTour = tournamentService.findOneById(tournamentId);
-				if (thisTour == null) {
-					result.put("Total page", 0);
-					result.put("Teams", null);
-					config.put("Global", 0);
-					error.put("MessageCode", 0);
-					error.put("Message", "Not found tournament");
-				} else {
-
-					teams.addAll(service.findByTournamentIdAndStatus(tournamentId, Const.TEAM_STATUS_JOINED));
-					
-					System.out.println("size: " + teams.size());
-					
-					Collections.sort(teams, new TeamEntity());
-
-					for (TeamEntity team : teams) {
-						ArrayList<Player> players = (ArrayList<Player>) service
-								.getTeamPlayerFromFile(team.getCompetition().getId(), team.getId());
-						TeamDTO resDTO = converter.toDTO(team);
-						resDTO.setPlayers(players);
-						teamDTOs.add(resDTO);
-					}
-
-					int total = service.countByCompetitionTournamentIdAndStatus(tournamentId, Const.TEAM_STATUS_JOINED).intValue();
-					int totalPage = total / limit;
-					if (total % limit != 0) {
-						totalPage++;
-					}
-					result.put("Total page", totalPage);
-					result.put("Teams", teamDTOs);
-					config.put("Global", 0);
-					error.put("MessageCode", 0);
-					error.put("Message", "get Page Teams successfully");
-
-				}
-			}
-			System.out.println("TeamsAPI: getTeams: no exception");
-		} catch (Exception e) {
-			System.out.println("TeamsAPI: getTeams: has exception");
-			result.put("Teams", teamDTOs);
-			config.put("Global", 0);
-			error.put("MessageCode", 1);
-			error.put("Message", "Đã có lỗi xảy ra, vui lòng thử lại");
-		}
-
-		response.setConfig(config);
-		response.setResult(result);
-		response.setError(error);
-		System.out.println("TeamsAPI: getTeams: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
 

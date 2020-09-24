@@ -32,9 +32,9 @@ public class MatchesAPI {
 	@Autowired
 	private IMatchService service;
 
-	@GetMapping("/getByCompetitionId")
-	public ResponseEntity<Response> getByCompetitionId(@RequestParam(value = "competitionId") Long competitionId) {
-		System.out.println("MatchsAPI: getByCompetitionId: no exception");
+	@GetMapping("/getByTournamentId")
+	public ResponseEntity<Response> getByTournamentId(@RequestParam(value = "tournamentId") Long TournamentId) {
+		System.out.println("MatchsAPI: getByTournamentId: no exception");
 		HttpStatus httpStatus = HttpStatus.OK;
 		Response response = new Response();
 		Map<String, Object> config = new HashMap<String, Object>();
@@ -45,14 +45,14 @@ public class MatchesAPI {
 		HashMap<Long, HashMap<String, Integer>> scores = new HashMap<>();
 		try {
 
-			if (competitionId == null) {// userId null
+			if (TournamentId == null) {// userId null
 				result.put("Matchs", matchDTOs);
 				config.put("Global", 0);
 				error.put("MessageCode", 1);
-				error.put("Message", "Required param competitionId");
+				error.put("Message", "Required param TournamentId");
 			} else {// userId not null
 
-				matchEntites = service.findByCompetitionId(competitionId);
+				matchEntites = service.findByTournamentId(TournamentId);
 				
 				System.out.println("totalMatch: " + matchEntites.size());
 
@@ -100,9 +100,9 @@ public class MatchesAPI {
 					error.put("Message", "Found");
 				}
 			}
-			System.out.println("MatchsAPI: getByCompetitionId: no exception");
+			System.out.println("MatchsAPI: getByTournamentId: no exception");
 		} catch (Exception e) {
-			System.out.println("MatchsAPI: getByCompetitionId: has exception");
+			System.out.println("MatchsAPI: getByTournamentId: has exception");
 			result.put("Match", null);
 			config.put("Global", 0);
 			error.put("MessageCode", 1);
@@ -112,7 +112,7 @@ public class MatchesAPI {
 		response.setConfig(config);
 		response.setResult(result);
 		response.setError(error);
-		System.out.println("MatchsAPI: getByCompetitionId: finish");
+		System.out.println("MatchsAPI: getByTournamentId: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
 

@@ -36,9 +36,9 @@ public class GroupStageSettingAPI {
 	@Autowired
 	private IGroupStageSettingService service;
 
-	@GetMapping("/getByCompetitionId")
+	@GetMapping("/getByTournamentId")
 	public ResponseEntity<Response> getGroupStageSetting(
-			@RequestParam(value = "competitionId", required = false) Long competitionId) {
+			@RequestParam(value = "tournamentId", required = false) Long tournamentId) {
 		System.out.println("GroupStageSettingAPI: getGroupStageSetting: no exception");
 		HttpStatus httpStatus = HttpStatus.OK;
 		Response response = new Response();
@@ -48,14 +48,14 @@ public class GroupStageSettingAPI {
 		GroupStageSettingEntity groupStageSettingEntity = new GroupStageSettingEntity();
 		GroupStageSettingDTO groupStageSettingDTO = new GroupStageSettingDTO();
 		try {
-			if (competitionId == null) { // competitionId null
+			if (tournamentId == null) { // TournamentId null
 				result.put("GroupStageSetting", null);
 				config.put("Global", 0);
 				error.put("MessageCode", 1);
-				error.put("Message", "Required param competitionId");
+				error.put("Message", "Required param TournamentId");
 			} else { // id not null
 
-				groupStageSettingEntity = service.findByCompetitionId(competitionId);
+				groupStageSettingEntity = service.findByTournamentId(tournamentId);
 
 				if (groupStageSettingEntity == null) { // not found
 					result.put("GroupStageSetting", null);
@@ -101,7 +101,7 @@ public class GroupStageSettingAPI {
 
 		try {
 			groupStageSettingEntity = converter.toEntity(newGroupStageSetting);
-			TournamentEntity tour = groupStageSettingEntity.getCompetition().getTournament();
+			TournamentEntity tour = groupStageSettingEntity.getTournament();
 			if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_INITIALIZING)) {
 				groupStageSettingEntity = service.create(groupStageSettingEntity);
 
@@ -126,7 +126,7 @@ public class GroupStageSettingAPI {
 				if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_STOPPED)) {
 					message = Const.TOURNAMENT_MESSAGE_STOPPED;
 				}
-				result.put("Competition", null);
+				result.put("Tournament", null);
 				config.put("Global", 0);
 				error.put("MessageCode", 1);
 				error.put("Message", message);
@@ -160,7 +160,7 @@ public class GroupStageSettingAPI {
 
 		try {
 			groupStageSettingEntity = converter.toEntity(groupStageSetting);
-			TournamentEntity tour = groupStageSettingEntity.getCompetition().getTournament();
+			TournamentEntity tour = groupStageSettingEntity.getTournament();
 			if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_INITIALIZING)) {
 				groupStageSettingEntity = service.update(id, groupStageSettingEntity);
 
@@ -186,7 +186,7 @@ public class GroupStageSettingAPI {
 				if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_STOPPED)) {
 					message = Const.TOURNAMENT_MESSAGE_STOPPED;
 				}
-				result.put("Competition", null);
+				result.put("Tournament", null);
 				config.put("Global", 0);
 				error.put("MessageCode", 1);
 				error.put("Message", message);

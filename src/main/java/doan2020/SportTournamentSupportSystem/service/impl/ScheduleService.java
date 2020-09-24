@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import doan2020.SportTournamentSupportSystem.config.Const;
-import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
+import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
 import doan2020.SportTournamentSupportSystem.entity.FinalStageSettingEntity;
 import doan2020.SportTournamentSupportSystem.entity.FormatEntity;
 import doan2020.SportTournamentSupportSystem.entity.GroupStageSettingEntity;
@@ -32,7 +32,7 @@ import doan2020.SportTournamentSupportSystem.model.Schedule.Format.DoubleElimina
 import doan2020.SportTournamentSupportSystem.model.Schedule.Format.RoundRobinTable;
 import doan2020.SportTournamentSupportSystem.model.Schedule.Format.SingleEliminationTree;
 import doan2020.SportTournamentSupportSystem.model.Struct.Node;
-import doan2020.SportTournamentSupportSystem.service.ICompetitionService;
+import doan2020.SportTournamentSupportSystem.service.ITournamentService;
 import doan2020.SportTournamentSupportSystem.service.IFileStorageService;
 import doan2020.SportTournamentSupportSystem.service.IMatchService;
 import doan2020.SportTournamentSupportSystem.service.IScheduleService;
@@ -46,7 +46,7 @@ public class ScheduleService implements IScheduleService {
 	private IFileStorageService fileService;
 
 	@Autowired
-	private ICompetitionService competitionService;
+	private ITournamentService TournamentService;
 
 	@Autowired
 	private ITeamService teamService;
@@ -58,27 +58,27 @@ public class ScheduleService implements IScheduleService {
 	private IMatchService matchService;
 
 	@Override
-	public ScheduleDTO getSchedule(CompetitionEntity thisCompetition) {
+	public ScheduleDTO getSchedule(TournamentEntity thisTournament) {
 		System.out.println("ScheduleService: getSchedule: start");
 		ScheduleDTO schedule;
-		Long competitionId = thisCompetition.getId();
+		Long TournamentId = thisTournament.getId();
 		try {
-			schedule = getScheduleFromFile(competitionId);
+			schedule = getScheduleFromFile(TournamentId);
 
 			// Check for changes in team numbers
-			int dbTeamNumber = teamService.countByCompetitionIdAndStatus(competitionId, Const.TEAM_STATUS_JOINED)
+			int dbTeamNumber = teamService.countByTournamentIdAndStatus(TournamentId, Const.TEAM_STATUS_JOINED)
 					.intValue();
 			int cfTeamNumber = schedule.getTotalTeam();
 
 			boolean checkTeamNumber = (dbTeamNumber == cfTeamNumber);
 
-			String dbFinalStageFormat = thisCompetition.getFinalStageSetting().getFormat().getName();
+			String dbFinalStageFormat = thisTournament.getFinalStageSetting().getFormat().getName();
 			String cfFinalStageFormat = schedule.getFinalStageSchedule().getFormatName();
 
 			boolean checkFinalStageFormat = (dbFinalStageFormat.contains(cfFinalStageFormat));
 			boolean checkGroupStageFormat = true;
-			if (thisCompetition.isHasGroupStage()) {
-				String dbGroupStageFormat = thisCompetition.getGroupStageSetting().getFormat().getName();
+			if (thisTournament.isHasGroupStage()) {
+				String dbGroupStageFormat = thisTournament.getGroupStageSetting().getFormat().getName();
 				String cfGroupStageFormat = schedule.getGroupStageSchedule().getFormatName();
 				checkGroupStageFormat = (dbGroupStageFormat.contains(cfGroupStageFormat));
 			}
@@ -94,7 +94,7 @@ public class ScheduleService implements IScheduleService {
 
 				if (cfFinalStageFormat.contains(Const.SINGLE_ELIMINATION_FORMAT)) {
 					SingleEliminationScheduleDTO fss = (SingleEliminationScheduleDTO) schedule.getFinalStageSchedule();
-					boolean db = thisCompetition.getFinalStageSetting().isHasHomeMatch();
+					boolean db = thisTournament.getFinalStageSetting().isHasHomeMatch();
 					boolean cf = fss.isHasMatch34();
 					System.out.println("final db: " + db);
 					System.out.println("final cf: " + cf);
@@ -103,18 +103,18 @@ public class ScheduleService implements IScheduleService {
 
 				if (cfFinalStageFormat.contains(Const.ROUND_ROBIN_FORMAT)) {
 					RoundRobinScheduleDTO fss = (RoundRobinScheduleDTO) schedule.getFinalStageSchedule();
-					boolean db = thisCompetition.getFinalStageSetting().isHasHomeMatch();
+					boolean db = thisTournament.getFinalStageSetting().isHasHomeMatch();
 					boolean cf = fss.isHasHomeMatch();
 					System.out.println("final db: " + db);
 					System.out.println("final cf: " + cf);
 					checkFinalStageOption = (db == cf);
 				}
-				if (thisCompetition.isHasGroupStage()) {
+				if (thisTournament.isHasGroupStage()) {
 					String cfGroupStageFormat = schedule.getGroupStageSchedule().getFormatName();
 					if (cfGroupStageFormat.contains(Const.SINGLE_ELIMINATION_FORMAT)) {
 						SingleEliminationScheduleDTO fss = (SingleEliminationScheduleDTO) schedule
 								.getGroupStageSchedule().getTables().get(0);
-						boolean db = thisCompetition.getGroupStageSetting().isHasHomeMatch();
+						boolean db = thisTournament.getGroupStageSetting().isHasHomeMatch();
 						boolean cf = fss.isHasMatch34();
 						System.out.println("group db: " + db);
 						System.out.println("group cf: " + cf);
@@ -124,7 +124,7 @@ public class ScheduleService implements IScheduleService {
 					if (cfGroupStageFormat.contains(Const.ROUND_ROBIN_FORMAT)) {
 						RoundRobinScheduleDTO fss = (RoundRobinScheduleDTO) schedule.getGroupStageSchedule().getTables()
 								.get(0);
-						boolean db = thisCompetition.getGroupStageSetting().isHasHomeMatch();
+						boolean db = thisTournament.getGroupStageSetting().isHasHomeMatch();
 						boolean cf = fss.isHasHomeMatch();
 						System.out.println("group db: " + db);
 						System.out.println("group cf: " + cf);
@@ -141,29 +141,29 @@ public class ScheduleService implements IScheduleService {
 				} else {
 					System.out.println("setting has change");
 					System.out.println("ScheduleService: getSchedule: finish -> ScheduleService: createSchedule:");
-					return createSchedule(thisCompetition);
+					return createSchedule(thisTournament);
 				}
 			} else {
 				System.out.println("setting has change");
 				System.out.println("ScheduleService: getSchedule: finish -> ScheduleService: createSchedule:");
-				return createSchedule(thisCompetition);
+				return createSchedule(thisTournament);
 			}
 		} catch (Exception e) {
 			System.out.println("schedule not yet created");
 			System.out.println("ScheduleService: getSchedule: finish -> ScheduleService: createSchedule:");
-			return createSchedule(thisCompetition);
+			return createSchedule(thisTournament);
 		}
 	}
 
-	private ScheduleDTO getScheduleFromFile(Long competitionId) {
-		String fileName = Const.COMPETITION_SCHEDULING;
+	private ScheduleDTO getScheduleFromFile(Long TournamentId) {
+		String fileName = Const.TOURNAMENT_SCHEDULING;
 		String absFolderPath = null;
 		String absFilePath = null;
 		ScheduleDTO schedule = new ScheduleDTO();
 
 		try {
 
-			String folder = Const.COMPETITION_FILESYSTEM + Const.COMPETITION_FOLDER_NAMING + competitionId;
+			String folder = Const.TOURNAMENT_FILESYSTEM + Const.TOURNAMENT_FOLDER_NAMING + TournamentId;
 			absFolderPath = fileService.getFileStorageLocation(folder).toString();
 			absFilePath = absFolderPath + "\\" + fileName;
 			schedule = (ScheduleDTO) fileService.getObjectFromFile(absFilePath);
@@ -174,13 +174,13 @@ public class ScheduleService implements IScheduleService {
 		return schedule;
 	}
 
-	private String saveScheduleToFile(ScheduleDTO schedule, Long competitionId) {
-		String fileName = Const.COMPETITION_SCHEDULING;
+	private String saveScheduleToFile(ScheduleDTO schedule, Long TournamentId) {
+		String fileName = Const.TOURNAMENT_SCHEDULING;
 		String absFolderPath = null;
 		String absFilePath = null;
 
 		try {
-			String folder = Const.COMPETITION_FILESYSTEM + Const.COMPETITION_FOLDER_NAMING + competitionId;
+			String folder = Const.TOURNAMENT_FILESYSTEM + Const.TOURNAMENT_FOLDER_NAMING + TournamentId;
 			absFolderPath = fileService.getFileStorageLocation(folder).toString();
 			absFilePath = absFolderPath + "\\" + fileName;
 			absFilePath = fileService.saveObjectToFile(schedule, absFilePath);
@@ -199,14 +199,14 @@ public class ScheduleService implements IScheduleService {
 	 * 
 	 */
 
-	public void createMatchesInDatabase(CompetitionEntity thisCompetition) {
+	public void createMatchesInDatabase(TournamentEntity thisTournament) {
 
 //		try {
 
 		System.out.println("ScheduleService: createMatchesInDatabase: start");
-		Long competitionId = thisCompetition.getId();
+		Long TournamentId = thisTournament.getId();
 		System.out.println("get id done");
-		ScheduleDTO schedule = getSchedule(thisCompetition);
+		ScheduleDTO schedule = getSchedule(thisTournament);
 		System.out.println("get schedule done");
 		String finalStageFormat = schedule.getFinalStageSchedule().getFormatName();
 		System.out.println("get final stage schedule done");
@@ -215,7 +215,7 @@ public class ScheduleService implements IScheduleService {
 		System.out.println("init OK");
 		if (!schedule.isHasGroupStage()) {
 			System.out.println("hasn\'t group stage");
-			teams.addAll(teamService.findByCompetitionIdAndStatus(competitionId, Const.TEAM_STATUS_JOINED));
+			teams.addAll(teamService.findByTournamentIdAndStatus(TournamentId, Const.TEAM_STATUS_JOINED));
 
 		} else {
 			System.out.println("has group stage");
@@ -224,7 +224,7 @@ public class ScheduleService implements IScheduleService {
 			ArrayList<FinalStageScheduleDTO> tables = groupStageSchedule.getTables();
 			ArrayList<TeamEntity> realTeams = new ArrayList<>();
 
-			realTeams.addAll(teamService.findByCompetitionIdAndStatus(competitionId, Const.TEAM_STATUS_JOINED));
+			realTeams.addAll(teamService.findByTournamentIdAndStatus(TournamentId, Const.TEAM_STATUS_JOINED));
 			Collections.sort(realTeams, new TeamEntity());
 
 			int totalMatch = 0;
@@ -245,15 +245,15 @@ public class ScheduleService implements IScheduleService {
 
 				if (groupStageFormat.contains(Const.SINGLE_ELIMINATION_FORMAT)) {
 					tables.set(tableId, createMatchesInDatabase((SingleEliminationScheduleDTO) tables.get(tableId),
-							tableTeams, thisCompetition));
+							tableTeams, thisTournament));
 				}
 				if (groupStageFormat.contains(Const.DOUBLE_ELIMINATION_FORMAT)) {
 					tables.set(tableId, createMatchesInDatabase((DoubleEliminationScheduleDTO) tables.get(tableId),
-							tableTeams, thisCompetition));
+							tableTeams, thisTournament));
 				}
 				if (groupStageFormat.contains(Const.ROUND_ROBIN_FORMAT)) {
 					tables.set(tableId, createMatchesInDatabase((RoundRobinScheduleDTO) tables.get(tableId), tableTeams,
-							thisCompetition));
+							thisTournament));
 				}
 
 				System.out.println("set table ok");
@@ -296,7 +296,7 @@ public class ScheduleService implements IScheduleService {
 		if (finalStageFormat.contains(Const.SINGLE_ELIMINATION_FORMAT)) {
 			SingleEliminationScheduleDTO finalStageSchedule = (SingleEliminationScheduleDTO) schedule
 					.getFinalStageSchedule();
-			schedule.setFinalStageSchedule(createMatchesInDatabase(finalStageSchedule, teams, thisCompetition));
+			schedule.setFinalStageSchedule(createMatchesInDatabase(finalStageSchedule, teams, thisTournament));
 			schedule.getMapping().putAll(finalStageSchedule.getMapping());
 			schedule.getFinalStageSchedule().setProcess(finalStageSchedule.getProcess());
 
@@ -304,19 +304,19 @@ public class ScheduleService implements IScheduleService {
 		if (finalStageFormat.contains(Const.DOUBLE_ELIMINATION_FORMAT)) {
 			DoubleEliminationScheduleDTO finalStageSchedule = (DoubleEliminationScheduleDTO) schedule
 					.getFinalStageSchedule();
-			schedule.setFinalStageSchedule(createMatchesInDatabase(finalStageSchedule, teams, thisCompetition));
+			schedule.setFinalStageSchedule(createMatchesInDatabase(finalStageSchedule, teams, thisTournament));
 			schedule.getMapping().putAll(finalStageSchedule.getMapping());
 			schedule.getFinalStageSchedule().setProcess(finalStageSchedule.getProcess());
 		}
 		if (finalStageFormat.contains(Const.ROUND_ROBIN_FORMAT)) {
 			RoundRobinScheduleDTO finalStageSchedule = (RoundRobinScheduleDTO) schedule.getFinalStageSchedule();
-			schedule.setFinalStageSchedule(createMatchesInDatabase(finalStageSchedule, teams, thisCompetition));
+			schedule.setFinalStageSchedule(createMatchesInDatabase(finalStageSchedule, teams, thisTournament));
 			schedule.getMapping().putAll(finalStageSchedule.getMapping());
 			schedule.getFinalStageSchedule().setProcess(finalStageSchedule.getProcess());
 		}
 
-//		saveScheduleToFile(schedule, competitionId);
-//		schedule = getSchedule(thisCompetition);
+//		saveScheduleToFile(schedule, TournamentId);
+//		schedule = getSchedule(thisTournament);
 
 		if (schedule.isHasGroupStage()) {
 			GroupStageScheduleDTO groupStageSchedule = schedule.getGroupStageSchedule();
@@ -370,7 +370,7 @@ public class ScheduleService implements IScheduleService {
 		} catch (Exception e) {
 
 		}
-		saveScheduleToFile(schedule, competitionId);
+		saveScheduleToFile(schedule, TournamentId);
 
 //		System.out.println("ScheduleService: createMatchesInDatabase: no exception");
 //		} catch (Exception e) {
@@ -382,7 +382,7 @@ public class ScheduleService implements IScheduleService {
 	}
 
 	private SingleEliminationScheduleDTO createMatchesInDatabase(SingleEliminationScheduleDTO schedule,
-			ArrayList<TeamEntity> teams, CompetitionEntity competition) {
+			ArrayList<TeamEntity> teams, TournamentEntity Tournament) {
 		System.out.println("ScheduleService: SingleEliminationScheduleDTO createMatchesInDatabase: start");
 		SingleEliminationTree tree = new SingleEliminationTree(schedule.getBracket(), schedule.getTotalTeam());
 		tree.applyTeams(teams);
@@ -393,7 +393,7 @@ public class ScheduleService implements IScheduleService {
 
 			totalMatch++;
 			MatchEntity realMatch = new MatchEntity();
-			realMatch.setCompetition(competition);
+			realMatch.setTournament(Tournament);
 
 			realMatch.setName(match.getName());
 			realMatch.setLocation(match.getLocation());
@@ -441,7 +441,7 @@ public class ScheduleService implements IScheduleService {
 			System.out.println("get match34 ok");
 			System.out.println("match34: " + match);
 			MatchEntity realMatch = new MatchEntity();
-			realMatch.setCompetition(competition);
+			realMatch.setTournament(Tournament);
 
 			realMatch.setName(match.getName());
 			realMatch.setLocation(match.getLocation());
@@ -485,7 +485,7 @@ public class ScheduleService implements IScheduleService {
 	}
 
 	private DoubleEliminationScheduleDTO createMatchesInDatabase(DoubleEliminationScheduleDTO schedule,
-			ArrayList<TeamEntity> teams, CompetitionEntity competition) {
+			ArrayList<TeamEntity> teams, TournamentEntity Tournament) {
 		System.out.println("ScheduleService: saveFinalScheduleToDatabase: start");
 		DoubleEliminationTree tree = new DoubleEliminationTree(schedule.getWinBranch(), schedule.getLoseBranch(),
 				schedule.getTotalTeam());
@@ -498,7 +498,7 @@ public class ScheduleService implements IScheduleService {
 			totalMatch++;
 
 			MatchEntity realMatch = new MatchEntity();
-			realMatch.setCompetition(competition);
+			realMatch.setTournament(Tournament);
 			realMatch.setName(match.getName());
 			realMatch.setLocation(match.getLocation());
 			realMatch.setTime(validator.formatStringToDate(match.getTime()));
@@ -559,7 +559,7 @@ public class ScheduleService implements IScheduleService {
 			totalMatch++;
 			Match finalMatch = tree.getSummaryFinal();
 			MatchEntity realFinalMatch = new MatchEntity();
-			realFinalMatch.setCompetition(competition);
+			realFinalMatch.setTournament(Tournament);
 
 			realFinalMatch.setName(finalMatch.getName());
 			realFinalMatch.setLocation(finalMatch.getLocation());
@@ -587,7 +587,7 @@ public class ScheduleService implements IScheduleService {
 
 			Match optionMatch = tree.getOptionFinal();
 			MatchEntity realOptionMatch = new MatchEntity();
-			realOptionMatch.setCompetition(competition);
+			realOptionMatch.setTournament(Tournament);
 
 			realOptionMatch.setName(optionMatch.getName());
 			realOptionMatch.setLocation(optionMatch.getLocation());
@@ -642,7 +642,7 @@ public class ScheduleService implements IScheduleService {
 	}
 
 	private RoundRobinScheduleDTO createMatchesInDatabase(RoundRobinScheduleDTO schedule, ArrayList<TeamEntity> teams,
-			CompetitionEntity competition) {
+			TournamentEntity Tournament) {
 		System.out.println("ScheduleService: RoundRobinScheduleDTO createMatchesInDatabase: start");
 		RoundRobinTable table = new RoundRobinTable((long) schedule.getTableId(), schedule.getMatches(),
 				schedule.getTotalTeam(), schedule.isHasHomeMatch());
@@ -654,7 +654,7 @@ public class ScheduleService implements IScheduleService {
 		for (Match match : table.getMatches()) {
 			totalMatch++;
 			MatchEntity realMatch = new MatchEntity();
-			realMatch.setCompetition(competition);
+			realMatch.setTournament(Tournament);
 			realMatch.setName(match.getName());
 			realMatch.setLocation(match.getLocation());
 			realMatch.setTime(validator.formatStringToDate(match.getTime()));
@@ -722,7 +722,7 @@ public class ScheduleService implements IScheduleService {
 	 * ---create
 	 */
 	@Override
-	public ScheduleDTO createSchedule(CompetitionEntity thisCompetition) {
+	public ScheduleDTO createSchedule(TournamentEntity thisTournament) {
 		System.out.println("ScheduleService: createSchedule: start");
 		ScheduleDTO schedule = new ScheduleDTO();
 		HashMap<Long, RevertMapping> map = new HashMap<Long, RevertMapping>();
@@ -730,14 +730,14 @@ public class ScheduleService implements IScheduleService {
 		int totalTeamBeforeGroupStage;
 		int totalTeamAfterGroupStage;
 
-		Long competitionId = thisCompetition.getId();
+		Long TournamentId = thisTournament.getId();
 
 		FormatEntity finalFormat;
 		FormatEntity groupFormat;
 
 		ArrayList<BoxDescription> descriptions = new ArrayList<>();
 
-		totalTeamBeforeGroupStage = teamService.countByCompetitionIdAndStatus(competitionId, Const.TEAM_STATUS_JOINED)
+		totalTeamBeforeGroupStage = teamService.countByTournamentIdAndStatus(TournamentId, Const.TEAM_STATUS_JOINED)
 				.intValue();
 
 		if (totalTeamBeforeGroupStage < 1) {
@@ -745,9 +745,9 @@ public class ScheduleService implements IScheduleService {
 			return null;
 		}
 
-		boolean hasGroupStage = thisCompetition.isHasGroupStage();
+		boolean hasGroupStage = thisTournament.isHasGroupStage();
 
-		FinalStageSettingEntity fsse = thisCompetition.getFinalStageSetting();
+		FinalStageSettingEntity fsse = thisTournament.getFinalStageSetting();
 
 		FinalStageScheduleDTO fss;
 		GroupStageScheduleDTO gss = new GroupStageScheduleDTO();
@@ -755,7 +755,7 @@ public class ScheduleService implements IScheduleService {
 		// group
 		if (hasGroupStage) {
 
-			GroupStageSettingEntity gsse = thisCompetition.getGroupStageSetting();
+			GroupStageSettingEntity gsse = thisTournament.getGroupStageSetting();
 			groupFormat = gsse.getFormat();
 			boolean hasHomeMatch = gsse.isHasHomeMatch();
 			System.out.println("Set config for group stage: option: " + hasHomeMatch);
@@ -829,7 +829,7 @@ public class ScheduleService implements IScheduleService {
 		map.putAll(fss.getMapping());
 		schedule.setMapping(map);
 
-		saveScheduleToFile(schedule, competitionId);
+		saveScheduleToFile(schedule, TournamentId);
 
 		System.out.println("ScheduleService: createSchedule: finish");
 		return schedule;
@@ -1049,9 +1049,9 @@ public class ScheduleService implements IScheduleService {
 		ArrayList<ResultEntity> results = new ArrayList<>();
 		results.addAll(match.getResults());
 
-		CompetitionEntity thisCompetition = match.getCompetition();
-		Long competitionId = thisCompetition.getId();
-		ScheduleDTO schedule = getScheduleFromFile(competitionId);
+		TournamentEntity thisTournament = match.getTournament();
+		Long TournamentId = thisTournament.getId();
+		ScheduleDTO schedule = getScheduleFromFile(TournamentId);
 
 		HashMap<Long, RevertMapping> allMap = schedule.getMapping();
 
@@ -1363,7 +1363,7 @@ public class ScheduleService implements IScheduleService {
 					nextIfWinReal.setWinnner(nextIfWinReal.getTeam1());
 					matchService.update(nextIfWinReal.getId(), nextIfWinReal);
 //					System.out.println("nextIfWinReal: winner: " + nextIfWinReal.getWinnner());
-//					saveScheduleToFile(schedule, competitionId);
+//					saveScheduleToFile(schedule, TournamentId);
 //					schedule = finishMatch(nextIfLoseReal);
 				}
 				System.out.println("ok");
@@ -1399,7 +1399,7 @@ public class ScheduleService implements IScheduleService {
 					nextIfLoseReal.setWinnner(nextIfLoseReal.getTeam1());
 					matchService.update(nextIfLoseReal.getId(), nextIfLoseReal);
 //					System.out.println("nextIfLose: winner: " + nextIfLoseReal.getWinnner());
-//					saveScheduleToFile(schedule, competitionId);
+//					saveScheduleToFile(schedule, TournamentId);
 //					schedule = finishMatch(nextIfLoseReal);
 				}
 			}
@@ -1442,7 +1442,7 @@ public class ScheduleService implements IScheduleService {
 
 		}
 
-		saveScheduleToFile(schedule, match.getCompetition().getId());
+		saveScheduleToFile(schedule, match.getTournament().getId());
 		System.out.println("ScheduleService: finishMatch: finish");
 		return schedule;
 	}
@@ -1640,14 +1640,14 @@ public class ScheduleService implements IScheduleService {
 	// ----------------------------------------------------------------------
 
 	@Override
-	public ScheduleDTO changeMatchInfo(CompetitionEntity competition, Integer nodeId, Integer degree, Integer location,
+	public ScheduleDTO changeMatchInfo(TournamentEntity Tournament, Integer nodeId, Integer degree, Integer location,
 			Integer tableId, HashMap<String, Object> newInfo) {
 		
 		System.out.println("ChangeMatchInfo: ");
 		System.out.println(newInfo.toString());
 		Match thisMatch = new Match();
 
-		ScheduleDTO schedule = getSchedule(competition);
+		ScheduleDTO schedule = getSchedule(Tournament);
 
 		switch (location) {
 		case -1:
@@ -1742,7 +1742,7 @@ public class ScheduleService implements IScheduleService {
 		thisMatch.setLocation((String) newInfo.get("location"));
 		thisMatch.setTime((String) newInfo.get("time"));
 
-		saveScheduleToFile(schedule, competition.getId());
+		saveScheduleToFile(schedule, Tournament.getId());
 
 		return schedule;
 	}

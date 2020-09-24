@@ -3,7 +3,7 @@ package doan2020.SportTournamentSupportSystem.dto;
 public class GroupStageSettingDTO {
 	private Long id;
 	
-	private Long competitionId;
+	private Long TournamentId;
 
 	private Integer maxTeamPerTable;
 
@@ -62,12 +62,12 @@ public class GroupStageSettingDTO {
 		this.formatId = formatId;
 	}
 
-	public Long getCompetitionId() {
-		return competitionId;
+	public Long getTournamentId() {
+		return TournamentId;
 	}
 
-	public void setCompetitionId(Long competitionId) {
-		this.competitionId = competitionId;
+	public void setTournamentId(Long TournamentId) {
+		this.TournamentId = TournamentId;
 	}
 
 	public String getStatus() {

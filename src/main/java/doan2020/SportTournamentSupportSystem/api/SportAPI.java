@@ -18,8 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 import doan2020.SportTournamentSupportSystem.converter.SportConverter;
 import doan2020.SportTournamentSupportSystem.dto.SportDTO;
 import doan2020.SportTournamentSupportSystem.entity.SportEntity;
+import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
 import doan2020.SportTournamentSupportSystem.response.Response;
 import doan2020.SportTournamentSupportSystem.service.ISportService;
+import doan2020.SportTournamentSupportSystem.service.ITournamentService;
 
 @RestController
 @CrossOrigin
@@ -32,6 +34,8 @@ public class SportAPI {
 	@Autowired
 	private ISportService service;
 	
+	@Autowired
+	private ITournamentService tournamentService;
 	
 	@GetMapping("")
 	public ResponseEntity<Response> getSport(@RequestParam(value = "id", required = false) Long id) {
@@ -84,10 +88,65 @@ public class SportAPI {
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
 
-	/*
-	 * Tao moi mot Sport
-	 * 
-	 */
+	
+	@GetMapping("/getByTournamentId")
+	public ResponseEntity<Response> getByTournamentId(
+			@RequestParam(value = "tournamentId", required = false) Long tournamentId) {
+
+		System.out.println("SportsAPI: getByTournamentId: start");
+		HttpStatus httpStatus = HttpStatus.OK;
+		Response response = new Response();
+		Map<String, Object> config = new HashMap<String, Object>();
+		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> error = new HashMap<String, Object>();
+
+		SportDTO dto = new SportDTO();
+
+		try {
+			if (tournamentId == null) { // tournamentId null
+				result.put("Sport", dto);
+				config.put("Global", 0);
+				error.put("MessageCode", 1);
+				error.put("Message", "Required param tournamentId");
+			} else { // tournamentId not null
+
+				TournamentEntity thisTournament = tournamentService.findOneById(tournamentId);
+
+				if (thisTournament == null) {
+					result.put("Sport", null);
+					config.put("Global", 0);
+					error.put("MessageCode", 0);
+					error.put("Message", "Tournament not found");
+				} else {
+					
+					SportEntity entity = thisTournament.getSport();
+					
+					dto = converter.toDTO(entity);
+					
+					result.put("Sport", dto);
+					config.put("Global", 0);
+					error.put("MessageCode", 0);
+					error.put("Message", "Found");
+				}
+			}
+
+			System.out.println("SportsAPI: getByTournamentId: no exception");
+		} catch (Exception e) {
+			System.out.println("SportsAPI: getByTournamentId: has exception");
+			result.put("Sport", dto);
+			config.put("Global", 0);
+			error.put("MessageCode", 1);
+			error.put("Message", "Đã có lỗi xảy ra, vui lòng thử lại");
+		}
+
+		response.setConfig(config);
+		response.setResult(result);
+		response.setError(error);
+		System.out.println("SportsAPI: getByTournamentId: finish");
+		return new ResponseEntity<Response>(response, httpStatus);
+	}
+
+	
 	@PostMapping
 	@CrossOrigin
 	public ResponseEntity<Response> createSport(@RequestBody SportDTO newSport) {

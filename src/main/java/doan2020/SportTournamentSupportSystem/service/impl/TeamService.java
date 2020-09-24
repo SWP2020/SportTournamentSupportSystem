@@ -9,7 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import doan2020.SportTournamentSupportSystem.config.Const;
-import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
+import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
 import doan2020.SportTournamentSupportSystem.entity.TeamEntity;
 import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
 import doan2020.SportTournamentSupportSystem.model.Entity.Player;
@@ -36,8 +36,8 @@ public class TeamService implements ITeamService {
 				newEntity = teamRepository.save(teamEntity);
 			} else if (teamEntity.getStatus() == Const.TEAM_STATUS_JOINED) {
 				System.out.println("TeamService: create: TEAM_STATUS_JOINED");
-				Long competitionId = teamEntity.getCompetition().getId();
-				Long maxSeedNo = getMaxSeedNoByCompetitionId(competitionId);
+				Long TournamentId = teamEntity.getTournament().getId();
+				Long maxSeedNo = getMaxSeedNoByTournamentId(TournamentId);
 				teamEntity.setSeedNo(maxSeedNo + 1l);
 				newEntity = teamRepository.save(teamEntity);
 				System.out.println("TeamService: create: no exception");
@@ -61,7 +61,7 @@ public class TeamService implements ITeamService {
 			updatedEntity.setShortName(newEntity.getShortName());
 			updatedEntity.setDescription(newEntity.getDescription());
 			updatedEntity.setCreator(newEntity.getCreator());
-			updatedEntity.setCompetition(newEntity.getCompetition());
+			updatedEntity.setTournament(newEntity.getTournament());
 			if (newEntity.getStatus() != null) {updatedEntity.setStatus(newEntity.getStatus());}
 			updatedEntity.setUrl(newEntity.getUrl());
 			updatedEntity = teamRepository.save(updatedEntity);
@@ -131,10 +131,10 @@ public class TeamService implements ITeamService {
 	}
 
 	@Override
-	public Collection<TeamEntity> findByCompetitionId(Long competitionId) {
+	public Collection<TeamEntity> findByTournamentId(Long TournamentId) {
 		Collection<TeamEntity> foundEntities = null;
 		try {
-			foundEntities = teamRepository.findByCompetitionId(competitionId);
+			foundEntities = teamRepository.findByTournamentId(TournamentId);
 		} catch (Exception e) {
 			return null;
 		}
@@ -147,7 +147,7 @@ public class TeamService implements ITeamService {
 		try {
 			TeamEntity team1 = teamRepository.findOneById(team1Id);
 			TeamEntity team2 = teamRepository.findOneById(team2Id);
-			CompetitionEntity thisComp = team1.getCompetition();
+			TournamentEntity thisComp = team1.getTournament();
 			Long compId = thisComp.getId();
 			
 			Long tmp = team1.getSeedNo();
@@ -156,7 +156,7 @@ public class TeamService implements ITeamService {
 			teamRepository.save(team1);
 			teamRepository.save(team2);
 			
-			teams = teamRepository.findByCompetitionId(compId);
+			teams = teamRepository.findByTournamentId(compId);
 			
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -171,11 +171,11 @@ public class TeamService implements ITeamService {
 		String absFilePath = null;
 
 		try {
-			CompetitionEntity comp = team.getCompetition();
+			TournamentEntity comp = team.getTournament();
 
-			String folder = Const.COMPETITION_FILESYSTEM + Const.COMPETITION_FOLDER_NAMING + comp.getId();
+			String folder = Const.TOURNAMENT_FILESYSTEM + Const.TOURNAMENT_FOLDER_NAMING + comp.getId();
 			absFolderPath = fileService.getFileStorageLocation(folder).toString();
-			String fileName = Const.COMPETITION_TEAM_PLAYERS_NAMING + team.getId()
+			String fileName = Const.TOURNAMENT_TEAM_PLAYERS_NAMING + team.getId()
 					+ Const.FILE_EXTENDED;
 			absFilePath = absFolderPath + "\\" + fileName;
 			absFilePath = fileService.saveObjectToFile(players, absFilePath);
@@ -188,7 +188,7 @@ public class TeamService implements ITeamService {
 	}
 
 	@SuppressWarnings("unchecked")
-	public Collection<Player> getTeamPlayerFromFile(Long competitionId, Long teamId) {
+	public Collection<Player> getTeamPlayerFromFile(Long TournamentId, Long teamId) {
 
 		String absFolderPath = null;
 		String absFilePath = null;
@@ -196,9 +196,9 @@ public class TeamService implements ITeamService {
 
 		try {
 
-			String folder = Const.COMPETITION_FILESYSTEM + Const.COMPETITION_FOLDER_NAMING + competitionId;
+			String folder = Const.TOURNAMENT_FILESYSTEM + Const.TOURNAMENT_FOLDER_NAMING + TournamentId;
 			absFolderPath = fileService.getFileStorageLocation(folder).toString();
-			String fileName = Const.COMPETITION_TEAM_PLAYERS_NAMING + teamId
+			String fileName = Const.TOURNAMENT_TEAM_PLAYERS_NAMING + teamId
 					+ Const.FILE_EXTENDED;
 			absFilePath = absFolderPath + "\\" + fileName;
 			players = (ArrayList<Player>) fileService.getObjectFromFile(absFilePath);
@@ -210,10 +210,10 @@ public class TeamService implements ITeamService {
 	}
 	
 	@Override
-	public Collection<TeamEntity> findByCompetitionIdAndStatus(Long competitionId, String status) {
+	public Collection<TeamEntity> findByTournamentIdAndStatus(Long TournamentId, String status) {
 		Collection<TeamEntity> foundEntities = null;
 		try {
-			foundEntities = teamRepository.findByCompetitionIdAndStatus(competitionId, status);
+			foundEntities = teamRepository.findByTournamentIdAndStatus(TournamentId, status);
 		} catch (Exception e) {
 			return null;
 		}
@@ -221,10 +221,10 @@ public class TeamService implements ITeamService {
 	}
 	
 	@Override
-	public Long getMaxSeedNoByCompetitionId(Long competitionId) {
+	public Long getMaxSeedNoByTournamentId(Long TournamentId) {
 		Long maxSeedNo = 0l;
 		try {
-			maxSeedNo = teamRepository.getMaxSeedNoByCompetitionId(competitionId);
+			maxSeedNo = teamRepository.getMaxSeedNoByTournamentId(TournamentId);
 			if (maxSeedNo == null) {
 				return 0l;
 			}
@@ -235,41 +235,10 @@ public class TeamService implements ITeamService {
 	}
 	
 	@Override
-	public Long countByCompetitionIdAndStatus(Long competitionId, String status) {
+	public Long countByTournamentIdAndStatus(Long TournamentId, String status) {
 		Long totalTeam = 0l;
 		try {
-			totalTeam = teamRepository.countByCompetitionIdAndStatus(competitionId, status);
-			if (totalTeam == null) {
-				return 0l;
-			}
-		} catch (Exception e) {
-		}
-		
-		return totalTeam;
-	}
-	
-	@Override
-	public Collection<TeamEntity> findByTournamentIdAndStatus(Long tournamentId, String status) {
-		Collection<TeamEntity> foundEntities = null;
-		try {
-			System.out.println("TeamService: findByTournamentIdAndStatus: start");
-			System.out.println("tour: " + tournamentId);
-			System.out.println("status: " + status);
-			foundEntities = teamRepository.findByTournamentIdAndStatus(tournamentId, status);
-			System.out.println("TeamService: findByTournamentIdAndStatus: size " + foundEntities.size());
-		} catch (Exception e) {
-			System.out.println("TeamService: findByTournamentIdAndStatus: has exception");
-			return null;
-		}
-		System.out.println("TeamService: findByTournamentIdAndStatus: finish");
-		return foundEntities;
-	}
-	
-	@Override
-	public Long countByCompetitionTournamentIdAndStatus(Long tournamentId, String status) {
-		Long totalTeam = 0l;
-		try {
-			totalTeam = teamRepository.countByCompetitionTournamentIdIdAndStatus(tournamentId, status);
+			totalTeam = teamRepository.countByTournamentIdAndStatus(TournamentId, status);
 			if (totalTeam == null) {
 				return 0l;
 			}

@@ -8,12 +8,32 @@ import org.springframework.stereotype.Component;
 import doan2020.SportTournamentSupportSystem.dto.TournamentDTO;
 import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
 import doan2020.SportTournamentSupportSystem.entity.UserEntity;
+import doan2020.SportTournamentSupportSystem.entity.FinalStageSettingEntity;
+import doan2020.SportTournamentSupportSystem.entity.GroupStageSettingEntity;
+import doan2020.SportTournamentSupportSystem.entity.SportEntity;
+import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
+import doan2020.SportTournamentSupportSystem.service.IFinalStageSettingService;
+import doan2020.SportTournamentSupportSystem.service.IGroupStageSettingService;
+import doan2020.SportTournamentSupportSystem.service.ISportService;
+import doan2020.SportTournamentSupportSystem.service.ITournamentService;
 import doan2020.SportTournamentSupportSystem.service.IUserService;
 import doan2020.SportTournamentSupportSystem.validator.Validator;
 
 @Component
 public class TournamentConverter {
 
+	@Autowired
+	private ITournamentService tournamentService;
+
+	@Autowired
+	private IFinalStageSettingService finalStageSettingService;
+
+	@Autowired
+	private IGroupStageSettingService groupStageSettingService;
+
+	@Autowired
+	private ISportService sportService;
+	
 	@Autowired
 	IUserService userService;
 
@@ -23,8 +43,8 @@ public class TournamentConverter {
 	public TournamentEntity toEntity(TournamentDTO dto) {
 		System.out.println("TournamentConverter: toEntity: start");
 		TournamentEntity entity = new TournamentEntity();
-		System.out.println("In toEntity:");
 		try {
+			
 			if (dto.getFullName() != null)
 				entity.setFullName(dto.getFullName());
 			if (dto.getShortName() != null)
@@ -61,6 +81,16 @@ public class TournamentConverter {
 			entity.setCloseRegistrationTime(closeRegistrationTime);
 			Date openRegistrationTime = validator.formatStringToDate(dto.getClosingTime());
 			entity.setOpenRegistrationTime(openRegistrationTime);
+
+			if (dto.getSportId() != null) {
+				Long sportId = dto.getSportId();
+				SportEntity sport = sportService.findOneById(sportId);
+				entity.setSport(sport);
+			}
+
+			entity.setHasGroupStage(dto.isHasGroupStage());
+			
+			
 			System.out.println("TournamentConverter: toEntity: no exception");
 		} catch (Exception e) {
 			System.out.println("TournamentConverter: toEntity: has exception");
@@ -74,6 +104,7 @@ public class TournamentConverter {
 		System.out.println("TournamentConverter: toDTO: finish");
 		TournamentDTO dto = new TournamentDTO();
 		try {
+
 			dto.setId(entity.getId());
 			dto.setFullName(entity.getFullName());
 			dto.setShortName(entity.getShortName());
@@ -104,6 +135,12 @@ public class TournamentConverter {
 			dto.setCloseRegistrationTime(closeRegistrationTime);
 			String openRegistrationTime = validator.formatDateToString(entity.getOpenRegistrationTime());
 			dto.setOpenRegistrationTime(openRegistrationTime);
+
+			SportEntity sport = entity.getSport();
+			Long sportId = sport.getId();
+			dto.setSportId(sportId);
+
+			dto.setHasGroupStage(entity.isHasGroupStage());
 			System.out.println("TournamentConverter: toDTO: no exception");
 		} catch (Exception e) {
 			System.out.println("TournamentConverter: toDTO: has exception");
@@ -113,5 +150,4 @@ public class TournamentConverter {
 		System.out.println("TournamentConverter: toDTO: finish");
 		return dto;
 	}
-
 }

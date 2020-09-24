@@ -7,7 +7,6 @@ import java.util.Date;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -15,14 +14,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.ColumnDefault;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Table(name = "tournaments")
-@EntityListeners(AuditingEntityListener.class)
 public class TournamentEntity {
 
 	@Id
@@ -31,10 +29,10 @@ public class TournamentEntity {
 	private Long id;
 
 	@Column(nullable = false)
-	private String fullName;
+	private String fullName = "unknown";
 
 	@Column(nullable = false)
-	private String shortName;
+	private String shortName = "unknown";
 
 	@ColumnDefault("'Chưa có mô tả.'")
 	private String description;
@@ -50,34 +48,119 @@ public class TournamentEntity {
 	@ColumnDefault("'Không có nhà tài trợ'")
 	private String donor;
 
-	@ColumnDefault("'unknown'")
-	private String status;
-
-	private String url = "/?";
-
 	private String avatar;
 
 	private String background;
 
 	private Date openRegistrationTime;
 	private Date closeRegistrationTime;
+	
+	@ColumnDefault("0")
+	@Column(nullable = false)
+	private boolean hasGroupStage = false;
 
+	@ColumnDefault("'unknown'")
+	private String status;
+
+	private String url = "/?";
 
 	@ManyToOne
 	@JoinColumn(name = "creatorId", nullable = false)
 	private UserEntity creator;
 
-	@ManyToMany(mappedBy = "tournamentsList")
-	private Collection<UserEntity> usersList;
-
 	@OneToMany(mappedBy = "tournament", cascade = CascadeType.ALL)
 	private Collection<ReportEntity> reports;
 
+	@ManyToOne
+	@JoinColumn(name = "sportId", nullable = false)
+	private SportEntity sport;
+
 	@OneToMany(mappedBy = "tournament", cascade = CascadeType.ALL)
-	private Collection<CompetitionEntity> competitions;
+	private Collection<MatchEntity> matches;
+
+	@OneToMany(mappedBy = "tournament", cascade = CascadeType.ALL)
+	private Collection<TeamEntity> teams;
+
+	@OneToOne(mappedBy = "tournament")
+	private GroupStageSettingEntity groupStageSetting;
+
+	@OneToOne(mappedBy = "tournament")
+	private FinalStageSettingEntity finalStageSetting;
 
 	public Long getId() {
 		return id;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public SportEntity getSport() {
+		return sport;
+	}
+
+	public void setSport(SportEntity sport) {
+		this.sport = sport;
+	}
+
+	public Collection<MatchEntity> getMatches() {
+		return matches;
+	}
+
+	public void setMatches(Collection<MatchEntity> matches) {
+		this.matches = matches;
+	}
+
+	public Collection<TeamEntity> getTeams() {
+		return teams;
+	}
+
+	public void setTeams(Collection<TeamEntity> teams) {
+		this.teams = teams;
+	}
+
+	public GroupStageSettingEntity getGroupStageSetting() {
+		return groupStageSetting;
+	}
+
+	public void setGroupStageSetting(GroupStageSettingEntity groupStageSetting) {
+		this.groupStageSetting = groupStageSetting;
+	}
+
+	public FinalStageSettingEntity getFinalStageSetting() {
+		return finalStageSetting;
+	}
+
+	public void setFinalStageSetting(FinalStageSettingEntity finalStageSetting) {
+		this.finalStageSetting = finalStageSetting;
+	}
+
+	public boolean isHasGroupStage() {
+		return hasGroupStage;
+	}
+
+	public void setHasGroupStage(boolean hasGroupStage) {
+		this.hasGroupStage = hasGroupStage;
 	}
 
 	public String getFullName() {
@@ -94,14 +177,6 @@ public class TournamentEntity {
 
 	public void setShortName(String shortName) {
 		this.shortName = shortName;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
 	}
 
 	public String getOpeningLocation() {
@@ -144,52 +219,12 @@ public class TournamentEntity {
 		this.donor = donor;
 	}
 
-	public String getStatus() {
-		return status;
+	public String getAvatar() {
+		return avatar;
 	}
 
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
-	public String getUrl() {
-		return url;
-	}
-
-	public void setUrl(String url) {
-		this.url = url;
-	}
-
-	public UserEntity getCreator() {
-		return creator;
-	}
-
-	public void setCreator(UserEntity creator) {
-		this.creator = creator;
-	}
-
-	public Collection<UserEntity> getUsersList() {
-		return usersList;
-	}
-
-	public void setUsersList(Collection<UserEntity> usersList) {
-		this.usersList = usersList;
-	}
-
-	public Collection<ReportEntity> getReports() {
-		return reports;
-	}
-
-	public void setReports(Collection<ReportEntity> reports) {
-		this.reports = reports;
-	}
-
-	public Collection<CompetitionEntity> getCompetitions() {
-		return competitions;
-	}
-
-	public void setCompetitions(Collection<CompetitionEntity> competitions) {
-		this.competitions = competitions;
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
 	}
 
 	public String getBackground() {
@@ -198,14 +233,6 @@ public class TournamentEntity {
 
 	public void setBackground(String background) {
 		this.background = background;
-	}
-
-	public String getAvatar() {
-		return avatar;
-	}
-
-	public void setAvatar(String avatar) {
-		this.avatar = avatar;
 	}
 
 	public Date getOpenRegistrationTime() {
@@ -223,5 +250,23 @@ public class TournamentEntity {
 	public void setCloseRegistrationTime(Date closeRegistrationTime) {
 		this.closeRegistrationTime = closeRegistrationTime;
 	}
+
+	public UserEntity getCreator() {
+		return creator;
+	}
+
+	public void setCreator(UserEntity creator) {
+		this.creator = creator;
+	}
+
+	public Collection<ReportEntity> getReports() {
+		return reports;
+	}
+
+	public void setReports(Collection<ReportEntity> reports) {
+		this.reports = reports;
+	}
+	
+	
 
 }

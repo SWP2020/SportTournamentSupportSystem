@@ -30,7 +30,7 @@ public class GroupStageSettingService implements IGroupStageSettingService{
 		try {
 			updatedEntity = groupStageSettingRepository.findOneById(id);
 
-			updatedEntity.setCompetition(newEntity.getCompetition());
+			updatedEntity.setTournament(newEntity.getTournament());
 			updatedEntity.setFormat(newEntity.getFormat());
 			updatedEntity.setHasHomeMatch(newEntity.isHasHomeMatch());
 			updatedEntity.setAdvanceTeamPerTable(newEntity.getAdvanceTeamPerTable());
@@ -71,10 +71,10 @@ public class GroupStageSettingService implements IGroupStageSettingService{
 	}
 	
 	@Override
-	public GroupStageSettingEntity findByCompetitionId(Long competitionId) {
+	public GroupStageSettingEntity findByTournamentId(Long TournamentId) {
 		GroupStageSettingEntity foundEntity = null;
 		try {
-			foundEntity = groupStageSettingRepository.findByCompetitionId(competitionId);
+			foundEntity = groupStageSettingRepository.findByTournamentId(TournamentId);
 		} catch (Exception e) {
 			return null;
 		}
