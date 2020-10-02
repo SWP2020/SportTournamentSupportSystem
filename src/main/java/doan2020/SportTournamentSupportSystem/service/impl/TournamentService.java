@@ -15,12 +15,8 @@ import org.springframework.stereotype.Service;
 
 import doan2020.SportTournamentSupportSystem.config.Const;
 import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
-import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
-import doan2020.SportTournamentSupportSystem.model.Schedule.DTO.ScheduleDTO;
-import doan2020.SportTournamentSupportSystem.repository.TournamentRepository;
 import doan2020.SportTournamentSupportSystem.repository.MatchRepository;
 import doan2020.SportTournamentSupportSystem.repository.TournamentRepository;
-import doan2020.SportTournamentSupportSystem.service.IScheduleService;
 import doan2020.SportTournamentSupportSystem.service.ITournamentService;
 
 @Service
@@ -252,6 +248,41 @@ public class TournamentService implements ITournamentService {
 		}
 
 		return entity;
+	}
+
+	@Override
+	public Collection<TournamentEntity> findBySearchStringAndSportAndStatus(Pageable pageable, String searchString,
+			String sport, String status) {
+		List<TournamentEntity> findTournaments = null;
+		try {
+
+			findTournaments = (List<TournamentEntity>) tournamentRepository.findBySearchStringAndSportAndStatus(searchString, sport, status);
+
+			System.out
+					.println("TournamentService: findBySearchString: findTournaments: size: " + findTournaments.size());
+
+			int start = (int) pageable.getOffset();
+			int end = (start + pageable.getPageSize()) > findTournaments.size() ? findTournaments.size()
+					: (start + pageable.getPageSize());
+			Page<TournamentEntity> pages = new PageImpl<TournamentEntity>(findTournaments.subList(start, end), pageable,
+					findTournaments.size());
+			findTournaments = pages.getContent();
+
+		} catch (Exception e) {
+			return null;
+		}
+		return findTournaments;
+	}
+
+	@Override
+	public Long countBySearchStringAndSportAndStatus(String searchString, String sport, String status) {
+		List<TournamentEntity> findTournaments = null;
+		try {
+			findTournaments = (List<TournamentEntity>) tournamentRepository.findBySearchStringAndSportAndStatus(searchString, sport, status);
+		} catch (Exception e) {
+			return 0l;
+		}
+		return new Long(findTournaments.size());
 	}
 
 }
