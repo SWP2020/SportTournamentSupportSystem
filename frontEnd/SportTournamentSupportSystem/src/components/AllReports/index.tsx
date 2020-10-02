@@ -130,7 +130,7 @@ class AllReports extends React.Component<IAllReportsProps, IAllReportsState> {
                     <div className="UserInfoTeamsItem-container-container" onClick={() => this.handleSeeMore(item)}>
                       <div className="UserInfoTeamsItem-order-number-container">
                         <div className="UserInfoTeamsItem-order-number-box">
-                          <p>{index + 1}</p>
+                          <p style={{color: 'white'}}>{index + 1}</p>
                         </div>
                       </div>
                       <div className="UserInfoTeamsItem-team-name-container">

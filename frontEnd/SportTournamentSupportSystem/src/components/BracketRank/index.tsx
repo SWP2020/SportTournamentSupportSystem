@@ -45,50 +45,50 @@ class BracketRank extends React.Component<IBracketRankProps, IBracketRankState> 
           <div className="BracketRank-container">
             <div className="BracketRank-item-container BracketRank-menuItem-container">
               <div className="BracketRank-item-orderNumber-container">
-                <p>Hạng</p>
+                <p style={{ color: 'white' }}>Hạng</p>
               </div>
               <div className="BracketRank-item-managerName-container">
-                <p>Tên đội</p>
+                <p style={{ color: 'white' }}>Tên đội</p>
               </div>
               <div className="BracketRank-item-teamName-container">
-                <p>Tên ngắn đội</p>
+                <p style={{ color: 'white' }}>Tên ngắn đội</p>
               </div>
               <div className="BracketRank-item-matchHistory-container">
-                <p>Điểm</p>
+                <p style={{ color: 'white' }}>Điểm</p>
               </div>
               <div className="BracketRank-item-score-container">
-                <p>Hiệu số</p>
+                <p style={{ color: 'white' }}>Hiệu số</p>
               </div>
               <div className="BracketRank-item-score-container">
-                <p>Thắng</p>
+                <p style={{ color: 'white' }}>Thắng</p>
               </div>
               <div className="BracketRank-item-score-container">
-                <p>Thua</p>
+                <p style={{ color: 'white' }}>Thua</p>
               </div>
             </div>
             {this.props.bracketRankInfo.finalStageScheduleRanking != null && (this.props.bracketRankInfo.finalStageScheduleRanking as IParams[]).length > 0 &&
               (this.props.bracketRankInfo.finalStageScheduleRanking as IParams[]).map((item, index) =>
                 <div className={`BracketRank-item-container ${index % 2 === 0 ? 'BracketRank-item-container1' : 'BracketRank-item-container2'}`} key={index}>
                   <div className="BracketRank-item-orderNumber-container">
-                    <p className={`BracketRank-item-orderNumber-${index + 1}`}>{index + 1}</p>
+                    <p className={`BracketRank-item-orderNumber-${index + 1} BracketRank-item-orderNumberr`}>{index + 1}</p>
                   </div>
                   <div className="BracketRank-item-managerName-container">
-                    <p className={`BracketRank-item-orderNumber-${index + 1}`}>{item.team != null ? (item.team as IParams).fullName : ''}</p>
+                    <p className={`BracketRank-item-orderNumber-${index + 1} BracketRank-item-orderNumberr`}>{item.team != null ? (item.team as IParams).fullName : ''}</p>
                   </div>
                   <div className="BracketRank-item-teamName-container">
-                    <p className={`BracketRank-item-orderNumber-${index + 1}`}>{item.team != null ? (item.team as IParams).shortName : ''}</p>
+                    <p className={`BracketRank-item-orderNumber-${index + 1} BracketRank-item-orderNumberr`}>{item.team != null ? (item.team as IParams).shortName : ''}</p>
                   </div>
                   <div className="BracketRank-item-matchHistory-container">
-                    <p className={`BracketRank-item-orderNumber-${index + 1}`}>{item.score}</p>
+                    <p className={`BracketRank-item-orderNumber-${index + 1} BracketRank-item-orderNumberr`}>{item.score}</p>
                   </div>
                   <div className="BracketRank-item-score-container">
-                    <p className={`BracketRank-item-orderNumber-${index + 1}`}>{item.difference}</p>
+                    <p className={`BracketRank-item-orderNumber-${index + 1} BracketRank-item-orderNumberr`}>{item.difference}</p>
                   </div>
                   <div className="BracketRank-item-score-container">
-                    <p className={`BracketRank-item-orderNumber-${index + 1}`}>{item.totalWin}</p>
+                    <p className={`BracketRank-item-orderNumber-${index + 1} BracketRank-item-orderNumberr`}>{item.totalWin}</p>
                   </div>
                   <div className="BracketRank-item-score-container">
-                    <p className={`BracketRank-item-orderNumber-${index + 1}`}>{item.totalLose}</p>
+                    <p className={`BracketRank-item-orderNumber-${index + 1} BracketRank-item-orderNumberr`}>{item.totalLose}</p>
                   </div>
                 </div>
               )
@@ -98,7 +98,7 @@ class BracketRank extends React.Component<IBracketRankProps, IBracketRankState> 
       } else {
 
         return (
-          (this.props.bracketRankInfo.groupStageScheduleRanking as IParams[]).map((item, index) =>
+          this.props.bracketRankInfo.groupStageScheduleRanking != null && (this.props.bracketRankInfo.groupStageScheduleRanking as IParams[]).map((item, index) =>
             <div key={index} className="BracketRank-container">
               <h2>Bảng {item.tableName}</h2>
               <div className="BracketRank-item-container BracketRank-menuItem-container">
