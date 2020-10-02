@@ -251,39 +251,39 @@ class MatchDetail extends React.Component<IMatchDetailProps, IMatchDetailState> 
           >
             <div className={'MatchDetail-team1-name-container'}>
               {this.props.info.team1 != null ?
-                ((this.props.info.team1 as IParams).team != null ? <p className={this.state.winner === true ? 'MatchDetail-team-winner' : ''}>{`${((this.props.info.team1 as IParams).team as IParams).fullName} (${((this.props.info.team1 as IParams).team as IParams).shortName})`}</p> :
-                  (((this.props.info.team1 as IParams).description as IParams).descType === 0 ? <p>{this.props.listTeam![(((this.props.info.team1 as IParams).description as IParams).unitIndex as number) - 1].shortName ? this.props.listTeam![(((this.props.info.team1 as IParams).description as IParams).unitIndex as number) - 1].shortName : ''}</p> : <p style={{ fontStyle: 'italic' }}>{((this.props.info.team1 as IParams).description as IParams).description}</p>)) : <p>(Chưa có)</p>
+                ((this.props.info.team1 as IParams).team != null ? <p className={this.state.winner === true ? 'MatchDetail-team-winner' : 'MatchDetail-team'}>{`${((this.props.info.team1 as IParams).team as IParams).fullName} (${((this.props.info.team1 as IParams).team as IParams).shortName})`}</p> :
+                  (((this.props.info.team1 as IParams).description as IParams).descType === 0 ? <p className={'MatchDetail-team'}>{this.props.listTeam![(((this.props.info.team1 as IParams).description as IParams).unitIndex as number) - 1].shortName ? this.props.listTeam![(((this.props.info.team1 as IParams).description as IParams).unitIndex as number) - 1].shortName : ''}</p> : <p style={{ fontStyle: 'italic', color: 'white' }}>{((this.props.info.team1 as IParams).description as IParams).description}</p>)) : <p className={'MatchDetail-team'}>(Chưa có)</p>
               }
             </div>
             <div className={'MatchDetail-team1-score-container'}>
-              <p className={this.state.winner === true ? 'MatchDetail-team-winner' : ''}>{this.state.team1Score}</p>
+              <p className={this.state.winner === true ? 'MatchDetail-team-winner' : 'MatchDetail-team'}>{this.state.team1Score}</p>
             </div>
           </div>
           <div
             className="MatchDetail-teams-middle-container"
           >
-            <p className={'MatchDetail-teams-middle-text'}>VS</p>
+            <p className={'MatchDetail-teams-middle-text MatchDetail-team'}>VS</p>
           </div >
           <div
             className="MatchDetail-team2-container"
           >
             <div className={'MatchDetail-team2-name-container'}>
               {this.props.info.team2 != null ?
-                ((this.props.info.team2 as IParams).team != null ? <p className={this.state.winner === false ? 'MatchDetail-team-winner' : ''}>{`${((this.props.info.team2 as IParams).team as IParams).fullName} (${((this.props.info.team2 as IParams).team as IParams).shortName})`}</p> :
+                ((this.props.info.team2 as IParams).team != null ? <p className={this.state.winner === false ? 'MatchDetail-team-winner' : 'MatchDetail-team'}>{`${((this.props.info.team2 as IParams).team as IParams).fullName} (${((this.props.info.team2 as IParams).team as IParams).shortName})`}</p> :
                   (((this.props.info.team2 as IParams).description as IParams).descType === 0 ?
-                    <p>{this.props.listTeam![(((this.props.info.team2 as IParams).description as IParams).unitIndex as number) - 1].shortName ? this.props.listTeam![(((this.props.info.team2 as IParams).description as IParams).unitIndex as number) - 1].shortName : ''}</p> : <p style={{ fontStyle: 'italic' }}>{((this.props.info.team2 as IParams).description as IParams).description === '-1' ? '(Chưa có)' : ((this.props.info.team2 as IParams).description as IParams).description}</p>)) : <p>(Không có)</p>
+                    <p className={'MatchDetail-team'}>{this.props.listTeam![(((this.props.info.team2 as IParams).description as IParams).unitIndex as number) - 1].shortName ? this.props.listTeam![(((this.props.info.team2 as IParams).description as IParams).unitIndex as number) - 1].shortName : ''}</p> : <p style={{ fontStyle: 'italic', color: 'white' }}>{((this.props.info.team2 as IParams).description as IParams).description === '-1' ? '(Chưa có)' : ((this.props.info.team2 as IParams).description as IParams).description}</p>)) : <p className={'MatchDetail-team'}>(Không có)</p>
               }
             </div>
             <div className={'MatchDetail-team2-score-container'}>
-              <p className={this.state.winner === false ? 'MatchDetail-team-winner' : ''}>{this.state.team2Score}</p>
+              <p className={this.state.winner === false ? 'MatchDetail-team-winner' : 'MatchDetail-team'}>{this.state.team2Score}</p>
             </div>
           </div >
         </div >
         <div
           className="MatchDetail-info-container"
         >
-          {this.state.editMode === false ? <p>Địa điểm: {this.props.info.location}</p> : <label>Địa điểm: <input value={this.state.location} type={'text'} onChange={this.onChangeLocation} /></label>}
-          {this.state.editMode === false ? <p>Thời gian: {this.props.info.time}</p> : <label>Thời gian:
+          {this.state.editMode === false ? <p className={'MatchDetail-team'}>Địa điểm: {this.props.info.location}</p> : <label style={{color: 'white'}}>Địa điểm: <input value={this.state.location} type={'text'} onChange={this.onChangeLocation} /></label>}
+          {this.state.editMode === false ? <p className={'MatchDetail-team'}>Thời gian: {this.props.info.time}</p> : <label style={{ color: 'white' }}>Thời gian: 
             <DatePicker
               selected={this.state.time}
               onChange={this.handleChangeTime}

@@ -150,7 +150,7 @@ class UserInfoTeamsItem extends React.Component<IUserInfoTeamsItemProps, IUserIn
           id: this.props.info.id,
         },
         data: {
-          competitionId: this.props.info.competitionId,
+          tournamentId: this.props.info.tournamentId,
         },
       }
       this.props.deleteTeam(params);
@@ -323,7 +323,7 @@ class UserInfoTeamsItem extends React.Component<IUserInfoTeamsItemProps, IUserIn
         id: this.props.info.id,
       },
       data: {
-        competitionId: this.props.info.competitionId,
+        tournamentId: this.props.info.tournamentId,
         creatorId: this.props.info.creatorId,
         description: this.props.info.description,
         fullName: this.state.teamFullName,
@@ -344,13 +344,13 @@ class UserInfoTeamsItem extends React.Component<IUserInfoTeamsItemProps, IUserIn
           <div className="UserInfoTeamsItem-container-container" onClick={this.handleSeeMore}>
             <div className="UserInfoTeamsItem-order-number-container">
               <div className="UserInfoTeamsItem-order-number-box">
-                <p>{this.props.index + 1}</p>
+                <p style={{ color: 'white' }}>{this.props.index + 1}</p>
               </div>
             </div>
             <div className="UserInfoTeamsItem-team-name-container">
               {
                 this.state.onEditMode === false ?
-                  <p>{this.props.info && this.props.info.fullName}</p> :
+                  <p style={{ color: 'white', fontWeight: 'bold' }}>{this.props.info && this.props.info.fullName}</p> :
                   <TextInput label={'Tên đội'} value={this.state.teamFullName} error={this.state.teamFullNameError} errorContent={this.state.teamFullNameErrorContent} onChangeText={this.onChangeTeamFullName} onBlur={this.onBlurTeamFullName} />
               }
             </div>
@@ -382,16 +382,16 @@ class UserInfoTeamsItem extends React.Component<IUserInfoTeamsItemProps, IUserIn
             <div className="UserInfoTeamsItem-moreInfo-listTeamInfo-container">
               <div className="UserInfoTeamsItem-join-tournament-container">
                 <div className="UserInfoTeamsItem-join-tournament-item1">
-                  <p>Tên</p>
+                  <p style={{ color: 'white' }}>Tên</p>
                 </div>
                 <div className="UserInfoTeamsItem-join-tournament-item2">
-                  <p>Giới tính</p>
+                  <p style={{ color: 'white' }}>Giới tính</p>
                 </div>
                 <div className="UserInfoTeamsItem-join-tournament-item2">
-                  <p>Tuổi</p>
+                  <p style={{ color: 'white' }}>Tuổi</p>
                 </div>
                 <div className="UserInfoTeamsItem-join-tournament-item1">
-                  <p>Email</p>
+                  <p style={{ color: 'white' }}>Email</p>
                 </div>
                 <div className="UserInfoTeamsItem-join-tournament-setting">
                 </div>

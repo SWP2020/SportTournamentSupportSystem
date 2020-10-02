@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { isAfter, isBefore } from 'date-fns';
+import ReduxBlockUi from 'react-block-ui/redux';
 import Select, { ValueType, OptionTypeBase } from 'react-select';
 import 'react-block-ui/style.css';
 import DatePicker from "react-datepicker";
@@ -21,6 +22,8 @@ import {
 } from 'components/CompetitionsSetting/actions';
 import { createNewTournament } from './actions';
 import './styles.css';
+import { CREATE_NEW_TOURNAMENT } from 'redux-saga/actions';
+import { CREATE_NEW_TOURNAMENT_FAILED, CREATE_NEW_TOURNAMENT_SUCCESS } from './reducers';
 
 interface ICreateNewTournamentProps extends React.ClassAttributes<CreateNewTournament> {
   allSports: IParams[];
@@ -76,6 +79,24 @@ interface ICreateNewTournamentState {
   amountOfTeamsGoOnInAGroup: number;
   amountOfTeamsGoOnInAGroupError: boolean;
   amountOfTeamsGoOnInAGroupErrorContent: string;
+  win1: number;
+  win1Error: boolean;
+  win1ErrorContent: string;
+  draw1: number;
+  draw1Error: boolean;
+  draw1ErrorContent: string;
+  lose1: number;
+  lose1Error: boolean;
+  lose1ErrorContent: string;
+  win2: number;
+  win2Error: boolean;
+  win2ErrorContent: string;
+  draw2: number;
+  draw2Error: boolean;
+  draw2ErrorContent: string;
+  lose2: number;
+  lose2Error: boolean;
+  lose2ErrorContent: string;
 }
 
 let sportOptions: IParams[] = [];
@@ -140,6 +161,24 @@ class CreateNewTournament extends React.Component<ICreateNewTournamentProps, ICr
       homeWayPhase1: false,
       boPhase1: { value: 1, label: '1' },
       boPhase2: { value: 1, label: '1' },
+      win1: 3,
+      win1Error: false,
+      win1ErrorContent: '',
+      draw1: 1,
+      draw1Error: false,
+      draw1ErrorContent: '',
+      lose1: 0,
+      lose1Error: false,
+      lose1ErrorContent: '',
+      win2: 3,
+      win2Error: false,
+      win2ErrorContent: '',
+      draw2: 1,
+      draw2Error: false,
+      draw2ErrorContent: '',
+      lose2: 0,
+      lose2Error: false,
+      lose2ErrorContent: '',
     };
   }
 
@@ -173,6 +212,11 @@ class CreateNewTournament extends React.Component<ICreateNewTournamentProps, ICr
     if (this.state.selectedCompetitionFormatPhase2 !== nextState.selectedCompetitionFormatPhase2) {
       this.setState({
         boPhase2: { value: 1, label: '1' },
+      });
+    }
+    if (this.state.twoPhase !== nextState.twoPhase && nextState.twoPhase === true) {
+      this.setState({
+        selectedCompetitionFormatPhase1: { value: 3, label: 'Vòng tròn tính điểm' },
       });
     }
     return true;
@@ -253,6 +297,65 @@ class CreateNewTournament extends React.Component<ICreateNewTournamentProps, ICr
       tempValue = 0;
     }
     this.setState({ amountOfTeamsGoOnInAGroup: tempValue, });
+  }
+
+  private onChangeWin1 = (value: string) => {
+    let tempValue = 0;
+    if (!isNaN(value as unknown as number)) {
+      tempValue = Number(value);
+    } else {
+      tempValue = 0;
+    }
+    this.setState({ win1: tempValue, });
+  }
+
+  private onChangeDraw1 = (value: string) => {
+    let tempValue = 0;
+    if (!isNaN(value as unknown as number)) {
+      tempValue = Number(value);
+    } else {
+      tempValue = 0;
+    }
+    this.setState({ draw1: tempValue, });
+  }
+
+  private onChangeLose1 = (value: string) => {
+    let tempValue = 0;
+    if (!isNaN(value as unknown as number)) {
+      tempValue = Number(value);
+    } else {
+      tempValue = 0;
+    }
+    this.setState({ lose1: tempValue, });
+  }
+  private onChangeWin2 = (value: string) => {
+    let tempValue = 0;
+    if (!isNaN(value as unknown as number)) {
+      tempValue = Number(value);
+    } else {
+      tempValue = 0;
+    }
+    this.setState({ win2: tempValue, });
+  }
+
+  private onChangeDraw2 = (value: string) => {
+    let tempValue = 0;
+    if (!isNaN(value as unknown as number)) {
+      tempValue = Number(value);
+    } else {
+      tempValue = 0;
+    }
+    this.setState({ draw2: tempValue, });
+  }
+
+  private onChangeLose2 = (value: string) => {
+    let tempValue = 0;
+    if (!isNaN(value as unknown as number)) {
+      tempValue = Number(value);
+    } else {
+      tempValue = 0;
+    }
+    this.setState({ lose2: tempValue, });
   }
 
   private handleChangeStartDate = (value: Date) => {
@@ -457,237 +560,288 @@ class CreateNewTournament extends React.Component<ICreateNewTournamentProps, ICr
 
   render() {
     return (
-      <div className="CreateNewTournament-container">
-        <div className="CreateNewTournament-tournament-container">
-          <p className="CreateNewTournament-header-text">Tạo mới giải đấu</p>
-          <table>
-            <tr>
-              <td>Tên giải: </td>
-              <td style={{ paddingTop: '25px' }}><TextInput label='' error={this.state.tournamentNameError} errorContent={this.state.tournamentNameErrorContent} onChangeText={this.onChangeTournamentname} /></td>
-            </tr>
-            <tr>
-              <td>Tên ngắn: </td>
-              <td style={{ paddingTop: '25px' }}><TextInput label='' error={this.state.tournamentShortNameError} errorContent={this.state.tournamentShortNameErrorContent} onChangeText={this.onChangeTournamentShortName} /></td>
-            </tr>
-            <tr>
-              <td>Mô tả: </td>
-              <td style={{ paddingTop: '25px' }}><TextInput label='' error={this.state.tournamentDescriptionError} errorContent={this.state.tournamentDescriptionErrorContent} onChangeText={this.onChangeTournamentDescription} /></td>
-            </tr>
-            <tr>
-              <td>Bộ môn: </td>
-              <td style={{ height: '80px' }}>
-                <Select
-                  options={sportOptions}
-                  className="Select"
-                  defaultValue={this.state.selectedSport}
-                  value={this.state.selectedSport}
-                  onChange={this.onChangeSport}
-                  maxMenuHeight={140}
-                />
-              </td>
-            </tr>
-            <tr>
-              <td>Cách tổ chức giải: </td>
-              <td>
-                <input type="radio" name="competitionType" onClick={this.OnChoose1} checked={this.state.onePhase} readOnly />
-                <label onClick={this.OnChoose1}>1 giai đoạn</label>
-                <input type="radio" name="competitionType" onClick={this.OnChoose2} checked={this.state.twoPhase} readOnly />
-                <label onClick={this.OnChoose2}>2 giai đoạn</label>
-              </td>
-            </tr>
-            <tr>
-              <td style={{ width: '225px', height: '80px' }}>{`Thể thức${this.state.onePhase === true ? ': ' : ' vòng bảng: '}`}</td>
-              <td>
-                <Select
-                  options={competitionFormatOptions}
-                  className="Select"
-                  defaultValue={this.state.selectedCompetitionFormatPhase1}
-                  value={this.state.selectedCompetitionFormatPhase1}
-                  onChange={this.onChangeCompetitionFormatPhase1}
-                  menuPlacement={'top'}
-                />
-              </td>
-            </tr>
-            <tr>
-              <td style={{ width: '225px', height: '80px' }}>{`Số set 1 trận${this.state.onePhase === true ? ': ' : ' vòng bảng: '}`}</td>
-              <td>
-                {this.state.selectedCompetitionFormatPhase1 != null &&
-                  ((this.state.selectedCompetitionFormatPhase1 as IParams).value !== 3 ?
+      <ReduxBlockUi
+        tag="div"
+        block={CREATE_NEW_TOURNAMENT}
+        unblock={[CREATE_NEW_TOURNAMENT_SUCCESS, CREATE_NEW_TOURNAMENT_FAILED]}
+      >
+        <div className="CreateNewTournament-container">
+          <div className="CreateNewTournament-tournament-container">
+            <p className="CreateNewTournament-header-text">Tạo mới giải đấu</p>
+            <table>
+              <tr>
+                <td>Tên giải: </td>
+                <td style={{ paddingTop: '25px' }}><TextInput label='' error={this.state.tournamentNameError} errorContent={this.state.tournamentNameErrorContent} onChangeText={this.onChangeTournamentname} /></td>
+              </tr>
+              <tr>
+                <td>Tên ngắn: </td>
+                <td style={{ paddingTop: '25px' }}><TextInput label='' error={this.state.tournamentShortNameError} errorContent={this.state.tournamentShortNameErrorContent} onChangeText={this.onChangeTournamentShortName} /></td>
+              </tr>
+              <tr>
+                <td>Mô tả: </td>
+                <td style={{ paddingTop: '25px' }}><TextInput label='' error={this.state.tournamentDescriptionError} errorContent={this.state.tournamentDescriptionErrorContent} onChangeText={this.onChangeTournamentDescription} /></td>
+              </tr>
+              <tr>
+                <td>Bộ môn: </td>
+                <td style={{ height: '80px' }}>
+                  <Select
+                    options={sportOptions}
+                    className="Select"
+                    defaultValue={this.state.selectedSport}
+                    value={this.state.selectedSport}
+                    onChange={this.onChangeSport}
+                    maxMenuHeight={140}
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>Cách tổ chức giải: </td>
+                <td>
+                  <input type="radio" name="competitionType" onClick={this.OnChoose1} checked={this.state.onePhase} readOnly />
+                  <label onClick={this.OnChoose1}>1 giai đoạn</label>
+                  <input type="radio" name="competitionType" onClick={this.OnChoose2} checked={this.state.twoPhase} readOnly />
+                  <label onClick={this.OnChoose2}>2 giai đoạn</label>
+                </td>
+              </tr>
+              <tr>
+                <td style={{ width: '225px', height: '80px' }}>{`Thể thức${this.state.onePhase === true ? ': ' : ' vòng bảng: '}`}</td>
+                <td>
+                  {this.state.onePhase === true ? <Select
+                    options={competitionFormatOptions}
+                    className="Select"
+                    defaultValue={this.state.selectedCompetitionFormatPhase1}
+                    value={this.state.selectedCompetitionFormatPhase1}
+                    onChange={this.onChangeCompetitionFormatPhase1}
+                    menuPlacement={'top'}
+                  /> : <p>Vòng tròn tính điểm</p>}
+                </td>
+              </tr>
+              <tr>
+                <td style={{ width: '225px', height: '80px' }}>{`Số set 1 trận${this.state.onePhase === true ? ': ' : ' vòng bảng: '}`}</td>
+                <td>
+                  {this.state.selectedCompetitionFormatPhase1 != null &&
+                    ((this.state.selectedCompetitionFormatPhase1 as IParams).value !== 3 ?
+                      <Select
+                        options={boOdd}
+                        className="Select"
+                        defaultValue={this.state.boPhase1}
+                        value={this.state.boPhase1}
+                        onChange={this.onChangeboPhase1}
+                        menuPlacement={'top'}
+                      /> : <Select
+                        options={boEven}
+                        className="Select"
+                        defaultValue={this.state.boPhase1}
+                        value={this.state.boPhase1}
+                        onChange={this.onChangeboPhase1}
+                        menuPlacement={'top'}
+                      />
+                    )}
+                </td>
+              </tr>
+              <tr>
+                <td style={{ width: '225px', height: '80px' }}>{`Cách tính điểm${this.state.onePhase === true ? ': ' : ' vòng bảng: '}`}</td>
+                <td>
+                </td>
+              </tr>
+              <tr>
+                <td>Thắng</td>
+                <td style={{ paddingTop: '25px' }}>
+                  <TextInput value={this.state.win1 as unknown as string} style={{ width: '100px' }} label='' error={this.state.win1Error} errorContent={this.state.win1ErrorContent} onChangeText={this.onChangeWin1} />
+                </td>
+              </tr>
+              <tr>
+                <td>Hòa</td>
+                <td style={{ paddingTop: '25px' }}>
+                  <TextInput value={this.state.draw1 as unknown as string} style={{ width: '100px' }} label='' error={this.state.draw1Error} errorContent={this.state.draw1ErrorContent} onChangeText={this.onChangeDraw1} />
+                </td>
+              </tr>
+              <tr>
+                <td>Thua</td>
+                <td style={{ paddingTop: '25px' }}>
+                  <TextInput value={this.state.lose1 as unknown as string} style={{ width: '100px' }} label='' error={this.state.lose1Error} errorContent={this.state.lose1ErrorContent} onChangeText={this.onChangeLose1} />
+                </td>
+              </tr>
+              {(this.state.selectedCompetitionFormatPhase1 != null &&
+                (this.state.selectedCompetitionFormatPhase1 as IParams).value !== 2 &&
+                <tr>
+                  <td></td>
+                  <td>
+                    <label className="Checkbox-label">
+                      <input
+                        type="checkbox"
+                        checked={this.state.homeWayPhase1}
+                        onChange={this.onChangeHomeWayPhase1}
+                      />
+                      {`${(this.state.selectedCompetitionFormatPhase1 as IParams).value === 3 ? `${this.state.twoPhase === true ? 'Chơi lượt đi lượt về vòng bảng' : 'Chơi lượt đi lượt về'}` : `${this.state.twoPhase === true ? 'Có trận tranh hạng 3 vòng bảng' : 'Có trận tranh hạng 3'}`}`}
+                    </label>
+                  </td>
+                </tr>
+              )}
+              {(this.state.twoPhase === true &&
+                <tr>
+                  <td>Số đội 1 bảng</td>
+                  <td style={{ paddingTop: '25px' }}>
+                    <TextInput
+                      style={{ width: 250 }}
+                      label={''}
+                      value={this.state.amountOfTeamsInAGroup as unknown as string}
+                      onChangeText={this.onChangeAmountOfTeamsInAGroup}
+                      error={this.state.amountOfTeamsInAGroupError}
+                      errorContent={this.state.amountOfTeamsInAGroupErrorContent}
+                      onBlur={this.onBlurAmountOfTeamsInAGroup}
+                    />
+                  </td>
+                </tr>
+              )}
+              {(this.state.twoPhase === true &&
+                <tr>
+                  <td>Số đội đi tiếp 1 bảng</td>
+                  <td style={{ paddingTop: '25px' }}>
+                    <TextInput
+                      style={{ width: 300 }}
+                      label={''}
+                      value={this.state.amountOfTeamsGoOnInAGroup as unknown as string}
+                      onChangeText={this.onChangeAmountOfTeamsGoOnInAGroup}
+                      error={this.state.amountOfTeamsGoOnInAGroupError}
+                      errorContent={this.state.amountOfTeamsGoOnInAGroupErrorContent}
+                      onBlur={this.onBlurAmountOfTeamsGoOnInAGroup}
+                    />
+                  </td>
+                </tr>)}
+              {(this.state.twoPhase === true &&
+                <tr>
+                  <td>Thể thức vòng chung kết</td>
+                  <td style={{ height: '80px' }}>
+                    <Select
+                      options={competitionFormatOptions2}
+                      className="Select"
+                      defaultValue={this.state.selectedCompetitionFormatPhase2}
+                      value={this.state.selectedCompetitionFormatPhase2}
+                      onChange={this.onChangeCompetitionFormatPhase2}
+                      menuPlacement={'top'}
+                    />
+                  </td>
+                </tr>)}
+              {(this.state.twoPhase === true && <tr>
+                <td style={{ width: '225px', height: '80px' }}>{`Cách tính điểm vòng chung kết: `}</td>
+                <td>
+                </td>
+              </tr>)}
+              {(this.state.twoPhase === true && <tr>
+                <td>Thắng</td>
+                <td style={{ paddingTop: '25px' }}>
+                  <TextInput value={this.state.win2 as unknown as string} style={{ width: '100px' }} label='' error={this.state.win2Error} errorContent={this.state.win2ErrorContent} onChangeText={this.onChangeWin2} />
+                </td>
+              </tr>)}
+              {(this.state.twoPhase === true && <tr>
+                <td>Hòa</td>
+                <td style={{ paddingTop: '25px' }}>
+                  <TextInput value={this.state.draw2 as unknown as string} style={{ width: '100px' }} label='' error={this.state.draw2Error} errorContent={this.state.draw2ErrorContent} onChangeText={this.onChangeDraw2} />
+                </td>
+              </tr>)}
+              {(this.state.twoPhase === true && <tr>
+                <td>Thua</td>
+                <td style={{ paddingTop: '25px' }}>
+                  <TextInput value={this.state.lose2 as unknown as string} style={{ width: '100px' }} label='' error={this.state.lose2Error} errorContent={this.state.lose2ErrorContent} onChangeText={this.onChangeLose2} />
+                </td>
+              </tr>)}
+              {(this.state.twoPhase === true && (this.state.selectedCompetitionFormatPhase2 as IParams).value !== 2 && ((this.state.selectedCompetitionFormatPhase2 as IParams).value === 3 ?
+                <tr>
+                  <td></td>
+                  <td>
+                    <label className="Checkbox-label">
+                      <input
+                        type="checkbox"
+                        checked={this.state.homeWayPhase2}
+                        onChange={this.onChangeHomeWayPhase2}
+                      />
+                    Chơi lượt đi lượt về vòng chung kết
+                  </label>
+                  </td>
+                </tr>
+                : <tr>
+                  <td></td>
+                  <td>
+                    <label className="Checkbox-label">
+                      <input
+                        type="checkbox"
+                        checked={this.state.homeWayPhase2}
+                        onChange={this.onChangeHomeWayPhase2}
+                      />
+                    Có trận tranh hạng 3 vòng chung kết
+                  </label>
+                  </td>
+                </tr>
+              ))}
+              {this.state.twoPhase === true && <tr>
+                <td style={{ width: '225px', height: '80px' }}>{`Số set 1 trận vòng chung kết: `}</td>
+                <td>
+                  {this.state.selectedCompetitionFormatPhase2 != null &&
                     <Select
                       options={boOdd}
                       className="Select"
-                      defaultValue={this.state.boPhase1}
-                      value={this.state.boPhase1}
-                      onChange={this.onChangeboPhase1}
-                      menuPlacement={'top'}
-                    /> : <Select
-                      options={boEven}
-                      className="Select"
-                      defaultValue={this.state.boPhase1}
-                      value={this.state.boPhase1}
-                      onChange={this.onChangeboPhase1}
+                      defaultValue={this.state.boPhase2}
+                      value={this.state.boPhase2}
+                      onChange={this.onChangeboPhase2}
                       menuPlacement={'top'}
                     />
-                  )}
-              </td>
-            </tr>
-            {(this.state.selectedCompetitionFormatPhase1 != null &&
-              (this.state.selectedCompetitionFormatPhase1 as IParams).value !== 2 &&
+                  }
+                </td>
+              </tr>}
               <tr>
-                <td></td>
+                <td>Địa điểm khai mạc: </td>
+                <td style={{ paddingTop: '25px' }}><TextInput label='' error={this.state.tournamentStartLocationError} errorContent={this.state.tournamentStartLocationErrorContent} onChangeText={this.onChangeTournamentStartLocation} /></td>
+              </tr>
+              <tr>
+                <td>Thời gian khai mạc: </td>
                 <td>
-                  <label className="Checkbox-label">
-                    <input
-                      type="checkbox"
-                      checked={this.state.homeWayPhase1}
-                      onChange={this.onChangeHomeWayPhase1}
-                    />
-                    {`${(this.state.selectedCompetitionFormatPhase1 as IParams).value === 3 ? `${this.state.twoPhase === true ? 'Chơi lượt đi lượt về vòng bảng' : 'Chơi lượt đi lượt về'}` : `${this.state.twoPhase === true ? 'Có trận tranh hạng 3 vòng bảng' : 'Có trận tranh hạng 3'}`}`}
-                  </label>
-                </td>
-              </tr>
-            )}
-            {(this.state.twoPhase === true &&
-              <tr>
-                <td>Số đội 1 bảng</td>
-                <td style={{ paddingTop: '25px' }}>
-                  <TextInput
-                    style={{ width: 250 }}
-                    label={''}
-                    value={this.state.amountOfTeamsInAGroup as unknown as string}
-                    onChangeText={this.onChangeAmountOfTeamsInAGroup}
-                    error={this.state.amountOfTeamsInAGroupError}
-                    errorContent={this.state.amountOfTeamsInAGroupErrorContent}
-                    onBlur={this.onBlurAmountOfTeamsInAGroup}
+                  <DatePicker
+                    selected={this.state.startDate}
+                    dateFormat="dd/MM/yyyy"
+                    onChange={this.handleChangeStartDate}
+                    minDate={new Date()}
                   />
                 </td>
               </tr>
-            )}
-            {(this.state.twoPhase === true &&
-              <tr>
-                <td>Số đội đi tiếp 1 bảng</td>
-                <td style={{ paddingTop: '25px' }}>
-                  <TextInput
-                    style={{ width: 300 }}
-                    label={''}
-                    value={this.state.amountOfTeamsGoOnInAGroup as unknown as string}
-                    onChangeText={this.onChangeAmountOfTeamsGoOnInAGroup}
-                    error={this.state.amountOfTeamsGoOnInAGroupError}
-                    errorContent={this.state.amountOfTeamsGoOnInAGroupErrorContent}
-                    onBlur={this.onBlurAmountOfTeamsGoOnInAGroup}
-                  />
-                </td>
-              </tr>)}
-            {(this.state.twoPhase === true &&
-              <tr>
-                <td>Thể thức vòng chung kết</td>
-                <td style={{ height: '80px' }}>
-                  <Select
-                    options={competitionFormatOptions2}
-                    className="Select"
-                    defaultValue={this.state.selectedCompetitionFormatPhase2}
-                    value={this.state.selectedCompetitionFormatPhase2}
-                    onChange={this.onChangeCompetitionFormatPhase2}
-                    menuPlacement={'top'}
-                  />
-                </td>
-              </tr>)}
-            {(this.state.twoPhase === true && (this.state.selectedCompetitionFormatPhase2 as IParams).value !== 2 && ((this.state.selectedCompetitionFormatPhase2 as IParams).value === 3 ?
-              <tr>
+              {this.state.startDateError === true && <tr>
                 <td></td>
-                <td>
-                  <label className="Checkbox-label">
-                    <input
-                      type="checkbox"
-                      checked={this.state.homeWayPhase2}
-                      onChange={this.onChangeHomeWayPhase2}
-                    />
-                    Chơi lượt đi lượt về vòng chung kết
-                  </label>
+                <td style={{ color: 'red' }}>
+                  {this.state.startDateErrorContent}
                 </td>
+              </tr>}
+              <tr>
+                <td>Địa điểm bế mạc: </td>
+                <td style={{ paddingTop: '25px' }}><TextInput label='' error={this.state.tournamentEndLocationError} errorContent={this.state.tournamentEndLocationErrorContent} onChangeText={this.onChangeTournamentEndLocation} /></td>
               </tr>
-              : <tr>
-                <td></td>
+              <tr>
+                <td>Thời gian bế mạc: </td>
                 <td>
-                  <label className="Checkbox-label">
-                    <input
-                      type="checkbox"
-                      checked={this.state.homeWayPhase2}
-                      onChange={this.onChangeHomeWayPhase2}
-                    />
-                    Có trận tranh hạng 3 vòng chung kết
-                  </label>
-                </td>
-              </tr>
-            ))}
-            {this.state.twoPhase === true && <tr>
-              <td style={{ width: '225px', height: '80px' }}>{`Số set 1 trận vòng chung kết: `}</td>
-              <td>
-                {this.state.selectedCompetitionFormatPhase2 != null &&
-                  <Select
-                    options={boOdd}
-                    className="Select"
-                    defaultValue={this.state.boPhase2}
-                    value={this.state.boPhase2}
-                    onChange={this.onChangeboPhase2}
-                    menuPlacement={'top'}
+                  <DatePicker
+                    selected={this.state.endDate}
+                    onChange={this.handleChangeEndDate}
+                    dateFormat="dd/MM/yyyy"
+                    minDate={new Date()}
                   />
-                }
-              </td>
-            </tr>}
-            <tr>
-              <td>Địa điểm khai mạc: </td>
-              <td style={{ paddingTop: '25px' }}><TextInput label='' error={this.state.tournamentStartLocationError} errorContent={this.state.tournamentStartLocationErrorContent} onChangeText={this.onChangeTournamentStartLocation} /></td>
-            </tr>
-            <tr>
-              <td>Thời gian khai mạc: </td>
-              <td>
-                <DatePicker
-                  selected={this.state.startDate}
-                  dateFormat="dd/MM/yyyy"
-                  onChange={this.handleChangeStartDate}
-                  minDate={new Date()}
-                />
-              </td>
-            </tr>
-            {this.state.startDateError === true && <tr>
-              <td></td>
-              <td style={{ color: 'red' }}>
-                {this.state.startDateErrorContent}
-              </td>
-            </tr>}
-            <tr>
-              <td>Địa điểm bế mạc: </td>
-              <td style={{ paddingTop: '25px' }}><TextInput label='' error={this.state.tournamentEndLocationError} errorContent={this.state.tournamentEndLocationErrorContent} onChangeText={this.onChangeTournamentEndLocation} /></td>
-            </tr>
-            <tr>
-              <td>Thời gian bế mạc: </td>
-              <td>
-                <DatePicker
-                  selected={this.state.endDate}
-                  onChange={this.handleChangeEndDate}
-                  dateFormat="dd/MM/yyyy"
-                  minDate={new Date()}
-                />
-              </td>
-            </tr>
-            {this.state.endDateError === true && <tr>
-              <td></td>
-              <td style={{ color: 'red' }}>
-                {this.state.endDateErrorContent}
-              </td>
-            </tr>}
-            <tr>
-              <td>Nhà tài trợ: </td>
-              <td style={{ paddingTop: '25px' }}><TextInput label='' error={this.state.donorError} errorContent={this.state.donorErrorContent} onChangeText={this.onChangeTournamentDonor} /></td>
-            </tr>
-          </table>
-          <div className="CreateNewTournament-button-container">
-            <div className="CreateNewTournament-button" onClick={this.handleCreateNewTournament}>
-              <h4 className="CreateNewTournament-button-text">Tạo mới</h4>
+                </td>
+              </tr>
+              {this.state.endDateError === true && <tr>
+                <td></td>
+                <td style={{ color: 'red' }}>
+                  {this.state.endDateErrorContent}
+                </td>
+              </tr>}
+              <tr>
+                <td>Nhà tài trợ: </td>
+                <td style={{ paddingTop: '25px' }}><TextInput label='' error={this.state.donorError} errorContent={this.state.donorErrorContent} onChangeText={this.onChangeTournamentDonor} /></td>
+              </tr>
+            </table>
+            <div className="CreateNewTournament-button-container">
+              <div className="CreateNewTournament-button" onClick={this.handleCreateNewTournament}>
+                <h4 className="CreateNewTournament-button-text">Tạo mới</h4>
+              </div>
             </div>
-          </div>
-          {/* <div className={'CreateNewTournament-listManager-container'}>
+            {/* <div className={'CreateNewTournament-listManager-container'}>
             <p>Tên giải:</p>
             <div className={'CreateNewTournament-tounamentName-container-container'}>
               <TextInput label='Nhập tên của giải' error={this.state.tournamentNameError} errorContent={this.state.tournamentNameErrorContent} onChangeText={this.onChangeTournamentname} />
@@ -748,8 +902,9 @@ class CreateNewTournament extends React.Component<ICreateNewTournamentProps, ICr
               <h4 className="CreateNewTournament-button-text">Tạo mới</h4>
             </div>
           </div> */}
+          </div>
         </div>
-      </div>
+      </ReduxBlockUi>
     );
   }
 }

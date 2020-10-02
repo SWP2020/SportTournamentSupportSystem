@@ -73,7 +73,7 @@ class BracketRound extends React.Component<IBracketRoundProps, IBracketRoundStat
             }))))
           }
           {this.props.info.listLoseMatches != null && <svg style={{ position: 'absolute', marginTop: '20px', width: '1px', height: `${(this.props.info.highestMatch as number) + 100}px`, backgroundColor: 'transparent', }}>
-            {this.props.info.listRoundPosition != null && (this.props.info.listRoundPosition as IParams[]).map((item, index) => <path key={index} d={`M 0 ${(item.a as number) + PADDING_TOP + 14} L 0 ${(item.b as number) + PADDING_TOP + 14}`} stroke="white" strokeWidth={2}></path>)}
+            {this.props.info.listRoundPosition != null && (this.props.info.listRoundPosition as IParams[]).map((item, index) => <path key={index} d={`M 0 ${(item.a as number) + PADDING_TOP + 14} L 0 ${(item.b as number) + PADDING_TOP + 14}`} stroke="#3bbf1a" strokeWidth={2}></path>)}
           </svg>}
         </div>
       );

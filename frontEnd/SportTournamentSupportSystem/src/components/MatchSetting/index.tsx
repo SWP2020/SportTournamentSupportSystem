@@ -404,6 +404,45 @@ class MatchSetting extends React.Component<IMatchSettingProps, IMatchSettingStat
     });
   }
 
+  private onResetMatch = () => {
+    let params: IBigRequest = {
+      path: '',
+      param: {
+        matchId: this.props.info.id,
+      },
+      data: {
+        results: { data: [] },
+      },
+    };
+    this.props.updateResult(params);
+    params = {
+      path: '',
+      param: {
+        id: this.props.info.id,
+      },
+      data: {
+        tournamentId: this.props.matchInfo!.tournamentId,
+        location: this.props.matchInfo!.location,
+        name: this.props.matchInfo!.name,
+        status: this.props.matchInfo!.status,
+        team1Id: this.props.matchInfo!.team1Id,
+        team2Id: this.props.matchInfo!.team2Id,
+        time: this.props.matchInfo!.time,
+        url: this.props.matchInfo!.url,
+        winnerId: null,
+        loserId: null,
+        team1Bonus: 0,
+        team2Bonus: 0,
+      },
+    };
+    this.props.updateMatchInfo(params);
+    this.setState({
+      editMode: false,
+    }, () => {
+      this.props.onChangeEditMode(false);
+    });
+  }
+
   private offEditMode = () => {
     let params: IBigRequest = {
       path: '',
@@ -497,6 +536,7 @@ class MatchSetting extends React.Component<IMatchSettingProps, IMatchSettingStat
       >
         <div className="MatchSetting-set-container">
           {this.props.canEdit !== false && (this.state.editMode === false ? <p className="MatchSetting-set-text" onClick={this.onEditMode}>Sửa</p> : <p className="MatchSetting-set-text" onClick={this.offEditMode}>Lưu</p>)}
+          {this.props.canEdit !== false && (this.state.editMode !== false && <p className="MatchSetting-set-text" onClick={this.onResetMatch}>Đặt lại</p>)}
           {/* {this.state.editMode === true && <p className="MatchSetting-set-text" onClick={this.onAddASet}>Thêm 1 set</p>}
           {this.state.editMode === true && this.state.configSheetData.header.length > 3 && <p className="MatchSetting-set-text" onClick={this.onRemoveASet}>Bớt 1 set</p>} */}
         </div>
