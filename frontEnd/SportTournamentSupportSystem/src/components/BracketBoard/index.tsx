@@ -192,6 +192,7 @@ class BracketBoard extends React.Component<IBracketBoardProps, IBracketBoardStat
                           allMatches={this.props.allMatches}
                           swapAble={this.props.swapAble}
                           finalStage={false}
+                          tableId={item.tableId as number}
                         />
                       )) : <p>Không thể lập lịch cho bảng này!</p>}
                     </div>

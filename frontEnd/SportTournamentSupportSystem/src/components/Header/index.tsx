@@ -76,7 +76,7 @@ class Header extends React.Component<IHeaderProps, IHeaderState> {
   }
 
   private handleSearch = () => {
-    if (this.state.searchText !== this.props.globalSearchString) {
+    if (this.state.searchText !== this.props.globalSearchString || this.state.searchText === '') {
       let params: IBigRequest;
       if ((this.state.selectedSearchOption as IParams).value === 1) {
         params = {

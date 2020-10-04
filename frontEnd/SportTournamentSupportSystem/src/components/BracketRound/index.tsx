@@ -16,6 +16,7 @@ interface IBracketRoundProps extends React.ClassAttributes<BracketRound> {
   allMatches: IParams | null;
   swapAble: boolean;
   finalStage: boolean;
+  tableId?: number;
 }
 
 interface IBracketRoundState {
@@ -49,6 +50,8 @@ class BracketRound extends React.Component<IBracketRoundProps, IBracketRoundStat
                   allMatches={this.props.allMatches}
                   swapAble={this.props.swapAble}
                   finalStage={this.props.finalStage}
+                  tableId={this.props.tableId}
+                  matchType={'rr'}
                 />
               );
             })
@@ -63,13 +66,13 @@ class BracketRound extends React.Component<IBracketRoundProps, IBracketRoundStat
           </div>
           {this.props.info.listMatches != null ?
             (this.props.info.listMatches as unknown as IParams[]).map((item, index) => {
-              return (<BracketMatch finalStage={this.props.finalStage} swapAble={this.props.swapAble} allMatches={this.props.allMatches} has34={this.props.has34} tournamentId={this.props.tournamentId} info={item} key={index} totalRound={this.props.totalRound} />);
+              return (<BracketMatch matchType={'se'} finalStage={this.props.finalStage} swapAble={this.props.swapAble} allMatches={this.props.allMatches} has34={this.props.has34} tournamentId={this.props.tournamentId} info={item} key={index} totalRound={this.props.totalRound} />);
             }) : (this.props.info.listWinMatches != null ? (this.props.info.listWinMatches as unknown as IParams[]).map((item, index) => {
-              return (<BracketMatch finalStage={this.props.finalStage} swapAble={this.props.swapAble} allMatches={this.props.allMatches} tournamentId={this.props.tournamentId} info={item} key={index} totalRound={this.props.totalRound} />);
+              return (<BracketMatch matchType={'win'} finalStage={this.props.finalStage} swapAble={this.props.swapAble} allMatches={this.props.allMatches} tournamentId={this.props.tournamentId} info={item} key={index} totalRound={this.props.totalRound} />);
             }) : (this.props.info.listLoseMatches != null ? (this.props.info.listLoseMatches as unknown as IParams[]).map((item, index) => {
-              return (<BracketMatch finalStage={this.props.finalStage} swapAble={this.props.swapAble} allMatches={this.props.allMatches} tournamentId={this.props.tournamentId} info={item} key={index} totalRound={this.props.totalRound} lowerBracket={true} />);
+              return (<BracketMatch matchType={'lose'} finalStage={this.props.finalStage} swapAble={this.props.swapAble} allMatches={this.props.allMatches} tournamentId={this.props.tournamentId} info={item} key={index} totalRound={this.props.totalRound} lowerBracket={true} />);
             }) : ((this.props.info.listSumMatches as IParams[]).map((item, index) => {
-              return (<BracketMatch finalStage={this.props.finalStage} swapAble={this.props.swapAble} allMatches={this.props.allMatches} showAllDescription={true} has34={true} tournamentId={this.props.tournamentId} info={item} key={index} totalRound={this.props.totalRound} />);
+              return (<BracketMatch matchType={'sum'} finalStage={this.props.finalStage} swapAble={this.props.swapAble} allMatches={this.props.allMatches} showAllDescription={true} has34={true} tournamentId={this.props.tournamentId} info={item} key={index} totalRound={this.props.totalRound} />);
             }))))
           }
           {this.props.info.listLoseMatches != null && <svg style={{ position: 'absolute', marginTop: '20px', width: '1px', height: `${(this.props.info.highestMatch as number) + 100}px`, backgroundColor: 'transparent', }}>
