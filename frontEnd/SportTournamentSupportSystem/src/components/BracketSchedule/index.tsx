@@ -300,6 +300,7 @@ class BracketSchedule extends React.Component<IBracketScheduleProps, IBracketSch
           }
         }
       } else {
+        console.log('(this.props.bracketBoardInfo.groupStage as IParams).listTableSE', (this.props.bracketBoardInfo.groupStage as IParams));
         if ((this.props.bracketBoardInfo.groupStage as IParams).listTableSE != null) {
           return (
             ((this.props.bracketBoardInfo.groupStage as IParams).listTableSE as IParams[]).map((item3, index3) =>
@@ -482,7 +483,7 @@ class BracketSchedule extends React.Component<IBracketScheduleProps, IBracketSch
                                 {
                                   item2.team2 != null && ((item2.team2 as IParams).description != null && (item2.team2 as IParams).team != null ?
                                     <p className={"BracketSchedule-name-text"}>{((item2.team2 as IParams).team as IParams).shortName}</p> :
-                                    (((item2.team2 as IParams).description as IParams).descType !== 0 ? <p className={"BracketSchedule-name-text BracketSchedule-name-text2"}>{((item2.team2 as IParams).description as IParams).description}</p> : <p className={"BracketSchedule-name-text"}>{this.props.listTeam != null && this.props.listTeam[(((item2.team2 as IParams).description as IParams).unitIndex as number) - 1] != null && this.props.listTeam[(((item2.team2 as IParams).description as IParams).unitIndex as number) - 1].shortName != null ? this.props.listTeam[(((item2.team2 as IParams).description as IParams).unitIndex as number) - 1].shortName : ''}</p>))}
+                                    (((item2.team2 as IParams).description as IParams).descType !== 0 ? <p className={"BracketSchedule-name-text BracketSchedule-name-text2"}>{((item2.team2 as IParams).description as IParams).descType === -1 ? `(Chưa có)` : ((item2.team2 as IParams).description as IParams).description}</p> : <p className={"BracketSchedule-name-text"}>{this.props.listTeam != null && this.props.listTeam[(((item2.team2 as IParams).description as IParams).unitIndex as number) - 1] != null && this.props.listTeam[(((item2.team2 as IParams).description as IParams).unitIndex as number) - 1].shortName != null ? this.props.listTeam[(((item2.team2 as IParams).description as IParams).unitIndex as number) - 1].shortName : ''}</p>))}
                               </div>
                             </div>)
                           } else {

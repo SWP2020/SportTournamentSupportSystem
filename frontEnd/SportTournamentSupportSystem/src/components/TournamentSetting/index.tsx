@@ -16,6 +16,7 @@ import { editFinalStageSetting, editGroupStageSetting, queryFinalStageSetting, q
 import { editTournamentInfo } from './actions';
 import { EDIT_TOURNAMENT_INFO_SUCCESS, EDIT_TOURNAMENT_INFO_FAILED } from './reducers';
 import './styles.css';
+import { TOURNAMENT_STATUS } from 'global';
 
 interface ITournamentSettingProps extends React.ClassAttributes<TournamentSetting> {
   isUsernameExisted: boolean | null | {};
@@ -25,6 +26,7 @@ interface ITournamentSettingProps extends React.ClassAttributes<TournamentSettin
   allFormats: IParams[];
   finalStageSetting: IParams | null;
   groupStageSetting: IParams | null;
+  tournamentStatus: string;
 
   queryAllSports(): void;
   queryAllFormats(): void;
@@ -215,7 +217,7 @@ class TournamentSetting extends React.Component<ITournamentSettingProps, ITourna
       if (nextProps.finalStageSetting != null && nextProps.groupStageSetting != null) {
         this.setState({
           selectedCompetitionFormatPhase1: nextProps.finalStageSetting != null && nextProps.groupStageSetting != null ? (nextProps.tournamentInfo.hasGroupStage === false ? competitionFormatOptions.find(element => element.value === nextProps.finalStageSetting!.formatId) : competitionFormatOptions.find(element => element.value === nextProps.groupStageSetting!.formatId)) : { value: -1, label: '' },
-          selectedCompetitionFormatPhase2: nextProps.finalStageSetting != null ? (competitionFormatOptions2.find(element => element.value === nextProps.finalStageSetting!.formatId) as ValueType<OptionTypeBase>) : { value: -1, label: '' },
+          selectedCompetitionFormatPhase2: nextProps.finalStageSetting != null ? (competitionFormatOptions2.find(element => element.value === nextProps.finalStageSetting!.formatId) ? competitionFormatOptions2.find(element => element.value === nextProps.finalStageSetting!.formatId) as ValueType<OptionTypeBase> : competitionFormatOptions2[0]) : { value: -1, label: '' },
           boPhase1: (nextProps.tournamentInfo.hasGroupStage === false ? boEven.find(element => element.value === nextProps.finalStageSetting!.bo) : boEven.find(element => element.value === nextProps.groupStageSetting!.bo)),
           boPhase2: boEven.find(element => element.value === nextProps.finalStageSetting!.bo),
         });
@@ -225,7 +227,7 @@ class TournamentSetting extends React.Component<ITournamentSettingProps, ITourna
       if (nextProps.finalStageSetting != null && nextProps.groupStageSetting != null) {
         this.setState({
           selectedCompetitionFormatPhase1: nextProps.tournamentInfo.hasGroupStage === false ? competitionFormatOptions.find(element => element.value === nextProps.finalStageSetting!.formatId) : competitionFormatOptions.find(element => element.value === nextProps.groupStageSetting!.formatId),
-          selectedCompetitionFormatPhase2: competitionFormatOptions2.find(element => element.value === nextProps.finalStageSetting!.formatId) as ValueType<OptionTypeBase>,
+          selectedCompetitionFormatPhase2: competitionFormatOptions2.find(element => element.value === nextProps.finalStageSetting!.formatId) ? competitionFormatOptions2.find(element => element.value === nextProps.finalStageSetting!.formatId) as ValueType<OptionTypeBase> : competitionFormatOptions2[0],
           homeWayPhase1: nextProps.tournamentInfo.hasGroupStage === false ? nextProps.finalStageSetting.hasHomeMatch as boolean : nextProps.groupStageSetting.hasHomeMatch as boolean,
           homeWayPhase2: nextProps.finalStageSetting.hasHomeMatch as boolean,
           amountOfTeamsInAGroup: nextProps.groupStageSetting.maxTeamPerTable as number,
@@ -649,64 +651,64 @@ class TournamentSetting extends React.Component<ITournamentSettingProps, ITourna
     });
   }
 
-  private onChangeWin1 = (value: string) => {
-    let tempValue = 0;
-    if (!isNaN(value as unknown as number)) {
-      tempValue = Number(value);
-    } else {
-      tempValue = 0;
-    }
-    this.setState({ win1: tempValue, });
-  }
+  // private onChangeWin1 = (value: string) => {
+  //   let tempValue = 0;
+  //   if (!isNaN(value as unknown as number)) {
+  //     tempValue = Number(value);
+  //   } else {
+  //     tempValue = 0;
+  //   }
+  //   this.setState({ win1: tempValue, });
+  // }
 
-  private onChangeDraw1 = (value: string) => {
-    let tempValue = 0;
-    if (!isNaN(value as unknown as number)) {
-      tempValue = Number(value);
-    } else {
-      tempValue = 0;
-    }
-    this.setState({ draw1: tempValue, });
-  }
+  // private onChangeDraw1 = (value: string) => {
+  //   let tempValue = 0;
+  //   if (!isNaN(value as unknown as number)) {
+  //     tempValue = Number(value);
+  //   } else {
+  //     tempValue = 0;
+  //   }
+  //   this.setState({ draw1: tempValue, });
+  // }
 
-  private onChangeLose1 = (value: string) => {
-    let tempValue = 0;
-    if (!isNaN(value as unknown as number)) {
-      tempValue = Number(value);
-    } else {
-      tempValue = 0;
-    }
-    this.setState({ lose1: tempValue, });
-  }
-  private onChangeWin2 = (value: string) => {
-    let tempValue = 0;
-    if (!isNaN(value as unknown as number)) {
-      tempValue = Number(value);
-    } else {
-      tempValue = 0;
-    }
-    this.setState({ win2: tempValue, });
-  }
+  // private onChangeLose1 = (value: string) => {
+  //   let tempValue = 0;
+  //   if (!isNaN(value as unknown as number)) {
+  //     tempValue = Number(value);
+  //   } else {
+  //     tempValue = 0;
+  //   }
+  //   this.setState({ lose1: tempValue, });
+  // }
+  // private onChangeWin2 = (value: string) => {
+  //   let tempValue = 0;
+  //   if (!isNaN(value as unknown as number)) {
+  //     tempValue = Number(value);
+  //   } else {
+  //     tempValue = 0;
+  //   }
+  //   this.setState({ win2: tempValue, });
+  // }
 
-  private onChangeDraw2 = (value: string) => {
-    let tempValue = 0;
-    if (!isNaN(value as unknown as number)) {
-      tempValue = Number(value);
-    } else {
-      tempValue = 0;
-    }
-    this.setState({ draw2: tempValue, });
-  }
+  // private onChangeDraw2 = (value: string) => {
+  //   let tempValue = 0;
+  //   if (!isNaN(value as unknown as number)) {
+  //     tempValue = Number(value);
+  //   } else {
+  //     tempValue = 0;
+  //   }
+  //   this.setState({ draw2: tempValue, });
+  // }
 
-  private onChangeLose2 = (value: string) => {
-    let tempValue = 0;
-    if (!isNaN(value as unknown as number)) {
-      tempValue = Number(value);
-    } else {
-      tempValue = 0;
-    }
-    this.setState({ lose2: tempValue, });
-  }
+  // private onChangeLose2 = (value: string) => {
+  //   let tempValue = 0;
+  //   if (!isNaN(value as unknown as number)) {
+  //     tempValue = Number(value);
+  //   } else {
+  //     tempValue = 0;
+  //   }
+  //   this.setState({ lose2: tempValue, });
+  // }
 
   render() {
     return (
@@ -738,7 +740,7 @@ class TournamentSetting extends React.Component<ITournamentSettingProps, ITourna
                   <td>Mô tả: </td>
                   <td style={{ paddingTop: '25px' }}><TextInput value={this.state.description} label='Nhập mô tả' error={this.state.descriptionError} errorContent={this.state.descriptionErrorContent} onChangeText={this.onChangeDescription} /></td>
                 </tr>
-                <tr>
+                {(this.props.tournamentStatus === TOURNAMENT_STATUS.INITIALIZING || this.props.tournamentStatus === TOURNAMENT_STATUS.OPENING) && <tr>
                   <td>Bộ môn: </td>
                   <td style={{ height: '80px' }}>
                     {(sportOptions.length > 0 &&
@@ -751,8 +753,8 @@ class TournamentSetting extends React.Component<ITournamentSettingProps, ITourna
                         maxMenuHeight={140}
                       />)}
                   </td>
-                </tr>
-                <tr>
+                </tr>}
+                {(this.props.tournamentStatus === TOURNAMENT_STATUS.INITIALIZING || this.props.tournamentStatus === TOURNAMENT_STATUS.OPENING) && <tr>
                   <td>Cách tổ chức giải: </td>
                   <td>
                     <input type="radio" name="competitionType" onClick={this.OnChoose1} checked={this.state.onePhase} readOnly />
@@ -760,8 +762,8 @@ class TournamentSetting extends React.Component<ITournamentSettingProps, ITourna
                     <input type="radio" name="competitionType" onClick={this.OnChoose2} checked={this.state.twoPhase} readOnly />
                     <label onClick={this.OnChoose2}>2 giai đoạn</label>
                   </td>
-                </tr>
-                <tr>
+                </tr>}
+                {(this.props.tournamentStatus === TOURNAMENT_STATUS.INITIALIZING || this.props.tournamentStatus === TOURNAMENT_STATUS.OPENING) && <tr>
                   <td style={{ width: '225px', height: '80px' }}>{`Thể thức${this.state.onePhase === true ? ': ' : ' vòng bảng: '}`}</td>
                   <td>
                     {this.state.onePhase === true ? <Select
@@ -773,8 +775,8 @@ class TournamentSetting extends React.Component<ITournamentSettingProps, ITourna
                       menuPlacement={'top'}
                     /> : <p>Vòng tròn tính điểm</p>}
                   </td>
-                </tr>
-                {(this.state.selectedCompetitionFormatPhase1 != null &&
+                </tr>}
+                {(this.props.tournamentStatus === TOURNAMENT_STATUS.INITIALIZING || this.props.tournamentStatus === TOURNAMENT_STATUS.OPENING) && (this.state.selectedCompetitionFormatPhase1 != null &&
                   (this.state.selectedCompetitionFormatPhase1 as IParams).value !== 2 &&
                   <tr>
                     <td></td>
@@ -790,7 +792,7 @@ class TournamentSetting extends React.Component<ITournamentSettingProps, ITourna
                     </td>
                   </tr>
                 )}
-                <tr>
+                {(this.props.tournamentStatus === TOURNAMENT_STATUS.INITIALIZING || this.props.tournamentStatus === TOURNAMENT_STATUS.OPENING) && <tr>
                   <td style={{ width: '225px', height: '80px' }}>{`Số set 1 trận${this.state.onePhase === true ? ': ' : ' vòng bảng: '}`}</td>
                   <td>
                     {this.state.selectedCompetitionFormatPhase1 != null &&
@@ -812,8 +814,8 @@ class TournamentSetting extends React.Component<ITournamentSettingProps, ITourna
                         />
                       )}
                   </td>
-                </tr>
-                <tr>
+                </tr>}
+                {/* <tr>
                   <td style={{ width: '225px', height: '80px' }}>{`Cách tính điểm${this.state.onePhase === true ? ': ' : ' vòng bảng: '}`}</td>
                   <td>
                   </td>
@@ -835,10 +837,10 @@ class TournamentSetting extends React.Component<ITournamentSettingProps, ITourna
                   <td style={{ paddingTop: '25px' }}>
                     <TextInput value={this.state.lose1 as unknown as string} style={{ width: '100px' }} label='' error={this.state.lose1Error} errorContent={this.state.lose1ErrorContent} onChangeText={this.onChangeLose1} />
                   </td>
-                </tr>
-                {(this.state.twoPhase === true &&
+                </tr> */}
+                {(this.props.tournamentStatus === TOURNAMENT_STATUS.INITIALIZING || this.props.tournamentStatus === TOURNAMENT_STATUS.OPENING) && (this.state.twoPhase === true &&
                   <tr>
-                    <td>Số đội 1 bảng</td>
+                    <td>Số đội tối đa 1 bảng</td>
                     <td style={{ paddingTop: '25px' }}>
                       <TextInput
                         style={{ width: 250 }}
@@ -852,7 +854,7 @@ class TournamentSetting extends React.Component<ITournamentSettingProps, ITourna
                     </td>
                   </tr>
                 )}
-                {(this.state.twoPhase === true &&
+                {(this.props.tournamentStatus === TOURNAMENT_STATUS.INITIALIZING || this.props.tournamentStatus === TOURNAMENT_STATUS.OPENING) && (this.state.twoPhase === true &&
                   <tr>
                     <td>Số đội đi tiếp 1 bảng</td>
                     <td style={{ paddingTop: '25px' }}>
@@ -867,7 +869,7 @@ class TournamentSetting extends React.Component<ITournamentSettingProps, ITourna
                       />
                     </td>
                   </tr>)}
-                {(this.state.twoPhase === true &&
+                {(this.props.tournamentStatus === TOURNAMENT_STATUS.INITIALIZING || this.props.tournamentStatus === TOURNAMENT_STATUS.OPENING) && (this.state.twoPhase === true &&
                   <tr>
                     <td>Thể thức vòng chung kết:</td>
                     <td style={{ height: '80px' }}>
@@ -881,7 +883,7 @@ class TournamentSetting extends React.Component<ITournamentSettingProps, ITourna
                       />
                     </td>
                   </tr>)}
-                {(this.state.twoPhase === true && <tr>
+                {/* {(this.state.twoPhase === true && <tr>
                   <td style={{ width: '225px', height: '80px' }}>{`Cách tính điểm vòng chung kết: `}</td>
                   <td>
                   </td>
@@ -903,8 +905,8 @@ class TournamentSetting extends React.Component<ITournamentSettingProps, ITourna
                   <td style={{ paddingTop: '25px' }}>
                     <TextInput value={this.state.lose2 as unknown as string} style={{ width: '100px' }} label='' error={this.state.lose2Error} errorContent={this.state.lose2ErrorContent} onChangeText={this.onChangeLose2} />
                   </td>
-                </tr>)}
-                {(this.state.twoPhase === true && this.state.selectedCompetitionFormatPhase2 != null && (this.state.selectedCompetitionFormatPhase2 as IParams).value !== 2 && ((this.state.selectedCompetitionFormatPhase2 as IParams).value === 3 ?
+                </tr>)} */}
+                {(this.props.tournamentStatus === TOURNAMENT_STATUS.INITIALIZING || this.props.tournamentStatus === TOURNAMENT_STATUS.OPENING) && (this.state.twoPhase === true && this.state.selectedCompetitionFormatPhase2 != null && (this.state.selectedCompetitionFormatPhase2 as IParams).value !== 2 && ((this.state.selectedCompetitionFormatPhase2 as IParams).value === 3 ?
                   <tr>
                     <td></td>
                     <td>
@@ -932,7 +934,7 @@ class TournamentSetting extends React.Component<ITournamentSettingProps, ITourna
                     </td>
                   </tr>
                 ))}
-                {this.state.twoPhase === true && <tr>
+                {(this.props.tournamentStatus === TOURNAMENT_STATUS.INITIALIZING || this.props.tournamentStatus === TOURNAMENT_STATUS.OPENING) && this.state.twoPhase === true && <tr>
                   <td style={{ width: '225px', height: '80px' }}>{`Số set 1 trận vòng chung kết: `}</td>
                   <td>
                     {this.state.selectedCompetitionFormatPhase2 != null &&
@@ -996,7 +998,7 @@ class TournamentSetting extends React.Component<ITournamentSettingProps, ITourna
               </table>
 
 
-{/* 
+              {/* 
               <div className={'TournamentSetting-listManager-container'}>
                 <p>Tên giải:</p>
                 <div className={'TournamentSetting-tounamentName-container-container'}>

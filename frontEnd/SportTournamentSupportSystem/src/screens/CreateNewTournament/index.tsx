@@ -79,24 +79,24 @@ interface ICreateNewTournamentState {
   amountOfTeamsGoOnInAGroup: number;
   amountOfTeamsGoOnInAGroupError: boolean;
   amountOfTeamsGoOnInAGroupErrorContent: string;
-  win1: number;
-  win1Error: boolean;
-  win1ErrorContent: string;
-  draw1: number;
-  draw1Error: boolean;
-  draw1ErrorContent: string;
-  lose1: number;
-  lose1Error: boolean;
-  lose1ErrorContent: string;
-  win2: number;
-  win2Error: boolean;
-  win2ErrorContent: string;
-  draw2: number;
-  draw2Error: boolean;
-  draw2ErrorContent: string;
-  lose2: number;
-  lose2Error: boolean;
-  lose2ErrorContent: string;
+  // win1: number;
+  // win1Error: boolean;
+  // win1ErrorContent: string;
+  // draw1: number;
+  // draw1Error: boolean;
+  // draw1ErrorContent: string;
+  // lose1: number;
+  // lose1Error: boolean;
+  // lose1ErrorContent: string;
+  // win2: number;
+  // win2Error: boolean;
+  // win2ErrorContent: string;
+  // draw2: number;
+  // draw2Error: boolean;
+  // draw2ErrorContent: string;
+  // lose2: number;
+  // lose2Error: boolean;
+  // lose2ErrorContent: string;
 }
 
 let sportOptions: IParams[] = [];
@@ -110,7 +110,6 @@ const boOdd = [
 ];
 const boEven = [
   { value: 1, label: '1' },
-  { value: 2, label: '2' },
   { value: 3, label: '3' },
   { value: 5, label: '5' },
   { value: 7, label: '7' },
@@ -161,24 +160,24 @@ class CreateNewTournament extends React.Component<ICreateNewTournamentProps, ICr
       homeWayPhase1: false,
       boPhase1: { value: 1, label: '1' },
       boPhase2: { value: 1, label: '1' },
-      win1: 3,
-      win1Error: false,
-      win1ErrorContent: '',
-      draw1: 1,
-      draw1Error: false,
-      draw1ErrorContent: '',
-      lose1: 0,
-      lose1Error: false,
-      lose1ErrorContent: '',
-      win2: 3,
-      win2Error: false,
-      win2ErrorContent: '',
-      draw2: 1,
-      draw2Error: false,
-      draw2ErrorContent: '',
-      lose2: 0,
-      lose2Error: false,
-      lose2ErrorContent: '',
+      // win1: 3,
+      // win1Error: false,
+      // win1ErrorContent: '',
+      // draw1: 1,
+      // draw1Error: false,
+      // draw1ErrorContent: '',
+      // lose1: 0,
+      // lose1Error: false,
+      // lose1ErrorContent: '',
+      // win2: 3,
+      // win2Error: false,
+      // win2ErrorContent: '',
+      // draw2: 1,
+      // draw2Error: false,
+      // draw2ErrorContent: '',
+      // lose2: 0,
+      // lose2Error: false,
+      // lose2ErrorContent: '',
     };
   }
 
@@ -299,64 +298,64 @@ class CreateNewTournament extends React.Component<ICreateNewTournamentProps, ICr
     this.setState({ amountOfTeamsGoOnInAGroup: tempValue, });
   }
 
-  private onChangeWin1 = (value: string) => {
-    let tempValue = 0;
-    if (!isNaN(value as unknown as number)) {
-      tempValue = Number(value);
-    } else {
-      tempValue = 0;
-    }
-    this.setState({ win1: tempValue, });
-  }
+  // private onChangeWin1 = (value: string) => {
+  //   let tempValue = 0;
+  //   if (!isNaN(value as unknown as number)) {
+  //     tempValue = Number(value);
+  //   } else {
+  //     tempValue = 0;
+  //   }
+  //   this.setState({ win1: tempValue, });
+  // }
 
-  private onChangeDraw1 = (value: string) => {
-    let tempValue = 0;
-    if (!isNaN(value as unknown as number)) {
-      tempValue = Number(value);
-    } else {
-      tempValue = 0;
-    }
-    this.setState({ draw1: tempValue, });
-  }
+  // private onChangeDraw1 = (value: string) => {
+  //   let tempValue = 0;
+  //   if (!isNaN(value as unknown as number)) {
+  //     tempValue = Number(value);
+  //   } else {
+  //     tempValue = 0;
+  //   }
+  //   this.setState({ draw1: tempValue, });
+  // }
 
-  private onChangeLose1 = (value: string) => {
-    let tempValue = 0;
-    if (!isNaN(value as unknown as number)) {
-      tempValue = Number(value);
-    } else {
-      tempValue = 0;
-    }
-    this.setState({ lose1: tempValue, });
-  }
-  private onChangeWin2 = (value: string) => {
-    let tempValue = 0;
-    if (!isNaN(value as unknown as number)) {
-      tempValue = Number(value);
-    } else {
-      tempValue = 0;
-    }
-    this.setState({ win2: tempValue, });
-  }
+  // private onChangeLose1 = (value: string) => {
+  //   let tempValue = 0;
+  //   if (!isNaN(value as unknown as number)) {
+  //     tempValue = Number(value);
+  //   } else {
+  //     tempValue = 0;
+  //   }
+  //   this.setState({ lose1: tempValue, });
+  // }
+  // private onChangeWin2 = (value: string) => {
+  //   let tempValue = 0;
+  //   if (!isNaN(value as unknown as number)) {
+  //     tempValue = Number(value);
+  //   } else {
+  //     tempValue = 0;
+  //   }
+  //   this.setState({ win2: tempValue, });
+  // }
 
-  private onChangeDraw2 = (value: string) => {
-    let tempValue = 0;
-    if (!isNaN(value as unknown as number)) {
-      tempValue = Number(value);
-    } else {
-      tempValue = 0;
-    }
-    this.setState({ draw2: tempValue, });
-  }
+  // private onChangeDraw2 = (value: string) => {
+  //   let tempValue = 0;
+  //   if (!isNaN(value as unknown as number)) {
+  //     tempValue = Number(value);
+  //   } else {
+  //     tempValue = 0;
+  //   }
+  //   this.setState({ draw2: tempValue, });
+  // }
 
-  private onChangeLose2 = (value: string) => {
-    let tempValue = 0;
-    if (!isNaN(value as unknown as number)) {
-      tempValue = Number(value);
-    } else {
-      tempValue = 0;
-    }
-    this.setState({ lose2: tempValue, });
-  }
+  // private onChangeLose2 = (value: string) => {
+  //   let tempValue = 0;
+  //   if (!isNaN(value as unknown as number)) {
+  //     tempValue = Number(value);
+  //   } else {
+  //     tempValue = 0;
+  //   }
+  //   this.setState({ lose2: tempValue, });
+  // }
 
   private handleChangeStartDate = (value: Date) => {
     if (isAfter(value, this.state.endDate)) {
@@ -639,12 +638,12 @@ class CreateNewTournament extends React.Component<ICreateNewTournamentProps, ICr
                     )}
                 </td>
               </tr>
-              <tr>
+              {/* <tr>
                 <td style={{ width: '225px', height: '80px' }}>{`Cách tính điểm${this.state.onePhase === true ? ': ' : ' vòng bảng: '}`}</td>
                 <td>
                 </td>
-              </tr>
-              <tr>
+              </tr> */}
+              {/* <tr>
                 <td>Thắng</td>
                 <td style={{ paddingTop: '25px' }}>
                   <TextInput value={this.state.win1 as unknown as string} style={{ width: '100px' }} label='' error={this.state.win1Error} errorContent={this.state.win1ErrorContent} onChangeText={this.onChangeWin1} />
@@ -661,7 +660,7 @@ class CreateNewTournament extends React.Component<ICreateNewTournamentProps, ICr
                 <td style={{ paddingTop: '25px' }}>
                   <TextInput value={this.state.lose1 as unknown as string} style={{ width: '100px' }} label='' error={this.state.lose1Error} errorContent={this.state.lose1ErrorContent} onChangeText={this.onChangeLose1} />
                 </td>
-              </tr>
+              </tr> */}
               {(this.state.selectedCompetitionFormatPhase1 != null &&
                 (this.state.selectedCompetitionFormatPhase1 as IParams).value !== 2 &&
                 <tr>
@@ -680,7 +679,7 @@ class CreateNewTournament extends React.Component<ICreateNewTournamentProps, ICr
               )}
               {(this.state.twoPhase === true &&
                 <tr>
-                  <td>Số đội 1 bảng</td>
+                <td>Số đội tối đa 1 bảng</td>
                   <td style={{ paddingTop: '25px' }}>
                     <TextInput
                       style={{ width: 250 }}
@@ -723,21 +722,15 @@ class CreateNewTournament extends React.Component<ICreateNewTournamentProps, ICr
                     />
                   </td>
                 </tr>)}
-              {(this.state.twoPhase === true && <tr>
+              {/* {(this.state.twoPhase === true && <tr>
                 <td style={{ width: '225px', height: '80px' }}>{`Cách tính điểm vòng chung kết: `}</td>
                 <td>
                 </td>
-              </tr>)}
-              {(this.state.twoPhase === true && <tr>
+              </tr>)} */}
+              {/* {(this.state.twoPhase === true && <tr>
                 <td>Thắng</td>
                 <td style={{ paddingTop: '25px' }}>
                   <TextInput value={this.state.win2 as unknown as string} style={{ width: '100px' }} label='' error={this.state.win2Error} errorContent={this.state.win2ErrorContent} onChangeText={this.onChangeWin2} />
-                </td>
-              </tr>)}
-              {(this.state.twoPhase === true && <tr>
-                <td>Hòa</td>
-                <td style={{ paddingTop: '25px' }}>
-                  <TextInput value={this.state.draw2 as unknown as string} style={{ width: '100px' }} label='' error={this.state.draw2Error} errorContent={this.state.draw2ErrorContent} onChangeText={this.onChangeDraw2} />
                 </td>
               </tr>)}
               {(this.state.twoPhase === true && <tr>
@@ -745,7 +738,7 @@ class CreateNewTournament extends React.Component<ICreateNewTournamentProps, ICr
                 <td style={{ paddingTop: '25px' }}>
                   <TextInput value={this.state.lose2 as unknown as string} style={{ width: '100px' }} label='' error={this.state.lose2Error} errorContent={this.state.lose2ErrorContent} onChangeText={this.onChangeLose2} />
                 </td>
-              </tr>)}
+              </tr>)} */}
               {(this.state.twoPhase === true && (this.state.selectedCompetitionFormatPhase2 as IParams).value !== 2 && ((this.state.selectedCompetitionFormatPhase2 as IParams).value === 3 ?
                 <tr>
                   <td></td>
