@@ -149,8 +149,8 @@ class CreateNewTournament extends React.Component<ICreateNewTournamentProps, ICr
       twoPhase: false,
       donorError: false,
       donorErrorContent: '',
-      startDate: new Date(),
-      endDate: new Date(),
+      startDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0, 0),
+      endDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 23, 59, 59, 0),
       startDateError: false,
       endDateError: false,
       endDateErrorContent: '',
@@ -358,6 +358,7 @@ class CreateNewTournament extends React.Component<ICreateNewTournamentProps, ICr
   // }
 
   private handleChangeStartDate = (value: Date) => {
+    // console.log('this.state.startDate.getDate', this.state.startDate.setHours(0,0,0,0));
     if (isAfter(value, this.state.endDate)) {
       this.setState({
         startDate: value,
@@ -793,7 +794,7 @@ class CreateNewTournament extends React.Component<ICreateNewTournamentProps, ICr
                     selected={this.state.startDate}
                     dateFormat="dd/MM/yyyy"
                     onChange={this.handleChangeStartDate}
-                    minDate={new Date()}
+                    minDate={new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0, 0)}
                   />
                 </td>
               </tr>
@@ -814,7 +815,7 @@ class CreateNewTournament extends React.Component<ICreateNewTournamentProps, ICr
                     selected={this.state.endDate}
                     onChange={this.handleChangeEndDate}
                     dateFormat="dd/MM/yyyy"
-                    minDate={new Date()}
+                    minDate={new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 23, 59, 59, 0)}
                   />
                 </td>
               </tr>
