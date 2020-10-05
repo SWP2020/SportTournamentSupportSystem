@@ -1213,10 +1213,10 @@ class CompetitionInfo extends React.Component<ICompetitionInfoProps, ICompetitio
                 <h1>Form Báo cáo</h1>
               </div>
               <div className={'Report-modal-subject-input-container'}>
-                <p>Tiêu đề: </p>
+                <p style={{ color: 'white' }}>Tiêu đề: </p>
                 <input style={{ width: '200px', height: '25px', marginLeft: '20px' }} type={'text'} onChange={this.onChangeSubjectForm} value={this.state.subjectForm} />
               </div>
-              <p>Nội dung báo cáo: </p>
+              <p style={{ color: 'white' }}>Nội dung báo cáo: </p>
               <textarea rows={7} cols={60} value={this.state.detailReportForm} onChange={this.onChangeDetailReportForm}></textarea>
               {this.state.subjectFormError === true && <p style={{ color: 'red' }}>{this.state.subjectFormErrorContent}</p>}
               {this.state.detailReportFormError === true && <p style={{ color: 'red' }}>{this.state.detailReportFormErrorContent}</p>}

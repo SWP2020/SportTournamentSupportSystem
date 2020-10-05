@@ -1,11 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { setHours, setMinutes } from 'date-fns';
+import { isAfter, isBefore, setHours, setMinutes } from 'date-fns';
 import DatePicker from "react-datepicker";
 import { IParams, IBigRequest } from 'interfaces/common';
 import { IState } from 'redux-saga/reducers';
 import { MATCH_STATUS } from 'global';
-import { formatStringToDate, formatDateToString } from 'utils/datetime';
+import { formatStringToDate, formatDateToString, formatDateToDisplay } from 'utils/datetime';
 import { updateMatchInfo, updateMatchInfoBeforeStart } from 'components/MatchSetting/actions';
 import './styles.css';
 
@@ -19,6 +19,9 @@ interface IMatchDetailProps extends React.ClassAttributes<MatchDetail> {
   lowerBracket?: boolean;
   tableId: number | null;
   matchType: 'se' | 'win' | 'lose' | 'rr' | 'sum';
+  tournamentInfo: IParams | null;
+  dateNextRound: Date | null;
+  datePreviousRound: Date | null;
 
   updateMatchInfo(params: IBigRequest): void;
   updateMatchInfoBeforeStart(params: IBigRequest): void;
@@ -29,6 +32,8 @@ interface IMatchDetailState {
   winner: boolean | null;
   location: string;
   time: Date;
+  timeError: boolean;
+  timeErrorContent: string;
   team1Score: number;
   team2Score: number;
 }
@@ -42,6 +47,8 @@ class MatchDetail extends React.Component<IMatchDetailProps, IMatchDetailState> 
       winner: null,
       location: '',
       time: new Date(),
+      timeError: false,
+      timeErrorContent: '',
       team1Score: 0,
       team2Score: 0,
     };
@@ -51,7 +58,7 @@ class MatchDetail extends React.Component<IMatchDetailProps, IMatchDetailState> 
     if (this.state.editMode !== nextState.editMode && nextState.editMode === true) {
       this.setState({
         location: nextProps.info != null ? nextProps.info.location as string : '',
-        time: nextProps.info != null ? formatStringToDate(nextProps.info.time as string, 'yyyy-MM-dd HH:mm:ss') : new Date(),
+        time: nextProps.info != null ? (nextProps.info.time === '' ? new Date() : formatStringToDate(nextProps.info.time as string, 'yyyy-MM-dd HH:mm:ss')) : new Date(),
       })
     }
     if (((this.props.allMatches !== nextProps.allMatches || nextProps.matchInfo !== this.props.matchInfo))) {
@@ -155,6 +162,14 @@ class MatchDetail extends React.Component<IMatchDetailProps, IMatchDetailState> 
   }
 
   private offEditMode = () => {
+    const { timeError, timeErrorContent } = this.validateTime();
+    this.setState({
+      timeError,
+      timeErrorContent,
+    });
+    if (timeError === true) {
+      return;
+    }
     if (this.props.matchInfo != null) {
       const params = {
         path: '',
@@ -224,6 +239,41 @@ class MatchDetail extends React.Component<IMatchDetailProps, IMatchDetailState> 
     });
   }
 
+  private validateTime = () => {
+    let timeError = false;
+    let timeErrorContent = '';
+    if (isAfter(this.state.time, formatStringToDate((this.props.tournamentInfo!.Tournament as IParams).closingTime as string, 'yyyy-MM-dd HH:mm:ss'))) {
+      timeError = true;
+      timeErrorContent = `Thời gian không được sau ngày bế mạc giải (${formatDateToDisplay((this.props.tournamentInfo!.Tournament as IParams).closingTime as string, 'yyyy-MM-dd', 'yyyy-MM-dd HH:mm:ss')})`;
+    }
+    if (isBefore(this.state.time, formatStringToDate((this.props.tournamentInfo!.Tournament as IParams).openingTime as string, 'yyyy-MM-dd HH:mm:ss'))) {
+      timeError = true;
+      timeErrorContent = `Thời gian không được trước ngày khai mạc giải (${formatDateToDisplay((this.props.tournamentInfo!.Tournament as IParams).openingTime as string, 'yyyy-MM-dd', 'yyyy-MM-dd HH:mm:ss')})`;
+    }
+    if (this.props.datePreviousRound != null) {
+      if (isBefore(this.state.time, this.props.datePreviousRound)) {
+        timeError = true;
+        timeErrorContent = `Thời gian không được trước thời gian của trận muộn nhất vòng trước (${formatDateToString(this.props.datePreviousRound, 'yyyy-MM-dd HH:mm:ss')})`;
+      } else {
+        if (this.props.dateNextRound != null) {
+          if (isAfter(this.state.time, this.props.dateNextRound)) {
+            timeError = true;
+            timeErrorContent = `Thời gian không được sau thời gian của trận sớm nhất vòng sau (${formatDateToString(this.props.dateNextRound, 'yyyy-MM-dd HH:mm:ss')})`;
+          }
+        }
+      }
+    } else {
+      if (this.props.dateNextRound != null) {
+        if (isAfter(this.state.time, this.props.dateNextRound)) {
+          timeError = true;
+          timeErrorContent = `Thời gian không được sau thời gian của trận sớm nhất vòng sau (${formatDateToString(this.props.dateNextRound, 'yyyy-MM-dd HH:mm:ss')})`;
+        }
+      }
+    }
+
+    return { timeError, timeErrorContent };
+  }
+
   private handleChangeTime = (value: Date) => {
     this.setState({
       time: value,
@@ -284,8 +334,8 @@ class MatchDetail extends React.Component<IMatchDetailProps, IMatchDetailState> 
         <div
           className="MatchDetail-info-container"
         >
-          {this.state.editMode === false ? <p className={'MatchDetail-team'}>Địa điểm: {this.props.info.location}</p> : <label style={{color: 'white'}}>Địa điểm: <input value={this.state.location} type={'text'} onChange={this.onChangeLocation} /></label>}
-          {this.state.editMode === false ? <p className={'MatchDetail-team'}>Thời gian: {this.props.info.time}</p> : <label style={{ color: 'white' }}>Thời gian: 
+          {this.state.editMode === false ? <p className={'MatchDetail-team'}>Địa điểm: {this.props.info.location != null && (this.props.info.location as string).trim() !== '' ? this.props.info.location : '(Chưa có)'}</p> : <label style={{ color: 'white' }}>Địa điểm: <input value={this.state.location} type={'text'} onChange={this.onChangeLocation} /></label>}
+          {this.state.editMode === false ? <p className={'MatchDetail-team'}>Thời gian: {this.props.info.time != null && (this.props.info.time as string).trim() !== '' ? this.props.info.time : '(Chưa có)'}</p> : <label style={{ color: 'white' }}>Thời gian:
             <DatePicker
               selected={this.state.time}
               onChange={this.handleChangeTime}
@@ -342,6 +392,7 @@ class MatchDetail extends React.Component<IMatchDetailProps, IMatchDetailState> 
               ]}
               dateFormat="MMMM d, yyyy HH:mm"
             /></label>}
+          <div className="MatchDetail-error-text-container">{this.state.timeError && <p className="TextInput-error-text">{this.state.timeErrorContent}</p>}</div>
         </div >
       </div >
     );
@@ -351,6 +402,7 @@ class MatchDetail extends React.Component<IMatchDetailProps, IMatchDetailState> 
 const mapStateToProps = (state: IState) => {
   return {
     listTeam: state.listTeam,
+    tournamentInfo: state.tournamentInfo,
   };
 };
 
