@@ -8,6 +8,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -63,8 +64,8 @@ public class UsersAPI {
 				limit = 3;
 			if (page == null)
 				page = 1;
-
-			Pageable pageable = PageRequest.of(page - 1, limit);
+			Sort sortable = Sort.by("id").descending();
+			Pageable pageable = PageRequest.of(page - 1, limit, sortable);
 			findPage = (List<UserEntity>) service.findByRoleId(pageable, 2l);
 			
 			

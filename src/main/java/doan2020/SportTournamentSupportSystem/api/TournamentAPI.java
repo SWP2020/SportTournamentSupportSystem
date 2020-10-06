@@ -477,27 +477,6 @@ public class TournamentAPI {
 							thisTournament = service.update(id, thisTournament);
 							thisTournamentDTO = converter.toDTO(thisTournament);
 
-							System.out.println("tounament" + id);
-							Long managerId = thisTournament.getCreator().getId();
-
-							HashSet<UserEntity> users = new HashSet<>();
-
-							List<TeamEntity> teamEntities = (List<TeamEntity>) teamService
-									.findByTournamentIdAndStatus(id, Const.TEAM_STATUS_JOINED);
-
-							for (TeamEntity teamEntity : teamEntities) {
-								if (teamEntity.getCreator().getId().longValue() != managerId.longValue()) {
-									users.add(teamEntity.getCreator());
-								}
-							}
-
-							for (UserEntity user : users) {
-								System.out.println("CreatorId: " + user.getId());
-								String mail = user.getEmail();
-								String userName = user.getUsername();
-								sendingMailService.sendNotificationMail(mail, thisTournament.getFullName(), userName);
-							}
-
 						}
 					}
 
@@ -522,6 +501,80 @@ public class TournamentAPI {
 		response.setResult(result);
 		response.setConfig(config);
 		System.out.println("TournamentAPI: startTournament: finish");
+		return new ResponseEntity<Response>(response, httpStatus);
+	}
+	
+	@PostMapping("/sendMail")
+	public ResponseEntity<Response> sendMail(@RequestParam Long id) {
+		System.out.println("TournamentAPI: sendMail: start");
+		Response response = new Response();
+		HttpStatus httpStatus = HttpStatus.OK;
+		Map<String, Object> config = new HashMap<String, Object>();
+		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> error = new HashMap<String, Object>();
+
+		TournamentEntity thisTournament = new TournamentEntity();
+		TournamentDTO thisTournamentDTO = new TournamentDTO();
+
+		System.out.println("CP1");
+		try {
+			if (id == null) {// id null
+				result.put("Tournament", null);
+				config.put("Global", 0);
+				error.put("MessageCode", 1);
+				error.put("Message", "Required param id");
+			} else {// id not null
+				System.out.println("CP0-1");
+				thisTournament = service.findOneById(id);
+				System.out.println("CP2");
+				if (thisTournament == null) {
+					result.put("Tournament", null);
+					config.put("Global", 0);
+					error.put("MessageCode", 1);
+					error.put("Message", "Tournament is not exist");
+				} else {
+					System.out.println("tounament" + id);
+					Long managerId = thisTournament.getCreator().getId();
+
+					HashSet<UserEntity> users = new HashSet<>();
+
+					List<TeamEntity> teamEntities = (List<TeamEntity>) teamService
+							.findByTournamentIdAndStatus(id, Const.TEAM_STATUS_JOINED);
+
+					for (TeamEntity teamEntity : teamEntities) {
+						if (teamEntity.getCreator().getId().longValue() != managerId.longValue()) {
+							users.add(teamEntity.getCreator());
+						}
+					}
+
+					for (UserEntity user : users) {
+						System.out.println("CreatorId: " + user.getId());
+						String mail = user.getEmail();
+						String userName = user.getUsername();
+						sendingMailService.sendNotificationMail(mail, thisTournament.getFullName(), userName);
+					}
+
+						}
+					}
+
+					config.put("Global", 0);
+					error.put("Message", "Send mail success");
+				
+
+			System.out.println("TournamentAPI: sendMail: no exception");
+		} catch (Exception e) {
+			System.out.println("TournamentAPI: sendMail: has exception");
+			System.out.println(e);
+			result.put("Tournament", null);
+			config.put("Global", 0);
+			error.put("MessageCode", 1);
+			error.put("Message", "Đã có lỗi xảy ra, vui lòng thử lại");
+		}
+
+		response.setError(error);
+		response.setResult(result);
+		response.setConfig(config);
+		System.out.println("TournamentAPI: sendMail: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
 
