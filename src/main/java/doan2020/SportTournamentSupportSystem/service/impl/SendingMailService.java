@@ -75,7 +75,7 @@ public class SendingMailService {
 	}
 	
 	public void sendNotificationMail(String toEmail, String tournamentName, String userName) {
-		String subject = "New Password for your account";
+		String subject = "Notification for start "+tournamentName;
 		String body = "";
 		try {
 			Template t = templates.getTemplate("notification.ftl");

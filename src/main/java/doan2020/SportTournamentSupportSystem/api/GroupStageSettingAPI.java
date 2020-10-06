@@ -157,6 +157,8 @@ public class GroupStageSettingAPI {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> error = new HashMap<String, Object>();
 		GroupStageSettingEntity groupStageSettingEntity = new GroupStageSettingEntity();
+		
+		System.out.println(groupStageSetting.toString());
 
 		try {
 			groupStageSettingEntity = converter.toEntity(groupStageSetting);

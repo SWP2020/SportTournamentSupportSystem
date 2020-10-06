@@ -20,4 +20,8 @@ public interface IScheduleService {
 	public ScheduleDTO changeMatchInfo(TournamentEntity Tournament, Integer nodeId, Integer degree, Integer location,
 			Integer tableId, HashMap<String, Object> newInfo);
 
+	public void swapTwoTeamInRankingTable(TournamentEntity thisTournament, int tableId, Long team1Id, Long team2Id);
+	
+	public void updateNote(TournamentEntity thisTournament, int tableId, Long teamId, String note);
+
 }
