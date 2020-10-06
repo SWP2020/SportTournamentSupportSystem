@@ -16,6 +16,7 @@ import {
 import './styles.css';
 import { formatTournamentStatus } from 'utils/common';
 import { TOURNAMENT_STATUS } from 'global';
+import { formatDateToDisplay } from 'utils/datetime';
 
 interface IAllTournamentsProps extends React.ClassAttributes<AllTournaments> {
   listTournament: IParams | null;
@@ -153,7 +154,7 @@ class AllTournaments extends React.Component<IAllTournamentsProps, IAllTournamen
           width: 250,
           style: { justifyContent: 'center' },
           element: (rowData: IParams, rowIndex: number, style?: React.CSSProperties) => (
-            <div style={style}>{(rowData.Tournament as IParams).openingTime}</div>
+            <div style={style}>{formatDateToDisplay((rowData.Tournament as IParams).openingTime as string,'yyyy-MM-dd' , 'yyyy-MM-dd HH:mm:ss')}</div>
           ),
         },
         {
@@ -169,7 +170,7 @@ class AllTournaments extends React.Component<IAllTournamentsProps, IAllTournamen
           width: 250,
           style: { justifyContent: 'center' },
           element: (rowData: IParams, rowIndex: number, style?: React.CSSProperties) => (
-            <div style={style}>{(rowData.Tournament as IParams).closingTime}</div>
+            <div style={style}>{formatDateToDisplay((rowData.Tournament as IParams).closingTime as string, 'yyyy-MM-dd', 'yyyy-MM-dd HH:mm:ss')}</div>
           ),
         },
         // {

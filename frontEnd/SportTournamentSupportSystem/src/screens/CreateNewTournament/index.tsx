@@ -617,7 +617,7 @@ class CreateNewTournament extends React.Component<ICreateNewTournamentProps, ICr
                 </td>
               </tr>
               <tr>
-                <td style={{ width: '225px', height: '80px' }}>{`Số set 1 trận${this.state.onePhase === true ? ': ' : ' vòng bảng: '}`}</td>
+                <td style={{ width: '225px', height: '80px' }}>{`Số set đấu tối đa 1 trận${this.state.onePhase === true ? ': ' : ' vòng bảng: '}`}</td>
                 <td>
                   {this.state.selectedCompetitionFormatPhase1 != null &&
                     ((this.state.selectedCompetitionFormatPhase1 as IParams).value !== 3 ?
@@ -769,7 +769,7 @@ class CreateNewTournament extends React.Component<ICreateNewTournamentProps, ICr
                 </tr>
               ))}
               {this.state.twoPhase === true && <tr>
-                <td style={{ width: '225px', height: '80px' }}>{`Số set 1 trận vòng chung kết: `}</td>
+                <td style={{ width: '225px', height: '80px' }}>{`Số set đấu tối đa 1 trận vòng chung kết: `}</td>
                 <td>
                   {this.state.selectedCompetitionFormatPhase2 != null &&
                     <Select
