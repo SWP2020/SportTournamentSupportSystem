@@ -335,8 +335,8 @@ class MatchDetail extends React.Component<IMatchDetailProps, IMatchDetailState> 
         <div
           className="MatchDetail-info-container"
         >
-          {this.state.editMode === false ? <p className={'MatchDetail-team'}>Địa điểm: {this.props.info.location != null && (this.props.info.location as string).trim() !== '' ? this.props.info.location : (this.props.matchInfo != null && (this.props.matchInfo.location as string).trim() !== '' ? this.props.matchInfo.location : '(Chưa có)')}</p> : <label style={{ color: 'white' }}>Địa điểm: <input value={this.state.location} type={'text'} onChange={this.onChangeLocation} /></label>}
-          {this.state.editMode === false ? <p className={'MatchDetail-team'}>Thời gian: {this.props.info.time != null && (this.props.info.time as string).trim() !== '' ? this.props.info.time : (this.props.matchInfo != null && (this.props.matchInfo.time as string).trim() !== '' ? this.props.matchInfo.time : '(Chưa có)')}</p> : <label style={{ color: 'white' }}>Thời gian:
+          {this.state.editMode === false ? <p className={'MatchDetail-team'}>Địa điểm: {this.props.info.location != null && this.props.info.location !== '' ? this.props.info.location : (this.props.matchInfo != null && this.props.matchInfo.location !== '' ? this.props.matchInfo.location : '(Chưa có)')}</p> : <label style={{ color: 'white' }}>Địa điểm: <input value={this.state.location} type={'text'} onChange={this.onChangeLocation} /></label>}
+          {this.state.editMode === false ? <p className={'MatchDetail-team'}>Thời gian: {this.props.info.time != null && this.props.info.time !== '' ? this.props.info.time : (this.props.matchInfo != null && this.props.matchInfo.time !== '' ? this.props.matchInfo.time : '(Chưa có)')}</p> : <label style={{ color: 'white' }}>Thời gian:
             <DatePicker
               selected={this.state.time}
               onChange={this.handleChangeTime}
