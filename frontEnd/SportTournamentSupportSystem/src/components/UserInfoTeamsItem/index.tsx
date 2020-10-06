@@ -372,8 +372,6 @@ class UserInfoTeamsItem extends React.Component<IUserInfoTeamsItemProps, IUserIn
                   <p>Tên ngắn: {this.props.info.shortName}</p> :
                   <TextInput label={'Tên ngắn đội'} value={this.state.teamShortName} error={this.state.teamShortNameError} errorContent={this.state.teamShortNameErrorContent} onChangeText={this.onChangeTeamShortName} onBlur={this.onBlurTeamShortName} />
               }
-              <p>Giải tham gia: {this.props.tournamentInfo != null && this.props.tournamentInfo.Tournament != null && (this.props.tournamentInfo.Tournament as unknown as IParams).fullName}</p>
-              <p>Bộ môn tham gia: Bóng đá</p>
               <p>Quản lý của đội: <Link style={{ fontWeight: 'bold' }} target={'_blank'} to={`/user/${this.props.info.creatorId}`} rel="noopener noreferrer">
                 {this.props.userInfo != null ? `${(this.props.userInfo.User as unknown as IParams).firstName} ${(this.props.userInfo.User as unknown as IParams).lastName}` : ''}
               </Link></p>

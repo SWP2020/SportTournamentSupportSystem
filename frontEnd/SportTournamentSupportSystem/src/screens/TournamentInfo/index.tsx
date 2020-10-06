@@ -589,13 +589,13 @@ class TournamentInfo extends React.Component<ITournamentInfoProps, ITournamentIn
     let teamNameInFormErrorContent = '';
     let teamShortNameInFormErrorContent = '';
     let teamShortNameInFormError = false;
-    if (this.state.teamNameInForm.trim() === '') {
+    if (this.state.teamNameInForm.trim() === '' || !config.regex.teamName.test(this.state.teamNameInForm)) {
       teamNameInFormError = true;
-      teamNameInFormErrorContent = 'Tên đội không được trống';
+      teamNameInFormErrorContent = 'Tên đội không được trống và không được chứa kí tự đặc biệt';
     }
-    if (this.state.teamShortNameInForm.trim() === '') {
+    if (this.state.teamShortNameInForm.trim() === '' || !config.regex.teamShortName.test(this.state.teamShortNameInForm)) {
       teamShortNameInFormError = true;
-      teamShortNameInFormErrorContent = 'Tên ngắn đội không được trống';
+      teamShortNameInFormErrorContent = 'Tên ngắn đội không được trống, tối đa 8 kí tự và không chứa kí tự đặc biệt';
     }
 
     return {
@@ -1229,10 +1229,10 @@ class TournamentInfo extends React.Component<ITournamentInfoProps, ITournamentIn
                     <h1>Form Báo cáo</h1>
                   </div>
                   <div className={'Report-modal-subject-input-container'}>
-                    <p style={{ color: 'white' }}>Tiêu đề: </p>
+                    <p style={{ color: 'white', fontSize: '25px' }}>Tiêu đề: </p>
                     <input style={{ width: '200px', height: '25px', marginLeft: '20px' }} type={'text'} onChange={this.onChangeSubjectForm} value={this.state.subjectForm} />
                   </div>
-                  <p style={{ color: 'white' }}>Nội dung báo cáo: </p>
+                  <p style={{ color: 'white', fontSize: '25px' }}>Nội dung báo cáo: </p>
                   <textarea rows={7} cols={60} value={this.state.detailReportForm} onChange={this.onChangeDetailReportForm}></textarea>
                   {this.state.subjectFormError === true && <p style={{ color: 'red' }}>{this.state.subjectFormErrorContent}</p>}
                   {this.state.detailReportFormError === true && <p style={{ color: 'red' }}>{this.state.detailReportFormErrorContent}</p>}
@@ -1315,10 +1315,10 @@ class TournamentInfo extends React.Component<ITournamentInfoProps, ITournamentIn
                     <h1>Form Báo cáo gian lận trong giải</h1>
                   </div>
                   <div className={'Report-modal-subject-input-container'}>
-                    <p style={{ color: 'white' }}>Tiêu đề: </p>
+                    <p style={{ color: 'white', fontSize: '25px' }}>Tiêu đề: </p>
                     <input style={{ width: '200px', height: '25px', marginLeft: '20px' }} type={'text'} onChange={this.onChangeSubjectForm2} value={this.state.subjectForm2} />
                   </div>
-                  <p style={{ color: 'white' }}>Nội dung báo cáo: </p>
+                  <p style={{ color: 'white', fontSize: '25px' }}>Nội dung báo cáo: </p>
                   <textarea rows={7} cols={60} value={this.state.detailReportForm2} onChange={this.onChangeDetailReportForm2}></textarea>
                   {this.state.subjectFormError2 === true && <p style={{ color: 'red' }}>{this.state.subjectFormErrorContent2}</p>}
                   {this.state.detailReportFormError2 === true && <p style={{ color: 'red' }}>{this.state.detailReportFormErrorContent2}</p>}
