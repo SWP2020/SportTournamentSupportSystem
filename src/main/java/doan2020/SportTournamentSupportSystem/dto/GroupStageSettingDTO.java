@@ -95,6 +95,13 @@ public class GroupStageSettingDTO {
 	public void setBo(Integer bo) {
 		this.bo = bo;
 	}
+
+	@Override
+	public String toString() {
+		return "GroupStageSettingDTO [id=" + id + ", TournamentId=" + TournamentId + ", maxTeamPerTable="
+				+ maxTeamPerTable + ", advanceTeamPerTable=" + advanceTeamPerTable + ", bo=" + bo + ", hasHomeMatch="
+				+ hasHomeMatch + ", formatId=" + formatId + ", status=" + status + ", url=" + url + "]";
+	}
 	
 	
 	

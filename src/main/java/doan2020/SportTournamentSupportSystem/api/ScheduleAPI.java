@@ -63,6 +63,8 @@ public class ScheduleAPI {
 				ScheduleDTO schedule = scheduleService.getSchedule(thisTournament);
 				try {
 				System.out.println("check data send to front end: " + schedule.getGroupStageSchedule().getTables().get(0).getMatches().get(0));
+				System.out.println("check data send to front end: " + schedule.getFinalStageSchedule().getRankingTable().get(0).getTeam().getId());
+				System.out.println("check data send to front end: " + schedule.getFinalStageSchedule().getRankingTable().get(1).getTeam().getId());
 				}catch (Exception e) {
 					// TODO: handle exception
 				}
@@ -232,6 +234,100 @@ public class ScheduleAPI {
 		response.setResult(result);
 		response.setError(error);
 		System.out.println("ScheduleAPI: changeMatchInfo: finish");
+		return new ResponseEntity<Response>(response, httpStatus);
+	}
+	
+	@PutMapping("/swapTwoTeamInRankingTable")
+	public ResponseEntity<Response> swapTwoTeamInRankingTable(
+			@RequestParam(value = "tournamentId", required = false) Long TournamentId,
+			@RequestParam(value = "tableId") Integer tableId,
+			@RequestParam(value = "team1Id") Long team1Id,
+			@RequestParam(value = "team2Id") Long team2Id) {
+		System.out.println("ScheduleAPI: swapTwoTeamInRankingTable: start");
+		Response response = new Response();
+		HttpStatus httpStatus = HttpStatus.OK;
+		Map<String, Object> config = new HashMap<String, Object>();
+		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> error = new HashMap<String, Object>();
+
+		try {
+
+			TournamentEntity thisTournament = TournamentService.findOneById(TournamentId);
+			if (thisTournament == null) {
+				result.put("Schedule", null);
+				config.put("Global", 0);
+				error.put("MessageCode", 1);
+				error.put("Message", "Tournament not found");
+			} else {
+				
+                scheduleService.swapTwoTeamInRankingTable(thisTournament, tableId, team1Id, team2Id);
+
+//				result.put("Schedule", schedule);
+				config.put("Global", 0);
+				error.put("MessageCode", 0);
+				error.put("Message", "swapTwoTeamInRankingTable Success");
+
+			}
+			System.out.println("ScheduleAPI: swapTwoTeamInRankingTable: no exception");
+		} catch (Exception e) {
+			System.out.println("ScheduleAPI: swapTwoTeamInRankingTable: has exception");
+			result.put("Schedule", null);
+			config.put("Global", 0);
+			error.put("MessageCode", 1);
+			error.put("Message", "Đã có lỗi xảy ra, vui lòng thử lại");
+		}
+
+		response.setConfig(config);
+		response.setResult(result);
+		response.setError(error);
+		System.out.println("ScheduleAPI: swapTwoTeamInRankingTable: finish");
+		return new ResponseEntity<Response>(response, httpStatus);
+	}
+	
+	@PutMapping("/updateNote")
+	public ResponseEntity<Response> UpdateNoteByTeamId(
+			@RequestParam(value = "tournamentId", required = false) Long TournamentId,
+			@RequestParam(value = "tableId") Integer tableId,
+			@RequestParam(value = "teamId") Long teamId, 
+			@RequestParam(value = "note") String note){
+		System.out.println("ScheduleAPI: updateNote: start");
+		Response response = new Response();
+		HttpStatus httpStatus = HttpStatus.OK;
+		Map<String, Object> config = new HashMap<String, Object>();
+		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> error = new HashMap<String, Object>();
+
+		try {
+
+			TournamentEntity thisTournament = TournamentService.findOneById(TournamentId);
+			if (thisTournament == null) {
+				result.put("Schedule", null);
+				config.put("Global", 0);
+				error.put("MessageCode", 1);
+				error.put("Message", "Tournament not found");
+			} else {
+				
+                scheduleService.updateNote(thisTournament, tableId, teamId, note);
+
+//				result.put("Schedule", schedule);
+				config.put("Global", 0);
+				error.put("MessageCode", 0);
+				error.put("Message", "updateNote Success");
+
+			}
+			System.out.println("ScheduleAPI: updateNote: no exception");
+		} catch (Exception e) {
+			System.out.println("ScheduleAPI: updateNote: has exception");
+			result.put("Schedule", null);
+			config.put("Global", 0);
+			error.put("MessageCode", 1);
+			error.put("Message", "Đã có lỗi xảy ra, vui lòng thử lại");
+		}
+
+		response.setConfig(config);
+		response.setResult(result);
+		response.setError(error);
+		System.out.println("ScheduleAPI: updateNote: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
 }

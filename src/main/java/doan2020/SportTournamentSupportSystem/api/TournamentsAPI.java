@@ -9,6 +9,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -130,9 +131,9 @@ public class TournamentsAPI {
 			error.put("MessageCode", 1);
 			error.put("Message", "Required param userId");
 		} else {// userId not null
-//			Sort sortable = Sort.by("id").ascending();
+			Sort sortable = Sort.by("id").descending();
 			try {
-				Pageable pageable = PageRequest.of(page - 1, limit);
+				Pageable pageable = PageRequest.of(page - 1, limit, sortable);
 				entities = (List<TournamentEntity>) service.findByCreatorId(pageable, userId);
 				int totalPage = 0;
 				UserEntity creator = userService.findOneById(userId);
