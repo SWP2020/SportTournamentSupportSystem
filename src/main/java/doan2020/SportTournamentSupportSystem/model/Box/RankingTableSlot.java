@@ -18,6 +18,7 @@ public class RankingTableSlot implements Serializable, Comparator<RankingTableSl
 	private Integer totalWin = 0;
 	private Integer totalLose = 0;
 	private Double elo = Const.DEFAULT_ELO;
+	private String note = "";
 
 	public RankingTableSlot(Team team) {
 		this.team = team;
@@ -87,16 +88,16 @@ public class RankingTableSlot implements Serializable, Comparator<RankingTableSl
 //			System.out.println("elo1 == elo2");
 			if (totalWin1.intValue() == totalWin2.intValue()) {
 //				System.out.println("totalWin1 == totalWin2");
-				if (score1.intValue() == score2.intValue()) {
+				if (Math.abs(diff2 - diff1) <= Const.EPSILON) {
 //					System.out.println("score1 == score2");
-					if (Math.abs(diff2 - diff1) <= Const.EPSILON) {
+					if (score1.intValue() == score2.intValue()) {
 //						System.out.println("diff1 == diff2");
 						return 0;
 					} else {
-						return (int) (diff2 - diff1);
+						return score2 - score1;
 					}
 				} else {
-					return score2 - score1;
+					return (int) (diff2 - diff1);
 				}
 			} else {
 				return totalWin2 - totalWin1;
@@ -119,7 +120,9 @@ public class RankingTableSlot implements Serializable, Comparator<RankingTableSl
 	}
 
 	public void updateTotalWin() {
+		System.out.println("totalWin before "+this.totalWin);
 		this.totalWin++;
+		System.out.println("totalWin after "+this.totalWin);
 	}
 
 	public Integer getTotalLose() {
@@ -127,7 +130,9 @@ public class RankingTableSlot implements Serializable, Comparator<RankingTableSl
 	}
 
 	public void updateTotalLose() {
+		System.out.println("totalLose before "+this.totalLose);
 		this.totalLose++;
+		System.out.println("totalLose after "+this.totalLose);
 	}
 
 	public Double getElo() {
@@ -136,6 +141,18 @@ public class RankingTableSlot implements Serializable, Comparator<RankingTableSl
 
 	public void updateElo(Double update) {
 		this.elo += update;
+	}
+
+	public void setElo(Double elo) {
+		this.elo = elo;
+	}
+
+	public String getNote() {
+		return note;
+	}
+
+	public void setNote(String note) {
+		this.note = note;
 	}
 
 }

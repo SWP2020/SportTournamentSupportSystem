@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import doan2020.SportTournamentSupportSystem.config.Const;
-import doan2020.SportTournamentSupportSystem.converter.CompetitionConverter;
+import doan2020.SportTournamentSupportSystem.converter.TournamentConverter;
 import doan2020.SportTournamentSupportSystem.converter.PermissionConverter;
 import doan2020.SportTournamentSupportSystem.converter.ReportConverter;
 import doan2020.SportTournamentSupportSystem.converter.TeamConverter;
@@ -30,13 +30,13 @@ import doan2020.SportTournamentSupportSystem.dto.PermissionDTO;
 import doan2020.SportTournamentSupportSystem.dto.ReportDTO;
 import doan2020.SportTournamentSupportSystem.dto.TournamentDTO;
 import doan2020.SportTournamentSupportSystem.dto.UserDTO;
-import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
+import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
 import doan2020.SportTournamentSupportSystem.entity.PermissionEntity;
 import doan2020.SportTournamentSupportSystem.entity.ReportEntity;
 import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
 import doan2020.SportTournamentSupportSystem.entity.UserEntity;
 import doan2020.SportTournamentSupportSystem.response.Response;
-import doan2020.SportTournamentSupportSystem.service.ICompetitionService;
+import doan2020.SportTournamentSupportSystem.service.ITournamentService;
 import doan2020.SportTournamentSupportSystem.service.IFinalStageSettingService;
 import doan2020.SportTournamentSupportSystem.service.IGroupStageSettingService;
 import doan2020.SportTournamentSupportSystem.service.IPermissionService;
@@ -78,10 +78,10 @@ public class AdminAPI {
 	private IPermissionService permissionService;
 
 	@Autowired
-	private ICompetitionService competitionService;
+	private ITournamentService TournamentService;
 
 	@Autowired
-	private CompetitionConverter competitionConverter;
+	private TournamentConverter TournamentConverter;
 
 	@Autowired
 	private IScheduleService scheduleService;

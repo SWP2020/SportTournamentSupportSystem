@@ -15,5 +15,5 @@ public interface IGroupStageSettingService {
 	
 	public GroupStageSettingEntity delete(Long id);
 	
-	public GroupStageSettingEntity findByCompetitionId(Long competitionId);
+	public GroupStageSettingEntity findByTournamentId(Long TournamentId);
 }

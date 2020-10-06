@@ -52,8 +52,8 @@ public class TeamEntity implements Comparator<TeamEntity> {
 	private UserEntity creator;
 
 	@ManyToOne
-	@JoinColumn(name = "competitionId", nullable = false)
-	private CompetitionEntity competition;
+	@JoinColumn(name = "tournamentId", nullable = false)
+	private TournamentEntity tournament;
 
 	@OneToMany(mappedBy = "team1", cascade = CascadeType.ALL)
 	private Collection<MatchEntity> team1Matches;
@@ -119,12 +119,12 @@ public class TeamEntity implements Comparator<TeamEntity> {
 		this.creator = creator;
 	}
 
-	public CompetitionEntity getCompetition() {
-		return competition;
+	public TournamentEntity getTournament() {
+		return tournament;
 	}
 
-	public void setCompetition(CompetitionEntity competition) {
-		this.competition = competition;
+	public void setTournament(TournamentEntity Tournament) {
+		this.tournament = Tournament;
 	}
 
 	public Long getSeedNo() {
@@ -178,7 +178,7 @@ public class TeamEntity implements Comparator<TeamEntity> {
 	public String toString() {
 		return "TeamEntity [id=" + id + ", fullName=" + fullName + ", shortName=" + shortName + ", description="
 				+ description + ", seedNo=" + seedNo + ", status=" + status + ", url=" + url + ", creator=" + creator
-				+ ", competition=" + competition + "]";
+				+ ", Tournament=" + tournament + "]";
 	}
 	
 	

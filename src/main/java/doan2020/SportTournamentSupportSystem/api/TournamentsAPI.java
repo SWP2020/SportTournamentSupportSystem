@@ -9,6 +9,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import doan2020.SportTournamentSupportSystem.config.Const;
 import doan2020.SportTournamentSupportSystem.converter.TournamentConverter;
 import doan2020.SportTournamentSupportSystem.dto.TournamentDTO;
 import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
@@ -129,9 +131,9 @@ public class TournamentsAPI {
 			error.put("MessageCode", 1);
 			error.put("Message", "Required param userId");
 		} else {// userId not null
-//			Sort sortable = Sort.by("id").ascending();
+			Sort sortable = Sort.by("id").descending();
 			try {
-				Pageable pageable = PageRequest.of(page - 1, limit);
+				Pageable pageable = PageRequest.of(page - 1, limit, sortable);
 				entities = (List<TournamentEntity>) service.findByCreatorId(pageable, userId);
 				int totalPage = 0;
 				UserEntity creator = userService.findOneById(userId);
@@ -253,6 +255,135 @@ public class TournamentsAPI {
 		response.setResult(result);
 		response.setError(error);
 		System.out.println("TournamentsAPI: getBySearchString: finish");
+		return new ResponseEntity<Response>(response, httpStatus);
+	}
+	
+	@GetMapping("/getBySearchStringAndSportAndStatus")
+	public ResponseEntity<Response> getBySearchStringAndSportAndStatus(@RequestParam(value = "page", required = false) Integer page,
+			@RequestParam(value = "limit", required = false) Integer limit,
+			@RequestParam(value = "searchString") String searchString, 
+			@RequestParam(value = "sportId") Long sportId, 
+			@RequestParam(value = "status") String status) {
+		System.out.println("TournamentsAPI: getBySearchString: start");
+
+		HttpStatus httpStatus = HttpStatus.OK;
+		Response response = new Response();
+		Map<String, Object> config = new HashMap<String, Object>();
+		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> error = new HashMap<String, Object>();
+
+		List<TournamentEntity> entities = new ArrayList<TournamentEntity>();
+		List<Map<String, Object>> tournaments = new ArrayList<Map<String,Object>>();
+		Long totalPage = 0l;
+		
+		String StringSportId = null;
+		if (limit == null || limit <= 0)
+			limit = 3;
+
+		if (page == null || page <= 0)
+			page = 1;
+		
+		
+
+		if (searchString == null || sportId == null || status == null) {// searchString null
+			result.put("Tournaments", tournaments);
+			config.put("Global", 0);
+			error.put("MessageCode", 1);
+			error.put("Message", "Required param searchString or sportId or status");
+		} else {// searchString not null
+//			Sort sortable = Sort.by("id").ascending();
+			try {
+				
+				if(sportId == -1){
+					StringSportId = "";
+				}else {
+					StringSportId = String.valueOf(sportId);
+				}
+				
+				Pageable pageable = PageRequest.of(page - 1, limit);
+				entities = (List<TournamentEntity>) service.findBySearchStringAndSportAndStatus(pageable, searchString, StringSportId, status);
+				
+				Long totalEntity = service.countBySearchStringAndSportAndStatus(searchString, StringSportId, status);
+				
+				System.out.println("TournamentsAPI: getBySearchString: totalEntity: " + new Long(totalEntity).toString());
+				
+				totalPage = totalEntity / limit;
+				if (totalEntity % limit != 0)
+					totalPage++;
+
+				for (TournamentEntity entity : entities) {
+					TournamentDTO tournamentDTO = converter.toDTO(entity);
+
+					Map<String, Object> tournament = new HashMap<String, Object>();
+					Map<String, Object> otherInformation = new HashMap<String, Object>();
+
+					otherInformation = service.getOtherInformation(entity.getId());
+					tournament.put("OtherInformation", otherInformation);
+					tournament.put("Tournament", tournamentDTO);
+					
+					tournaments.add(tournament);
+				}
+
+				result.put("TotalPage", totalPage);
+				result.put("Tournaments", tournaments);
+				config.put("Global", 0);
+				error.put("MessageCode", 0);
+				error.put("Message", "Found");
+				System.out.println("TournamentsAPI: getBySearchString: no exception");
+			} catch (Exception e) {
+				System.out.println("TournamentsAPI: getBySearchString: has exception");
+				result.put("TotalPage", totalPage);
+				result.put("Tournaments", tournaments);
+				config.put("Global", 0);
+				error.put("MessageCode", 0);
+				error.put("Message", "Đã có lỗi xảy ra, vui lòng thử lại");
+			}
+
+		}
+
+		response.setConfig(config);
+		response.setResult(result);
+		response.setError(error);
+		System.out.println("TournamentsAPI: getBySearchString: finish");
+		return new ResponseEntity<Response>(response, httpStatus);
+	}
+	
+	@GetMapping("/getAllStatus")
+	public ResponseEntity<Response> getAllStatus() {
+
+		System.out.println("TournamentsAPI: getAllStatus: start");
+
+		HttpStatus httpStatus = HttpStatus.OK;
+		Response response = new Response();
+		Map<String, Object> config = new HashMap<String, Object>();
+		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> error = new HashMap<String, Object>();
+
+		List<String> listStatus = new ArrayList<String>();
+			try {
+				listStatus.add(Const.TOURNAMENT_STATUS_INITIALIZING);
+				listStatus.add(Const.TOURNAMENT_STATUS_PROCESSING);
+				listStatus.add(Const.TOURNAMENT_STATUS_REGISTRATION_OPENING);
+				listStatus.add(Const.TOURNAMENT_STATUS_STOPPED);
+				listStatus.add(Const.TOURNAMENT_STATUS_FINISHED);
+
+				result.put("ListStatus", listStatus);
+				config.put("Global", 0);
+				error.put("MessageCode", 0);
+				error.put("Message", "get ListStatus status successfull");
+				System.out.println("TournamentsAPI: getAllStatus: no exception");
+			} catch (Exception e) {
+				System.out.println("TournamentsAPI: getAllStatus: has exception");
+				result.put("ListStatus", listStatus);
+				config.put("Global", 0);
+				error.put("MessageCode", 0);
+				error.put("Message", "Đã có lỗi xảy ra, vui lòng thử lại");
+			}
+
+		response.setConfig(config);
+		response.setResult(result);
+		response.setError(error);
+		System.out.println("TournamentsAPI: getAllStatus: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
 

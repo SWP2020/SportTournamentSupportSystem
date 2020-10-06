@@ -96,10 +96,6 @@ public class UserEntity {
 	@JoinColumn(name = "roleId", nullable = false)
 	private RoleEntity role;
 
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinTable(name = "user_tournament", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "tournament_id"))
-	private Collection<TournamentEntity> tournamentsList;
-
 	@ManyToMany(mappedBy = "usersList")
 	private Collection<NotificationEntity> notificationsList;
 
@@ -233,14 +229,6 @@ public class UserEntity {
 
 	public void setRole(RoleEntity role) {
 		this.role = role;
-	}
-
-	public Collection<TournamentEntity> getTournamentsList() {
-		return tournamentsList;
-	}
-
-	public void setTournamentsList(Collection<TournamentEntity> tournamentsList) {
-		this.tournamentsList = tournamentsList;
 	}
 
 	public Collection<NotificationEntity> getNotificationsList() {

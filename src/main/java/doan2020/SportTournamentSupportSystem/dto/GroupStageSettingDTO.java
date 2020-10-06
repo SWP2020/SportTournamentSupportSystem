@@ -3,11 +3,13 @@ package doan2020.SportTournamentSupportSystem.dto;
 public class GroupStageSettingDTO {
 	private Long id;
 	
-	private Long competitionId;
+	private Long TournamentId;
 
 	private Integer maxTeamPerTable;
 
 	private Integer advanceTeamPerTable;
+	
+	private Integer bo;
 	
 	private boolean hasHomeMatch;
 	private Long formatId;
@@ -62,12 +64,12 @@ public class GroupStageSettingDTO {
 		this.formatId = formatId;
 	}
 
-	public Long getCompetitionId() {
-		return competitionId;
+	public Long getTournamentId() {
+		return TournamentId;
 	}
 
-	public void setCompetitionId(Long competitionId) {
-		this.competitionId = competitionId;
+	public void setTournamentId(Long TournamentId) {
+		this.TournamentId = TournamentId;
 	}
 
 	public String getStatus() {
@@ -84,6 +86,21 @@ public class GroupStageSettingDTO {
 
 	public void setUrl(String url) {
 		this.url = url;
+	}
+
+	public Integer getBo() {
+		return bo;
+	}
+
+	public void setBo(Integer bo) {
+		this.bo = bo;
+	}
+
+	@Override
+	public String toString() {
+		return "GroupStageSettingDTO [id=" + id + ", TournamentId=" + TournamentId + ", maxTeamPerTable="
+				+ maxTeamPerTable + ", advanceTeamPerTable=" + advanceTeamPerTable + ", bo=" + bo + ", hasHomeMatch="
+				+ hasHomeMatch + ", formatId=" + formatId + ", status=" + status + ", url=" + url + "]";
 	}
 	
 	

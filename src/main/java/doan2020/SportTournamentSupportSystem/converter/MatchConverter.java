@@ -6,10 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import doan2020.SportTournamentSupportSystem.dto.MatchDTO;
-import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
+import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
 import doan2020.SportTournamentSupportSystem.entity.MatchEntity;
 import doan2020.SportTournamentSupportSystem.entity.TeamEntity;
-import doan2020.SportTournamentSupportSystem.service.ICompetitionService;
+import doan2020.SportTournamentSupportSystem.service.ITournamentService;
 import doan2020.SportTournamentSupportSystem.service.ITeamService;
 import doan2020.SportTournamentSupportSystem.validator.Validator;
 
@@ -17,7 +17,7 @@ import doan2020.SportTournamentSupportSystem.validator.Validator;
 public class MatchConverter {
 
 	@Autowired
-	private ICompetitionService competitionService;
+	private ITournamentService TournamentService;
 
 	@Autowired
 	private ITeamService teamService;
@@ -48,10 +48,10 @@ public class MatchConverter {
 			Date expectedDate = validator.formatStringToDate(dto.getTime());
 			entity.setTime(expectedDate);
 
-			if (dto.getCompetitionId() != null) {
-				Long competitionId = dto.getCompetitionId();
-				CompetitionEntity competition = competitionService.findOneById(competitionId);
-				entity.setCompetition(competition);
+			if (dto.getTournamentId() != null) {
+				Long TournamentId = dto.getTournamentId();
+				TournamentEntity Tournament = TournamentService.findOneById(TournamentId);
+				entity.setTournament(Tournament);
 			}
 
 			if (dto.getWinnerId() != null) {
@@ -78,7 +78,7 @@ public class MatchConverter {
 		MatchDTO dto = new MatchDTO();
 		try {
 			dto.setId(entity.getId());
-			dto.setCompetitionId(entity.getCompetition().getId());
+			dto.setTournamentId(entity.getTournament().getId());
 			dto.setLocation(entity.getLocation());
 			dto.setName(entity.getName());
 			dto.setStatus(entity.getStatus());

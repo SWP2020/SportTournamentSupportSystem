@@ -25,8 +25,11 @@ public class GroupStageSettingEntity {
 	private Long id;
 	
 	@OneToOne
-	@JoinColumn(name = "competition_id", nullable = false)
-	private CompetitionEntity competition;
+	@JoinColumn(name = "tournamentId", nullable = false)
+	private TournamentEntity tournament;
+	
+	@ColumnDefault("3")
+	private Integer bo = 3;
 
 	@Column(nullable = false)
 	@ColumnDefault("4")
@@ -102,12 +105,22 @@ public class GroupStageSettingEntity {
 		this.url = url;
 	}
 
-	public CompetitionEntity getCompetition() {
-		return competition;
+	public TournamentEntity getTournament() {
+		return tournament;
 	}
 
-	public void setCompetition(CompetitionEntity competition) {
-		this.competition = competition;
+	public void setTournament(TournamentEntity tournament) {
+		this.tournament = tournament;
 	}
+
+	public Integer getBo() {
+		return bo;
+	}
+
+	public void setBo(Integer bo) {
+		this.bo = bo;
+	}
+	
+	
 
 }

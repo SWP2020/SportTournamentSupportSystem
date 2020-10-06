@@ -24,21 +24,18 @@ public interface ITeamService {
 
 	public Collection<TeamEntity> findByCreatorId(Long creatorId);
 	
-	public Collection<TeamEntity> findByCompetitionId(Long creatorId);
+	public Collection<TeamEntity> findByTournamentId(Long creatorId);
 	
 	public Collection<TeamEntity> swap(Long team1Id, Long team2Id);
 	
 	public String saveTeamPlayersToFile(TeamEntity team, Collection<Player> players);
 
-	public Collection<Player> getTeamPlayerFromFile(Long competitionId, Long teamId);
+	public Collection<Player> getTeamPlayerFromFile(Long TournamentId, Long teamId);
 	
-	public Collection<TeamEntity> findByCompetitionIdAndStatus(Long competitionId, String status);
+	public Collection<TeamEntity> findByTournamentIdAndStatus(Long TournamentId, String status);
+		
+	public Long getMaxSeedNoByTournamentId(Long TournamentId);
 	
-	public Collection<TeamEntity> findByTournamentIdAndStatus(Long tournamentId, String status);
+	public Long countByTournamentIdAndStatus(Long TournamentId, String status);
 	
-	public Long getMaxSeedNoByCompetitionId(Long competitionId);
-	
-	public Long countByCompetitionIdAndStatus(Long competitionId, String status);
-	
-	public Long countByCompetitionTournamentIdAndStatus(Long tournamentId, String status);
 }

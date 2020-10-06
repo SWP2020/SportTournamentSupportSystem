@@ -16,13 +16,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import doan2020.SportTournamentSupportSystem.config.Const;
-import doan2020.SportTournamentSupportSystem.entity.CompetitionEntity;
+import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
 import doan2020.SportTournamentSupportSystem.entity.FinalStageSettingEntity;
 import doan2020.SportTournamentSupportSystem.entity.GroupStageSettingEntity;
 import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
 import doan2020.SportTournamentSupportSystem.model.Schedule.DTO.ScheduleDTO;
 import doan2020.SportTournamentSupportSystem.response.Response;
-import doan2020.SportTournamentSupportSystem.service.ICompetitionService;
+import doan2020.SportTournamentSupportSystem.service.ITournamentService;
 import doan2020.SportTournamentSupportSystem.service.IScheduleService;
 
 @RestController
@@ -31,19 +31,19 @@ import doan2020.SportTournamentSupportSystem.service.IScheduleService;
 public class ScheduleAPI {
 
 	@Autowired
-	private ICompetitionService competitionService;
+	private ITournamentService TournamentService;
 
 	@Autowired
 	private IScheduleService scheduleService;
 
 	/*
-	 * Get schedule for a competition
+	 * Get schedule for a Tournament
 	 */
 
 	@GetMapping()
-	public ResponseEntity<Response> getScheduleByCompetitionId(
-			@RequestParam(value = "competitionId", required = false) Long competitionId) {
-		System.out.println("ScheduleAPI: getScheduleByCompetitionId: start");
+	public ResponseEntity<Response> getScheduleByTournamentId(
+			@RequestParam(value = "tournamentId", required = false) Long TournamentId) {
+		System.out.println("ScheduleAPI: getScheduleByTournamentId: start");
 		Response response = new Response();
 		HttpStatus httpStatus = HttpStatus.OK;
 		Map<String, Object> config = new HashMap<String, Object>();
@@ -52,21 +52,23 @@ public class ScheduleAPI {
 
 		try {
 
-			CompetitionEntity thisCompetition = competitionService.findOneById(competitionId);
-			if (thisCompetition == null) {
+			TournamentEntity thisTournament = TournamentService.findOneById(TournamentId);
+			if (thisTournament == null) {
 				result.put("Schedule", null);
 				config.put("Global", 0);
 				error.put("MessageCode", 1);
-				error.put("Message", "Competition not found");
+				error.put("Message", "Tournament not found");
 			} else {
-				System.out.println("ScheduleAPI: getScheduleByCompetitionId: -> ScheduleService: getSchedule: ");
-				ScheduleDTO schedule = scheduleService.getSchedule(thisCompetition);
+				System.out.println("ScheduleAPI: getScheduleByTournamentId: -> ScheduleService: getSchedule: ");
+				ScheduleDTO schedule = scheduleService.getSchedule(thisTournament);
 				try {
 				System.out.println("check data send to front end: " + schedule.getGroupStageSchedule().getTables().get(0).getMatches().get(0));
+				System.out.println("check data send to front end: " + schedule.getFinalStageSchedule().getRankingTable().get(0).getTeam().getId());
+				System.out.println("check data send to front end: " + schedule.getFinalStageSchedule().getRankingTable().get(1).getTeam().getId());
 				}catch (Exception e) {
 					// TODO: handle exception
 				}
-				System.out.println("ScheduleService: getSchedule: -> ScheduleAPI: getScheduleByCompetitionId:");
+				System.out.println("ScheduleService: getSchedule: -> ScheduleAPI: getScheduleByTournamentId:");
 				if (schedule == null) {
 					result.put("Schedule", null);
 					config.put("Global", 0);
@@ -79,9 +81,9 @@ public class ScheduleAPI {
 					error.put("Message", "Success");
 				}
 			}
-			System.out.println("ScheduleAPI: getScheduleByCompetitionId: no exception");
+			System.out.println("ScheduleAPI: getScheduleByTournamentId: no exception");
 		} catch (Exception e) {
-			System.out.println("ScheduleAPI: getScheduleByCompetitionId: has exception");
+			System.out.println("ScheduleAPI: getScheduleByTournamentId: has exception");
 			result.put("Schedule", null);
 			config.put("Global", 0);
 			error.put("MessageCode", 1);
@@ -91,14 +93,14 @@ public class ScheduleAPI {
 		response.setConfig(config);
 		response.setResult(result);
 		response.setError(error);
-		System.out.println("ScheduleAPI: getScheduleByCompetitionId: finish");
+		System.out.println("ScheduleAPI: getScheduleByTournamentId: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
 
 	@PostMapping()
-	public ResponseEntity<Response> schedulingByCompetitionId(
-			@RequestParam(value = "competitionId", required = false) Long competitionId) {
-		System.out.println("ScheduleAPI: createFinalStageScheduleByCompetitionId: start");
+	public ResponseEntity<Response> schedulingByTournamentId(
+			@RequestParam(value = "tournamentId", required = false) Long TournamentId) {
+		System.out.println("ScheduleAPI: createFinalStageScheduleByTournamentId: start");
 		Response response = new Response();
 		HttpStatus httpStatus = HttpStatus.OK;
 		Map<String, Object> config = new HashMap<String, Object>();
@@ -110,20 +112,19 @@ public class ScheduleAPI {
 		boolean err = false;
 
 		try {
-			CompetitionEntity thisCompetition = competitionService.findOneById(competitionId);
+			TournamentEntity thisTournament = TournamentService.findOneById(TournamentId);
 
-			if (thisCompetition == null) {
+			if (thisTournament == null) {
 				result.put("Schedule", null);
 				config.put("Global", 0);
 				error.put("MessageCode", 1);
-				error.put("Message", "Competition not found");
+				error.put("Message", "Tournament not found");
 			} else {
-				TournamentEntity tour = thisCompetition.getTournament();
-				if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_INITIALIZING)) {
+				if (thisTournament.getStatus().contains(Const.TOURNAMENT_STATUS_INITIALIZING)) {
 
-					boolean hasGroupStage = thisCompetition.isHasGroupStage();
-					FinalStageSettingEntity fsse = thisCompetition.getFinalStageSetting();
-					GroupStageSettingEntity gsse = thisCompetition.getGroupStageSetting();
+					boolean hasGroupStage = thisTournament.isHasGroupStage();
+					FinalStageSettingEntity fsse = thisTournament.getFinalStageSetting();
+					GroupStageSettingEntity gsse = thisTournament.getGroupStageSetting();
 
 					if (fsse == null) {
 						error.put("Message", "Missing final stage setting");
@@ -136,7 +137,7 @@ public class ScheduleAPI {
 					}
 
 					if (!err) {
-						schedule = scheduleService.createSchedule(thisCompetition);
+						schedule = scheduleService.createSchedule(thisTournament);
 
 						result.put("Schedule", schedule);
 						config.put("Global", 0);
@@ -150,28 +151,28 @@ public class ScheduleAPI {
 					}
 				} else {
 					String message = "Unknown error";
-					if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_REGISTRATION_OPENING)) {
+					if (thisTournament.getStatus().contains(Const.TOURNAMENT_STATUS_REGISTRATION_OPENING)) {
 						message = Const.TOURNAMENT_MESSAGE_REGISTRATION_OPENING;
 					}
-					if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_PROCESSING)) {
+					if (thisTournament.getStatus().contains(Const.TOURNAMENT_STATUS_PROCESSING)) {
 						message = Const.TOURNAMENT_MESSAGE_PROCESSING;
 					}
-					if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_FINISHED)) {
+					if (thisTournament.getStatus().contains(Const.TOURNAMENT_STATUS_FINISHED)) {
 						message = Const.TOURNAMENT_MESSAGE_FINISHED;
 					}
-					if (tour.getStatus().contains(Const.TOURNAMENT_STATUS_STOPPED)) {
+					if (thisTournament.getStatus().contains(Const.TOURNAMENT_STATUS_STOPPED)) {
 						message = Const.TOURNAMENT_MESSAGE_STOPPED;
 					}
-					result.put("Competition", null);
+					result.put("Tournament", null);
 					config.put("Global", 0);
 					error.put("MessageCode", 1);
 					error.put("Message", message);
 				}
 			}
 
-			System.out.println("ScheduleAPI: createFinalStageScheduleByCompetitionId: no exception");
+			System.out.println("ScheduleAPI: createFinalStageScheduleByTournamentId: no exception");
 		} catch (Exception e) {
-			System.out.println("ScheduleAPI: createFinalStageScheduleByCompetitionId: has exception");
+			System.out.println("ScheduleAPI: createFinalStageScheduleByTournamentId: has exception");
 			System.out.println(e);
 			result.put("Schedule", null);
 			config.put("Global", 0);
@@ -182,13 +183,13 @@ public class ScheduleAPI {
 		response.setConfig(config);
 		response.setResult(result);
 		response.setError(error);
-		System.out.println("ScheduleAPI: createFinalStageScheduleByCompetitionId: finish");
+		System.out.println("ScheduleAPI: createFinalStageScheduleByTournamentId: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
 
 	@PutMapping("/changeMatchInfo")
 	public ResponseEntity<Response> changeMatchInfo(
-			@RequestParam(value = "competitionId", required = false) Long competitionId,
+			@RequestParam(value = "tournamentId", required = false) Long TournamentId,
 			@RequestParam(value = "nodeId") Integer nodeId,
 			@RequestParam(value = "degree") Integer degree,
 			@RequestParam(value = "location") Integer location, // -1-RR, 0-SE, 1-Win branch, 2-Lose branch, 3-match34,
@@ -203,15 +204,15 @@ public class ScheduleAPI {
 
 		try {
 
-			CompetitionEntity thisCompetition = competitionService.findOneById(competitionId);
-			if (thisCompetition == null) {
+			TournamentEntity thisTournament = TournamentService.findOneById(TournamentId);
+			if (thisTournament == null) {
 				result.put("Schedule", null);
 				config.put("Global", 0);
 				error.put("MessageCode", 1);
-				error.put("Message", "Competition not found");
+				error.put("Message", "Tournament not found");
 			} else {
 
-				ScheduleDTO schedule = scheduleService.changeMatchInfo(thisCompetition, nodeId, degree, location,
+				ScheduleDTO schedule = scheduleService.changeMatchInfo(thisTournament, nodeId, degree, location,
 						tableId, newInfo);
 
 				result.put("Schedule", schedule);
@@ -233,6 +234,100 @@ public class ScheduleAPI {
 		response.setResult(result);
 		response.setError(error);
 		System.out.println("ScheduleAPI: changeMatchInfo: finish");
+		return new ResponseEntity<Response>(response, httpStatus);
+	}
+	
+	@PutMapping("/swapTwoTeamInRankingTable")
+	public ResponseEntity<Response> swapTwoTeamInRankingTable(
+			@RequestParam(value = "tournamentId", required = false) Long TournamentId,
+			@RequestParam(value = "tableId") Integer tableId,
+			@RequestParam(value = "team1Id") Long team1Id,
+			@RequestParam(value = "team2Id") Long team2Id) {
+		System.out.println("ScheduleAPI: swapTwoTeamInRankingTable: start");
+		Response response = new Response();
+		HttpStatus httpStatus = HttpStatus.OK;
+		Map<String, Object> config = new HashMap<String, Object>();
+		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> error = new HashMap<String, Object>();
+
+		try {
+
+			TournamentEntity thisTournament = TournamentService.findOneById(TournamentId);
+			if (thisTournament == null) {
+				result.put("Schedule", null);
+				config.put("Global", 0);
+				error.put("MessageCode", 1);
+				error.put("Message", "Tournament not found");
+			} else {
+				
+                scheduleService.swapTwoTeamInRankingTable(thisTournament, tableId, team1Id, team2Id);
+
+//				result.put("Schedule", schedule);
+				config.put("Global", 0);
+				error.put("MessageCode", 0);
+				error.put("Message", "swapTwoTeamInRankingTable Success");
+
+			}
+			System.out.println("ScheduleAPI: swapTwoTeamInRankingTable: no exception");
+		} catch (Exception e) {
+			System.out.println("ScheduleAPI: swapTwoTeamInRankingTable: has exception");
+			result.put("Schedule", null);
+			config.put("Global", 0);
+			error.put("MessageCode", 1);
+			error.put("Message", "Đã có lỗi xảy ra, vui lòng thử lại");
+		}
+
+		response.setConfig(config);
+		response.setResult(result);
+		response.setError(error);
+		System.out.println("ScheduleAPI: swapTwoTeamInRankingTable: finish");
+		return new ResponseEntity<Response>(response, httpStatus);
+	}
+	
+	@PutMapping("/updateNote")
+	public ResponseEntity<Response> UpdateNoteByTeamId(
+			@RequestParam(value = "tournamentId", required = false) Long TournamentId,
+			@RequestParam(value = "tableId") Integer tableId,
+			@RequestParam(value = "teamId") Long teamId, 
+			@RequestParam(value = "note") String note){
+		System.out.println("ScheduleAPI: updateNote: start");
+		Response response = new Response();
+		HttpStatus httpStatus = HttpStatus.OK;
+		Map<String, Object> config = new HashMap<String, Object>();
+		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> error = new HashMap<String, Object>();
+
+		try {
+
+			TournamentEntity thisTournament = TournamentService.findOneById(TournamentId);
+			if (thisTournament == null) {
+				result.put("Schedule", null);
+				config.put("Global", 0);
+				error.put("MessageCode", 1);
+				error.put("Message", "Tournament not found");
+			} else {
+				
+                scheduleService.updateNote(thisTournament, tableId, teamId, note);
+
+//				result.put("Schedule", schedule);
+				config.put("Global", 0);
+				error.put("MessageCode", 0);
+				error.put("Message", "updateNote Success");
+
+			}
+			System.out.println("ScheduleAPI: updateNote: no exception");
+		} catch (Exception e) {
+			System.out.println("ScheduleAPI: updateNote: has exception");
+			result.put("Schedule", null);
+			config.put("Global", 0);
+			error.put("MessageCode", 1);
+			error.put("Message", "Đã có lỗi xảy ra, vui lòng thử lại");
+		}
+
+		response.setConfig(config);
+		response.setResult(result);
+		response.setError(error);
+		System.out.println("ScheduleAPI: updateNote: finish");
 		return new ResponseEntity<Response>(response, httpStatus);
 	}
 }

@@ -52,7 +52,7 @@ public class FormatsAPI {
 				dtos.add(dto);
 			}
 
-			result.put("CompetitionSettings", dtos);
+			result.put("TournamentSettings", dtos);
 			error.put("MessageCode", 0);
 			error.put("Message", "Get page successfully");
 

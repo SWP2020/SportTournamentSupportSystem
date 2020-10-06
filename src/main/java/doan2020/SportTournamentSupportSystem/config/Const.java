@@ -10,27 +10,26 @@ public final class Const {
 //	public final static String DOMAIN = "http://192.168.1.131:3000"; //vuthon8
 //	public final static String DOMAIN = "http://192.168.43.15:3000"; //LongSama
 //	public final static String DOMAIN = "http://172.20.10.6:3000"; // Nhan's 11
-
-	public final static String DOMAIN = "https://sport-tournament-system.herokuapp.com"; //heroku cloud
+	  public final static String DOMAIN = "https://sport-tournament-system.herokuapp.com"; //heroku cloud
 
 	@SuppressWarnings("deprecation")
 	public final static Date DEFAULT_DATE = new Date(2020, 1, 13, 7, 0, 0);
-	public final static String DEFAULT_DATE_STRING = "2020-01-13 07:00:00";
+	public final static String DEFAULT_DATE_STRING = "";
 	
-	public final static String DEFAULT_PLACE = "Hòa Lạc";
+	public final static String DEFAULT_PLACE = "";
 	
 	public final static String TOKEN_HEADER = "Authorization";
 	
-	public final static String VIEWER = "viewer"; // Viewer
+	public final static String VIEWER = "viewer";
 	public final static String MONITOR = "monitor";
 	public final static String MANAGER = "manager";
 	public final static String OWNER = "owner";
 	
 
-	public final static String COMPETITION_FILESYSTEM = "competitions\\";
-	public final static String COMPETITION_FOLDER_NAMING = "comp_";
-	public final static String COMPETITION_SCHEDULING = "schedule.dat";
-	public final static String COMPETITION_TEAM_PLAYERS_NAMING = "team_";
+	public final static String TOURNAMENT_FILESYSTEM = "tournaments\\";
+	public final static String TOURNAMENT_FOLDER_NAMING = "tour_";
+	public final static String TOURNAMENT_SCHEDULING = "schedule.dat";
+	public final static String TOURNAMENT_TEAM_PLAYERS_NAMING = "team_";
 	public final static String FILE_EXTENDED = ".dat";
 	
 	public final static String IMAGE_FOLDER = "images\\";
@@ -67,8 +66,8 @@ public final class Const {
 	public final static String TOURNAMENT_MESSAGE_PROCESSING = "Giải đấu đang tiến hành";
 	public final static String TOURNAMENT_MESSAGE_STOPPED = "Giải đấu đã bị dừng lại bởi Quản trị viên";
 	public final static String TOURNAMENT_MESSAGE_FINISHED = "Giải đấu đã kết thúc";
-	public final static String TOURNAMENT_MESSAGE_NOT_READY = "Tất cả các cuộc thi cần phải sẵn sàng";
-	public final static String TOURNAMENT_MESSAGE_NO_COMPETITION = "Giải đấu đang không có cuộc thi nào";
+	public final static String TOURNAMENT_MESSAGE_NOT_READY = "Chưa đủ đội để bắt đầu";
+	public final static String TOURNAMENT_MESSAGE_NO_Tournament = "Giải đấu đang không có cuộc thi nào";
 	
 //	Response message
 	public final static String RESPONSE_SUCCESS = "Success";
