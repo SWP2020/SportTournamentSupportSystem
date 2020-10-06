@@ -1,10 +1,9 @@
 Hi ${USERNAME},<br/>
 
-Thank you for using the service of Sport Tournament Support System! <br/>
-Please click on the link to be able to verify your account:<br/>
+Thanks for using SportTournamentSupportSystem! Please confirm your email address by enter code on the link below.<br/>
 
 ${DOMAIN}/active/${VERIFICATION_URL}<br/>
 
-If not you, please ignore this message.<br/>
+If you did not sign up for a SportTournamentSupportSystem account please disregard this email.<br/>
 
-The SportTournamentSupportSystem team,
+The SportTournamentSupportSystem team.
