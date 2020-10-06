@@ -47,7 +47,7 @@ public class LoginAPI {
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
-	
+  
 	@PostMapping
 	public ResponseEntity<Response> login(@RequestBody UserDTO user) {
 		System.out.println("LoginAPI: login: start");
@@ -88,9 +88,10 @@ public class LoginAPI {
 				} else { // User is active
 					System.out.println("LoginAPI: login: User is active");
 
-					boolean checkPW = passwordEncoder.matches(password, findUser.getPassword());
+					boolean checkPW = passwordEncoder.matches(user.getPassword(), findUser.getPassword());
 					
-//					System.out.println("LoginAPI: login: Password: " + findUser.getPassword());
+					System.out.println("LoginAPI: login: Password: " + findUser.getPassword());
+
 //					int checkPW = password.compareTo(findUser.getPassword());
 					
 					if (!checkPW) {// password wrong
