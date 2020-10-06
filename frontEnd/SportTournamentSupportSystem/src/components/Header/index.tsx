@@ -209,7 +209,7 @@ class Header extends React.Component<IHeaderProps, IHeaderState> {
               <div className={'UserOption-avatar-container'}>
                 <img className={'UserOption-avatar-image'} src={this.state.errorLoadImage === false ? (currentUserInfo.avatar != null ? currentUserInfo.avatar as string : '') : config.defaultAvatar} alt={'logo'} onError={this.onImageError} />
               </div>
-              <p className={'UserOption-name-text'}>{`${currentUserInfo.firstName}`}</p>
+              <p className={'UserOption-name-text'}>{`${currentUserInfo.username}`}</p>
               {this.state.showUserOption === true ? <FaChevronDown color={'white'} /> : <FaChevronUp color={'white'} />}
             </div>
             {this.state.showUserOption === true &&

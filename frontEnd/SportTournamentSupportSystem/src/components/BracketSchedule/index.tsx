@@ -5,7 +5,6 @@ import { IState } from 'redux-saga/reducers';
 import { queryBracketBoardInfo } from 'components/BracketBoard/actions';
 import { queryListTeams } from 'components/Teams/actions';
 import { queryAllMatches } from 'components/BracketBoard/actions';
-import { formatDateToDisplay } from 'utils/datetime';
 import './styles.css';
 
 interface IBracketScheduleProps extends React.ClassAttributes<BracketSchedule> {
@@ -127,8 +126,8 @@ class BracketSchedule extends React.Component<IBracketScheduleProps, IBracketSch
                             <p>{(item2.data as IParams).name}</p>
                           </div>
                           <div className="BracketSchedule-roundMatch-time-container">
-                            <p>{(item2.data as IParams).time}</p>
-                            <p>{(item2.data as IParams).location}</p>
+                            <p>{((item2.data as IParams).time as string).trim() !== '' ? (item2.data as IParams).time : `(Chưa có thời gian)`}</p>
+                            <p>{((item2.data as IParams).location as string).trim() !== '' ? (item2.data as IParams).location : `(Chưa có địa điểm)`}</p>
                           </div>
                           <div className="BracketSchedule-roundMatch-name-container">
                             {(item2.data as IParams).team1 != null && (((item2.data as IParams).team1 as IParams).description != null && ((item2.data as IParams).team1 as IParams).team != null ?
@@ -176,8 +175,8 @@ class BracketSchedule extends React.Component<IBracketScheduleProps, IBracketSch
                               <p>{(item2.data as IParams).name}</p>
                             </div>
                             <div className="BracketSchedule-roundMatch-time-container">
-                              <p>{(item2.data as IParams).time}</p>
-                              <p>{(item2.data as IParams).location}</p>
+                              <p>{((item2.data as IParams).time as string).trim() !== '' ? (item2.data as IParams).time : `(Chưa có thời gian)`}</p>
+                              <p>{((item2.data as IParams).location as string).trim() !== '' ? (item2.data as IParams).location : `(Chưa có địa điểm)`}</p>
                             </div>
                             <div className="BracketSchedule-roundMatch-name-container">
                               {(item2.data as IParams).team1 != null && (((item2.data as IParams).team1 as IParams).description != null && ((item2.data as IParams).team1 as IParams).team != null ?
@@ -219,8 +218,8 @@ class BracketSchedule extends React.Component<IBracketScheduleProps, IBracketSch
                               <p>{(item2.data as IParams).name}</p>
                             </div>
                             <div className="BracketSchedule-roundMatch-time-container">
-                              <p>{(item2.data as IParams).time}</p>
-                              <p>{(item2.data as IParams).location}</p>
+                              <p>{((item2.data as IParams).time as string).trim() !== '' ? (item2.data as IParams).time : `(Chưa có thời gian)`}</p>
+                              <p>{((item2.data as IParams).location as string).trim() !== '' ? (item2.data as IParams).location : `(Chưa có địa điểm)`}</p>
                             </div>
                             <div className="BracketSchedule-roundMatch-name-container">
                               {(item2.data as IParams).team1 != null && (((item2.data as IParams).team1 as IParams).description != null && ((item2.data as IParams).team1 as IParams).team != null ?
@@ -266,8 +265,8 @@ class BracketSchedule extends React.Component<IBracketScheduleProps, IBracketSch
                               <p>{item2.name}</p>
                             </div>
                             <div className="BracketSchedule-roundMatch-time-container">
-                              <p>{item2.time}</p>
-                              <p>{item2.location}</p>
+                              <p>{(item2.time as string).trim() !== '' ? item2.time : `(Chưa có thời gian)`}</p>
+                              <p>{(item2.location as string).trim() !== '' ? item2.location : `(Chưa có địa điểm)`}</p>
                             </div>
                             <div className="BracketSchedule-roundMatch-name-container">
                               {item2.team1 != null && ((item2.team1 as IParams).description != null && (item2.team1 as IParams).team != null ?
@@ -318,8 +317,8 @@ class BracketSchedule extends React.Component<IBracketScheduleProps, IBracketSch
                               <p>{(item2.data as IParams).name}</p>
                             </div>
                             <div className="BracketSchedule-roundMatch-time-container">
-                              <p>{(item2.data as IParams).time}</p>
-                              <p>{(item2.data as IParams).location}</p>
+                              <p>{((item2.data as IParams).time as string).trim() !== '' ? (item2.data as IParams).time : `(Chưa có thời gian)`}</p>
+                              <p>{((item2.data as IParams).location as string).trim() !== '' ? (item2.data as IParams).location : `(Chưa có địa điểm)`}</p>
                             </div>
                             <div className="BracketSchedule-roundMatch-name-container">
                               {(item2.data as IParams).team1 != null && (((item2.data as IParams).team1 as IParams).description != null && ((item2.data as IParams).team1 as IParams).team != null ?
@@ -369,8 +368,8 @@ class BracketSchedule extends React.Component<IBracketScheduleProps, IBracketSch
                                 <p>{(item2.data as IParams).name}</p>
                               </div>
                               <div className="BracketSchedule-roundMatch-time-container">
-                                <p>{formatDateToDisplay((item2.data as IParams).time as string, 'HH:mm dd/MM/yyyy', 'yyyy-MM-dd HH:mm:ss')}</p>
-                                <p>{(item2.data as IParams).location}</p>
+                                <p>{((item2.data as IParams).time as string).trim() !== '' ? (item2.data as IParams).time : `(Chưa có thời gian)`}</p>
+                                <p>{((item2.data as IParams).location as string).trim() !== '' ? (item2.data as IParams).location : `(Chưa có địa điểm)`}</p>
                               </div>
                               <div className="BracketSchedule-roundMatch-name-container">
                                 {(item2.data as IParams).team1 != null && (((item2.data as IParams).team1 as IParams).description != null && ((item2.data as IParams).team1 as IParams).team != null ?
@@ -412,8 +411,8 @@ class BracketSchedule extends React.Component<IBracketScheduleProps, IBracketSch
                                 <p>{(item2.data as IParams).name}</p>
                               </div>
                               <div className="BracketSchedule-roundMatch-time-container">
-                                <p>{(item2.data as IParams).time}</p>
-                                <p>{(item2.data as IParams).location}</p>
+                                <p>{((item2.data as IParams).time as string).trim() !== '' ? (item2.data as IParams).time : `(Chưa có thời gian)`}</p>
+                                <p>{((item2.data as IParams).location as string).trim() !== '' ? (item2.data as IParams).location : `(Chưa có địa điểm)`}</p>
                               </div>
                               <div className="BracketSchedule-roundMatch-name-container">
                                 {(item2.data as IParams).team1 != null && (((item2.data as IParams).team1 as IParams).description != null && ((item2.data as IParams).team1 as IParams).team != null ?
@@ -461,8 +460,8 @@ class BracketSchedule extends React.Component<IBracketScheduleProps, IBracketSch
                                 <p>{item2.name}</p>
                               </div>
                               <div className="BracketSchedule-roundMatch-time-container">
-                                <p>{item2.time}</p>
-                                <p>{item2.location}</p>
+                                <p>{(item2.time as string).trim() !== '' ? item2.time : `(Chưa có thời gian)`}</p>
+                                <p>{(item2.location as string).trim() !== '' ? item2.location : `(Chưa có địa điểm)`}</p>
                               </div>
                               <div className="BracketSchedule-roundMatch-name-container">
                                 {item2.team1 != null && ((item2.team1 as IParams).description != null && (item2.team1 as IParams).team != null ?

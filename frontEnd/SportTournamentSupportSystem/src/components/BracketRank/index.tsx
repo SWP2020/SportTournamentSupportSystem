@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Styles } from 'react-modal';
 import { AiOutlineQuestionCircle } from 'react-icons/ai';
 import { IBigRequest, IParams } from 'interfaces/common';
+import NoteInput from 'components/NoteInput';
 import CustomModal from 'components/CustomModal';
 import { IState } from 'redux-saga/reducers';
 import { queryAllMatches } from 'components/BracketBoard/actions';
@@ -109,6 +110,9 @@ class BracketRank extends React.Component<IBracketRankProps, IBracketRankState> 
     });
   }
 
+  private handleSaveChangeNote = () => {
+  }
+
   render() {
     if (this.props.bracketRankInfo != null) {
       if (this.props.finalStage === true) {
@@ -166,7 +170,7 @@ class BracketRank extends React.Component<IBracketRankProps, IBracketRankState> 
               handleConfirmModal={this.handleConfirmModal}
               confirmButtonVisible={false}
             >
-              <p style={{ color: 'white' }}>Quy tắc xếp hạng (được tính theo thứ tư ưu tiên từ trên xuống dưới):<br /><br />1. Đội có số trận thắng nhiều hơn<br /><br />2. Đội có số trận thua ít hơn.<br /><br />3. hiệu số set thắng / thua.<br /><br />4. Đội có số set thắng nhiều hơn<br /><br />5. Nếu những quy tắc trên vẫn không phân định được thứ hạng, giải sẽ thực hiện phân hạng theo cách thủ công, bạn có thể thay đổi thứ tự bảng tùy chọn theo ý muốn.</p>
+              <p style={{ color: 'white' }}>Quy tắc xếp hạng (được tính theo thứ tư ưu tiên từ trên xuống dưới):<br /><br />1. Đội có số trận thắng nhiều hơn<br /><br />2. Đội có số trận thua ít hơn.<br /><br />3. hiệu số (số set thắng - số set thua).<br /><br />4. Đội có số set thắng nhiều hơn<br /><br />5. Nếu những quy tắc trên vẫn không phân định được thứ hạng, giải sẽ thực hiện phân hạng theo cách thủ công, bạn có thể thay đổi thứ tự bảng tùy chọn theo ý muốn (sau khi giai đoạn đó đã kết thúc).</p>
             </CustomModal>
           </div>
         );
@@ -178,19 +182,22 @@ class BracketRank extends React.Component<IBracketRankProps, IBracketRankState> 
               <h2>Bảng {item.tableName}</h2>
               <div className="BracketRank-item-container BracketRank-menuItem-container">
                 <div className="BracketRank-item-orderNumber-container">
-                  <p>Hạng</p>
+                  <p style={{ color: 'white' }}>Hạng</p>
                 </div>
                 <div className="BracketRank-item-managerName-container">
-                  <p>Tên đội</p>
+                  <p style={{ color: 'white' }}>Tên đội</p>
                 </div>
                 <div className="BracketRank-item-score-container">
-                  <p>Thắng</p>
+                  <p style={{ color: 'white' }}>Thắng</p>
                 </div>
                 <div className="BracketRank-item-score-container">
-                  <p>Thua</p>
+                  <p style={{ color: 'white' }}>Thua</p>
                 </div>
                 <div className="BracketRank-item-score-container">
-                  <p>Hiệu số</p>
+                  <p style={{ color: 'white' }}>Hiệu số</p>
+                </div>
+                <div className="BracketRank-item-managerName-container">
+                  <p style={{ color: 'white' }}>Ghi chú</p>
                 </div>
                 {/* <div className="BracketRank-item-matchHistory-container">
                   <p>Số set thắng</p>
@@ -219,6 +226,10 @@ class BracketRank extends React.Component<IBracketRankProps, IBracketRankState> 
                   {/* <div className="BracketRank-item-matchHistory-container">
                     <p className={`BracketRank-item-orderNumber-${index2 + 1}`}>{item2.score}</p>
                   </div> */}
+                  <div className="BracketRank-item-managerName-container">
+                    <NoteInput info={item2} index={index2} handleSaveChangeNote={this.handleSaveChangeNote} />
+                    {/* <p className={`BracketRank-item-orderNumber-${index2 + 1}`}>{item2.note}</p> */}
+                  </div>
                 </div>
               )}
               <CustomModal
@@ -228,7 +239,7 @@ class BracketRank extends React.Component<IBracketRankProps, IBracketRankState> 
                 handleConfirmModal={this.handleConfirmModal}
                 confirmButtonVisible={false}
               >
-                <p style={{ color: 'white' }}>Quy tắc xếp hạng (được tính theo thứ tư ưu tiên từ trên xuống dưới):<br /><br />1. Đội có số trận thắng nhiều hơn<br /><br />2. Đội có số trận thua ít hơn.<br /><br />3. hiệu số set thắng / thua.<br /><br />4. Đội có số set thắng nhiều hơn<br /><br />5. Nếu những quy tắc trên vẫn không phân định được thứ hạng, giải sẽ thực hiện phân hạng theo cách thủ công, bạn có thể thay đổi thứ tự bảng tùy chọn theo ý muốn.</p>
+                <p style={{ color: 'white' }}>Quy tắc xếp hạng (được tính theo thứ tư ưu tiên từ trên xuống dưới):<br /><br />1. Đội có số trận thắng nhiều hơn<br /><br />2. Đội có số trận thua ít hơn.<br /><br />3. hiệu số (số set thắng - số set thua).<br /><br />4. Đội có số set thắng nhiều hơn<br /><br />5. Nếu những quy tắc trên vẫn không phân định được thứ hạng, giải sẽ thực hiện phân hạng theo cách thủ công, bạn có thể thay đổi thứ tự bảng tùy chọn theo ý muốn (sau khi giai đoạn đó đã kết thúc).</p>
               </CustomModal>
             </div>
           )

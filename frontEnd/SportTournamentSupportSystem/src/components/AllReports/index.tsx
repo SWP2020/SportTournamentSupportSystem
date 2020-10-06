@@ -157,8 +157,8 @@ class AllReports extends React.Component<IAllReportsProps, IAllReportsState> {
             <div className={'Report-modal-header-container'}>
               <h1>Báo cáo</h1>
             </div>
-            <p style={{ color: 'white', fontSize: '20px' }}>Tiêu đề: {this.info && this.info.subject}</p>
-            <p style={{ color: 'white', fontSize: '20px' }}>Nội dung báo cáo: {this.info && this.info.content}</p>
+            <p style={{ color: 'white', fontSize: '25px' }}>Tiêu đề: <span style={{ color: 'white', fontSize: '18px' }}>{this.info && this.info.subject}</span></p>
+            <p style={{ color: 'white', fontSize: '25px' }}>Nội dung báo cáo: <span style={{ color: 'white', fontSize: '18px' }}>{this.info && this.info.content}</span></p>
           </div>
         </CustomModal>
       </div>
