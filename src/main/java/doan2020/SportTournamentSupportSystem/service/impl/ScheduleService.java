@@ -133,10 +133,10 @@ public class ScheduleService implements IScheduleService {
 			System.out.println("ok");
 			
 		}
-
 		String nameFileSchedule = saveScheduleToFile(schedule, TournamentId);
+		System.out.println("nameFileSchedule: "+nameFileSchedule);
 	}
-
+	
 	public void updateNote(TournamentEntity thisTournament, int tableId, Long teamId, String note) {
 		Long tournamentId = thisTournament.getId();
 		RankingTable rankingTable = new RankingTable();
@@ -1624,7 +1624,7 @@ public class ScheduleService implements IScheduleService {
 		Double loseElo = -1 * diff;
 
 		if (diff < Const.EPSILON) {
-			winElo = team1Elo / 100.0;
+			winElo = Const.DEFAULT_ELO / 100.0;
 			loseElo = -1 * winElo;
 		}
 
@@ -1657,12 +1657,15 @@ public class ScheduleService implements IScheduleService {
 			boolean test1_2 = team1Elo <= team2Elo;
 			System.out.println("test 1_2+" + test1_2);
 			if (team1Elo <= team2Elo || type == 0) {
-				rt.updateByTeamId(match.getTeam1().getId(), team1Score, team1Diff, true, winElo);
+				rt.updateEloByTeamId(match.getTeam1().getId(), winElo);
 				boolean test1_3 = match.getTeam2() != null;
 				System.out.println("match.getTeam2()" + test1_3);
 				if (match.getTeam2() != null)
-					rt.updateByTeamId(match.getTeam2().getId(), team2Score, team2Diff, false, loseElo);
+					rt.updateEloByTeamId(match.getTeam2().getId(), loseElo);
 			}
+			rt.updateByTeamId(match.getTeam1().getId(), team1Score, team1Diff, true, winElo);
+			if (match.getTeam2() != null)
+				rt.updateByTeamId(match.getTeam2().getId(), team2Score, team2Diff, false, loseElo);
 		} else {
 			thisMatch.getWinner().setTeam(thisMatch.getTeam2().getTeam());
 			thisMatch.getLoser().setTeam(thisMatch.getTeam1().getTeam());
@@ -1673,12 +1676,15 @@ public class ScheduleService implements IScheduleService {
 			boolean test2_2 = team1Elo <= team2Elo;
 			System.out.println("test 2_@+" + test2_2);
 			if (team1Elo >= team2Elo || type == 0) {
-				rt.updateByTeamId(match.getTeam1().getId(), team1Score, team1Diff, false, loseElo);
-				boolean test2_3 = match.getTeam2() != null;
-				System.out.println("match.getTeam2()" + test2_3);
+				rt.updateEloByTeamId(match.getTeam1().getId(), loseElo);
+				boolean test1_3 = match.getTeam2() != null;
+				System.out.println("match.getTeam2()" + test1_3);
 				if (match.getTeam2() != null)
-					rt.updateByTeamId(match.getTeam2().getId(), team2Score, team2Diff, true, winElo);
+					rt.updateEloByTeamId(match.getTeam2().getId(), winElo);
 			}
+			rt.updateByTeamId(match.getTeam1().getId(), team1Score, team1Diff, false, loseElo);
+			if (match.getTeam2() != null)
+				rt.updateByTeamId(match.getTeam2().getId(), team2Score, team2Diff, true, winElo);
 		}
 
 		thisMatch.getTeam1().setScore(team1Score);
@@ -1720,6 +1726,9 @@ public class ScheduleService implements IScheduleService {
 			winElo = Const.DEFAULT_ELO / 10.0;
 			loseElo = 0.0;
 		}
+		
+		Double winElo34 = (double) 1;
+		Double loseElo34 = (double) 2;
 
 		for (ResultEntity r : results) {
 			Double tmpDiff1 = new Double(r.getTeam1Score() - r.getTeam2Score());
@@ -1745,7 +1754,11 @@ public class ScheduleService implements IScheduleService {
 			boolean test1_2 = team1Elo <= team2Elo;
 			System.out.println("test 1_2+" + test1_2);
 			if (team1Elo <= team2Elo || type == 0) {
-				rt.update34ByTeamId(match.getTeam1().getId(), match.getTeam2().getId());
+				rt.update34ByTeamId(match.getTeam1().getId(), winElo34);
+				boolean test1_3 = match.getTeam2() != null;
+				System.out.println("match.getTeam2()" + test1_3);
+				if (match.getTeam2() != null)
+					rt.update34ByTeamId(match.getTeam2().getId(), loseElo34);
 			}
 		} else {
 			thisMatch.getWinner().setTeam(thisMatch.getTeam2().getTeam());
@@ -1757,7 +1770,11 @@ public class ScheduleService implements IScheduleService {
 			boolean test2_2 = team1Elo <= team2Elo;
 			System.out.println("test 2_@+" + test2_2);
 			if (team1Elo >= team2Elo || type == 0) {
-				rt.update34ByTeamId(match.getTeam1().getId(), match.getTeam2().getId());
+				rt.update34ByTeamId(match.getTeam1().getId(), loseElo34);
+				boolean test1_3 = match.getTeam2() != null;
+				System.out.println("match.getTeam2()" + test1_3);
+				if (match.getTeam2() != null)
+					rt.update34ByTeamId(match.getTeam2().getId(), winElo34);
 			}
 		}
 

@@ -65,12 +65,15 @@ public class RankingTableSlot implements Serializable, Comparator<RankingTableSl
 		Integer totalWin1 = o1.getTotalWin();
 		Integer totalWin2 = o2.getTotalWin();
 
+		Integer totalLose1 = o1.getTotalLose();
+		Integer totalLose2 = o2.getTotalLose();
+
 		Integer score1 = o1.getScore();
 		Integer score2 = o2.getScore();
 
 		Double diff1 = o1.getDifference();
 		Double diff2 = o2.getDifference();
-		
+
 //		System.out.println("Compare: ");
 //		System.out.println("team1: " + o1.getTeam());
 //		System.out.println("team2: " + o2.getTeam());
@@ -88,16 +91,20 @@ public class RankingTableSlot implements Serializable, Comparator<RankingTableSl
 //			System.out.println("elo1 == elo2");
 			if (totalWin1.intValue() == totalWin2.intValue()) {
 //				System.out.println("totalWin1 == totalWin2");
-				if (Math.abs(diff2 - diff1) <= Const.EPSILON) {
+				if (totalLose1.intValue() == totalLose2.intValue()) {
+					if (Math.abs(diff2 - diff1) <= Const.EPSILON) {
 //					System.out.println("score1 == score2");
-					if (score1.intValue() == score2.intValue()) {
+						if (score1.intValue() == score2.intValue()) {
 //						System.out.println("diff1 == diff2");
-						return 0;
+							return 0;
+						} else {
+							return score2 - score1;
+						}
 					} else {
-						return score2 - score1;
+						return (int) (diff2 - diff1);
 					}
 				} else {
-					return (int) (diff2 - diff1);
+					return -(totalLose2 - totalLose1);
 				}
 			} else {
 				return totalWin2 - totalWin1;
@@ -120,9 +127,9 @@ public class RankingTableSlot implements Serializable, Comparator<RankingTableSl
 	}
 
 	public void updateTotalWin() {
-		System.out.println("totalWin before "+this.totalWin);
+		System.out.println("totalWin before " + this.totalWin);
 		this.totalWin++;
-		System.out.println("totalWin after "+this.totalWin);
+		System.out.println("totalWin after " + this.totalWin);
 	}
 
 	public Integer getTotalLose() {
@@ -130,9 +137,9 @@ public class RankingTableSlot implements Serializable, Comparator<RankingTableSl
 	}
 
 	public void updateTotalLose() {
-		System.out.println("totalLose before "+this.totalLose);
+		System.out.println("totalLose before " + this.totalLose);
 		this.totalLose++;
-		System.out.println("totalLose after "+this.totalLose);
+		System.out.println("totalLose after " + this.totalLose);
 	}
 
 	public Double getElo() {
@@ -141,6 +148,10 @@ public class RankingTableSlot implements Serializable, Comparator<RankingTableSl
 
 	public void updateElo(Double update) {
 		this.elo += update;
+	}
+	
+	public void update34Elo(Double update) {
+		this.elo -= update;
 	}
 
 	public void setElo(Double elo) {
