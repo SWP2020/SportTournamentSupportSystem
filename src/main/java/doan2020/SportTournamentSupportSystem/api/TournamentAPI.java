@@ -30,6 +30,7 @@ import doan2020.SportTournamentSupportSystem.dto.TournamentDTO;
 import doan2020.SportTournamentSupportSystem.dto.PermissionDTO;
 import doan2020.SportTournamentSupportSystem.dto.TournamentDTO;
 import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
+import doan2020.SportTournamentSupportSystem.entity.GroupStageSettingEntity;
 import doan2020.SportTournamentSupportSystem.entity.PermissionEntity;
 import doan2020.SportTournamentSupportSystem.entity.TeamEntity;
 import doan2020.SportTournamentSupportSystem.entity.TournamentEntity;
@@ -37,6 +38,7 @@ import doan2020.SportTournamentSupportSystem.entity.UserEntity;
 import doan2020.SportTournamentSupportSystem.model.Ranks;
 import doan2020.SportTournamentSupportSystem.response.Response;
 import doan2020.SportTournamentSupportSystem.service.IFileStorageService;
+import doan2020.SportTournamentSupportSystem.service.IGroupStageSettingService;
 import doan2020.SportTournamentSupportSystem.service.IPermissionService;
 import doan2020.SportTournamentSupportSystem.service.IScheduleService;
 import doan2020.SportTournamentSupportSystem.service.ITeamService;
@@ -85,6 +87,9 @@ public class TournamentAPI {
 
 	@Autowired
 	private SendingMailService sendingMailService;
+	
+	@Autowired
+	private IGroupStageSettingService groupStageSettingService;
 
 	@GetMapping("")
 	public ResponseEntity<Response> getTournament(
@@ -432,6 +437,38 @@ public class TournamentAPI {
 					error.put("MessageCode", 1);
 					error.put("Message", "Tournament is not exist");
 				} else {
+					
+					int countAllTeam = teamService.countByTournamentIdAndStatus(id, Const.TEAM_STATUS_JOINED).intValue();
+					
+					GroupStageSettingEntity groupStageSettingEntity = groupStageSettingService.findByTournamentId(id);
+					int totalTeamBeforeGroupStage = countAllTeam;
+					int totalTeamInFinalTable;
+					int advanceTeamPerTable = groupStageSettingEntity.getAdvanceTeamPerTable();
+					
+					int maxTeamPerTable = groupStageSettingEntity.getMaxTeamPerTable();
+					
+					int totalTable = (int) (totalTeamBeforeGroupStage / maxTeamPerTable);
+
+					if (totalTable != 0) {
+						totalTeamInFinalTable = totalTeamBeforeGroupStage % maxTeamPerTable;
+					} else {
+						totalTeamInFinalTable = totalTeamBeforeGroupStage;
+					}
+
+					if (totalTeamInFinalTable == 0) {
+						totalTeamInFinalTable = maxTeamPerTable;
+					} else {
+						totalTable++;
+					}
+					
+					int CountAllAdvanceTeamPerTable = totalTable * advanceTeamPerTable;
+					
+					if(totalTeamBeforeGroupStage <= CountAllAdvanceTeamPerTable) {
+					    String message = "Unknown error";
+						message = "Tổng số đội vượt qua vòng bảng không thể lớn hơn hoặc bằng tổng số đội hiện tại";
+						error.put("MessageCode", 1);
+						error.put("Message", message);
+					}else {
 					System.out.println("CP3");
 					int code = 1;
 					String message = "Unknown error";
@@ -485,7 +522,7 @@ public class TournamentAPI {
 					error.put("MessageCode", code);
 					error.put("Message", message);
 				}
-
+				}
 			}
 			System.out.println("TournamentAPI: startTournament: no exception");
 		} catch (Exception e) {
