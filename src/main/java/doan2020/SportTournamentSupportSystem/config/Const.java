@@ -133,7 +133,7 @@ public final class Const {
 	public static final String STAGE_FINISHED = "finished";
 	
 //	azure cloud
-	public final static String CONNECTION_STRING = "DefaultEndpointsProtocol=https;AccountName=doan2020;AccountKey=zQox6fOtBhUdJHayTJ6ArwxjUuC64/iiYzv4Qy/Kgv0lNbJ/VRQbpLQSDl+YpIBrwxfFN6Wz4UZ+F4JIC0iNKw==;EndpointSuffix=core.windows.net";
+	public final static String CONNECTION_STRING = "DefaultEndpointsProtocol=https;AccountName=storagedoan;AccountKey=m5TI+dVdpIMjzlvc4x4mS5L0h8GT1td/SmLr5LL+ZecnAkV9xLhmvTR2NZ7YKJHaTAFExos+qU4qJZJA02ydxg==;EndpointSuffix=core.windows.net";
 
 //	elo
 	public static final Double DEFAULT_ELO = 10000.0;
