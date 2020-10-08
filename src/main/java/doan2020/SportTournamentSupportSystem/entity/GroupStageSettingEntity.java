@@ -52,8 +52,6 @@ public class GroupStageSettingEntity {
 	private String status;
 
 	private String url = "/?";
-	
-	private int totalTable;
 
 	public int getMaxTeamPerTable() {
 		return maxTeamPerTable;
@@ -121,14 +119,6 @@ public class GroupStageSettingEntity {
 
 	public void setBo(Integer bo) {
 		this.bo = bo;
-	}
-
-	public int getTotalTable() {
-		return totalTable;
-	}
-
-	public void setTotalTable(int totalTable) {
-		this.totalTable = totalTable;
 	}
 	
 }
