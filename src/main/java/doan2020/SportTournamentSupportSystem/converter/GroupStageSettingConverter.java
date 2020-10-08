@@ -48,6 +48,10 @@ public class GroupStageSettingConverter {
 			if (dto.getAdvanceTeamPerTable() != null) {
 				entity.setAdvanceTeamPerTable(dto.getAdvanceTeamPerTable());
 			}
+			
+			if (dto.getTotalTable() != null) {
+				entity.setTotalTable(dto.getTotalTable());
+			}
 
 			System.out.println("GroupStageSettingConverter: toEntity: no exception");
 		} catch (Exception e) {
@@ -76,6 +80,7 @@ public class GroupStageSettingConverter {
 			dto.setAdvanceTeamPerTable(entity.getAdvanceTeamPerTable());
 			dto.setStatus(entity.getStatus());
 			dto.setUrl(entity.getUrl());
+			dto.setTotalTable(entity.getTotalTable());
 			System.out.println("GroupStageSettingConverter: toDTO: no exception");
 		} catch (Exception e) {
 			System.out.println("GroupStageSettingConverter: toDTO: has exception");

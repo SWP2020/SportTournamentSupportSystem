@@ -90,6 +90,9 @@ public class TournamentConverter {
 
 			entity.setHasGroupStage(dto.isHasGroupStage());
 			
+			if (dto.getTotalTeam() != null) {
+				entity.setTotalTeam(dto.getTotalTeam());
+			}
 			
 			System.out.println("TournamentConverter: toEntity: no exception");
 		} catch (Exception e) {
@@ -141,6 +144,8 @@ public class TournamentConverter {
 			dto.setSportId(sportId);
 
 			dto.setHasGroupStage(entity.isHasGroupStage());
+			
+			dto.setTotalTeam(entity.getTotalTeam());
 			System.out.println("TournamentConverter: toDTO: no exception");
 		} catch (Exception e) {
 			System.out.println("TournamentConverter: toDTO: has exception");
