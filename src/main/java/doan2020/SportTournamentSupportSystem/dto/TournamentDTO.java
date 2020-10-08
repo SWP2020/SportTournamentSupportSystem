@@ -199,24 +199,11 @@ public class TournamentDTO {
 	public void setHasGroupStage(boolean hasGroupStage) {
 		this.hasGroupStage = hasGroupStage;
 	}
-	
-	public Integer getTotalTeam() {
-		return totalTeam;
-	}
-
-	public void setTotalTeam(Integer totalTeam) {
-		this.totalTeam = totalTeam;
-	}
 
 	@Override
 	public String toString() {
-		return "TournamentDTO [id=" + id + ", fullName=" + fullName + ", shortName=" + shortName + ", description="
-				+ description + ", openingLocation=" + openingLocation + ", openingTime=" + openingTime
-				+ ", closingLocation=" + closingLocation + ", closingTime=" + closingTime + ", donor=" + donor
-				+ ", status=" + status + ", url=" + url + ", avatar=" + avatar + ", background=" + background
-				+ ", openRegistrationTime=" + openRegistrationTime + ", closeRegistrationTime=" + closeRegistrationTime
-				+ ", creatorId=" + creatorId + ", createDate=" + createDate + ", sportId=" + sportId
-				+ ", hasGroupStage=" + hasGroupStage + ", totalTeam=" + totalTeam + "]";
+		// TODO Auto-generated method stub
+		return super.toString();
 	}
 
 }

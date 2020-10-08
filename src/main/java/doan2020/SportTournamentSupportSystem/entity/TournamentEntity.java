@@ -55,8 +55,6 @@ public class TournamentEntity {
 	private Date openRegistrationTime;
 	private Date closeRegistrationTime;
 	
-	private int totalTeam;
-	
 	@ColumnDefault("0")
 	@Column(nullable = false)
 	private boolean hasGroupStage = false;
@@ -269,12 +267,4 @@ public class TournamentEntity {
 		this.reports = reports;
 	}
 
-	public int getTotalTeam() {
-		return totalTeam;
-	}
-
-	public void setTotalTeam(int totalTeam) {
-		this.totalTeam = totalTeam;
-	}
-	
 }
