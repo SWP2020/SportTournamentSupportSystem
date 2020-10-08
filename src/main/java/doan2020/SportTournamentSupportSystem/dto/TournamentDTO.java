@@ -42,8 +42,6 @@ public class TournamentDTO {
 	private Long sportId;
 
 	private boolean hasGroupStage;
-	
-	private Integer totalTeam;
 
 	public TournamentDTO() {
 	}
