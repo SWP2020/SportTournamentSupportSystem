@@ -438,37 +438,41 @@ public class TournamentAPI {
 					error.put("Message", "Tournament is not exist");
 				} else {
 					
-					int countAllTeam = teamService.countByTournamentIdAndStatus(id, Const.TEAM_STATUS_JOINED).intValue();
+					int countAllTeamTt = teamService.countByTournamentIdAndStatus(id, Const.TEAM_STATUS_JOINED).intValue();
 					
-					GroupStageSettingEntity groupStageSettingEntity = groupStageSettingService.findByTournamentId(id);
-					int totalTeamBeforeGroupStage = countAllTeam;
-					int totalTeamInFinalTable;
-					int advanceTeamPerTable = groupStageSettingEntity.getAdvanceTeamPerTable();
+					int totalTeamdb = thisTournament.getTotalTeam();
 					
-					int maxTeamPerTable = groupStageSettingEntity.getMaxTeamPerTable();
+					if(countAllTeamTt == totalTeamdb) {
 					
-					int totalTable = (int) (totalTeamBeforeGroupStage / maxTeamPerTable);
-
-					if (totalTable != 0) {
-						totalTeamInFinalTable = totalTeamBeforeGroupStage % maxTeamPerTable;
-					} else {
-						totalTeamInFinalTable = totalTeamBeforeGroupStage;
-					}
-
-					if (totalTeamInFinalTable == 0) {
-						totalTeamInFinalTable = maxTeamPerTable;
-					} else {
-						totalTable++;
-					}
-					
-					int CountAllAdvanceTeamPerTable = totalTable * advanceTeamPerTable;
-					
-					if(totalTeamBeforeGroupStage <= CountAllAdvanceTeamPerTable) {
-					    String message = "Unknown error";
-						message = "Tổng số đội vượt qua vòng bảng không thể lớn hơn hoặc bằng tổng số đội hiện tại";
-						error.put("MessageCode", 1);
-						error.put("Message", message);
-					}else {
+//					GroupStageSettingEntity groupStageSettingEntity = groupStageSettingService.findByTournamentId(id);
+//					int totalTeamBeforeGroupStage = countAllTeamTt;
+//					int totalTeamInFinalTable;
+//					int advanceTeamPerTable = groupStageSettingEntity.getAdvanceTeamPerTable();
+//					
+//					int maxTeamPerTable = groupStageSettingEntity.getMaxTeamPerTable();
+//					
+//					int totalTable = (int) (totalTeamBeforeGroupStage / maxTeamPerTable);
+//
+//					if (totalTable != 0) {
+//						totalTeamInFinalTable = totalTeamBeforeGroupStage % maxTeamPerTable;
+//					} else {
+//						totalTeamInFinalTable = totalTeamBeforeGroupStage;
+//					}
+//
+//					if (totalTeamInFinalTable == 0) {
+//						totalTeamInFinalTable = maxTeamPerTable;
+//					} else {
+//						totalTable++;
+//					}
+//					
+//					int CountAllAdvanceTeamPerTable = totalTable * advanceTeamPerTable;
+//					
+//					if(totalTeamBeforeGroupStage <= CountAllAdvanceTeamPerTable) {
+//					    String message = "Unknown error";
+//						message = "Tổng số đội vượt qua vòng bảng không thể lớn hơn hoặc bằng tổng số đội hiện tại";
+//						error.put("MessageCode", 1);
+//						error.put("Message", message);
+//					}else {
 					System.out.println("CP3");
 					int code = 1;
 					String message = "Unknown error";
@@ -520,6 +524,11 @@ public class TournamentAPI {
 					result.put("Tournament", thisTournamentDTO);
 					config.put("Global", 0);
 					error.put("MessageCode", code);
+					error.put("Message", message);
+				}else {
+					String message = "Unknown error";
+					message = "Số đội hiện tại chưa bằng so với tổng số lượng đội bạn đã cài đặt để có thể bắt đầu giải đấu.";
+					error.put("MessageCode", 1);
 					error.put("Message", message);
 				}
 				}

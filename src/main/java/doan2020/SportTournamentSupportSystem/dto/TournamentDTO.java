@@ -42,6 +42,8 @@ public class TournamentDTO {
 	private Long sportId;
 
 	private boolean hasGroupStage;
+	
+	private Integer totalTeam;
 
 	public TournamentDTO() {
 	}
@@ -197,6 +199,14 @@ public class TournamentDTO {
 	public void setHasGroupStage(boolean hasGroupStage) {
 		this.hasGroupStage = hasGroupStage;
 	}
+	
+	public Integer getTotalTeam() {
+		return totalTeam;
+	}
+
+	public void setTotalTeam(Integer totalTeam) {
+		this.totalTeam = totalTeam;
+	}
 
 	@Override
 	public String toString() {
@@ -206,9 +216,7 @@ public class TournamentDTO {
 				+ ", status=" + status + ", url=" + url + ", avatar=" + avatar + ", background=" + background
 				+ ", openRegistrationTime=" + openRegistrationTime + ", closeRegistrationTime=" + closeRegistrationTime
 				+ ", creatorId=" + creatorId + ", createDate=" + createDate + ", sportId=" + sportId
-				+ ", hasGroupStage=" + hasGroupStage + "]";
+				+ ", hasGroupStage=" + hasGroupStage + ", totalTeam=" + totalTeam + "]";
 	}
-	
-	
 
 }

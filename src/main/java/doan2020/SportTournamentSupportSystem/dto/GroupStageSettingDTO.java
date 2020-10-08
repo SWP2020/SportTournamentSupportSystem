@@ -17,6 +17,8 @@ public class GroupStageSettingDTO {
 	private String status;
 
 	private String url;
+	
+	private Integer totalTable;
 
 	public GroupStageSettingDTO() {
 		// TODO Auto-generated constructor stub
@@ -96,14 +98,19 @@ public class GroupStageSettingDTO {
 		this.bo = bo;
 	}
 
+	public Integer getTotalTable() {
+		return totalTable;
+	}
+
+	public void setTotalTable(Integer totalTable) {
+		this.totalTable = totalTable;
+	}
+
 	@Override
 	public String toString() {
 		return "GroupStageSettingDTO [id=" + id + ", TournamentId=" + TournamentId + ", maxTeamPerTable="
 				+ maxTeamPerTable + ", advanceTeamPerTable=" + advanceTeamPerTable + ", bo=" + bo + ", hasHomeMatch="
-				+ hasHomeMatch + ", formatId=" + formatId + ", status=" + status + ", url=" + url + "]";
+				+ hasHomeMatch + ", formatId=" + formatId + ", status=" + status + ", url=" + url + ", totalTable="
+				+ totalTable + "]";
 	}
-	
-	
-	
-	
 }
