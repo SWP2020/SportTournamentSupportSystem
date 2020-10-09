@@ -98,6 +98,66 @@ public class TournamentConverter {
 		System.out.println("TournamentConverter: toEntity: finish");
 		return entity;
 	}
+	
+	public TournamentEntity toEntityEditStarted(TournamentDTO dto) {
+		System.out.println("TournamentConverter: toEntity: start");
+		TournamentEntity entity = new TournamentEntity();
+		try {
+			
+			if (dto.getFullName() != null)
+				entity.setFullName(dto.getFullName());
+			if (dto.getShortName() != null)
+				entity.setShortName(dto.getShortName());
+			entity.setDescription(dto.getDescription());
+
+//			if (dto.getCreatorId() != null) {
+//				Long tournamentCreatorId = dto.getCreatorId();
+//				UserEntity tournamentCreator = userService.findOneById(tournamentCreatorId);
+//				entity.setCreator(tournamentCreator);
+//			}
+				
+			entity.setOpeningLocation(dto.getOpeningLocation());
+			entity.setClosingLocation(dto.getClosingLocation());
+
+			try {
+				Date openingTime = validator.formatStringToDate(dto.getOpeningTime());
+				entity.setOpeningTime(openingTime);
+
+				
+			} catch (Exception e) {
+			}
+			try {
+				Date closingTime = validator.formatStringToDate(dto.getClosingTime());
+				entity.setClosingTime(closingTime);
+			} catch (Exception e) {
+			}
+
+			entity.setDonor(dto.getDonor());
+
+//			entity.setAvatar(dto.getAvatar());
+//			entity.setBackground(dto.getBackground());
+			Date closeRegistrationTime = validator.formatStringToDate(dto.getClosingTime());
+			entity.setCloseRegistrationTime(closeRegistrationTime);
+			Date openRegistrationTime = validator.formatStringToDate(dto.getClosingTime());
+			entity.setOpenRegistrationTime(openRegistrationTime);
+
+//			if (dto.getSportId() != null) {
+//				Long sportId = dto.getSportId();
+//				SportEntity sport = sportService.findOneById(sportId);
+//				entity.setSport(sport);
+//			}
+
+//			entity.setHasGroupStage(dto.isHasGroupStage());
+			
+			System.out.println("TournamentConverter: toEntity: no exception");
+		} catch (Exception e) {
+			System.out.println("TournamentConverter: toEntity: has exception");
+			return null;
+		}
+		System.out.println("TournamentConverter: toEntity: finish");
+		return entity;
+	}
+	
 
 	public TournamentDTO toDTO(TournamentEntity entity) {
 		System.out.println("TournamentConverter: toDTO: finish");
