@@ -71,7 +71,7 @@ public class LoginAPI {
 				result.put("Authentication", null);
 				config.put("Global", 0);
 				error.put("MessageCode", 1);
-				error.put("Message", "User is not Exist");
+				error.put("Message", "tài khoản không tồn tại trong hệ thống");
 			} else { // User exist
 				System.out.println("LoginAPI: login: User is Exist");
 				System.out.println("LoginAPI: login: found: " + findUser.getId().toString());
@@ -84,7 +84,7 @@ public class LoginAPI {
 					result.put("Authentication", null);
 					config.put("Global", 0);
 					error.put("MessageCode", 1);
-					error.put("Message", "User is not active");
+					error.put("Message", "tài khoản chưa được kích hoạt");
 				} else { // User is active
 					System.out.println("LoginAPI: login: User is active");
 
@@ -101,7 +101,7 @@ public class LoginAPI {
 						result.put("Authentication", null);
 						config.put("Global", 0);
 						error.put("MessageCode", 1);
-						error.put("Message", "Password wrong");
+						error.put("Message", "Mật khẩu chưa chính xác.");
 					} else {// password right
 						System.out.println("LoginAPI: login: Password right");
 						

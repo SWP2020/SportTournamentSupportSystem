@@ -423,7 +423,7 @@ public class UserAPI {
 			if (user == null) {
 				result.put("User", null);
 				error.put("MessageCode", 1);
-				error.put("Message", "User is not exist");
+				error.put("Message", "Email không tồn tại trong hệ thống tài khoản");
 			} else {
 				String userName = user.getUsername();
 				UUID uuid = new UUID(UUID.randomUUID().getMostSignificantBits(),
@@ -436,11 +436,11 @@ public class UserAPI {
 					userService.changePassword(user.getId(), encoderPassword);
 					result.put("User", dto);
 					error.put("MessageCode", 0);
-					error.put("Message", "forgot password successfully");
+					error.put("Message", "forgot PassWord");
 				} else {
 					result.put("User", null);
 					error.put("MessageCode", 1);
-					error.put("Message", "forgot password fail");
+					error.put("Message", "Lỗi hệ thống vui lòng thử lại sau");
 				}
 			}
 
@@ -599,11 +599,11 @@ public class UserAPI {
 					UserDTO dto = userConverter.toDTO(userEntity);
 					result.put("User", dto);
 					error.put("MessageCode", 0);
-					error.put("Message", "changePassword Successfull");
+					error.put("Message", "đổi mật khẩu thành công");
 				}else {
 					result.put("User", null);
 					error.put("MessageCode", 1);
-					error.put("Message", "Old password incorect");
+					error.put("Message", "mật khẩu cũ không chính xác");
 				}
 				
 			} else {

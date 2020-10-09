@@ -235,22 +235,44 @@ public class TournamentAPI {
 		Map<String, Object> error = new HashMap<String, Object>();
 		TournamentEntity tournamentEntity = new TournamentEntity();
 		TournamentEntity newEntity = new TournamentEntity();
+		TournamentEntity newEntityStarted = new TournamentEntity();
 
 		try {
 			tournamentEntity = service.findOneById(id);
 			newEntity = converter.toEntity(tournament);
+			newEntityStarted = converter.toEntityEditStarted(tournament);
 			if (tournamentEntity == null) {
 				result.put("Tournament", null);
 				config.put("Global", 0);
 				error.put("MessageCode", 1);
 				error.put("Message", "Tournament not exist");
 			} else {
+				boolean check = false;
+				
 				String message = "Unknown error";
 				if (tournamentEntity.getStatus().contains(Const.TOURNAMENT_STATUS_REGISTRATION_OPENING)) {
-					message = Const.TOURNAMENT_MESSAGE_REGISTRATION_OPENING;
+					newEntity = service.update(id, newEntity);
+
+					TournamentDTO dto = converter.toDTO(newEntity);
+
+					message = Const.RESPONSE_SUCCESS;
+					result.put("Tournament", dto);
+					config.put("Global", 0);
+					error.put("MessageCode", 0);
+					error.put("Message", message);
+					check = true;
 				}
 				if (tournamentEntity.getStatus().contains(Const.TOURNAMENT_STATUS_PROCESSING)) {
-					message = Const.TOURNAMENT_MESSAGE_PROCESSING;
+					newEntity = service.update(id, newEntity);
+
+					TournamentDTO dto = converter.toDTO(newEntity);
+
+					message = Const.RESPONSE_SUCCESS;
+					result.put("Tournament", dto);
+					config.put("Global", 0);
+					error.put("MessageCode", 0);
+					error.put("Message", message);
+					check = true;
 				}
 				if (tournamentEntity.getStatus().contains(Const.TOURNAMENT_STATUS_FINISHED)) {
 					message = Const.TOURNAMENT_MESSAGE_FINISHED;
@@ -270,7 +292,9 @@ public class TournamentAPI {
 					config.put("Global", 0);
 					error.put("MessageCode", 0);
 					error.put("Message", message);
-				} else {
+					check = true;
+				}
+				if(check = false) {
 					result.put("Tournament", null);
 					config.put("Global", 0);
 					error.put("MessageCode", 1);
@@ -463,7 +487,9 @@ public class TournamentAPI {
 					
 					int CountAllAdvanceTeamPerTable = totalTable * advanceTeamPerTable;
 					
-					if(totalTeamBeforeGroupStage <= CountAllAdvanceTeamPerTable) {
+					boolean isHasHomeMatch = thisTournament.isHasGroupStage();
+					
+					if(totalTeamBeforeGroupStage <= CountAllAdvanceTeamPerTable && isHasHomeMatch == true) {
 					    String message = "Unknown error";
 						message = "Tổng số đội vượt qua vòng bảng không thể lớn hơn hoặc bằng tổng số đội hiện tại";
 						error.put("MessageCode", 1);
