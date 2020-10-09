@@ -220,26 +220,21 @@ public class ScheduleService implements IScheduleService {
 				}
 
 				if (cfFinalStageFormat.contains(Const.ROUND_ROBIN_FORMAT)) {
+					System.out.println("start final"+ Const.ROUND_ROBIN_FORMAT);
 					RoundRobinScheduleDTO fss = (RoundRobinScheduleDTO) schedule.getFinalStageSchedule();
 					boolean db = thisTournament.getFinalStageSetting().isHasHomeMatch();
 					boolean cf = fss.isHasHomeMatch();
+					
+					System.out.println();
 					System.out.println("final db: " + db);
 					System.out.println("final cf: " + cf);
-					int dbAdvanceTeamPerTable = thisTournament.getGroupStageSetting().getAdvanceTeamPerTable();
-					int dbMaxTeamPerTable = thisTournament.getGroupStageSetting().getMaxTeamPerTable();
-					int cfAdvanceTeamPerTable = schedule.getGroupStageSchedule().getAdvanceTeamPerTable();
-					int cfMaxTeamPerTable = schedule.getGroupStageSchedule().getMaxTeamPerTable();
-					System.out.println("group db: " + db);
-					System.out.println("group cf: " + cf);
-					System.out.println("cfAdvanceTeamPerTable: "+cfAdvanceTeamPerTable);
-					System.out.println("dbMaxTeamPerTable: "+dbMaxTeamPerTable);
-					System.out.println("cfMaxTeamPerTable "+cfMaxTeamPerTable);
-					System.out.println("dbMaxTeamPerTable "+dbMaxTeamPerTable);
-					if(db == cf && dbAdvanceTeamPerTable == cfAdvanceTeamPerTable && dbMaxTeamPerTable == cfMaxTeamPerTable) {
+					if(db == cf) {
 					checkGroupStageOption = true;
 					}else {
 						checkGroupStageOption = false;
 					}
+					System.out.println("checkGroupStageOption: "+checkGroupStageOption);
+					System.out.println("finish final"+ Const.ROUND_ROBIN_FORMAT);
 				}
 				if (thisTournament.isHasGroupStage()) {
 					String cfGroupStageFormat = schedule.getGroupStageSchedule().getFormatName();
@@ -1944,16 +1939,24 @@ public class ScheduleService implements IScheduleService {
 		Match thisMatch = new Match();
 
 		ScheduleDTO schedule = getSchedule(Tournament);
-
+		System.out.println("nodeId: "+ nodeId);
+		System.out.println("degree: "+ location);
+		System.out.println("location: "+ location);
+		System.out.println("tableId: "+ tableId);
+		System.out.println((String) newInfo.get("location"));
+		System.out.println((String) newInfo.get("time"));
+		System.out.println("start");
 		switch (location) {
 		case -1:
 			System.out.println("case -1");
 			if (tableId >= 0) {
+				System.out.println("start fail");
 				GroupStageScheduleDTO gss = schedule.getGroupStageSchedule();
 				RoundRobinScheduleDTO thisTable = (RoundRobinScheduleDTO) gss.getTables().get(tableId);
 				thisMatch = thisTable.getMatches().get(nodeId - 1);
 
 			} else {
+				System.out.println("start true");
 				RoundRobinScheduleDTO fss = (RoundRobinScheduleDTO) schedule.getFinalStageSchedule();
 				thisMatch = fss.getMatches().get(nodeId - 1);
 			}
@@ -2034,12 +2037,24 @@ public class ScheduleService implements IScheduleService {
 			break;
 
 		}
-
+        System.out.println("process");
 		thisMatch.setLocation((String) newInfo.get("location"));
 		thisMatch.setTime((String) newInfo.get("time"));
+		
+		System.out.println((String) newInfo.get("location"));
+		System.out.println((String) newInfo.get("time"));
+		
+		System.out.println(thisMatch.getLocation());
+		System.out.println(thisMatch.getTime());
+		
+		System.out.println("cong");
+		System.out.println("schedule.getFinalStageSchedule()");
+		System.out.println("schedule.getFinalStageSchedule()"+schedule.getFinalStageSchedule().getMatches().get(0).getLocation());
+		System.out.println("schedule.getFinalStageSchedule()"+schedule.getFinalStageSchedule().getMatches().get(1).getLocation());
+		System.out.println("schedule.getFinalStageSchedule()"+schedule.getFinalStageSchedule().getMatches().get(2).getLocation());
 
 		saveScheduleToFile(schedule, Tournament.getId());
-
+        System.out.println("sucess");
 		return schedule;
 	}
 }
