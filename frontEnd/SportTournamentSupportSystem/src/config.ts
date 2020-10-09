@@ -62,7 +62,7 @@ let config: IConfig = {
     domain: {},
   },
   regex: {
-    password: /^[-\w]{8,32}$/,
+    password: /^.{8,32}$/,
     username: /^[-\w]{8,32}$/,
     // eslint-disable-next-line
     email: /^[a-z][a-z0-9_\.]{5,32}@[a-z0-9]{2,}(\.[a-z0-9]{2,4}){1,2}$/,
